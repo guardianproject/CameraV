@@ -2,11 +2,11 @@ package org.witness.iwitness;
 
 import java.util.ArrayList;
 
+import org.witness.informacam.CameraActivity;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.ui.WizardActivity;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
 
-import org.witness.iwitness.app.CameraActivity;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.HomeActivity;
 import org.witness.iwitness.app.LoginActivity;

@@ -25,15 +25,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.media.action.IMAGE_CAPTURE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
-        <activity
-            android:name="org.witness.iwitness.app.CameraActivity"
-            android:label="@string/app_name" />
         <activity
             android:name="org.witness.iwitness.app.EditorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -58,6 +50,9 @@
             android:label="@string/app_name" />
         <activity
             android:name="org.witness.iwitness.app.WipeActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name="org.witness.informacam.CameraActivity"
             android:label="@string/app_name" />
 
         <service
