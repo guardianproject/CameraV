@@ -1,0 +1,23 @@
+<resources>
+
+    <string name="app_name">iWitness</string>
+	<string name="photo">Photo</string>
+	<string name="video">Video</string>
+	<string name="menu_all_media">All Media</string>
+	<string name="menu_grid">Grid</string>
+	<string name="menu_location">Location</string>
+	<string name="menu_date">Date</string>
+	<string name="connected_to_tor">Connected to Tor</string>
+	<string name="you">You</string>
+	<string name="notifications">Notifications</string>
+	<string name="organizations">Organizations</string>
+	<string name="get_in">Get In</string>
+	<string name="we_could_not_log">We could not log you in.  Please try again.</string>
+	<string name="change_settings">Change Settings</string>
+	<string name="cancel">Cancel</string>
+	<string name="pull_down_to_wipe">Pull down to wipe yoru contents</string>
+	<string name="log_out">Log Out</string>
+	<string name="no_new_notifications">No new notifications.</string>
+	<string name="connect_with_organizations">Connect with organizations:</string>
+	<string name="original_images_should_be">Original images should be:</string>
+</resources>

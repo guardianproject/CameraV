@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/rusted_red"
+    android:paddingLeft="20dip"
+    android:paddingRight="20dip"
+    android:paddingTop="60dip" >
+    <TextView style="@style/iwitness_h1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:gravity="center"
+        android:layout_marginBottom="16dip" />
+    <ProgressBar
+        android:id="@+id/login_waiter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+    
+
+</LinearLayout>

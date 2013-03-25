@@ -1,0 +1,289 @@
+<html lang="en">
+  <head>
+      <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+      <title>Help</title>
+
+<link rel="stylesheet" href="css/jquery.mobile-1.1.1.min.css" />
+<script src="js/jquery-1.7.1.min.js"></script>
+<script src="js/jquery.mobile-1.1.1.min.js"></script>
+<script src="test.js"></script>
+
+<script>
+
+
+$(document).bind( "pagebeforechange", function(event) {
+
+	$(".section_links").click(function() {
+	listSegments(this.id);
+	});
+
+});
+
+
+function listSegments(sectionName) {
+	array = window[sectionName];
+
+	$('.section_title').html(sectionName);
+
+	//create Tutorial objects
+		for (k in array) {
+		window[array[k].name] = new Tutorial(array[k]);
+	}
+	//list all the tutorials available
+	$('.listing').html('');
+	for (k in array) {
+		console.log(array[k].name);
+		$('.listing').append('<li class="tutorial_links" id="' + array[k].name + '">' + array[k].name + '</li>');
+	}
+	//set links to change 'page' and set active Tutorial
+	$(".tutorial_links").click(function (e) {
+		window.activeTutorialID = this.id;
+		$.mobile.changePage('#tutorial', { transition: "slide"});
+	});
+
+	$('.listing').listview('refresh');
+
+}
+
+
+/* Tutorial Object
+ * @param tutorialArray pass a selected tutorial's array of JSON content
+ * this object has functions to display overview and the steps in a tutorial 'page';
+ * to track 'active' content for forward and backward swipe; and
+ * to clear active tracking/page content when exiting tutorial
+ */
+
+function Tutorial(tutorialArray) {
+ 	this.inheritFrom = Steps;
+  this.inheritFrom();
+	this.tutorialName=tutorialArray.name;
+	this.tutorialArray = tutorialArray;
+	this.tutorialStartPages = false;
+	this.tutorialActivePage = 0;
+	this.tutorialPagesLength = tutorialArray.steps.length;
+	this.tutorialActiveList = 0;
+	this.tutorialOverview = function tutorialOverview() {
+			$('.tutorial_content').html('<h3 class="section_title">'+ this.tutorialName+'</h3><div class="section_description">'+ this.tutorialArray.description+'</div>');
+	}
+	this.tutorialPageView = function tutorialPageView() {
+		var activePage = this.tutorialArray.steps[this.tutorialActivePage];
+		this.tutorialActiveList = 0;
+		$('.tutorial_content').html('<h3 class="section_title">'+ activePage.name+'</h3><div class="section_description">'+ activePage.description+'</div>');
+		steps = this.testForSteps(activePage);
+		$('.tutorial_content').append(steps);
+		this.tutorialActivePage++;
+	}
+	this.tutorialClearPageView = function tutorialClearPageView() {
+		$('.tutorial_content').html('');
+		this.tutorialStartPages = false;
+		this.tutorialActivePage = 0;
+		this.tutorialActiveList = 0;
+		delete window.activeTutorialID;
+	}
+}
+
+function Steps(stepsArray) {
+	this.activeList = 0;
+	//if an array of steps exists then append the list of steps to tutorial active content
+	this.testForSteps = function testForSteps(stepsArray) {
+		if (typeof stepsArray.steps !== 'undefined' && stepsArray.steps !== null) {
+			steps = this.printSteps(stepsArray.steps);
+			return steps;
+		}
+		else {
+			return false;
+		}
+	}
+	//create string of nested ULs from passed JSON array
+	this.printSteps = function printSteps(stepsArray, parentList) {
+		this.activeList++;
+		var list = '<ul class="list_' + this.activeList+ '">';
+		for (k in stepsArray) {
+			list = list + '<li>'+stepsArray[k].name+'</li>';
+			//check for substeps
+			sublist = this.testForSteps(stepsArray[k]);
+			if (sublist != false) {
+				list = list + sublist;
+			}
+		}
+		list = list + '</ul>';
+		return list;
+	}
+}
+
+//grab 'active' Tutorial and load the 'active' page content
+$('#tutorial').live('pageshow',function(event){
+
+	$('.tutorial_title').html(window[window.activeTutorialID].tutorialName);
+	if(window[window.activeTutorialID].tutorialStartPages == false) {
+		window[window.activeTutorialID].tutorialOverview();
+		window[window.activeTutorialID].tutorialStartPages = true;
+	}
+	else {
+		window[window.activeTutorialID].tutorialPageView();
+	}
+
+	//set swipe events and return to tutorial menu button on a tutorial 'page'
+	$('#tutorial').live("swipeleft", function(e){
+		e.stopImmediatePropagation();
+		if(window[window.activeTutorialID].tutorialActivePage == -1) {
+			window[window.activeTutorialID].tutorialActivePage = 0;
+		}
+		if (window[window.activeTutorialID].tutorialActivePage < window[window.activeTutorialID].tutorialPagesLength) {
+			window[window.activeTutorialID].tutorialPageView();
+		}
+		else {
+			window[window.activeTutorialID].tutorialClearPageView();
+			$.mobile.changePage('#section_listings', { transition: "slide"});
+		}
+	});
+
+	$('#tutorial').live("swiperight", function(e){
+		e.stopImmediatePropagation();
+		window[window.activeTutorialID].tutorialActivePage = window[window.activeTutorialID].tutorialActivePage -2;
+		if (window[window.activeTutorialID].tutorialActivePage < -1) {
+			window[window.activeTutorialID].tutorialClearPageView();
+			$.mobile.changePage('#section_listings', { transition: "slide"});
+		}
+		else if(window[window.activeTutorialID].tutorialActivePage == -1) {
+			window[window.activeTutorialID].tutorialOverview();
+		}
+		else {
+			window[window.activeTutorialID].tutorialPageView();
+		}
+	});
+
+	$(".tutorials_main").click(function() {
+		window[window.activeTutorialID].tutorialClearPageView();
+  	$.mobile.changePage('#section_listings', { transition: "slide"});
+	});
+
+});
+
+
+
+
+
+</script>
+
+    <style type="text/css">
+
+        body {
+            /* Setting body margins to 0 to have proper positioning of #container div */
+            margin: 0;
+        }
+
+            /* #container div with absolute position and 100% width and height so it takes up whole window */
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+
+.section_title {text-transform:capitalize;}
+
+    </style>
+
+  </head>
+  <body>
+
+<div id="container">
+
+<div data-role="page" id="main_menu">
+
+		<header data-role="header">
+    	<h1>Help</h1>
+		</header>
+
+	<article data-role="content">
+  <ul data-role="listview">
+        <li>
+            <a href="#section_listings" class="section_links" id="tutorials">
+            <h1>Tutorials</h1>
+            <img src="images/start.jpg" alt="Min Pin" />
+            <p>Quickstarts for using InformaCam</p>
+            </a>
+        </li>
+        <li>
+            <a href="#index">
+            <h1>Index</h1>
+            <img src="images/question.png" alt="Gummy Bears" />
+            <p>Link to Glossary, Quick Steps and FAQs</p>
+            </a>
+        </li>
+    </ul>
+</article>
+
+
+
+</div><!--end main_menu-->
+
+
+<div data-role="page" id="index">
+	<header data-role="header">
+  	<a href="#main_menu" rel="external" data-icon="grid" data-iconpos="notext">Main Menu</a>
+  	<h1>Help</h1>
+   </header>
+
+
+	<article data-role="content">
+  <ul data-role="listview">
+        <li>
+            <a href="#section_listings" class="section_links" id="steps">
+            <h1>Steps</h1>
+            <img src="images/doggie_tn.png" alt="Min Pin" />
+            <p>Quick steps for actions</p>
+            </a>
+        </li>
+        <li>
+            <a href="#section_listings" class="section_links" id="terms">
+            <h1>Terms</h1>
+            <img src="images/gummies_tn.png" alt="Gummy Bears" />
+            <p>Definitions for technical words</p>
+            </a>
+        </li>
+        <li>
+            <a href="#section_listings" class="section_links" id="FAQs">
+            <h1>FAQs</h1>
+            <img src="images/gummies_tn.png" alt="Gummy Bears" />
+            <p>Frequently Asked Questions</p>
+            </a>
+        </li>
+    </ul>
+</article>
+
+</div><!-- Page tutorials -->
+
+
+
+<div data-role="page" id="section_listings">
+	<header data-role="header">
+  	<a href="#main_menu" rel="external" data-icon="grid" data-iconpos="notext">Main Menu</a>
+  	<h1 class="section_title"></h1>
+   </header>
+	<article data-role="content">
+	  <ul data-role="listview" class="listing">
+
+    </ul>
+	</article>
+
+</div><!-- Page tutorials -->
+
+
+
+<div data-role="page" id="tutorial">
+    <header data-role="header">
+        <h1 class="tutorial_title"></h1>
+       <a href="#section_listings" data-role="button" data-mini="true" class="tutorials_main">Tutorials</a>
+    </header>
+	<div data-role="content" class="tutorial_content">
+	</div>
+
+</div>
+</div><!-- Page tutorial -->
+
+</div>
+  </body>
+</html>

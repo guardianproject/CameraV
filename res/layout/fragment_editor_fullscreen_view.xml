@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/black" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="0dip" >
+
+        <FrameLayout
+            android:id="@+id/media_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageButton
+            android:id="@+id/toggle_controls"
+            android:layout_width="60dip"
+            android:layout_height="60dip"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="1dip"
+            android:layout_marginLeft="1dip"
+            android:background="@drawable/trans_grey_1"
+            android:paddingRight="16dip"
+            android:paddingTop="16dip"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_launcher" />
+
+        <LinearLayout
+            android:id="@+id/controls_holder_landscape"
+            android:layout_width="wrap_content"
+            android:layout_height="60dip"
+            android:layout_toLeftOf="@+id/toggle_controls"
+            android:background="@drawable/trans_grey_1"
+            android:paddingTop="16dip"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/controls_holder_portrait"
+            android:layout_width="60dip"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/toggle_controls"
+            android:layout_below="@+id/toggle_controls"
+            android:background="@drawable/trans_grey_1"
+            android:paddingRight="16dip"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</ScrollView>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gallery_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/white"
+    android:orientation="vertical"
+    android:layout_marginTop="10dip" >
+
+    <RelativeLayout
+        android:id="@+id/media_manager_holder"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:id="@+id/options_holder"
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
+            android:padding="0dip"
+            android:weightSum="1.0" >
+
+            <Spinner
+                android:id="@+id/display_toggle"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7" />
+
+            <Spinner
+                android:id="@+id/display_sort"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15" />
+
+            <ImageButton
+                android:id="@+id/multi_select"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_launcher" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/options_holder" >
+
+            <RelativeLayout
+                android:id="@+id/media_display_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <GridView
+                    android:id="@+id/media_display_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnWidth="90dip"
+                    android:gravity="center"
+                    android:horizontalSpacing="10dip"
+                    android:numColumns="auto_fit"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="10dip"
+                    android:visibility="gone" />
+                <ListView
+                    android:id="@+id/media_display_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+</LinearLayout>

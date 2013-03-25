@@ -1,0 +1,85 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.witness.iwitness"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="17" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="org.witness.informacam.ICP" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="org.witness.iwitness.IWitness"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.media.action.IMAGE_CAPTURE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.witness.iwitness.app.CameraActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name="org.witness.iwitness.app.EditorActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Sherlock.Light" />
+        <activity
+            android:name="org.witness.iwitness.app.HomeActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.witness.informacam.ui.WizardActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.witness.informacam.ui.SurfaceGrabberActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="org.witness.iwitness.app.LoginActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name="org.witness.iwitness.app.WipeActivity"
+            android:label="@string/app_name" />
+
+        <service
+            android:name="org.witness.informacam.InformaCam"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="org.witness.informacam.informa.InformaService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="org.witness.informacam.storage.IOService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="org.witness.informacam.transport.UploaderService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name="org.witness.informacam.crypto.SignatureService"
+            android:enabled="true"
+            android:exported="false" />
+    </application>
+
+</manifest>

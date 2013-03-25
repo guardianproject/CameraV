@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:id="@+id/wipe_settings_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true" >
+        <Button
+            android:layout_width="0dip"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:id="@+id/wipe_change_settings"
+            android:text="@string/change_settings" />
+        <Button
+            android:layout_width="0dip"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:id="@+id/wipe_cancel"
+            android:text="@string/cancel" />
+    </LinearLayout>
+    <Button
+        android:id="@+id/wipe_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wipe_settings_holder"
+        android:text="@string/log_out" />
+    <View
+        android:id="@+id/wipe_trigger_buffer"
+        android:layout_below="@+id/wipe_logout"
+        android:layout_width="match_parent" 
+        android:layout_height="20dip"/>
+
+    <ImageView
+        android:id="@+id/wipe_trigger"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/wipe_trigger_buffer"
+        android:src="@drawable/ic_launcher" />
+
+</RelativeLayout>

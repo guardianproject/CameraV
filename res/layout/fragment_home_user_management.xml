@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/user_management_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/white"
+    android:orientation="vertical"
+    android:layout_marginTop="10dip" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:orientation="horizontal"
+        android:weightSum="1.0" >
+
+        <ImageButton
+            android:id="@+id/user_thumbnail"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:padding="5dip"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher" />
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.45"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/user_alias"
+                style="@style/iwitness_h2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="You" />
+
+            <TextView
+                android:id="@+id/user_connectivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/connected_to_tor" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/emergency_wipe"
+            style="@style/button_a"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.175"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/to_settings"
+            style="@style/button_a"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.175"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher" />
+    </LinearLayout>
+
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="10dip" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                style="@style/iwitness_sub_tab_holder"
+                android:layout_width="fill_parent"
+                android:layout_height="56dip"
+                android:orientation="horizontal" />
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:background="@drawable/white"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </TabHost>
+
+</LinearLayout>

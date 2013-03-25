@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="view_options">
+        <item>@string/menu_grid</item>
+        <item>@string/menu_all_media</item>
+    </string-array>
+    
+    <string-array name="sort_options">
+        <item>@string/menu_location</item>
+        <item>@string/menu_date</item>
+        <item>@string/photo</item>
+        <item>@string/video</item>
+    </string-array>
+</resources>

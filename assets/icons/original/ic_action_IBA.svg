@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="48px" height="48px"
+	 viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  height="30.037" width="30.179" y="381.481" x="290.411" bottomLeftOrigin="true"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<path fill="#FFFFFF" d="M33.505,12.073c-2.901-0.697-7.049,0.431-9.256,1.897c-2.775-0.899-6.127-3.095-9.73-1.662
+	C18.556,7.819,29.157,8.005,33.505,12.073z"/>
+<path fill="#FFFFFF" d="M21.163,15.632c-1.556,2.082-3.896,3.381-5.221,5.695c-1.613-1.813-4.021-5.01-2.611-8.306
+	C16.711,12.267,18.934,14.469,21.163,15.632z"/>
+<path fill="#FFFFFF" d="M34.929,13.259c0.926,3.583-1.334,5.906-2.609,8.068c-1.816-1.903-3.476-3.961-5.696-5.458
+	C28.741,14.559,31.715,11.927,34.929,13.259z"/>
+<path fill="#FFFFFF" d="M35.878,14.682c4.441,3.822,4.045,14.556,0.236,18.748c0.242-3.217-0.367-7.289-2.137-9.255
+	C35.29,21.816,36.796,18.492,35.878,14.682z"/>
+<path fill="#FFFFFF" d="M30.182,23.937c-1.855,2.338-3.793,4.592-6.407,6.172c-2.042-1.914-4.068-3.846-5.934-5.935
+	c1.612-2.423,3.861-4.206,5.934-6.17C26.463,19.43,28.077,21.929,30.182,23.937z"/>
+<path fill="#FFFFFF" d="M15.468,26.786c2.034,1.764,3.932,3.663,5.695,5.696c-2.279,0.994-5.725,4.15-8.307,1.898
+	C12.513,30.635,14.489,29.211,15.468,26.786z"/>
+<path fill="#FFFFFF" d="M32.081,26.786c1.715,1.845,3.193,3.926,3.084,7.597c-2.582,2.25-6.024-0.904-8.308-1.9
+	C28.357,30.34,30.717,29.062,32.081,26.786z"/>
+<path fill="#FFFFFF" d="M12.145,14.446c-0.756,2.864,0.186,7.57,1.897,9.491c-1.371,2.327-2.796,5.668-1.897,9.493
+	C7.761,29.544,7.905,18.381,12.145,14.446z"/>
+<path fill="#FFFFFF" d="M33.03,35.805c-2.763,4.193-14.488,4.295-18.274,0.236c2.118,0.479,6.872-0.525,9.256-1.896
+	C26.516,35.111,29.902,36.941,33.03,35.805z"/>
+</svg>

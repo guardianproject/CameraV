@@ -1,0 +1,52 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    
+    <style name="iwitness_tab_holder">
+        <item name="android:background">@drawable/worn_red</item>
+    </style>
+    
+    <style name="iwitness_sub_tab_holder">
+        <item name="android:background">@drawable/white</item>
+    </style>
+    
+    <style name="iwitness_camera_chooser_button">
+        <item name="android:background">@drawable/black</item>
+    </style>
+    
+    <style name="iwitness_h1">
+        <item name="android:textColor">@drawable/white</item>
+        <item name="android:textSize">28sp</item>
+    </style>
+    
+    <style name="iwitness_h2">
+        <item name="android:textColor">@drawable/black</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+    
+    <style name="iwitness_h3">
+        <item name="android:textColor">@drawable/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    
+    <style name="button_a">
+        <item name="android:background">@drawable/white</item>
+        <item name="android:padding">5dip</item>
+    </style>
+
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/worn_red"
+    android:weightSum="1" >
+
+    <ImageButton
+        android:id="@+id/ab_navigation_back"
+        android:layout_width="70dip"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ab_buffer"
+        android:scaleType="fitXY"
+        android:layout_marginTop="6dip"
+        android:src="@drawable/ic_launcher" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:layout_marginTop="6dip"
+        android:layout_above="@+id/ab_buffer"
+        android:weightSum="1" >
+
+        <ImageButton
+            android:id="@+id/ab_share_media"
+            android:layout_width="70dip"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/ab_to_fullscreen"
+            android:layout_width="70dip"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/ab_buffer"
+        android:layout_width="match_parent"
+        android:layout_height="8dip"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/rusted_red" />
+
+</RelativeLayout>

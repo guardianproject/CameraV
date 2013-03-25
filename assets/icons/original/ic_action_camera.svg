@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="48px" height="48px"
+	 viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  height="37.146" width="37.49" y="377.349" x="287.505" bottomLeftOrigin="true"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<path fill="#FFFFFF" d="M41.434,12.195H39.6V6.006H27.561v6.189H8.069c-1.135,0-2.063,0.929-2.063,2.065v26.828
+	c0,1.136,0.928,2.064,2.063,2.064h33.364c1.136,0,2.063-0.93,2.063-2.064V14.26C43.497,13.124,42.568,12.195,41.434,12.195z
+	 M29.625,8.07h7.91v4.125h-7.91V8.07z M25.062,40.762c-7.218,0-13.085-5.87-13.085-13.087c0-7.216,5.868-13.088,13.085-13.088
+	c7.217,0,13.09,5.872,13.09,13.088C38.152,34.892,32.277,40.762,25.062,40.762z"/>
+<path fill="#FFFFFF" d="M25.061,19.922c-4.271,0-7.749,3.479-7.749,7.752c0,4.273,3.477,7.749,7.749,7.749
+	c4.275,0,7.752-3.476,7.752-7.749C32.812,23.402,29.336,19.922,25.061,19.922z M25.061,33.337c-3.126,0-5.664-2.536-5.664-5.664
+	c0-3.13,2.537-5.666,5.664-5.666c3.132,0,5.668,2.536,5.668,5.666C30.729,30.801,28.192,33.337,25.061,33.337z"/>
+<path fill="#FFFFFF" d="M25.062,15.963c-6.457,0-11.71,5.253-11.71,11.712c0,6.457,5.254,11.711,11.71,11.711
+	c6.461,0,11.713-5.254,11.713-11.711C36.775,21.216,31.523,15.963,25.062,15.963z M25.061,36.663c-4.955,0-8.987-4.032-8.987-8.989
+	s4.032-8.988,8.987-8.988c4.958,0,8.991,4.031,8.991,8.988S30.019,36.663,25.061,36.663z"/>
+</svg>
