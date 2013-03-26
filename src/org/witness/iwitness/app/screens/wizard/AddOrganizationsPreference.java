@@ -75,7 +75,7 @@ public class AddOrganizationsPreference extends Fragment implements WizardListen
 							new String(
 									informaCam.ioService.getBytes(
 											("includedOrganizations/" + organizationManifest), 
-											Type.APPLICATION_ASSET, a)
+											Type.APPLICATION_ASSET)
 									)
 					).nextValue());
 					includedOrganizations.add(organization);

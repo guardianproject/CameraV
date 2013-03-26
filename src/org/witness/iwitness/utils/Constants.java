@@ -10,6 +10,7 @@ public class Constants {
 		public FragmentManager returnFragmentManager();
 		public int[] getDimensions();
 		public void launchEditor(String mediaId);
+		public void launchCamera(int cameraType);
 		public void logoutUser();
 	}
 	
@@ -46,6 +47,7 @@ public class Constants {
 			public static final String SET_ORIENTATION = "set_orientation";
 			public static final String WIZARD_SUPPLEMENT = org.witness.informacam.utils.Constants.Codes.Extras.WIZARD_SUPPLEMENT;
 			public static final String MESSAGE_CODE = org.witness.informacam.utils.Constants.Codes.Extras.MESSAGE_CODE;
+			public static final String RETURNED_MEDIA = org.witness.informacam.utils.Constants.Codes.Extras.RETURNED_MEDIA;
 		}
 	}
 	

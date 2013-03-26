@@ -37,7 +37,7 @@ public class MainFragment extends Fragment implements TabHost.OnTabChangeListene
 	Activity a;
 	FragmentManager fm;
 	
-	private InformaCam informaCam = InformaCam.getInstance();
+	InformaCam informaCam;
 		
 	@Override
 	public View onCreateView(LayoutInflater li, ViewGroup container, Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class MainFragment extends Fragment implements TabHost.OnTabChangeListene
 		this.fm = ((MainFragmentListener) a).returnFragmentManager();
 		initLayout(savedInstanceState);
 		
-		informaCam.associateActivity(a);
+		informaCam = InformaCam.getInstance();
 		informaCam.uploaderService.init();
 	}
 	

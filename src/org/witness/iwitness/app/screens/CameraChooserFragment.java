@@ -2,14 +2,12 @@ package org.witness.iwitness.app.screens;
 
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App;
+import org.witness.iwitness.utils.Constants.MainFragmentListener;
 import org.witness.iwitness.utils.app.VerticalButton;
 
-import org.witness.informacam.CameraActivity;
-import org.witness.informacam.utils.Constants.Codes;
 import org.witness.informacam.utils.Constants.App.Camera;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -22,9 +20,7 @@ public class CameraChooserFragment extends Fragment implements OnClickListener {
 	View rootView;
 	Activity a;
 	VerticalButton launch_camera, launch_camcorder;
-	
-	Intent informaCamIntent;
-	
+		
 	private final static String LOG = App.Home.LOG;
 	
 	@Override
@@ -44,27 +40,22 @@ public class CameraChooserFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
-		this.a = a;
-		
-		informaCamIntent = new Intent(a, CameraActivity.class);
+		this.a = a;		
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 	}
-
+	
 	@Override
 	public void onClick(View v) {
 		if(v == launch_camera) {
 			Log.d(LOG, "hello camera");
-			informaCamIntent.putExtra(Camera.TYPE, Camera.Type.CAMERA);
+			((MainFragmentListener) a).launchCamera(Camera.Type.CAMERA);
 		} else if(v == launch_camcorder) {
 			Log.d(LOG, "hello camcorder");
-			informaCamIntent.putExtra(Camera.TYPE, Camera.Type.CAMCORDER);
-		}
-		
-		startActivityForResult(informaCamIntent, Codes.Routes.IMAGE_CAPTURE);
-		
+			((MainFragmentListener) a).launchCamera(Camera.Type.CAMCORDER);
+		}		
 	}
 }

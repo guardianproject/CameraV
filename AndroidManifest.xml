@@ -22,8 +22,11 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.media.action.IMAGE_CAPTURE" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -52,7 +55,7 @@
             android:name="org.witness.iwitness.app.WipeActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="org.witness.informacam.CameraActivity"
+            android:name="org.witness.informacam.ui.CameraActivity"
             android:label="@string/app_name" />
 
         <service

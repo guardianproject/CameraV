@@ -2,7 +2,7 @@ package org.witness.iwitness;
 
 import java.util.ArrayList;
 
-import org.witness.informacam.CameraActivity;
+import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.ui.WizardActivity;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
@@ -48,20 +48,13 @@ public class IWitness extends Activity implements InformaCamEventListener {
 		
 		setContentView(R.layout.activity_main);
 		
-		startService(new Intent(this, org.witness.informacam.InformaCam.class));
+		startService(new Intent(this, InformaCam.class));
 		h.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				informaCam = InformaCam.getInstance();
-				informaCam.associateActivity(IWitness.this);
-				
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						informaCam.startup();
-					}
-				}).start();
-				
+				Log.d(LOG, packageName + " activity is getting informa instance");
+				informaCam = InformaCam.getInstance(IWitness.this);
+				onUpdate(informaCam.getUpdate());
 			}
 		}, 1500);		
 	}
@@ -104,7 +97,7 @@ public class IWitness extends Activity implements InformaCamEventListener {
 				
 				break;
 			case Codes.Routes.LOGIN:
-				
+				Log.d(LOG, "hi i logged in!");
 				break;
 			}
 			

@@ -1,6 +1,9 @@
 package org.witness.iwitness.app;
 
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.ui.CameraActivity;
+import org.witness.informacam.utils.Constants.App.Camera;
+import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.CameraChooserFragment;
 import org.witness.iwitness.app.screens.MainFragment;
@@ -16,13 +19,14 @@ import com.deaux.fan.FanView.FanViewListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Display;
 
-public class HomeActivity extends FragmentActivity implements MainFragmentListener, FanViewListener {
+public class HomeActivity extends FragmentActivity implements MainFragmentListener, FanViewListener, InformaCamEventListener {
 	Intent init;
 	private final static String LOG = Constants.App.Home.LOG;
 	private String packageName;
@@ -31,7 +35,7 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 	Fragment mainFragment, cameraChooserFragment;
 	boolean cameraChooserIsShowing = false;
 	
-	private InformaCam informaCam = InformaCam.getInstance();
+	InformaCam informaCam;
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +52,8 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 		mainHolder.setFragments(mainFragment, cameraChooserFragment);
 		mainHolder.associate(HomeActivity.this);
 		
-		informaCam.associateActivity(this);
+		Log.d(LOG, packageName + " activity is getting informa instance");
+		informaCam = InformaCam.getInstance();
 	}
 	
 	@Override
@@ -112,6 +117,13 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 	}
 	
 	@Override
+	public void launchCamera(int cameraType) {
+		Log.d(LOG, "launching camera as type " + cameraType);
+		Intent toCamera = new Intent(this, CameraActivity.class).putExtra(Camera.TYPE, cameraType);
+		startActivityForResult(toCamera, Routes.CAMERA);
+	}
+	
+	@Override
 	public void onBackPressed() {
 		setResult(Activity.RESULT_CANCELED);
 		finish();
@@ -121,6 +133,29 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 	public void logoutUser() {
 		setResult(Activity.RESULT_CANCELED);
 		finish();
+		
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int responseCode, Intent data) {
+		informaCam.associateActivity(this);
+		if(responseCode == Activity.RESULT_OK) {
+			switch(requestCode) {
+			case Codes.Routes.CAMERA:
+				Log.d(LOG, "we returned these values: " + data.getStringExtra(Codes.Extras.RETURNED_MEDIA));
+				
+				break;
+			case Codes.Routes.LOGOUT:
+				logoutUser();
+				break;
+			}
+		}
+		Log.d(LOG, "HEY WE FINISHED A THING WITH RESULT " + responseCode);
+	}
+
+	@Override
+	public void onUpdate(Message message) {
+		// TODO Auto-generated method stub
 		
 	}
 }
