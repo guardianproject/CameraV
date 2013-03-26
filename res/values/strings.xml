@@ -8,6 +8,7 @@
 	<string name="menu_location">Location</string>
 	<string name="menu_date">Date</string>
 	<string name="connected_to_tor">Connected to Tor</string>
+	<string name="not_connected_to_tor">Not connected to Tor</string>
 	<string name="you">You</string>
 	<string name="notifications">Notifications</string>
 	<string name="organizations">Organizations</string>
