@@ -1,45 +1,74 @@
 package org.witness.iwitness.app;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.ui.CameraActivity;
-import org.witness.informacam.utils.Constants.App.Camera;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
+import org.witness.informacam.utils.Constants.Models;
+import org.witness.informacam.models.IMedia;
+
 import org.witness.iwitness.R;
-import org.witness.iwitness.app.screens.CameraChooserFragment;
-import org.witness.iwitness.app.screens.MainFragment;
+import org.witness.iwitness.app.screens.CameraFragment;
+import org.witness.iwitness.app.screens.GalleryFragment;
+import org.witness.iwitness.app.screens.UserManagementFragment;
+import org.witness.iwitness.app.screens.menus.MediaActionMenu;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
-import org.witness.iwitness.utils.Constants.MainFragmentListener;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.Codes.Routes;
+import org.witness.iwitness.utils.actions.ContextMenuAction;
 
-import com.deaux.fan.FanView;
-import com.deaux.fan.FanView.FanViewListener;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
+import android.widget.TabHost;
+import android.widget.LinearLayout.LayoutParams;
 
-public class HomeActivity extends FragmentActivity implements MainFragmentListener, FanViewListener, InformaCamEventListener {
+public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamEventListener {
 	Intent init;
 	private final static String LOG = Constants.App.Home.LOG;
 	private String packageName;
 	
-	private FanView mainHolder;
-	Fragment mainFragment, cameraChooserFragment;
-	boolean cameraChooserIsShowing = false;
+	List<Fragment> fragments = new Vector<Fragment>();
+	Fragment userManagementFragment, galleryFragment, cameraFragment;
+	
 	boolean initUploads = true;
+	boolean initGallery = false;
+	
+	int visibility = View.VISIBLE;
+	
+	LayoutInflater li;
+	TabHost tabHost;
+	ViewPager viewPager;
+	TabPager pager;
 	
 	InformaCam informaCam;
+	
+	Handler h = new Handler();
+	Waiter waiter;
+	MediaActionMenu mam;
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,13 +77,6 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 		
 		Log.d(LOG, "hello " + packageName);
 		setContentView(R.layout.activity_home);
-		
-		mainHolder = (FanView) findViewById(R.id.main_holder);
-		mainFragment = new MainFragment();
-		cameraChooserFragment = new CameraChooserFragment();
-		
-		mainHolder.setFragments(mainFragment, cameraChooserFragment);
-		mainHolder.associate(HomeActivity.this);
 				
 		try {
 			Iterator<String> i = savedInstanceState.keySet().iterator();
@@ -62,11 +84,21 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 				String outState = i.next();
 				if(outState.equals(Home.TAG) && savedInstanceState.getBoolean(Home.TAG)) {
 					initUploads = false;
+					initGallery = true;
 				}
 			}
-		} catch(NullPointerException e) {}
+		} catch(NullPointerException e) {
+			Log.e(LOG, e.toString());
+			e.printStackTrace();
+		}
 		
+		userManagementFragment = Fragment.instantiate(this, UserManagementFragment.class.getName());
+		galleryFragment = Fragment.instantiate(this, GalleryFragment.class.getName());
+		cameraFragment = Fragment.instantiate(this, CameraFragment.class.getName());
 		
+		fragments.add(userManagementFragment);
+		fragments.add(galleryFragment);
+		fragments.add(cameraFragment);
 	}
 	
 	@Override
@@ -79,6 +111,61 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 		if(initUploads) {
 			informaCam.uploaderService.init();
 		}
+		
+		initUploads = false;
+		initLayout();
+	}
+	
+	private void initLayout() {
+		pager = new TabPager(getSupportFragmentManager());
+		
+		viewPager = (ViewPager) findViewById(R.id.view_pager_root);
+		viewPager.setAdapter(pager);
+		viewPager.setOnPageChangeListener(pager);
+		
+		li = LayoutInflater.from(this);
+		
+		int[] dims = getDimensions();
+
+		tabHost = (TabHost) findViewById(android.R.id.tabhost);
+		tabHost.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
+		tabHost.setup();
+		
+		TabHost.TabSpec tab = tabHost.newTabSpec(UserManagementFragment.class.getName()).setIndicator(generateTab(li, R.layout.tabs_user_management));
+		li.inflate(R.layout.fragment_home_user_management, tabHost.getTabContentView(), true);
+		tab.setContent(R.id.user_management_root_view);
+		tabHost.addTab(tab);
+		
+		tab = tabHost.newTabSpec(GalleryFragment.class.getName()).setIndicator(generateTab(li, R.layout.tabs_iwitness));
+		li.inflate(R.layout.fragment_home_gallery, tabHost.getTabContentView(), true);
+		tab.setContent(R.id.gallery_root_view);
+		tabHost.addTab(tab);
+		
+		tab = tabHost.newTabSpec(CameraFragment.class.getName()).setIndicator(generateTab(li, R.layout.tabs_camera_chooser));
+		li.inflate(R.layout.fragment_home_camera_chooser, tabHost.getTabContentView(), true);
+		tab.setContent(R.id.camera_chooser_root_view);
+		tabHost.addTab(tab);
+		
+		tabHost.setOnTabChangedListener(pager);
+		
+		for(int i=0; i<tabHost.getTabWidget().getChildCount(); i++) {
+			View tab_ = tabHost.getTabWidget().getChildAt(i);
+			if(i == 1) {
+				tab_.setLayoutParams(new LinearLayout.LayoutParams((int) (dims[0] * 0.5), LayoutParams.MATCH_PARENT));
+			} else {
+				tab_.setLayoutParams(new LinearLayout.LayoutParams((int) (dims[0] * 0.25), LayoutParams.MATCH_PARENT));
+			}
+		}
+
+		viewPager.setCurrentItem(1);
+		
+		if(initGallery) {
+			((GalleryFragment) galleryFragment).updateData();
+		}
+	}
+	
+	private static View generateTab(final LayoutInflater li, final int resource) {
+		return li.inflate(resource, null);
 	}
 	
 	@Override
@@ -98,36 +185,6 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 		super.onDestroy();
 	}
 
-	@Override
-	public void toggleCameraChooser(boolean cameraChooserShouldShow) {
-		if(cameraChooserShouldShow && !cameraChooserIsShowing) {
-			mainHolder.showMenu();
-		} else if(!cameraChooserShouldShow && cameraChooserIsShowing) {
-			mainHolder.showMenu();
-		}
-	}
-
-	@Override
-	public void updateStatus(boolean isShowing) {
-		cameraChooserIsShowing = isShowing;		
-	}
-
-	@Override
-	public boolean getCameraChooserIsShowing() {
-		return cameraChooserIsShowing;
-	}
-
-	@Override
-	public FragmentManager returnFragmentManager() {
-		return getSupportFragmentManager();
-	}
-
-	@Override
-	public void notifyAnimationFinished() {
-		((HomeActivityListener) mainFragment).toggleCameraChooser();
-		
-	}
-
 	@SuppressWarnings("deprecation")
 	@Override
 	public int[] getDimensions() {
@@ -137,6 +194,8 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 
 	@Override
 	public void launchEditor(String mediaId) {
+		waiter.show();
+		
 		Log.d(LOG, "launching editor for " + mediaId);
 		Intent toEditor = new Intent(this, EditorActivity.class).putExtra(Codes.Extras.MEDIA_ID, mediaId);
 		startActivityForResult(toEditor, Routes.EDITOR);
@@ -144,10 +203,68 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 	}
 	
 	@Override
-	public void launchCamera(int cameraType) {
-		Log.d(LOG, "launching camera as type " + cameraType);
-		Intent toCamera = new Intent(this, CameraActivity.class).putExtra(Camera.TYPE, cameraType);
-		startActivityForResult(toCamera, Routes.CAMERA);
+	public void getContextualMenuFor(final String mediaId) {
+		List<ContextMenuAction> actions = new Vector<ContextMenuAction>();
+		
+		ContextMenuAction action = new ContextMenuAction();
+		action.label = getResources().getString(R.string.delete);
+		action.ocl = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mam.cancel();
+				if(((IMedia) informaCam.mediaManifest.getById(mediaId)).delete()) {
+					((GalleryFragment) galleryFragment).updateData();
+				}
+			}
+			
+		};
+		actions.add(action);
+		
+		action = new ContextMenuAction();
+		action.label = getResources().getString(R.string.rename);
+		action.ocl = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mam.cancel();
+				((IMedia) informaCam.mediaManifest.getById(mediaId)).rename();
+				
+			}
+			
+		};
+		actions.add(action);
+		
+		action = new ContextMenuAction();
+		action.label = getResources().getString(R.string.export);
+		action.ocl = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mam.cancel();
+				((IMedia) informaCam.mediaManifest.getById(mediaId)).export();
+				
+			}
+			
+		};
+		actions.add(action);
+		
+		mam = new MediaActionMenu(this, actions);
+		mam.Show();
+	}
+	
+	public void launchCamera() {
+		waiter = new Waiter(this);
+		waiter.Show();
+		
+		h.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				Intent toCamera = new Intent(HomeActivity.this, CameraActivity.class);
+				startActivityForResult(toCamera, Routes.CAMERA);
+			}
+		}, 1000);
+		
 	}
 	
 	@Override
@@ -165,12 +282,18 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 	
 	@Override
 	public void onActivityResult(int requestCode, int responseCode, Intent data) {
+		super.onActivityResult(requestCode, responseCode, data);
+		try {
+			waiter.cancel();
+		} catch(NullPointerException e) {}
+		
 		if(responseCode == Activity.RESULT_OK) {
 			switch(requestCode) {
 			case Codes.Routes.CAMERA:
-				Log.d(LOG, "we returned these values: " + data.getStringExtra(Codes.Extras.RETURNED_MEDIA));				
-				((HomeActivityListener) mainFragment).updateGalleryData();
+				Log.d(LOG, "we returned these values: " + data.getStringExtra(Codes.Extras.RETURNED_MEDIA));
 				
+				informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
+				((GalleryFragment) galleryFragment).updateData();
 				break;
 			case Codes.Routes.LOGOUT:
 				logoutUser();
@@ -183,5 +306,79 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 	public void onUpdate(Message message) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	class Waiter extends AlertDialog.Builder {
+		public Dialog alert;
+		public boolean isShowing = false;
+		
+		protected Waiter(Context context) {
+			super(context);
+			setCancelable(false);
+			
+			alert = create();
+			setView(LayoutInflater.from(context).inflate(R.layout.extras_waiter, null));
+		}
+		
+		public void Show() {
+			isShowing = true;
+			alert = this.show();		
+		}
+		
+		public void cancel() {
+			isShowing = false;
+			alert.cancel();
+		}
+	}
+	
+	class TabPager extends FragmentStatePagerAdapter implements TabHost.OnTabChangeListener, OnPageChangeListener {
+
+		public TabPager(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public void onTabChanged(String tabId) {
+			Log.d(LOG, tabId);
+			int i=0;
+			for(Fragment f : fragments) {
+				if(f.getClass().getName().equals(tabId)) {
+					viewPager.setCurrentItem(i);
+					break;
+				}
+
+				i++;
+			}
+		}
+
+		@Override
+		public void onPageScrollStateChanged(int state) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2) {}
+
+		@Override
+		public void onPageSelected(int page) {
+			tabHost.setCurrentTab(page);
+			Log.d(LOG, "setting current page as " + page);
+			if(page == 2) {
+				launchCamera();
+			}
+		}
+
+		@Override
+		public Fragment getItem(int which) {
+			return fragments.get(which);
+		}
+
+
+		@Override
+		public int getCount() {
+			return fragments.size();
+		}
+
 	}
 }

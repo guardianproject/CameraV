@@ -1,14 +1,14 @@
 package org.witness.iwitness.app.screens;
 
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.utils.models.IUser;
+import org.witness.informacam.models.IUser;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.WipeActivity;
 import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.Codes.Routes;
-import org.witness.iwitness.utils.Constants.MainFragmentListener;
 import org.witness.iwitness.utils.Constants.App.Home.Tabs;
+import org.witness.iwitness.utils.Constants.HomeActivityListener;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -73,7 +73,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener 
 		super.onAttach(a);
 		this.a = a;
 		
-		dims = ((MainFragmentListener) a).getDimensions();
+		dims = ((HomeActivityListener) a).getDimensions();
 	}
 	
 	@Override
@@ -140,7 +140,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener 
 		if(resultCode == Activity.RESULT_OK) {
 			switch(requestCode) {
 			case Codes.Routes.WIPE:
-				((MainFragmentListener) a).logoutUser();
+				((HomeActivityListener) a).logoutUser();
 				break;
 			}
 		}

@@ -18,6 +18,7 @@
         android:id="@+id/gallery_details"
         android:layout_width="match_parent"
         android:layout_height="60dip"
-        android:text="image details" />
+        android:text="image details"
+        android:layout_marginBottom="10dip" />
 
 </RelativeLayout>

@@ -4,6 +4,7 @@
 	<string name="photo">Photo</string>
 	<string name="video">Video</string>
 	<string name="menu_all_media">All Media</string>
+	<string name="menu_list">List</string>
 	<string name="menu_grid">Grid</string>
 	<string name="menu_location">Location</string>
 	<string name="menu_date">Date</string>
@@ -21,4 +22,10 @@
 	<string name="no_new_notifications">No new notifications.</string>
 	<string name="connect_with_organizations">Connect with organizations:</string>
 	<string name="original_images_should_be">Original images should be:</string>
+	<string name="delete">Delete</string>
+	<string name="rename">Rename</string>
+	<string name="export">Export</string>
+	<string name="your_gallery_is_hungry">Your gallery is hungry for photos and videos.</string>
+	<string name="swipe_left_for_cameras">Swipe left for cameras.</string>
+	<string name="all_media">All Media</string>
 </resources>

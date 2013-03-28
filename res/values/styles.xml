@@ -29,6 +29,11 @@
         <item name="android:background">@drawable/black</item>
     </style>
     
+    <style name="iWitness_button_a">
+        <item name="android:textColor">@drawable/peuter</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    
     <style name="iwitness_h1">
         <item name="android:textColor">@drawable/white</item>
         <item name="android:textSize">28sp</item>
@@ -42,6 +47,15 @@
     <style name="iwitness_h3">
         <item name="android:textColor">@drawable/black</item>
         <item name="android:textSize">18sp</item>
+    </style>
+    
+    <style name="iWitness_list">
+        <item name="android:textColor">@drawable/black</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingTop">8dip</item>
+        <item name="android:paddingBottom">8dip</item>
+        <item name="android:paddingLeft">4dip</item>
+        <item name="android:paddingRight">4dip</item>
     </style>
     
     <style name="button_a">

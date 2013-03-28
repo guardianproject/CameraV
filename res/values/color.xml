@@ -8,4 +8,5 @@
     <drawable name="peuter">#ff6d6d6d</drawable>
     <drawable name="trans_grey_1">#80ffffff</drawable>
     <drawable name="trans_black">#80000000</drawable>
+    <drawable name="blue">#ff09bdff</drawable>
 </resources>

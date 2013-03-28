@@ -3,50 +3,14 @@
     android:id="@+id/camera_chooser_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/black"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/faux_tab"
-        android:layout_width="match_parent"
-        android:layout_height="56dip"
-        android:orientation="vertical"
-        android:background="@drawable/black" >
-
-        <ImageView
-            android:id="@+id/tab_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_launcher"
-            android:scaleType="fitCenter" />
-
-        <View
-            android:id="@+id/tab_selector"
-            android:layout_width="match_parent"
-            android:layout_height="8dip"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/white" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/faux_tab"
-        android:orientation="vertical"
-        android:weightSum="1" >
-
-        <org.witness.iwitness.utils.app.VerticalButton style="@style/iwitness_camera_chooser_button"
-            android:id="@+id/launch_camera"
-            android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_weight="0.5"
-            android:text="@string/photo" />
-
-        <org.witness.iwitness.utils.app.VerticalButton style="@style/iwitness_camera_chooser_button"
-            android:id="@+id/launch_camcorder"
-            android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:layout_weight="0.5"
-            android:text="@string/video" />
-    </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_action_camera" />
 
 </RelativeLayout>

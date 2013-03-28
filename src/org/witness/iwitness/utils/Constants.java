@@ -1,26 +1,15 @@
 package org.witness.iwitness.utils;
 
-import android.support.v4.app.FragmentManager;
-
-public class Constants {
-	
-	public interface MainFragmentListener {
-		public void toggleCameraChooser(boolean show);
-		public boolean getCameraChooserIsShowing();
-		public FragmentManager returnFragmentManager();
-		public int[] getDimensions();
-		public void launchEditor(String mediaId);
-		public void launchCamera(int cameraType);
-		public void logoutUser();
-	}
-	
+public class Constants {	
 	public interface EditorActivityListener {
 		public void lockOrientation(int newOrientation);
 	}
 	
 	public interface HomeActivityListener {
-		public void toggleCameraChooser();
-		public void updateGalleryData();
+		public int[] getDimensions();
+		public void launchEditor(String mediaId);
+		public void logoutUser();
+		public void getContextualMenuFor(String mediaId);
 	}
 	
 	public class Codes {

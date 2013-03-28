@@ -2,7 +2,7 @@
 <resources>
     <string-array name="view_options">
         <item>@string/menu_grid</item>
-        <item>@string/menu_all_media</item>
+        <item>@string/menu_list</item>
     </string-array>
     
     <string-array name="sort_options">

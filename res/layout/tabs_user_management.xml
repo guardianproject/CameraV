@@ -15,8 +15,8 @@
   	    android:id="@+id/tab_label"
   	    android:layout_width="wrap_content"
   	    android:layout_height="wrap_content"
-  	    android:layout_alignParentRight="true"
-  	    android:layout_alignParentTop="true"
-  	    android:src="@drawable/ic_launcher" />
+  	    android:layout_centerInParent="true"
+  	    android:scaleType="fitXY"
+  	    android:src="@drawable/ic_action_profile" />
 
 </RelativeLayout>
