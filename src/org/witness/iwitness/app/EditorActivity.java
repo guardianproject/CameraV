@@ -1,9 +1,14 @@
 package org.witness.iwitness.app;
 
+import org.witness.informacam.InformaCam;
+import org.witness.informacam.utils.Constants.App.Storage.Type;
+import org.witness.informacam.utils.Constants.IManifest;
+import org.witness.informacam.utils.Constants.Models;
+import org.witness.informacam.utils.models.IMedia;
+import org.witness.informacam.utils.models.IMediaManifest;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.DetailsViewFragment;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
-import org.witness.iwitness.models.Media;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
@@ -36,7 +41,8 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	private final static String LOG = Constants.App.Editor.LOG;
 	private String packageName;
 	
-	private Media media;
+	private InformaCam informaCam;
+	private IMedia media;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,10 +85,10 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 			finish();
 		}
 		
-		media = new Media(EditorActivity.this, true);
 		// TODO: actually, you would init without the "true" flag, and then call inflate(mediaId)
-		// media = new Media(EditorActivity.this);
-		// media.inflate(getIntent().getStringExtra(Codes.Extras.MEDIA_ID));
+		IMediaManifest manifest = new IMediaManifest();
+		manifest.inflate(informaCam.ioService.getBytes(IManifest.MEDIA, Type.IOCIPHER));		
+		media = (IMedia) manifest.getObjectByParameter(manifest.media, Models.IMedia._ID, getIntent().getStringExtra(Codes.Extras.MEDIA_ID));
 		
 		if(media == null) {
 			setResult(Activity.RESULT_CANCELED);

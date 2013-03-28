@@ -2,11 +2,12 @@ package org.witness.iwitness.utils.adapters;
 
 import java.util.List;
 
+import org.witness.informacam.utils.models.IMedia;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.MainFragmentListener;
-import org.witness.iwitness.models.Media;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,11 +17,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class GalleryListAdapter extends BaseAdapter {
-	List<Media> media;
+	List<IMedia> media;
 	LayoutInflater li;
 	Activity a;
 		
-	public GalleryListAdapter(Activity a, List<Media> media) {
+	public GalleryListAdapter(Activity a, List<IMedia> media) throws NullPointerException {
 		this.media = media;
 		this.a = a;
 		li = LayoutInflater.from(a);
@@ -46,7 +47,10 @@ public class GalleryListAdapter extends BaseAdapter {
 		View view = li.inflate(R.layout.adapter_gallery_list, null);
 		
 		ImageView iv = (ImageView) view.findViewById(R.id.gallery_list);
-		iv.setImageBitmap(media.get(position).bitmapList);
+		
+		Bitmap bitmap = media.get(position).getBitmap(media.get(position).bitmapList);
+		iv.setImageBitmap(bitmap);
+		
 		iv.setOnClickListener(new OnClickListener() {
 
 			@Override

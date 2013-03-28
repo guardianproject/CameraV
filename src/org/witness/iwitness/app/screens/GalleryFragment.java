@@ -1,10 +1,7 @@
 package org.witness.iwitness.app.screens;
 
-import java.util.List;
-import java.util.Vector;
-
+import org.witness.informacam.InformaCam;
 import org.witness.iwitness.R;
-import org.witness.iwitness.models.Media;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.adapters.GalleryGridAdapter;
 import org.witness.iwitness.utils.adapters.GalleryListAdapter;
@@ -29,25 +26,24 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	View rootView;
 	Spinner displayToggle, displaySort;
 	ImageButton multiSelect;
-	
+
 	GridView mediaDisplayGrid;
 	GalleryGridAdapter galleryGridAdapter;
-	
+
 	ListView mediaDisplayList;
 	GalleryListAdapter galleryListAdapter;
 
 	Activity a;
 	boolean isInMultiSelectMode = false;
-	
-	private static final String LOG = Home.LOG;
-	private List<Media> TEST_MEDIA = new Vector<Media>();
+
+	private static final String LOG = Home.LOG;	
+	private InformaCam informaCam = InformaCam.getInstance();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initData();
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater li, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(li, container, savedInstanceState);
@@ -56,7 +52,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		displayToggle = (Spinner) rootView.findViewById(R.id.display_toggle);
 		displaySort = (Spinner) rootView.findViewById(R.id.display_sort);
 		multiSelect = (ImageButton) rootView.findViewById(R.id.multi_select);
-		
+
 		mediaDisplayGrid = (GridView) rootView.findViewById(R.id.media_display_grid);
 		mediaDisplayList = (ListView) rootView.findViewById(R.id.media_display_list);
 
@@ -66,7 +62,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
-		this.a = a;
+		this.a = a;		
 	}
 
 	@Override
@@ -74,33 +70,62 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		super.onActivityCreated(savedInstanceState);
 		initLayout(savedInstanceState);	
 	}
+
+	public void initData() {
+		try {
+			if(informaCam.mediaManifest.media != null) {
+				Log.d(LOG, informaCam.mediaManifest.asJson().toString());
+
+				galleryGridAdapter = new GalleryGridAdapter(a, informaCam.mediaManifest.media);
+				galleryListAdapter = new GalleryListAdapter(a, informaCam.mediaManifest.media);
+
+				mediaDisplayGrid.setAdapter(galleryGridAdapter);
+				mediaDisplayList.setAdapter(galleryListAdapter);
+			}
+		} catch(NullPointerException e) {
+			Log.e(LOG, e.toString());
+			e.printStackTrace();
+		}
+	}
+
+	public void updateData() {
+		mediaDisplayGrid.removeAllViewsInLayout();
+		mediaDisplayList.removeAllViewsInLayout();
+
+		initData();
+	}
 	
-	private void initData() {
-		Media media = new Media(a, true);
-		TEST_MEDIA.add(media);
+	public void toggleMultiSelectMode() {
+		multiSelect.setImageDrawable(a.getResources().getDrawable(isInMultiSelectMode ? R.drawable.ic_launcher : R.drawable.ic_launcher));
 		
-		galleryGridAdapter = new GalleryGridAdapter(a, TEST_MEDIA);
-		galleryListAdapter = new GalleryListAdapter(a, TEST_MEDIA);
+		if(isInMultiSelectMode) {
+			isInMultiSelectMode = false;
+		} else {
+			isInMultiSelectMode = true;
+		}
+		
+		initData();
+		
 	}
 
 	private void initLayout(Bundle savedInstanceState) {
 		ArrayAdapter<CharSequence> toggleAdapter = ArrayAdapter.createFromResource(a, R.array.view_options, android.R.layout.simple_spinner_item);
 		ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(a, R.array.sort_options, android.R.layout.simple_spinner_item);
-		
+
 		toggleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		
+
 		displayToggle.setAdapter(toggleAdapter);
 		displayToggle.setOnItemSelectedListener(this);
-		
+
 		displaySort.setAdapter(sortAdapter);
 		displaySort.setOnItemSelectedListener(this);
-		
+
 		mediaDisplayGrid.removeAllViewsInLayout();
-		mediaDisplayGrid.setAdapter(galleryGridAdapter);
-		
 		mediaDisplayList.removeAllViewsInLayout();
-		mediaDisplayList.setAdapter(galleryListAdapter);
+
+		initData();
+		toggleMultiSelectMode();
 	}
 
 	@Override
@@ -127,8 +152,8 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	@Override
 	public void onClick(View v) {
 		if(v == multiSelect) {
-			
+			toggleMultiSelectMode();
 		}
-		
+
 	}
 }

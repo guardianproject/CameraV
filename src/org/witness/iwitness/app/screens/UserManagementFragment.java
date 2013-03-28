@@ -2,7 +2,6 @@ package org.witness.iwitness.app.screens;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.utils.models.IUser;
-import org.witness.informacam.utils.models.Model;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.WipeActivity;
 import org.witness.iwitness.utils.Constants.App;
@@ -15,7 +14,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,6 +41,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener 
 	InformaCam informaCam = InformaCam.getInstance();
 	IUser user = informaCam.user;
 	
+	@SuppressWarnings("unused")
 	private static final String LOG = App.Home.LOG;
 	
 	@Override
@@ -64,6 +63,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener 
 		
 		alias = (TextView) rootView.findViewById(R.id.user_alias);
 		connectivity = (TextView) rootView.findViewById(R.id.user_connectivity);
+		
 		
 		return rootView;
 	}
@@ -110,6 +110,8 @@ public class UserManagementFragment extends Fragment implements OnClickListener 
 	private void initData() {
 		alias.setText(user.alias);
 		
+		int connectivityLabel = informaCam.uploaderService.isConnectedToTor() ? R.string.connected_to_tor : R.string.not_connected_to_tor;
+		connectivity.setText(getResources().getString(connectivityLabel));
 	}
 	
 	private static View generateTab(final LayoutInflater li, final int layout, final String labelText) {

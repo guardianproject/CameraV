@@ -66,7 +66,6 @@ public class MainFragment extends Fragment implements TabHost.OnTabChangeListene
 		initLayout(savedInstanceState);
 		
 		informaCam = InformaCam.getInstance();
-		informaCam.uploaderService.init();
 	}
 	
 	private void initLayout(Bundle savedInstanceState) {
@@ -152,6 +151,11 @@ public class MainFragment extends Fragment implements TabHost.OnTabChangeListene
 	@Override
 	public void toggleCameraChooser() {
 		tabHost.getTabWidget().getChildAt(0).setVisibility(visibility);
+	}
+	
+	@Override
+	public void updateGalleryData() {
+		((GalleryFragment) galleryFragment).initData();
 	}
 	
 }

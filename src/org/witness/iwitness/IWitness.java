@@ -49,14 +49,13 @@ public class IWitness extends Activity implements InformaCamEventListener {
 		setContentView(R.layout.activity_main);
 		
 		startService(new Intent(this, InformaCam.class));
-		h.postDelayed(new Runnable() {
+		h.post(new Runnable() {
 			@Override
 			public void run() {
 				Log.d(LOG, packageName + " activity is getting informa instance");
 				informaCam = InformaCam.getInstance(IWitness.this);
-				onUpdate(informaCam.getUpdate());
 			}
-		}, 1500);		
+		});		
 	}
 	
 	@Override
@@ -109,10 +108,7 @@ public class IWitness extends Activity implements InformaCamEventListener {
 		Log.d(LOG, "intent is: " + init.getAction());
 				
 		if(Intent.ACTION_MAIN.equals(init.getAction())) {
-			if(routeCode != Wizard.ROUTE_CODE && routeCode != Login.ROUTE_CODE) {
-				route = new Intent(this, HomeActivity.class);
-				routeCode = Home.ROUTE_CODE;
-			}
+			// do some extra logic if necessary (but not yet...)
 		} else if("android.media.action.IMAGE_CAPTURE".equals(init.getAction())) {
 			route = new Intent(this, CameraActivity.class);
 			routeCode = Camera.ROUTE_CODE;
@@ -140,6 +136,10 @@ public class IWitness extends Activity implements InformaCamEventListener {
 		case org.witness.informacam.utils.Constants.Codes.Messages.Login.DO_LOGIN:
 			route = new Intent(this, LoginActivity.class);
 			routeCode = Login.ROUTE_CODE;
+			break;
+		case org.witness.informacam.utils.Constants.Codes.Messages.Home.INIT:
+			route = new Intent(this, HomeActivity.class);
+			routeCode = Home.ROUTE_CODE;
 			break;
 		}
 		

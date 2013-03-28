@@ -1,5 +1,7 @@
 package org.witness.iwitness.app;
 
+import java.util.Iterator;
+
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.utils.Constants.App.Camera;
@@ -7,6 +9,7 @@ import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.CameraChooserFragment;
 import org.witness.iwitness.app.screens.MainFragment;
+import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants.MainFragmentListener;
 import org.witness.iwitness.utils.Constants;
@@ -34,6 +37,7 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 	private FanView mainHolder;
 	Fragment mainFragment, cameraChooserFragment;
 	boolean cameraChooserIsShowing = false;
+	boolean initUploads = true;
 	
 	InformaCam informaCam;
 		
@@ -51,14 +55,37 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 		
 		mainHolder.setFragments(mainFragment, cameraChooserFragment);
 		mainHolder.associate(HomeActivity.this);
+				
+		try {
+			Iterator<String> i = savedInstanceState.keySet().iterator();
+			while(i.hasNext()) {
+				String outState = i.next();
+				if(outState.equals(Home.TAG) && savedInstanceState.getBoolean(Home.TAG)) {
+					initUploads = false;
+				}
+			}
+		} catch(NullPointerException e) {}
 		
-		Log.d(LOG, packageName + " activity is getting informa instance");
-		informaCam = InformaCam.getInstance();
+		
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		Log.d(LOG, packageName + " activity is getting informa instance");
+		informaCam = InformaCam.getInstance(HomeActivity.this);
+		
+		if(initUploads) {
+			informaCam.uploaderService.init();
+		}
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putBoolean(Home.TAG, true);
+		
+		super.onSaveInstanceState(outState);
 	}
 	
 	@Override
@@ -138,11 +165,11 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 	
 	@Override
 	public void onActivityResult(int requestCode, int responseCode, Intent data) {
-		informaCam.associateActivity(this);
 		if(responseCode == Activity.RESULT_OK) {
 			switch(requestCode) {
 			case Codes.Routes.CAMERA:
-				Log.d(LOG, "we returned these values: " + data.getStringExtra(Codes.Extras.RETURNED_MEDIA));
+				Log.d(LOG, "we returned these values: " + data.getStringExtra(Codes.Extras.RETURNED_MEDIA));				
+				((HomeActivityListener) mainFragment).updateGalleryData();
 				
 				break;
 			case Codes.Routes.LOGOUT:
@@ -150,7 +177,6 @@ public class HomeActivity extends FragmentActivity implements MainFragmentListen
 				break;
 			}
 		}
-		Log.d(LOG, "HEY WE FINISHED A THING WITH RESULT " + responseCode);
 	}
 
 	@Override

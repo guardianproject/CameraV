@@ -20,6 +20,7 @@ public class Constants {
 	
 	public interface HomeActivityListener {
 		public void toggleCameraChooser();
+		public void updateGalleryData();
 	}
 	
 	public class Codes {
@@ -34,12 +35,12 @@ public class Constants {
 		}
 		
 		public class Media {
-			public static final int ORIENTATION_PORTRAIT = 1;
-			public static final int ORIENTATION_LANDSCAPE = 2;
+			public static final int ORIENTATION_PORTRAIT = org.witness.informacam.utils.Constants.Codes.Media.ORIENTATION_PORTRAIT;
+			public static final int ORIENTATION_LANDSCAPE = org.witness.informacam.utils.Constants.Codes.Media.ORIENTATION_LANDSCAPE;
 			
-			public static final int TYPE_IMAGE = 400;
-			public static final int TYPE_VIDEO = 401;
-			public static final int TYPE_JOURNAL = 402;
+			public static final int TYPE_IMAGE = org.witness.informacam.utils.Constants.Codes.Media.TYPE_IMAGE;
+			public static final int TYPE_VIDEO = org.witness.informacam.utils.Constants.Codes.Media.TYPE_VIDEO;
+			public static final int TYPE_JOURNAL = org.witness.informacam.utils.Constants.Codes.Media.TYPE_JOURNAL;
 		}
 
 		public class Extras {
@@ -81,6 +82,7 @@ public class Constants {
 		public class Home {
 			public final static String LOG = "******************** iWitness : HomeActivity ********************";
 			public static final int ROUTE_CODE = Codes.Routes.HOME;
+			public static final String TAG = "iWitness.Home";
 			
 			public class Tabs {
 				public class UserManagement {
