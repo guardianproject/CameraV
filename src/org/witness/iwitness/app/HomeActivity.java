@@ -128,7 +128,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		int[] dims = getDimensions();
 
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
-		tabHost.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		tabHost.setup();
 		
 		TabHost.TabSpec tab = tabHost.newTabSpec(UserManagementFragment.class.getName()).setIndicator(generateTab(li, R.layout.tabs_user_management));
@@ -193,11 +192,11 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	}
 
 	@Override
-	public void launchEditor(String mediaId) {
-		waiter.show();
+	public void launchEditor(IMedia media) {
 		
-		Log.d(LOG, "launching editor for " + mediaId);
-		Intent toEditor = new Intent(this, EditorActivity.class).putExtra(Codes.Extras.MEDIA_ID, mediaId);
+		
+		Log.d(LOG, "launching editor for " + media._id);
+		Intent toEditor = new Intent(this, EditorActivity.class).putExtra(Codes.Extras.EDIT_MEDIA, media.asJson().toString());
 		startActivityForResult(toEditor, Routes.EDITOR);
 		
 	}
@@ -236,7 +235,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		actions.add(action);
 		
 		action = new ContextMenuAction();
-		action.label = getResources().getString(R.string.export);
+		action.label = getResources().getString(R.string.send);
 		action.ocl = new OnClickListener() {
 
 			@Override
@@ -254,8 +253,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	}
 	
 	public void launchCamera() {
-		waiter = new Waiter(this);
-		waiter.Show();
 		
 		h.postDelayed(new Runnable() {
 			@Override
@@ -282,11 +279,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	
 	@Override
 	public void onActivityResult(int requestCode, int responseCode, Intent data) {
-		super.onActivityResult(requestCode, responseCode, data);
-		try {
-			waiter.cancel();
-		} catch(NullPointerException e) {}
-		
 		if(responseCode == Activity.RESULT_OK) {
 			switch(requestCode) {
 			case Codes.Routes.CAMERA:

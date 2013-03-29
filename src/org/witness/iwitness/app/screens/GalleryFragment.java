@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -35,7 +36,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	View rootView;
 	Spinner displayToggle, displaySort;
 	ImageButton multiSelect, displaySortTrigger;
-	Button displayToggleTrigger;
+	Button displayToggleTrigger, batchShare, batchDelete;
 
 	GridView mediaDisplayGrid;
 	GalleryGridAdapter galleryGridAdapter;
@@ -43,6 +44,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	ListView mediaDisplayList;
 	GalleryListAdapter galleryListAdapter;
 	RelativeLayout noMedia;
+	LinearLayout batchEditHolder;
 
 	Activity a;
 	
@@ -78,6 +80,14 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		mediaDisplayList = (ListView) rootView.findViewById(R.id.media_display_list);
 		
 		noMedia = (RelativeLayout) rootView.findViewById(R.id.media_display_no_media);
+		
+		batchEditHolder = (LinearLayout) rootView.findViewById(R.id.media_batch_edit_holder);
+		
+		batchShare = (Button) rootView.findViewById(R.id.media_batch_share);
+		batchShare.setOnClickListener(this);
+
+		batchDelete = (Button) rootView.findViewById(R.id.media_batch_delete);
+		batchDelete.setOnClickListener(this);
 
 		return rootView;
 	}
@@ -139,8 +149,10 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		multiSelect.setImageDrawable(a.getResources().getDrawable(isInMultiSelectMode ? R.drawable.ic_action_selected : R.drawable.ic_action_select));
 		if(isInMultiSelectMode) {
 			batch = new Vector<IMedia>();
+			batchEditHolder.setVisibility(View.VISIBLE);
 		} else {
 			batch = null;
+			batchEditHolder.setVisibility(View.GONE);
 			
 		}
 		initData();
@@ -204,6 +216,13 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 			displaySort.performClick();
 		} else if(v == displayToggleTrigger) {
 			displayToggle.performClick();
+		} else if(v == batchShare) {
+			// TODO
+		} else if(v == batchDelete) {
+			for(IMedia m : batch) {
+				m.delete();
+			}
+			updateData();
 		}
 
 	}
@@ -217,7 +236,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int viewId, long l) {
 		if(!isInMultiSelectMode) {
-			((HomeActivityListener) a).launchEditor(((IMedia) informaCam.mediaManifest.media.get((int) l))._id);
+			((HomeActivityListener) a).launchEditor(((IMedia) informaCam.mediaManifest.media.get((int) l)));
 		} else {
 			batch.add((IMedia) informaCam.mediaManifest.media.get((int) l));
 		}

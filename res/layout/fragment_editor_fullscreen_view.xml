@@ -24,10 +24,7 @@
             android:layout_marginBottom="1dip"
             android:layout_marginLeft="1dip"
             android:background="@drawable/trans_grey_1"
-            android:paddingRight="16dip"
-            android:paddingTop="16dip"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_launcher" />
+            android:scaleType="centerInside" />
 
         <LinearLayout
             android:id="@+id/controls_holder_landscape"

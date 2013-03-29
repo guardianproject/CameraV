@@ -38,6 +38,14 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener 
 		
 		rootView = li.inflate(R.layout.fragment_editor_fullscreen_view, null);
 		toggleControls = (ImageButton) rootView.findViewById(R.id.toggle_controls);
+		
+		int controlHolder = R.id.controls_holder_landscape;
+		
+		if(getArguments().getInt(Codes.Extras.SET_ORIENTATION) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+			controlHolder = R.id.controls_holder_portrait;
+		}
+		
+		controlsHolder = (LinearLayout) rootView.findViewById(controlHolder);
 				
 		return rootView;
 	}
@@ -53,7 +61,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		((EditorActivityListener) a).lockOrientation(getArguments().getInt(Codes.Extras.SET_ORIENTATION));
+		
 		if(getArguments().getInt(Codes.Extras.SET_ORIENTATION) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
 			controlsHolder = (LinearLayout) rootView.findViewById(R.id.controls_holder_landscape);
 		} else {
@@ -66,18 +74,28 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener 
 	
 	private void initLayout() {
 		toggleControls.setOnClickListener(this);
+		toggleControls();
+	}
+	
+	private void toggleControls() {
+		int d = R.drawable.ic_edit_show_tags;
+		
+		if(controlsAreShowing) {
+			controlsHolder.setVisibility(View.GONE);
+			d = R.drawable.ic_edit_hide_tags;
+			controlsAreShowing = false;
+		} else {
+			controlsHolder.setVisibility(View.VISIBLE);
+			controlsAreShowing = true;
+		}
+		
+		toggleControls.setImageDrawable(a.getResources().getDrawable(d));
 	}
 
 	@Override
 	public void onClick(View v) {
 		if(v == toggleControls) {
-			if(controlsAreShowing) {
-				controlsHolder.setVisibility(View.GONE);
-				controlsAreShowing = false;
-			} else {
-				controlsHolder.setVisibility(View.VISIBLE);
-				controlsAreShowing = true;
-			}
+			toggleControls();
 		}
 		
 	}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="10dip"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_marginBottom="10dip"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <EditText
+            android:id="@+id/media_quick_note_prompt"
+            style="@style/iwitness_edittext"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:hint="@string/add_a_quick_note" />
+
+        <ImageButton
+            android:id="@+id/media_audio_note_prompt"
+            style="@style/button_d"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_context_audio_note" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/media_quick_note_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dip" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <TextView
+            android:id="@+id/media_audio_note_title"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8" />
+
+        <ImageButton
+            android:id="@+id/media_audio_note_play_toggle"
+            style="@style/button_a"
+            android:layout_width="0dip"
+            android:layout_height="46dip"
+            android:layout_weight="0.2"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_context_play" />
+    </LinearLayout>
+
+    <include layout="@layout/extras_divider_blue" />
+
+</LinearLayout>

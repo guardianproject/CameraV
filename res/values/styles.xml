@@ -58,9 +58,30 @@
         <item name="android:paddingRight">4dip</item>
     </style>
     
+    <style name="iwitness_edittext">
+        <item name="android:background">@drawable/extras_button_d_background_inactive</item>
+        <item name="android:padding">8dip</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+    
     <style name="button_a">
-        <item name="android:background">@drawable/white</item>
+        <item name="android:background">@drawable/extras_button_a_selector</item>
         <item name="android:padding">5dip</item>
+    </style>
+    
+    <style name="button_b">
+        <item name="android:background">@drawable/black</item>
+        <item name="android:textColor">@drawable/white</item>
+    </style>
+    
+    <style name="button_c">
+        <item name="android:background">@drawable/extras_button_c_selector</item>
+        <item name="android:textColor">@drawable/trans_grey_1</item>
+    </style>
+    
+    <style name="button_d">
+        <item name="android:background">@drawable/extras_button_d_selector</item>
+        <item name="android:textColor">@drawable/black</item>
     </style>
 
 </resources>

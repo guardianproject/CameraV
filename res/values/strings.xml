@@ -25,7 +25,15 @@
 	<string name="delete">Delete</string>
 	<string name="rename">Rename</string>
 	<string name="export">Export</string>
+	<string name="send">Send\u2026</string>
 	<string name="your_gallery_is_hungry">Your gallery is hungry for photos and videos.</string>
 	<string name="swipe_left_for_cameras">Swipe left for cameras.</string>
 	<string name="all_media">All Media</string>
+	<string name="share">Share</string>
+	<string name="add_a_quick_note">Add a quick note \u2026</string>
+	<string name="untitled">Untitled</string>
+	<string name="x_tags">%1$d Tag%2$s</string>
+	<string name="x_messages">%1$d Message%2$s</string>
+	<string name="x_location">%1$f, %2$f</string>
+	<string name="location_unknown">Location unknown</string>
 </resources>

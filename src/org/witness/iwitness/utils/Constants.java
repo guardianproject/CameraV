@@ -1,13 +1,15 @@
 package org.witness.iwitness.utils;
 
+import org.witness.informacam.models.IMedia;
+
 public class Constants {	
 	public interface EditorActivityListener {
-		public void lockOrientation(int newOrientation);
+		
 	}
 	
 	public interface HomeActivityListener {
 		public int[] getDimensions();
-		public void launchEditor(String mediaId);
+		public void launchEditor(IMedia media);
 		public void logoutUser();
 		public void getContextualMenuFor(String mediaId);
 	}
@@ -33,7 +35,7 @@ public class Constants {
 		}
 
 		public class Extras {
-			public final static String MEDIA_ID = "media_id";
+			public final static String EDIT_MEDIA = "edit_media";
 			public static final String SET_ORIENTATION = "set_orientation";
 			public static final String WIZARD_SUPPLEMENT = org.witness.informacam.utils.Constants.Codes.Extras.WIZARD_SUPPLEMENT;
 			public static final String MESSAGE_CODE = org.witness.informacam.utils.Constants.Codes.Extras.MESSAGE_CODE;

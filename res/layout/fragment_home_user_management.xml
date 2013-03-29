@@ -32,7 +32,7 @@
                 style="@style/iwitness_h2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="You" />
+                android:text="@string/you" />
 
             <TextView
                 android:id="@+id/user_connectivity"
@@ -41,22 +41,20 @@
                 android:text="@string/connected_to_tor" />
         </LinearLayout>
 
-        <ImageButton
+        <ImageButton style="@style/button_a"
             android:id="@+id/emergency_wipe"
-            style="@style/button_a"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="0.175"
-            android:scaleType="fitXY"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_context_panic" />
 
-        <ImageButton
+        <ImageButton style="@style/button_a"
             android:id="@+id/to_settings"
-            style="@style/button_a"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="0.175"
-            android:scaleType="fitXY"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_context_settings" />
     </LinearLayout>
 

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/gallery_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/white"
-    android:orientation="vertical" >
+    android:background="@drawable/white" >
 
     <RelativeLayout
         android:id="@+id/media_manager_holder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true" >
 
         <LinearLayout
             android:id="@+id/options_holder"
@@ -155,5 +155,30 @@
             android:gravity="center"
             android:visibility="gone" />
     </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/media_batch_edit_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:padding="0dip"
+        android:weightSum="1"
+        android:visibility="gone" >
+        <Button style="@style/button_b"
+            android:id="@+id/media_batch_share"
+            android:text="@string/share"
+            android:layout_width="0dip"
+            android:layout_margin="0dip"
+            android:layout_marginRight="1dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5" />
+        <Button style="@style/button_b"
+            android:id="@+id/media_batch_delete"
+            android:text="@string/delete"
+            android:layout_width="0dip"
+            android:layout_marginLeft="1dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5" />
+    </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

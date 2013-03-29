@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="0dip"
+    android:orientation="vertical"
+    android:padding="0dip" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/details_media_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dip"
+                android:padding="0dip"
+                android:scaleType="fitXY" />
+
+            <FrameLayout
+                android:id="@+id/details_form_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="6dip"
+                android:paddingRight="6dip" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
