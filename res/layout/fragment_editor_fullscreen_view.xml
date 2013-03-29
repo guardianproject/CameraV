@@ -10,10 +10,11 @@
         android:layout_height="match_parent"
         android:padding="0dip" >
 
-        <FrameLayout
+        <ImageView
             android:id="@+id/media_holder"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:scaleType="matrix" />
 
         <ImageButton
             android:id="@+id/toggle_controls"

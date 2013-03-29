@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<h:html xmlns:jr="http://openrosa.org/javarosa"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:kobo="http://www.kobotoolbox.org/xmlns"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.w3.org/1999/xhtml" >
+    <h:head>
+        <h:title ref="jr:itext(&apos;iWitness_top_level&apos;)" >iWitness Top Level Annotations</h:title>
+        <model>
+            <instance>
+                <iWitness_top_level id="iWitness_top_level" >
+                    <iW_quick_note />
+                    <iW_audio_note />
+                </iWitness_top_level>
+            </instance>
+
+            <itext>
+                <bind
+                    id="iW_quick_note"
+                    nodeset="/iWitness_v_1_0/iW_name"
+                    type="xsd:string" />
+
+                <bind
+                    id="iW_audio_note"
+                    nodeset="/iWitness_top_level/iW_audio_note"
+                    type="binary" />
+            </itext>
+
+            <translation lang="English" >
+                <text id="iWitness_top_level" >
+                    <value>iWitness Top Level Annotations</value>
+                </text>
+
+                <text id="iW_quick_note" >
+                    <value>Add a quick note...</value>
+                </text>
+
+                <text id="iW_audio_note" >
+                    <value>Add an audio note...</value>
+                </text>
+            </translation>
+        </model>
+    </h:head>
+
+    <h:body>
+        <input bind="iW_quick_note" >
+            <label ref="jr:itext(&apos;iW_quick_note&apos;)" />
+        </input>
+
+        <upload
+            bind="iW_audio_note"
+            mediatype="audio/*" >
+            <label ref="jr:itext(&apos;iW_audio_note&apos;)" />
+        </upload>
+    </h:body>
+</h:html>

@@ -14,7 +14,6 @@
           <iW_religion/>
           <iW_political_affiliation/>
           <iW_gender/>
-          <iW_record_annotation />
         </iWitness_v_1_0>
       </instance>
       <bind id="iW_individual_identifiers" nodeset="/iWitness_v_1_0/iW_individual_identifiers" type="xsd:string" required="true()"/>
@@ -26,7 +25,6 @@
       <bind id="iW_religion" nodeset="/iWitness_v_1_0/iW_religion" type="xsd:string"/>
       <bind id="iW_political_affiliation" nodeset="/iWitness_v_1_0/iW_political_affiliation" type="xsd:string"/>
       <bind id="iW_gender" nodeset="/iWitness_v_1_0/iW_gender" type="xsd:string"/>
-      <bind id="iW_record_annotation" nodeset="/iWitness_v_1_0/iW_record_annotation" type="binary" />
       <itext>
         <translation lang="English">
           <text id="iWitness_v_1_0">
@@ -79,9 +77,6 @@
           </text>
           <text id="iW_gender_2">
             <value>Male</value>
-          </text>
-          <text id="iW_record_annotation">
-          	<value>Record Audio Annotation?</value>
           </text>
         </translation>
       </itext>
@@ -140,8 +135,5 @@
         <value>2</value>
       </item>
     </select1>
-    <upload bind="iW_record_annotation" mediatype="audio/*">
-    	<label ref="jr:itext('iW_record_annotation')" />
-    </upload>
   </h:body>
 </h:html>
