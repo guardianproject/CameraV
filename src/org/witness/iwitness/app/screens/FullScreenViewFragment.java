@@ -2,6 +2,7 @@ package org.witness.iwitness.app.screens;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.IMedia;
+import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.utils.Constants.App;
@@ -147,8 +148,8 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		bfo.inJustDecodeBounds = true;
 		bfo.inPreferredConfig = Bitmap.Config.RGB_565;
 
-		info.guardianproject.iocipher.FileInputStream bFile = informaCam.ioService.getFileInputStream(media.bitmap); 
-		bitmap = BitmapFactory.decodeStream(bFile);
+		byte[] bytes = informaCam.ioService.getBytes(media.bitmap, Type.IOCIPHER);
+		bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
 		dims = informaCam.getDimensions();
 		// Ratios between the display and the image
@@ -168,7 +169,8 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		bfo.inSampleSize = inSampleSize;
 		bfo.inJustDecodeBounds = false;
 
-		bitmap = BitmapFactory.decodeStream(bFile, null, bfo);
+		bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bfo);
+		bytes = null;
 
 		if (media.dcimEntry.exif.orientation == ExifInterface.ORIENTATION_ROTATE_90) {
 			Log.d(LOG, "Rotating Bitmap 90");
@@ -242,5 +244,4 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 }
