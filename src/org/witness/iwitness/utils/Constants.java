@@ -81,6 +81,22 @@ public class Constants {
 				public final static int DETECTED_COLOR = 0x00000000;
 				public final static int OBSCURED_COLOR = 0x00000000;
 			}
+			
+			public class Forms {
+				public static final String OVERVIEW_FORM = "iWitness Top Level Annotations";
+				public static final String TAG_FORM = "iWitness v 1.0";
+				
+				public class OverviewForm {
+					public static final String TAG = "iWitness Top Level Annotations";
+					public static final String QUICK_NOTE_PROMPT = "iW_quick_note";
+					public static final String AUDIO_NOTE_PROMPT = "iW_audio_note";
+					
+				}
+				
+				public class TagForm {
+					public static final String TAG = "iWitness v 1.0";
+				}
+			}
 
 
 			// Maximum zoom scale

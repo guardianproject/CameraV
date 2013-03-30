@@ -1,9 +1,12 @@
 package org.witness.iwitness.app;
 
+import java.util.List;
+
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.IManifest;
-import org.witness.informacam.utils.Constants.Models;
+import org.witness.informacam.models.IForm;
 import org.witness.informacam.models.IMedia;
 import org.witness.informacam.models.IMediaManifest;
 import org.witness.iwitness.R;
@@ -40,12 +43,14 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 
 	ActionBar actionBar;
 	ImageButton abNavigationBack, abShareMedia, abToIBA;
+	
 
 	private final static String LOG = Constants.App.Editor.LOG;
 	private String packageName;
 
 	private InformaCam informaCam;
 	public IMedia media;
+	public List<IForm> availableForms;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -94,13 +99,15 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 		manifest.inflate(informaCam.ioService.getBytes(IManifest.MEDIA, Type.IOCIPHER));		
 		media = new IMedia();
 		media.inflate(getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA).getBytes());
+		
+		availableForms = FormUtility.getAvailableForms();
 
 		if(media == null) {
 			setResult(Activity.RESULT_CANCELED);
 			finish();
 		}
 
-		Log.d(LOG, "INITING MEDIA FOR EDIT:\n" + media.asJson().toString());
+		Log.d(LOG, "INITING MEDIA FOR EDIT:\n" + media.asJson().toString());		
 	}
 
 	private void initLayout() {

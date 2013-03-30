@@ -1,10 +1,13 @@
 package org.witness.iwitness.app.screens.forms;
 
+import org.witness.informacam.models.IForm;
 import org.witness.informacam.models.IMedia;
+import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
+import org.witness.iwitness.utils.Constants.App.Editor.Forms;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -28,6 +31,8 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 	
 	Activity a;
 	IMedia media;
+	IForm form = null;
+	FormUtility formUtility;
 	
 	TextView alias, dateCaptured, timeCaptured, location, quickNoteHolder, messagesHolder, tagsHolder;
 	EditText quickNotePrompt;
@@ -93,6 +98,7 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 		overviewFormRoot.addView(tagsAndMessagesView);
 		
 		initData();
+		initForms();
 	}
 	
 	private void initData() {
@@ -114,6 +120,18 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 		timeCaptured.setText(dateAndTime[1]);
 		
 	}
+	
+	private void initForms() {
+		for(IForm form : ((EditorActivity) a).availableForms) {
+			if(form.namespace.equals(Forms.OverviewForm.TAG)) {
+				form.associate(a, quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
+				form.associate(a, audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
+				
+				this.form = form;
+				break;
+			}
+		}
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -126,6 +144,7 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 		if(event != null) {
 			if(!event.isShiftPressed()) {
 				quickNoteHolder.setText(quickNotePrompt.getText().toString());
+				form.answer(Forms.OverviewForm.QUICK_NOTE_PROMPT);
 			}
 			return true;
 		}

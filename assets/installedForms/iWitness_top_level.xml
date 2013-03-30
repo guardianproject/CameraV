@@ -13,32 +13,32 @@
                     <iW_audio_note />
                 </iWitness_top_level>
             </instance>
+			<bind
+				id="iW_quick_note"
+				nodeset="/iWitness_top_level/iW_quick_note"
+                type="xsd:string" />
 
+            <bind
+                id="iW_audio_note"
+                nodeset="/iWitness_top_level/iW_audio_note"
+                type="binary" />
             <itext>
-                <bind
-                    id="iW_quick_note"
-                    nodeset="/iWitness_v_1_0/iW_name"
-                    type="xsd:string" />
+                <translation lang="English" >
+               		<text id="iWitness_top_level" >
+                    	<value>iWitness Top Level Annotations</value>
+                	</text>
 
-                <bind
-                    id="iW_audio_note"
-                    nodeset="/iWitness_top_level/iW_audio_note"
-                    type="binary" />
+                	<text id="iW_quick_note" >
+                    	<value>Add a quick note...</value>
+                	</text>
+
+                	<text id="iW_audio_note" >
+                    	<value>Add an audio note...</value>
+                	</text>
+            	</translation>
             </itext>
 
-            <translation lang="English" >
-                <text id="iWitness_top_level" >
-                    <value>iWitness Top Level Annotations</value>
-                </text>
-
-                <text id="iW_quick_note" >
-                    <value>Add a quick note...</value>
-                </text>
-
-                <text id="iW_audio_note" >
-                    <value>Add an audio note...</value>
-                </text>
-            </translation>
+            
         </model>
     </h:head>
 

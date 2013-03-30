@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.ui.WizardActivity;
@@ -100,7 +101,7 @@ public class IWitness extends Activity implements InformaCamEventListener, Infor
 			
 			switch(requestCode) {
 			case Codes.Routes.WIZARD:
-				
+				FormUtility.installIncludedForms(this);
 				break;
 			case Codes.Routes.CAMERA:
 				route = new Intent(this, EditorActivity.class);
@@ -172,6 +173,7 @@ public class IWitness extends Activity implements InformaCamEventListener, Infor
 				informaCam = InformaCam.getInstance(IWitness.this);
 				
 				if(informaCam.isAbsolutelyLoggedIn()) {
+					Log.d(LOG, "WE CAN BYPASS AUTH (isAbsolutelyLoggedIn = " + String.valueOf(informaCam.isAbsolutelyLoggedIn()) + ")");
 					route = new Intent(IWitness.this, HomeActivity.class);
 					routeCode = Home.ROUTE_CODE;
 					
