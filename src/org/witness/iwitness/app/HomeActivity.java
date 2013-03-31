@@ -6,8 +6,11 @@ import java.util.Vector;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.ui.CameraActivity;
+import org.witness.informacam.utils.InformaCamBroadcaster;
+import org.witness.informacam.utils.Constants.Actions;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.Models;
+import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 import org.witness.informacam.models.IMedia;
 
 import org.witness.iwitness.R;
@@ -31,6 +34,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -48,7 +52,7 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.LinearLayout.LayoutParams;
 
-public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamEventListener {
+public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamEventListener, InformaCamStatusListener {
 	Intent init;
 	private final static String LOG = Constants.App.Home.LOG;
 	private String packageName;
@@ -71,6 +75,10 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	Handler h = new Handler();
 	Waiter waiter;
 	MediaActionMenu mam;
+	
+	List<InformaCamBroadcaster> icb = null;
+	Intent toEditor;
+	Intent toCamera;
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +102,13 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			e.printStackTrace();
 		}
 		
+		toEditor = new Intent(this, EditorActivity.class);
+		toCamera = new Intent(this, CameraActivity.class);
+		
+		icb = new Vector<InformaCamBroadcaster>();
+		icb.add(new InformaCamBroadcaster(this, new IntentFilter(Actions.INFORMACAM_START)));
+		icb.add(new InformaCamBroadcaster(this, new IntentFilter(Actions.INFORMACAM_STOP)));
+		
 		userManagementFragment = Fragment.instantiate(this, UserManagementFragment.class.getName());
 		galleryFragment = Fragment.instantiate(this, GalleryFragment.class.getName());
 		cameraFragment = Fragment.instantiate(this, CameraFragment.class.getName());
@@ -106,6 +121,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		if(icb != null) {
+			for(InformaCamBroadcaster icb_ : icb) {
+				registerReceiver(icb_, ((InformaCamBroadcaster) icb_).intentFilter);
+			}
+		}
 		
 		Log.d(LOG, packageName + " activity is getting informa instance");
 		informaCam = InformaCam.getInstance(HomeActivity.this);
@@ -179,6 +200,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void onPause() {
 		super.onPause();
+		
+		if(icb != null) {
+			for(InformaCamBroadcaster icb_ : icb) {
+				this.unregisterReceiver(icb_);
+			}
+		}
 	}
 	
 	@Override
@@ -195,12 +222,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void launchEditor(IMedia media) {
+		toEditor.putExtra(Codes.Extras.EDIT_MEDIA, media.asJson().toString());
 		informaCam.startInforma();
-		
-		Log.d(LOG, "launching editor for " + media._id);
-		Intent toEditor = new Intent(this, EditorActivity.class).putExtra(Codes.Extras.EDIT_MEDIA, media.asJson().toString());
-		startActivityForResult(toEditor, Routes.EDITOR);
-		
+		Log.d(LOG, "launching editor for " + media._id);		
 	}
 	
 	@Override
@@ -258,7 +282,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		h.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				Intent toCamera = new Intent(HomeActivity.this, CameraActivity.class);
 				startActivityForResult(toCamera, Routes.CAMERA);
 			}
 		}, 1000);
@@ -376,5 +399,17 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			return fragments.size();
 		}
 
+	}
+
+	@Override
+	public void onInformaCamStart() {
+		startActivityForResult(toEditor, Routes.EDITOR);
+		
+	}
+
+	@Override
+	public void onInformaCamStop() {
+		// TODO Auto-generated method stub
+		
 	}
 }
