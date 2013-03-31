@@ -15,6 +15,8 @@ import org.witness.iwitness.app.screens.CameraFragment;
 import org.witness.iwitness.app.screens.GalleryFragment;
 import org.witness.iwitness.app.screens.UserManagementFragment;
 import org.witness.iwitness.app.screens.menus.MediaActionMenu;
+import org.witness.iwitness.app.screens.popups.RenamePopup;
+import org.witness.iwitness.app.screens.popups.SharePopup;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants;
@@ -193,7 +195,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void launchEditor(IMedia media) {
-		
+		informaCam.startInforma();
 		
 		Log.d(LOG, "launching editor for " + media._id);
 		Intent toEditor = new Intent(this, EditorActivity.class).putExtra(Codes.Extras.EDIT_MEDIA, media.asJson().toString());
@@ -227,8 +229,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				((IMedia) informaCam.mediaManifest.getById(mediaId)).rename();
-				
+				new RenamePopup(HomeActivity.this, ((IMedia) informaCam.mediaManifest.getById(mediaId)));
 			}
 			
 		};
@@ -241,7 +242,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				((IMedia) informaCam.mediaManifest.getById(mediaId)).export();
+				new SharePopup(HomeActivity.this, ((IMedia) informaCam.mediaManifest.getById(mediaId)));
 				
 			}
 			
@@ -289,6 +290,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				break;
 			case Codes.Routes.LOGOUT:
 				logoutUser();
+				break;
+			case Codes.Routes.EDITOR:
+				informaCam.stopInforma();
 				break;
 			}
 		}

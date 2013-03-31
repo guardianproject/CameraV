@@ -1,6 +1,9 @@
 package org.witness.iwitness.app.screens.wizard;
 
+import info.guardianproject.iocipher.File;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -10,8 +13,10 @@ import org.json.JSONTokener;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.ui.adapters.OrganizationAdapter;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
+import org.witness.informacam.utils.Constants.IManifest;
 import org.witness.informacam.utils.Constants.WizardListener;
 import org.witness.informacam.models.IConnection;
+import org.witness.informacam.models.IInstalledOrganizations;
 import org.witness.informacam.models.IOrganization;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App;
@@ -68,7 +73,7 @@ public class AddOrganizationsPreference extends Fragment implements WizardListen
 	private void initData() {
 		try {
 			if(a.getAssets().list("includedOrganizations").length > 0) {
-				List<IOrganization> includedOrganizations = new Vector<IOrganization>();
+				List<IOrganization> includedOrganizations = new ArrayList<IOrganization>();
 				for(String organizationManifest : a.getAssets().list("includedOrganizations")) {
 					IOrganization organization = new IOrganization();
 					organization.inflate((JSONObject) new JSONTokener(
@@ -83,6 +88,10 @@ public class AddOrganizationsPreference extends Fragment implements WizardListen
 				
 				organizationAdapter = new OrganizationAdapter(includedOrganizations, a);
 				organizationsHolder.setAdapter(organizationAdapter);
+				
+				IInstalledOrganizations installedOrganizations = new IInstalledOrganizations();
+				installedOrganizations.organizations = includedOrganizations;
+				informaCam.saveState(installedOrganizations, new info.guardianproject.iocipher.File(IManifest.ORGS));
 			}
 		} catch(IOException e) {
 			Log.e(LOG, e.toString());

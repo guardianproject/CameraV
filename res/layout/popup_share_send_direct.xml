@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dip"
+    android:id="@+id/send_direct_root" >
+    <TextView style="@style/iwitness_h3"
+        android:id="@+id/send_directly_no_organizations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/there_are_no_organizations" />
+    <ListView
+        android:id="@+id/send_directly_organization_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+        
+
+</LinearLayout>

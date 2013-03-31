@@ -107,9 +107,6 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	public void initData() {
 		try {
 			if(informaCam.mediaManifest.media != null && informaCam.mediaManifest.media.size() > 0) {
-				Log.d(LOG, "the manifest has " + informaCam.mediaManifest.media.size() + " entries now.");
-				Log.d(LOG, informaCam.mediaManifest.asJson().toString());
-
 				galleryGridAdapter = new GalleryGridAdapter(a, informaCam.mediaManifest.media);
 				galleryListAdapter = new GalleryListAdapter(a, informaCam.mediaManifest.media);
 

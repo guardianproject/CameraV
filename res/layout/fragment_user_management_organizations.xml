@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/organization_list_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/organization_list_root" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dip" >
 
-    <LinearLayout
+    <Button style="@style/button_d"
+        android:id="@+id/organizations_export_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
-        <ListView
-            android:id="@+id/organizations_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+        android:text="@string/export_my_credentials"
+        android:drawableLeft="@drawable/ic_context_slide_right"
+        android:paddingLeft="10dip" />
 
-</ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/organizations_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

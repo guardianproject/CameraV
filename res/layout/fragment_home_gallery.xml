@@ -166,7 +166,7 @@
         android:visibility="gone" >
         <Button style="@style/button_b"
             android:id="@+id/media_batch_share"
-            android:text="@string/share"
+            android:text="@string/send"
             android:layout_width="0dip"
             android:layout_margin="0dip"
             android:layout_marginRight="1dip"

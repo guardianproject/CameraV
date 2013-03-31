@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/send_via_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dip" >
+
+    <RelativeLayout
+        android:id="@+id/send_via_encrypt_holder"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:visibility="gone" >
+
+        <CheckBox
+            android:id="@+id/send_via_encrypt_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:id="@+id/send_via_encrypt_prompt"
+            style="@style/button_a"
+            android:layout_toRightOf="@+id/send_via_encrypt_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/send_encrypted_to_organization" />
+
+        <Spinner
+            android:id="@+id/send_via_encrypt_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/send_via_encrypt_prompt" />
+    </RelativeLayout>
+    <TextView style="@style/iwitness_h3"
+        android:id="@+id/send_via_warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sharing_outside_of_informacam" />
+    <Button style="@style/button_c"
+        android:layout_marginTop="10dip"
+        android:id="@+id/send_via_commit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/share" />
+
+</LinearLayout>

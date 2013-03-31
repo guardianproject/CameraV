@@ -12,12 +12,14 @@ import org.witness.iwitness.utils.Constants.HomeActivityListener;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,6 +31,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener 
 	TabHost tabHost;
 	
 	ImageButton emergencyWipe, toSettings, thumbnail;
+	Button exportCredentials;
 	
 	TextView alias, connectivity;
 	ListView notificationsHolder, organizationsHolder;
@@ -102,6 +105,8 @@ public class UserManagementFragment extends Fragment implements OnClickListener 
 		tabHost.addTab(tab);
 		
 		organizationsHolder = (ListView) v.findViewById(R.id.organizations_list_view);
+		exportCredentials = (Button) v.findViewById(R.id.organizations_export_key);
+		exportCredentials.setOnClickListener(this);
 		
 		tabHost.setCurrentTab(0);
 		
@@ -112,6 +117,17 @@ public class UserManagementFragment extends Fragment implements OnClickListener 
 		
 		int connectivityLabel = informaCam.uploaderService.isConnectedToTor() ? R.string.connected_to_tor : R.string.not_connected_to_tor;
 		connectivity.setText(getResources().getString(connectivityLabel));
+	}
+	
+	private void exportCredentials() {
+		java.io.File credentials = informaCam.ioService.getPublicCredentials();
+		Intent intent = new Intent()
+			.setAction(Intent.ACTION_SEND)
+			.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(credentials))
+			.setType("file/");
+		
+		startActivity(Intent.createChooser(intent, getString(R.string.send)));
+		
 	}
 	
 	private static View generateTab(final LayoutInflater li, final int layout, final String labelText) {
@@ -130,6 +146,8 @@ public class UserManagementFragment extends Fragment implements OnClickListener 
 			
 		} else if(v == thumbnail) {
 			
+		} else if(v == exportCredentials) {
+			exportCredentials();
 		}
 	}
 	

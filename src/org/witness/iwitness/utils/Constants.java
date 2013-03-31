@@ -120,6 +120,10 @@ public class Constants {
 				public class CameraChooser {
 					public final static String TAG = App.CameraChooser.TAG;
 				}
+				
+				public class SharePopup {
+					public final static String TAG = "share_popup";
+				}
 			}
 		}
 

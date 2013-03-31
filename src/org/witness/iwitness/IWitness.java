@@ -122,7 +122,7 @@ public class IWitness extends Activity implements InformaCamEventListener, Infor
 	
 	private void routeByIntent() {
 		Log.d(LOG, "intent is: " + init.getAction());
-				
+
 		if(Intent.ACTION_MAIN.equals(init.getAction())) {
 			// do some extra logic if necessary (but not yet...)
 		} else if("android.media.action.IMAGE_CAPTURE".equals(init.getAction())) {
