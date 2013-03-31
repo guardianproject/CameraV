@@ -5,6 +5,7 @@ import org.witness.informacam.models.IMedia;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
+import org.witness.iwitness.app.screens.forms.TagFormFragment;
 import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.App.Editor.Mode;
 import org.witness.iwitness.utils.Constants.Codes;
@@ -21,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,6 +30,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,6 +48,9 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	LinearLayout controlsHolder;
 	ImageView mediaHolder;
 	boolean controlsAreShowing = false;
+	
+	FrameLayout formHolder;
+	Fragment tagFormFragment;
 
 	// sample sized used to downsize from native photo
 	int inSampleSize;
@@ -113,6 +119,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		controlsHolder = (LinearLayout) rootView.findViewById(controlHolder);
 
 		mediaHolder = (ImageView) rootView.findViewById(R.id.media_holder);
+		formHolder = (FrameLayout) rootView.findViewById(R.id.fullscreen_form_holder);
 
 		return rootView;
 	}
@@ -186,6 +193,13 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 		originalBitmap = bitmap;
 		setBitmap();
+		
+		tagFormFragment = Fragment.instantiate(a, TagFormFragment.class.getName());
+		
+		FragmentTransaction ft = ((EditorActivity) a).fm.beginTransaction();
+		ft.add(R.id.details_form_holder, tagFormFragment);
+		ft.addToBackStack(null);
+		ft.commit();
 	}
 
 	private void setBitmap() {

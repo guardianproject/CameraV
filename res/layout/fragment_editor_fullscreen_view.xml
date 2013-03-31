@@ -45,6 +45,12 @@
             android:background="@drawable/trans_grey_1"
             android:paddingRight="16dip"
             android:visibility="gone" />
+        
+        <FrameLayout
+            android:id="@+id/fullscreen_form_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/media_holder" />
     </RelativeLayout>
 
 </ScrollView>

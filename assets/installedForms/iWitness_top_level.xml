@@ -5,7 +5,7 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns="http://www.w3.org/1999/xhtml" >
     <h:head>
-        <h:title ref="jr:itext(&apos;iWitness_top_level&apos;)" >iWitness Top Level Annotations</h:title>
+        <h:title ref="jr:itext('iWitness_top_level')" >iWitness Top Level Annotations</h:title>
         <model>
             <instance>
                 <iWitness_top_level id="iWitness_top_level" >
@@ -31,6 +31,9 @@
                 	<text id="iW_quick_note" >
                     	<value>Add a quick note...</value>
                 	</text>
+                	<text id="iW_quick_note-hint">
+            			<value>Add a quick note...</value>
+          			</text>
 
                 	<text id="iW_audio_note" >
                     	<value>Add an audio note...</value>
@@ -44,13 +47,14 @@
 
     <h:body>
         <input bind="iW_quick_note" >
-            <label ref="jr:itext(&apos;iW_quick_note&apos;)" />
+            <label ref="jr:itext('iW_quick_note')" />
+            <hint ref="jr:itext('iW_quick_note-hint')"/>
         </input>
 
         <upload
             bind="iW_audio_note"
             mediatype="audio/*" >
-            <label ref="jr:itext(&apos;iW_audio_note&apos;)" />
+            <label ref="jr:itext('iW_audio_note')" />
         </upload>
     </h:body>
 </h:html>

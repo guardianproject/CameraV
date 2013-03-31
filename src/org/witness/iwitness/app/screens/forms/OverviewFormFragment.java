@@ -119,6 +119,16 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 		dateCaptured.setText(dateAndTime[0]);
 		timeCaptured.setText(dateAndTime[1]);
 		
+		if(media.alias != null) {
+			alias.setText(media.alias);
+		}
+		
+		if(media.dcimEntry.exif.location != null) {
+			location.setText(a.getString(R.string.x_location, media.dcimEntry.exif.location[0], media.dcimEntry.exif.location[1]));
+		} else {
+			location.setText(a.getString(R.string.location_unknown));
+		}
+		
 	}
 	
 	private void initForms() {
@@ -131,6 +141,10 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 				break;
 			}
 		}
+	}
+	
+	public void cleanup() {
+		
 	}
 
 	@Override
