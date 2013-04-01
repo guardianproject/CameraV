@@ -110,7 +110,9 @@ public class AddOrganizationsPreference extends Fragment implements WizardListen
 								
 				if(organization.has("isSelected") && organization.getBoolean("isSelected")) {
 					IConnection connection = new IConnection();
-					connection.url = organization.requestUrl;
+					connection.url = organization.requestUrl.substring(0, organization.requestUrl.lastIndexOf(":"));
+					connection.port = Integer.parseInt(organization.requestUrl.substring(organization.requestUrl.lastIndexOf(":") + 1));
+					connection.destination = organization;
 					
 					informaCam.uploaderService.addToQueue(connection);
 				}

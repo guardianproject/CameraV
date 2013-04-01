@@ -9,7 +9,6 @@ import org.witness.iwitness.app.screens.forms.TagFormFragment;
 import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.App.Editor.Mode;
 import org.witness.iwitness.utils.Constants.Codes;
-import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -134,6 +133,13 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 		media = ((EditorActivity) a).media;
 		informaCam = InformaCam.getInstance();
+	}
+	
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		
+		// TODO: save state and cleanup bitmaps!
 	}
 
 	@Override

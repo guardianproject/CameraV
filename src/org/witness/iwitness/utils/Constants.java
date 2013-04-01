@@ -158,5 +158,7 @@ public class Constants {
 			public final static String LOG = "******************** iWitness : WipeActivity ********************";
 			public static final int ROUTE_CODE = Codes.Routes.WIPE;
 		}
+
+		public static final String TAG = "iWitness_main";
 	}
 }

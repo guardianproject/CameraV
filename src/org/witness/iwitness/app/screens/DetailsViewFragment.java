@@ -66,6 +66,13 @@ public class DetailsViewFragment extends Fragment {
 		
 	}
 	
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		
+		// TODO: save state and cleanup bitmaps!
+	}
+	
 	private void initLayout() {
 		mediaPreview.setImageBitmap(media.getBitmap(media.bitmapPreview));
 		

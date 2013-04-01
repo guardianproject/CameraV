@@ -1,6 +1,7 @@
 package org.witness.iwitness;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -19,6 +20,7 @@ import org.witness.iwitness.app.LoginActivity;
 import org.witness.iwitness.app.screens.wizard.AddOrganizationsPreference;
 import org.witness.iwitness.app.screens.wizard.OriginalImagePreference;
 import org.witness.iwitness.utils.Constants;
+import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.App.Editor;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.App.Camera;
@@ -60,11 +62,23 @@ public class IWitness extends Activity implements InformaCamEventListener, Infor
 		
 		setContentView(R.layout.activity_main);
 		startService(new Intent(this, InformaCam.class));
+		
+		try {
+			Iterator<String> i = savedInstanceState.keySet().iterator();
+			while(i.hasNext()) {
+				String outState = i.next();
+				if(outState.equals(Home.TAG) && savedInstanceState.getBoolean(App.TAG)) {
+					onInformaCamStart();
+				}
+			}
+		} catch(NullPointerException e) {}
+		
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
+		Log.d(LOG, "ON RESUME");
 		for(InformaCamBroadcaster icb_ : icb) {
 			registerReceiver(icb_, ((InformaCamBroadcaster) icb_).intentFilter);
 		}
@@ -87,6 +101,13 @@ public class IWitness extends Activity implements InformaCamEventListener, Infor
 	public void onDestroy() {
 		super.onDestroy();
 		
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putBoolean(App.TAG, true);
+		Log.d(LOG, "ON SAVE STATE INSTANCE");
+		super.onSaveInstanceState(outState);
 	}
 	
 	@Override

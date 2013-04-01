@@ -97,10 +97,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 					initGallery = true;
 				}
 			}
-		} catch(NullPointerException e) {
-			Log.e(LOG, e.toString());
-			e.printStackTrace();
-		}
+		} catch(NullPointerException e) {}
 		
 		toEditor = new Intent(this, EditorActivity.class);
 		toCamera = new Intent(this, CameraActivity.class);
