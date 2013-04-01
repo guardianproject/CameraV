@@ -49,6 +49,11 @@
         <item name="android:textSize">18sp</item>
     </style>
     
+    <style name="iwitness_p">
+        <item name="android:textColor">@drawable/black</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    
     <style name="iWitness_list">
         <item name="android:textColor">@drawable/black</item>
         <item name="android:textSize">18sp</item>

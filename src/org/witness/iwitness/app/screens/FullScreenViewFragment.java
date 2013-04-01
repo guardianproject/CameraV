@@ -34,6 +34,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 public class FullScreenViewFragment extends Fragment implements OnClickListener, OnTouchListener {
 	View rootView;
@@ -51,6 +52,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	
 	FrameLayout formHolder;
 	Fragment tagFormFragment;
+	RelativeLayout mediaHolderParent; 
 
 	// sample sized used to downsize from native photo
 	int inSampleSize;
@@ -118,6 +120,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 		controlsHolder = (LinearLayout) rootView.findViewById(controlHolder);
 
+		mediaHolderParent = (RelativeLayout) rootView.findViewById(R.id.media_holder_parent);
 		mediaHolder = (ImageView) rootView.findViewById(R.id.media_holder);
 		formHolder = (FrameLayout) rootView.findViewById(R.id.fullscreen_form_holder);
 
@@ -148,6 +151,10 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	}
 
 	private void initLayout() {
+		dims = informaCam.getDimensions();
+		
+		mediaHolderParent.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
+		
 		toggleControls.setOnClickListener(this);
 		toggleControls();
 
@@ -158,7 +165,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		byte[] bytes = informaCam.ioService.getBytes(media.bitmap, Type.IOCIPHER);
 		bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-		dims = informaCam.getDimensions();
+		
 		// Ratios between the display and the image
 		double widthRatio =  Math.floor(bfo.outWidth / dims[0]);
 		double heightRatio = Math.floor(bfo.outHeight / dims[1]);
@@ -197,7 +204,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		tagFormFragment = Fragment.instantiate(a, TagFormFragment.class.getName());
 		
 		FragmentTransaction ft = ((EditorActivity) a).fm.beginTransaction();
-		ft.add(R.id.details_form_holder, tagFormFragment);
+		ft.add(R.id.fullscreen_form_holder, tagFormFragment);
 		ft.addToBackStack(null);
 		ft.commit();
 	}

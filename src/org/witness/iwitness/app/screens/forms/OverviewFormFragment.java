@@ -92,6 +92,12 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 		
 	}
 	
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		Log.d(LOG, "SHOULD SAVE FORM STATE!");
+	}
+	
 	private void initLayout() {
 		overviewFormRoot.addView(detailsView);
 		overviewFormRoot.addView(topLevelAnnotationsView);
