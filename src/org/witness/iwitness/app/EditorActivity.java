@@ -6,12 +6,15 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.IManifest;
+import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.models.IForm;
 import org.witness.informacam.models.IMedia;
 import org.witness.informacam.models.IMediaManifest;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.DetailsViewFragment;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
+import org.witness.iwitness.app.screens.editors.FullScreenImageViewFragment;
+import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
@@ -59,7 +62,7 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 
 		Log.d(LOG, "hello " + packageName);
 		informaCam = InformaCam.getInstance();
-
+		
 		initData();
 
 		setContentView(R.layout.activity_editor);
@@ -94,11 +97,11 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 			finish();
 		}
 
-		// TODO: actually, you would init without the "true" flag, and then call inflate(mediaId)
 		IMediaManifest manifest = new IMediaManifest();
 		manifest.inflate(informaCam.ioService.getBytes(IManifest.MEDIA, Type.IOCIPHER));		
 		media = new IMedia();
 		media.inflate(getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA).getBytes());
+		informaCam.informaService.associateMedia(media);
 		
 		availableForms = FormUtility.getAvailableForms();
 
@@ -132,7 +135,12 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 		fullscreenViewArgs.putInt(Codes.Extras.SET_ORIENTATION, fullscreenOrientation);
 		detailsViewArgs.putInt(Codes.Extras.SET_ORIENTATION, detailsOrientation);
 
-		fullscreenView = Fragment.instantiate(this, FullScreenViewFragment.class.getName(), fullscreenViewArgs);
+		if(media.dcimEntry.mediaType.equals(Models.IMedia.MimeType.IMAGE)) {
+			fullscreenView = Fragment.instantiate(this, FullScreenImageViewFragment.class.getName(), fullscreenViewArgs);
+		} else if(media.dcimEntry.mediaType.equals(Models.IMedia.MimeType.VIDEO)) {
+			fullscreenView = Fragment.instantiate(this, FullScreenVideoViewFragment.class.getName(), fullscreenViewArgs);
+		}
+		
 		detailsView = Fragment.instantiate(this, DetailsViewFragment.class.getName(), detailsViewArgs);
 
 		View actionBarView = LayoutInflater.from(this).inflate(R.layout.action_bar_editor, null);

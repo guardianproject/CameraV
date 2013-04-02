@@ -263,7 +263,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				new SharePopup(HomeActivity.this, ((IMedia) informaCam.mediaManifest.getById(mediaId)));
+				new SharePopup(HomeActivity.this, ((IMedia) informaCam.mediaManifest.getById(mediaId)), true);
 				
 			}
 			
