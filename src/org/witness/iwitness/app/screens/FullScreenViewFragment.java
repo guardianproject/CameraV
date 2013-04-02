@@ -8,6 +8,7 @@ import org.witness.iwitness.utils.Constants.App.Editor.Mode;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,7 +32,8 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	protected ImageButton toggleControls;
 	protected LinearLayout controlsHolder;
-	protected ImageView mediaHolder;
+	protected RelativeLayout mediaHolder;
+	protected Canvas regionDisplay;
 	protected boolean controlsAreShowing = false;
 
 	protected FrameLayout formHolder;
@@ -79,7 +81,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		controlsHolder = (LinearLayout) rootView.findViewById(controlHolder);
 
 		mediaHolderParent = (RelativeLayout) rootView.findViewById(R.id.media_holder_parent);
-		mediaHolder = (ImageView) rootView.findViewById(R.id.media_holder);
+		mediaHolder = (RelativeLayout) rootView.findViewById(R.id.media_holder);
 		formHolder = (FrameLayout) rootView.findViewById(R.id.fullscreen_form_holder);
 
 		return rootView;

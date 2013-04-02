@@ -11,7 +11,9 @@ import org.witness.informacam.utils.Constants.Actions;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
-import org.witness.informacam.models.IMedia;
+import org.witness.informacam.models.connections.IMessage;
+import org.witness.informacam.models.IOrganization;
+import org.witness.informacam.models.media.IMedia;
 
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.CameraFragment;
@@ -20,6 +22,7 @@ import org.witness.iwitness.app.screens.UserManagementFragment;
 import org.witness.iwitness.app.screens.menus.MediaActionMenu;
 import org.witness.iwitness.app.screens.popups.RenamePopup;
 import org.witness.iwitness.app.screens.popups.SharePopup;
+import org.witness.iwitness.app.screens.popups.TextareaPopup;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants;
@@ -56,38 +59,38 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	Intent init;
 	private final static String LOG = Constants.App.Home.LOG;
 	private String packageName;
-	
+
 	List<Fragment> fragments = new Vector<Fragment>();
 	Fragment userManagementFragment, galleryFragment, cameraFragment;
-	
+
 	boolean initUploads = true;
 	boolean initGallery = false;
-	
+
 	int visibility = View.VISIBLE;
-	
+
 	LayoutInflater li;
 	TabHost tabHost;
 	ViewPager viewPager;
 	TabPager pager;
-	
+
 	InformaCam informaCam;
-	
+
 	Handler h = new Handler();
 	Waiter waiter;
 	MediaActionMenu mam;
-	
+
 	List<InformaCamBroadcaster> icb = null;
 	Intent toEditor;
 	Intent toCamera;
-		
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		packageName = getClass().getName();
-		
+
 		Log.d(LOG, "hello " + packageName);
 		setContentView(R.layout.activity_home);
-				
+
 		try {
 			Iterator<String> i = savedInstanceState.keySet().iterator();
 			while(i.hasNext()) {
@@ -98,75 +101,75 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				}
 			}
 		} catch(NullPointerException e) {}
-		
+
 		toEditor = new Intent(this, EditorActivity.class);
 		toCamera = new Intent(this, CameraActivity.class);
-		
+
 		icb = new Vector<InformaCamBroadcaster>();
 		icb.add(new InformaCamBroadcaster(this, new IntentFilter(Actions.INFORMACAM_START)));
 		icb.add(new InformaCamBroadcaster(this, new IntentFilter(Actions.INFORMACAM_STOP)));
-		
+
 		userManagementFragment = Fragment.instantiate(this, UserManagementFragment.class.getName());
 		galleryFragment = Fragment.instantiate(this, GalleryFragment.class.getName());
 		cameraFragment = Fragment.instantiate(this, CameraFragment.class.getName());
-		
+
 		fragments.add(userManagementFragment);
 		fragments.add(galleryFragment);
 		fragments.add(cameraFragment);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		if(icb != null) {
 			for(InformaCamBroadcaster icb_ : icb) {
 				registerReceiver(icb_, ((InformaCamBroadcaster) icb_).intentFilter);
 			}
 		}
-		
+
 		Log.d(LOG, packageName + " activity is getting informa instance");
 		informaCam = InformaCam.getInstance(HomeActivity.this);
-		
+
 		if(initUploads) {
 			informaCam.uploaderService.init();
 		}
-		
+
 		initUploads = false;
 		initLayout();
 	}
-	
+
 	private void initLayout() {
 		pager = new TabPager(getSupportFragmentManager());
-		
+
 		viewPager = (ViewPager) findViewById(R.id.view_pager_root);
 		viewPager.setAdapter(pager);
 		viewPager.setOnPageChangeListener(pager);
-		
+
 		li = LayoutInflater.from(this);
-		
+
 		int[] dims = getDimensions();
 
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		tabHost.setup();
-		
+
 		TabHost.TabSpec tab = tabHost.newTabSpec(UserManagementFragment.class.getName()).setIndicator(generateTab(li, R.layout.tabs_user_management));
 		li.inflate(R.layout.fragment_home_user_management, tabHost.getTabContentView(), true);
 		tab.setContent(R.id.user_management_root_view);
 		tabHost.addTab(tab);
-		
+
 		tab = tabHost.newTabSpec(GalleryFragment.class.getName()).setIndicator(generateTab(li, R.layout.tabs_iwitness));
 		li.inflate(R.layout.fragment_home_gallery, tabHost.getTabContentView(), true);
 		tab.setContent(R.id.gallery_root_view);
 		tabHost.addTab(tab);
-		
+
 		tab = tabHost.newTabSpec(CameraFragment.class.getName()).setIndicator(generateTab(li, R.layout.tabs_camera_chooser));
 		li.inflate(R.layout.fragment_home_camera_chooser, tabHost.getTabContentView(), true);
 		tab.setContent(R.id.camera_chooser_root_view);
 		tabHost.addTab(tab);
-		
+
 		tabHost.setOnTabChangedListener(pager);
-		
+
 		for(int i=0; i<tabHost.getTabWidget().getChildCount(); i++) {
 			View tab_ = tabHost.getTabWidget().getChildAt(i);
 			if(i == 1) {
@@ -177,34 +180,34 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		}
 
 		viewPager.setCurrentItem(1);
-		
+
 		if(initGallery) {
 			((GalleryFragment) galleryFragment).updateData();
 		}
 	}
-	
+
 	private static View generateTab(final LayoutInflater li, final int resource) {
 		return li.inflate(resource, null);
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean(Home.TAG, true);
-		
+
 		super.onSaveInstanceState(outState);
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
-		
+
 		if(icb != null) {
 			for(InformaCamBroadcaster icb_ : icb) {
 				this.unregisterReceiver(icb_);
 			}
 		}
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -223,11 +226,39 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		informaCam.startInforma();
 		Log.d(LOG, "launching editor for " + media._id);		
 	}
-	
+
 	@Override
-	public void getContextualMenuFor(final String mediaId) {
+	public void getContextualMenuFor(final IOrganization organization) {
 		List<ContextMenuAction> actions = new Vector<ContextMenuAction>();
+
+		ContextMenuAction action = new ContextMenuAction();
+		action.label = getResources().getString(R.string.send_message);
+		action.ocl = new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mam.cancel();
+				new TextareaPopup(HomeActivity.this, organization) {
+					@Override
+					public void cancel() {
+						IMessage connection = new IMessage(organization, this.prompt.getText().toString());
+						informaCam.uploaderService.addToQueue(connection);
+						
+						super.cancel();
+					}
+				};
+			}
+		};
+		actions.add(action);
 		
+		mam = new MediaActionMenu(this, actions);
+		mam.Show();
+	}
+
+	@Override
+	public void getContextualMenuFor(final IMedia media) {
+		List<ContextMenuAction> actions = new Vector<ContextMenuAction>();
+
 		ContextMenuAction action = new ContextMenuAction();
 		action.label = getResources().getString(R.string.delete);
 		action.ocl = new OnClickListener() {
@@ -235,14 +266,14 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				if(((IMedia) informaCam.mediaManifest.getById(mediaId)).delete()) {
+				if(((IMedia) informaCam.mediaManifest.getById(media._id)).delete()) {
 					((GalleryFragment) galleryFragment).updateData();
 				}
 			}
-			
+
 		};
 		actions.add(action);
-		
+
 		action = new ContextMenuAction();
 		action.label = getResources().getString(R.string.rename);
 		action.ocl = new OnClickListener() {
@@ -250,12 +281,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				new RenamePopup(HomeActivity.this, ((IMedia) informaCam.mediaManifest.getById(mediaId)));
+				new RenamePopup(HomeActivity.this, ((IMedia) informaCam.mediaManifest.getById(media._id)));
 			}
-			
+
 		};
 		actions.add(action);
-		
+
 		action = new ContextMenuAction();
 		action.label = getResources().getString(R.string.send);
 		action.ocl = new OnClickListener() {
@@ -263,28 +294,27 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				new SharePopup(HomeActivity.this, ((IMedia) informaCam.mediaManifest.getById(mediaId)), true);
-				
+				new SharePopup(HomeActivity.this, ((IMedia) informaCam.mediaManifest.getById(media._id)), true);
 			}
-			
+
 		};
 		actions.add(action);
-		
+
 		mam = new MediaActionMenu(this, actions);
 		mam.Show();
 	}
-	
+
 	public void launchCamera() {
-		
+
 		h.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				startActivityForResult(toCamera, Routes.CAMERA);
 			}
 		}, 1000);
-		
+
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		setResult(Activity.RESULT_CANCELED);
@@ -295,17 +325,18 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void logoutUser() {
 		setResult(Activity.RESULT_CANCELED);
 		finish();
-		
+
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int responseCode, Intent data) {
 		if(responseCode == Activity.RESULT_OK) {
 			switch(requestCode) {
 			case Codes.Routes.CAMERA:
 				Log.d(LOG, "we returned these values: " + data.getStringExtra(Codes.Extras.RETURNED_MEDIA));
-				
+
 				informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
+				Log.d(LOG, informaCam.mediaManifest.asJson().toString());
 				((GalleryFragment) galleryFragment).updateData();
 				break;
 			case Codes.Routes.LOGOUT:
@@ -321,32 +352,32 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void onUpdate(Message message) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	class Waiter extends AlertDialog.Builder {
 		public Dialog alert;
 		public boolean isShowing = false;
-		
+
 		protected Waiter(Context context) {
 			super(context);
 			setCancelable(false);
-			
+
 			alert = create();
 			setView(LayoutInflater.from(context).inflate(R.layout.extras_waiter, null));
 		}
-		
+
 		public void Show() {
 			isShowing = true;
 			alert = this.show();		
 		}
-		
+
 		public void cancel() {
 			isShowing = false;
 			alert.cancel();
 		}
 	}
-	
+
 	class TabPager extends FragmentStatePagerAdapter implements TabHost.OnTabChangeListener, OnPageChangeListener {
 
 		public TabPager(FragmentManager fm) {
@@ -401,12 +432,11 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void onInformaCamStart() {
 		startActivityForResult(toEditor, Routes.EDITOR);
-		
 	}
 
 	@Override
 	public void onInformaCamStop() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

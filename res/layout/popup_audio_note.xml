@@ -1,8 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
-    
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <ImageButton style="@style/button_a"
+            android:id="@+id/audio_record_stop_toggle"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_context_audio_note" />
+
+        <ImageButton style="@style/button_a"
+            android:id="@+id/audio_play_pause_toggle"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_videop_play" />
+
+        <ProgressBar
+            android:id="@+id/audio_progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:progress="0" />
+    </LinearLayout>
+    <Button style="@style/button_c"
+        android:layout_marginTop="10dip"
+        android:id="@+id/audio_commit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ok" />
 
 </LinearLayout>

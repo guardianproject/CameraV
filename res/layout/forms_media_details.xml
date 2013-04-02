@@ -12,7 +12,7 @@
 
         <TextView
             android:id="@+id/media_details_alias"
-            style="@style/iwitness_h2"
+            style="@style/button_e"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"

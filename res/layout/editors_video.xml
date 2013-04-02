@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <VideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/video_controls_holder"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center" />
+
+    <LinearLayout
+        android:id="@+id/video_controls_holder"
+        android:layout_width="match_parent"
+        android:layout_height="40dip"
+        android:weightSum="1"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <ImageButton style="@style/button_c"
+            android:id="@+id/video_play_pause_toggle"
+            android:layout_width="0dip"
+            android:layout_weight="0.15"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_videop_play" />
+
+        <ProgressBar
+            android:id="@+id/video_seek_bar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.85"
+            android:gravity="center"
+            android:indeterminate="false"
+            android:indeterminateOnly="false"
+            android:padding="4dip"
+            android:secondaryProgress="0"
+            android:thumbOffset="0dip" />
+    </LinearLayout>
+
+</RelativeLayout>

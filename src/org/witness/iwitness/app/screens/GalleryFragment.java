@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.models.IMedia;
+import org.witness.informacam.models.media.IMedia;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants.App.Home;
@@ -226,7 +226,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l) {
-		((HomeActivityListener) a).getContextualMenuFor(((IMedia) informaCam.mediaManifest.media.get((int) l))._id);
+		((HomeActivityListener) a).getContextualMenuFor(((IMedia) informaCam.mediaManifest.media.get((int) l)));
 		return true;
 	}
 

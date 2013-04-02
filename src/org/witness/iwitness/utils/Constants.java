@@ -1,17 +1,21 @@
 package org.witness.iwitness.utils;
 
-import org.witness.informacam.models.IMedia;
+import org.witness.informacam.models.IOrganization;
+import org.witness.informacam.models.media.IMedia;
+
+import android.net.Uri;
 
 public class Constants {	
 	public interface EditorActivityListener {
-
+		public void onMediaScanned(Uri uri);
 	}
 
 	public interface HomeActivityListener {
 		public int[] getDimensions();
 		public void launchEditor(IMedia media);
 		public void logoutUser();
-		public void getContextualMenuFor(String mediaId);
+		public void getContextualMenuFor(IOrganization organization);
+		public void getContextualMenuFor(IMedia media);
 	}
 
 	public class Codes {

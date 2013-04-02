@@ -7,12 +7,12 @@ import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.IManifest;
 import org.witness.informacam.utils.Constants.Models;
+import org.witness.informacam.utils.InformaCamMediaScanner.OnMediaScannedListener;
 import org.witness.informacam.models.IForm;
-import org.witness.informacam.models.IMedia;
+import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.IMediaManifest;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.DetailsViewFragment;
-import org.witness.iwitness.app.screens.FullScreenViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenImageViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.iwitness.utils.Constants;
@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,7 +37,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 
-public class EditorActivity extends SherlockFragmentActivity implements OnClickListener, EditorActivityListener {
+public class EditorActivity extends SherlockFragmentActivity implements OnClickListener, EditorActivityListener, OnMediaScannedListener {
 	Intent init;
 
 	int fullscreenProxy, detailsProxy;
@@ -98,7 +99,8 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 		}
 
 		IMediaManifest manifest = new IMediaManifest();
-		manifest.inflate(informaCam.ioService.getBytes(IManifest.MEDIA, Type.IOCIPHER));		
+		manifest.inflate(informaCam.ioService.getBytes(IManifest.MEDIA, Type.IOCIPHER));
+		
 		media = new IMedia();
 		media.inflate(getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA).getBytes());
 		informaCam.informaService.associateMedia(media);
@@ -180,6 +182,8 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	}
 
 	private void saveStateAndFinish() {
+		
+		informaCam.saveState(informaCam.mediaManifest);
 		setResult(Activity.RESULT_OK);
 		finish();
 	}
@@ -211,5 +215,11 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	@Override
 	public void onBackPressed() {
 		saveStateAndFinish();
+	}
+
+	@Override
+	public void onMediaScanned(Uri uri) {
+		((EditorActivityListener) fullscreenView).onMediaScanned(uri);
+		
 	}
 }

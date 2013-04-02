@@ -6,17 +6,19 @@
     android:orientation="vertical"
     android:padding="10dip" >
 
-    <Button style="@style/button_d"
+    <Button
         android:id="@+id/organizations_export_key"
+        style="@style/button_d"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/export_my_credentials"
         android:drawableLeft="@drawable/ic_context_slide_right"
-        android:paddingLeft="10dip" />
+        android:paddingLeft="10dip"
+        android:text="@string/export_my_credentials" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dip" >
 
         <LinearLayout
             android:layout_width="match_parent"

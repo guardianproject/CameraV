@@ -1,7 +1,10 @@
 package org.witness.iwitness.app.screens;
 
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.models.IInstalledOrganizations;
+import org.witness.informacam.models.IOrganization;
 import org.witness.informacam.models.IUser;
+import org.witness.informacam.models.media.IMedia;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.WipeActivity;
 import org.witness.iwitness.utils.Constants.App;
@@ -9,6 +12,7 @@ import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.Codes.Routes;
 import org.witness.iwitness.utils.Constants.App.Home.Tabs;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
+import org.witness.iwitness.utils.adapters.OrganizationsListAdapter;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -26,7 +32,7 @@ import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-public class UserManagementFragment extends Fragment implements OnClickListener {
+public class UserManagementFragment extends Fragment implements OnClickListener, OnItemLongClickListener {
 	View rootView;
 	TabHost tabHost;
 	
@@ -43,6 +49,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener 
 	
 	InformaCam informaCam = InformaCam.getInstance();
 	IUser user = informaCam.user;
+	IInstalledOrganizations installedOrganizations;
 	
 	@SuppressWarnings("unused")
 	private static final String LOG = App.Home.LOG;
@@ -117,6 +124,12 @@ public class UserManagementFragment extends Fragment implements OnClickListener 
 		
 		int connectivityLabel = informaCam.uploaderService.isConnectedToTor() ? R.string.connected_to_tor : R.string.not_connected_to_tor;
 		connectivity.setText(getResources().getString(connectivityLabel));
+		
+		installedOrganizations = new IInstalledOrganizations();
+		installedOrganizations.inflate(informaCam.getModel(installedOrganizations));
+		organizationsHolder.setOnItemLongClickListener(this);
+		organizationsHolder.setAdapter(new OrganizationsListAdapter(installedOrganizations.organizations));
+		
 	}
 	
 	private void exportCredentials() {
@@ -162,5 +175,11 @@ public class UserManagementFragment extends Fragment implements OnClickListener 
 				break;
 			}
 		}
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l) {
+		((HomeActivityListener) a).getContextualMenuFor(installedOrganizations.organizations.get((int) l));
+		return true;
 	}
 }

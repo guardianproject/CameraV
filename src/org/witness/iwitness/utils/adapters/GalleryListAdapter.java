@@ -3,7 +3,7 @@ package org.witness.iwitness.utils.adapters;
 import java.util.List;
 
 import org.json.JSONException;
-import org.witness.informacam.models.IMedia;
+import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;

@@ -88,5 +88,11 @@
         <item name="android:background">@drawable/extras_button_d_selector</item>
         <item name="android:textColor">@drawable/black</item>
     </style>
+    
+    <style name="button_e">
+        <item name="android:background">@drawable/extras_button_a_selector</item>
+        <item name="android:padding">5dip</item>
+        <item name="android:textSize">25sp</item>
+    </style>
 
 </resources>

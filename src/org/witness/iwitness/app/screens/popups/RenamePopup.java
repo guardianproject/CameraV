@@ -1,6 +1,6 @@
 package org.witness.iwitness.app.screens.popups;
 
-import org.witness.informacam.models.IMedia;
+import org.witness.informacam.models.media.IMedia;
 import org.witness.iwitness.R;
 
 import android.app.Activity;

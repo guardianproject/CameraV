@@ -1,23 +1,17 @@
 package org.witness.iwitness.app.screens.editors;
 
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.models.IMedia;
 import org.witness.informacam.models.media.IImage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
 import org.witness.iwitness.app.screens.forms.TagFormFragment;
-import org.witness.iwitness.utils.Constants.App;
-import org.witness.iwitness.utils.Constants.App.Editor.Mode;
-import org.witness.iwitness.utils.Constants.Codes;
 
 import android.app.Activity;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.PointF;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,21 +19,13 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	IImage media;
 	Bitmap bitmap, originalBitmap, previewBitmap;
+	ImageView mediaHolder_;
 
 	// sample sized used to downsize from native photo
 	int inSampleSize;
@@ -73,15 +59,25 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		super.onAttach(a);
 		this.a = a;
 
-		media = (IImage) ((EditorActivity) a).media;
+		media = new IImage();
+		media.inflate(((EditorActivity) a).media.asJson());
 		informaCam = InformaCam.getInstance();
 	}
 	
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		
 		// TODO: save state and cleanup bitmaps!
+		
+		try {
+			bitmap.recycle();
+			originalBitmap.recycle();
+			previewBitmap.recycle();
+		} catch(NullPointerException e) {
+			Log.e(LOG, e.toString());
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Override
@@ -92,8 +88,12 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	}
 
 	private void initLayout() {
-		
+		Log.d(LOG, media.asJson().toString());
 		mediaHolderParent.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
+		
+		mediaHolder_ = new ImageView(a);
+		mediaHolder_.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
+		mediaHolder.addView(mediaHolder_);
 		
 		toggleControls.setOnClickListener(this);
 		toggleControls();
@@ -102,10 +102,17 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		bfo.inJustDecodeBounds = true;
 		bfo.inPreferredConfig = Bitmap.Config.RGB_565;
 
-		byte[] bytes = informaCam.ioService.getBytes(media.bitmap, Type.IOCIPHER);
+		byte[] bytes = null;
+		if(media.bitmap != null) {
+			bytes = informaCam.ioService.getBytes(media.bitmap, Type.IOCIPHER);
+		} else {
+			info.guardianproject.iocipher.File bitmapBytes = new info.guardianproject.iocipher.File(media.rootFolder, media.dcimEntry.name);
+			bytes = informaCam.ioService.getBytes(bitmapBytes.getAbsolutePath(), Type.IOCIPHER);
+			media.bitmap = bitmapBytes.getAbsolutePath();
+			Log.d(LOG, "we didn't have this bitmap before for some reason...");
+		}
 		bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-		
 		// Ratios between the display and the image
 		double widthRatio =  Math.floor(bfo.outWidth / dims[0]);
 		double heightRatio = Math.floor(bfo.outHeight / dims[1]);
@@ -160,7 +167,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 			matrixScale = matrixWidthRatio;
 		} 
 
-		mediaHolder.setImageBitmap(bitmap);
+		mediaHolder_.setImageBitmap(bitmap);
 
 		// Set the OnTouch and OnLongClick listeners to this (ImageEditor)
 		mediaHolder.setOnTouchListener(this);
@@ -174,6 +181,6 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		//int fudge = 42;
 		matrix.postTranslate((float)((float) dims[0] -(float) bitmap.getWidth() * (float) matrixScale)/2f,(float)((float) dims[1] - (float) bitmap.getHeight() * matrixScale)/2f);
 
-		mediaHolder.setImageMatrix(matrix);
+		mediaHolder_.setImageMatrix(matrix);
 	}
 }

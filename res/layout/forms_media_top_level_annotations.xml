@@ -17,6 +17,8 @@
             style="@style/iwitness_edittext"
             android:layout_width="0dip"
             android:layout_height="match_parent"
+            android:editable="false"
+            android:text="@string/add_a_quick_note"
             android:layout_weight="0.8" />
 
         <ImageButton

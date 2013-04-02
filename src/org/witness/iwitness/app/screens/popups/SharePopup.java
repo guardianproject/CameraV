@@ -2,9 +2,10 @@ package org.witness.iwitness.app.screens.popups;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.IInstalledOrganizations;
-import org.witness.informacam.models.IMedia;
+import org.witness.informacam.models.media.IMedia;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App.Home.Tabs;
+import org.witness.iwitness.utils.adapters.OrganizationsListAdapter;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -29,7 +30,6 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 	Object context;
 
 	InformaCam informaCam;
-	boolean startsInforma = false;
 
 	TextView noOrganizations, warning;
 	ListView organizationList;
@@ -45,12 +45,8 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 	public SharePopup(Activity a, final Object context, boolean startsInforma) {
 		super(a, R.layout.popup_share);
 		this.context = context;
-		this.startsInforma = startsInforma;
 
 		informaCam = InformaCam.getInstance();
-		if(this.startsInforma) {
-			informaCam.startInforma();
-		}
 
 		tabHost = (TabHost) layout.findViewById(android.R.id.tabhost);
 		li = LayoutInflater.from(a);
@@ -106,6 +102,7 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 
 			noOrganizations.setVisibility(View.GONE);
 			organizationList.setVisibility(View.VISIBLE);
+			organizationList.setAdapter(new OrganizationsListAdapter(installedOrganizations.organizations));
 		}
 	}
 
@@ -116,13 +113,6 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 		return tab;
 	}
 
-	private void stopInforma() {
-		if(startsInforma) {
-			informaCam.informaService.associateMedia((IMedia) context);
-			informaCam.stopInforma();
-		}
-	}
-
 	@Override
 	public void onClick(View v) {
 		if(v == encryptToggle) {
@@ -131,19 +121,19 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 			}
 		} else if(v == encryptCommit) {
 			((IMedia) context).export();
+			// TODO: with params.
 		}
 
 	}
 
 	@Override
 	public void onDismiss(DialogInterface dialog) {
-		stopInforma();
 
 	}
 
 	@Override
 	public void onCancel(DialogInterface dialog) {
-		stopInforma();
+
 	}
 
 }

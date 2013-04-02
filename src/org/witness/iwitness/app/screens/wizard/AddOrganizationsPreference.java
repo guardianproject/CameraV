@@ -1,11 +1,8 @@
 package org.witness.iwitness.app.screens.wizard;
 
-import info.guardianproject.iocipher.File;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +12,7 @@ import org.witness.informacam.ui.adapters.OrganizationAdapter;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.IManifest;
 import org.witness.informacam.utils.Constants.WizardListener;
-import org.witness.informacam.models.IConnection;
+import org.witness.informacam.models.connections.IConnection;
 import org.witness.informacam.models.IInstalledOrganizations;
 import org.witness.informacam.models.IOrganization;
 import org.witness.iwitness.R;
