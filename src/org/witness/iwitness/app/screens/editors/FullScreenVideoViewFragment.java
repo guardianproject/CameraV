@@ -90,7 +90,6 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, EditorActiv
 		} catch (IllegalArgumentException e) {
 			Log.e(LOG, "setDataSource error: " + e.getMessage());
 			e.printStackTrace();
-			
 		} catch (IllegalStateException e) {
 			Log.e(LOG, "setDataSource error: " + e.getMessage());
 			e.printStackTrace();

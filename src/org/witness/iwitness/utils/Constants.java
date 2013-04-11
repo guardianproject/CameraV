@@ -44,6 +44,7 @@ public class Constants {
 			public static final String WIZARD_SUPPLEMENT = org.witness.informacam.utils.Constants.Codes.Extras.WIZARD_SUPPLEMENT;
 			public static final String MESSAGE_CODE = org.witness.informacam.utils.Constants.Codes.Extras.MESSAGE_CODE;
 			public static final String RETURNED_MEDIA = org.witness.informacam.utils.Constants.Codes.Extras.RETURNED_MEDIA;
+			public static final String INSTALL_NEW_KEY = org.witness.informacam.utils.Constants.Codes.Extras.INSTALL_NEW_KEY;
 		}
 	}
 

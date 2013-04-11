@@ -15,6 +15,7 @@ import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.DetailsViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenImageViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
+import org.witness.iwitness.app.screens.popups.SharePopup;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
@@ -46,7 +47,7 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	public FragmentManager fm;
 
 	ActionBar actionBar;
-	ImageButton abNavigationBack, abShareMedia, abToIBA;
+	ImageButton abNavigationBack, abShareMedia;
 	
 
 	private final static String LOG = Constants.App.Editor.LOG;
@@ -153,9 +154,6 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 		abShareMedia = (ImageButton) actionBarView.findViewById(R.id.ab_share_media);
 		abShareMedia.setOnClickListener(this);
 
-		abToIBA = (ImageButton) actionBarView.findViewById(R.id.ab_to_fullscreen);
-		abToIBA.setOnClickListener(this);
-
 		actionBar.setCustomView(actionBarView);
 
 		int currentOrientation = getResources().getConfiguration().orientation;
@@ -205,9 +203,7 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 		if(v == abNavigationBack) {
 			saveStateAndFinish();
 		} else if(v == abShareMedia) {
-
-		} else if(v == abToIBA) {
-
+			new SharePopup(this, media);
 		}
 
 	}

@@ -8,9 +8,6 @@
         android:minSdkVersion="10"
         android:targetSdkVersion="17" />
 
-    <uses-feature android:name="android.hardware.camera" />
-
-    <uses-permission android:name="org.witness.informacam.ICP" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -27,25 +24,57 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Sherlock.Light.NoActionBar">
+        android:theme="@style/Theme.Sherlock.Light.NoActionBar" >
+        <receiver
+            android:name="org.witness.informacam.utils.InformaCamBroadcaster"
+            android:enabled="true"
+            android:exported="true"
+            android:singleUser="false" >
+            <intent-filter>
+                <action android:name="org.witness.informacam.action.INFORMACAM_START" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.witness.informacam.action.INFORMACAM_STOP" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.FOUND" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.wifi.SCAN_RESULTS" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name="org.witness.iwitness.IWitness"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.media.action.IMAGE_CAPTURE" />
-
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW" />
+                <data
+                    android:mimeType="application/*"
+                    android:pathPattern=".*.ictd"
+                    android:scheme="content" />
+            </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW" />
+                <data
+                    android:mimeType="application/*"
+                    android:pathPattern=".*.ictd"
+                    android:scheme="file" />
             </intent-filter>
         </activity>
         <activity
@@ -59,6 +88,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light.NoActionBar" />
         <activity
+            android:name="org.witness.iwitness.app.LoginActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name="org.witness.iwitness.app.WipeActivity"
+            android:label="@string/app_name" />
+        <activity
             android:name="org.witness.informacam.ui.WizardActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
@@ -68,12 +103,6 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape" />
-        <activity
-            android:name="org.witness.iwitness.app.LoginActivity"
-            android:label="@string/app_name" />
-        <activity
-            android:name="org.witness.iwitness.app.WipeActivity"
-            android:label="@string/app_name" />
         <activity
             android:name="org.witness.informacam.ui.CameraActivity"
             android:label="@string/app_name" />

@@ -1,5 +1,6 @@
 {
 	"organizationName":"International Bar Association",
 	"organizationDetails":"London, UK",
-	"requestUrl":"http://ec2-107-22-45-79.compute-1.amazonaws.com"
+	"requestUrl":"https://ec2-107-22-45-79.compute-1.amazonaws.com:8080",
+	"organizationFingerprint":"d6beb35df8e332380d38caab62c36cb914534ff5"
 }

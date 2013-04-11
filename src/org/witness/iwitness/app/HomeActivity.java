@@ -38,6 +38,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -55,7 +56,7 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.LinearLayout.LayoutParams;
 
-public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamEventListener, InformaCamStatusListener {
+public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamEventListener {
 	Intent init;
 	private final static String LOG = Constants.App.Home.LOG;
 	private String packageName;
@@ -79,9 +80,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	Waiter waiter;
 	MediaActionMenu mam;
 
-	List<InformaCamBroadcaster> icb = null;
-	Intent toEditor;
-	Intent toCamera;
+	Intent toEditor, toCamera;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -105,10 +104,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		toEditor = new Intent(this, EditorActivity.class);
 		toCamera = new Intent(this, CameraActivity.class);
 
-		icb = new Vector<InformaCamBroadcaster>();
-		icb.add(new InformaCamBroadcaster(this, new IntentFilter(Actions.INFORMACAM_START)));
-		icb.add(new InformaCamBroadcaster(this, new IntentFilter(Actions.INFORMACAM_STOP)));
-
 		userManagementFragment = Fragment.instantiate(this, UserManagementFragment.class.getName());
 		galleryFragment = Fragment.instantiate(this, GalleryFragment.class.getName());
 		cameraFragment = Fragment.instantiate(this, CameraFragment.class.getName());
@@ -116,23 +111,38 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		fragments.add(userManagementFragment);
 		fragments.add(galleryFragment);
 		fragments.add(cameraFragment);
+		
+		init = getIntent();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 
-		if(icb != null) {
-			for(InformaCamBroadcaster icb_ : icb) {
-				registerReceiver(icb_, ((InformaCamBroadcaster) icb_).intentFilter);
-			}
-		}
-
 		Log.d(LOG, packageName + " activity is getting informa instance");
 		informaCam = InformaCam.getInstance(HomeActivity.this);
 
 		if(initUploads) {
-			informaCam.uploaderService.init();
+			informaCam.initUploads();
+		}
+		
+		if(init.getData() != null) {
+			final Uri ictdURI = init.getData();
+			Log.d(LOG, "INIT KEY: " + ictdURI);
+			
+			h.post(new Runnable() {
+				@Override
+				public void run() {
+					IOrganization organization = informaCam.installICTD(ictdURI);
+					if(organization != null) {
+						viewPager.setCurrentItem(0);
+						// TODO: add to notifications
+						Log.d(LOG, "installed this: " + organization.asJson().toString());
+					} else {
+						// TODO: handle error
+					}
+				}
+			});
 		}
 
 		initUploads = false;
@@ -200,12 +210,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void onPause() {
 		super.onPause();
-
-		if(icb != null) {
-			for(InformaCamBroadcaster icb_ : icb) {
-				this.unregisterReceiver(icb_);
-			}
-		}
 	}
 
 	@Override
@@ -426,17 +430,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		public int getCount() {
 			return fragments.size();
 		}
-
-	}
-
-	@Override
-	public void onInformaCamStart() {
-		startActivityForResult(toEditor, Routes.EDITOR);
-	}
-
-	@Override
-	public void onInformaCamStop() {
-		// TODO Auto-generated method stub
 
 	}
 }

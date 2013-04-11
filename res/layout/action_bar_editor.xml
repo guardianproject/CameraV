@@ -10,36 +10,23 @@
         android:layout_width="70dip"
         android:layout_height="match_parent"
         android:layout_above="@+id/ab_buffer"
-        android:scaleType="centerInside"
-        android:background="#00000000"
         android:layout_marginTop="6dip"
+        android:background="#00000000"
+        android:scaleType="centerInside"
         android:src="@drawable/ic_action_up" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <ImageButton
+        android:id="@+id/ab_share_media"
+        style="@style/button_c"
+        android:layout_width="56dip"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:orientation="horizontal"
-        android:layout_marginTop="6dip"
-        android:layout_marginBottom="6dip"
         android:layout_above="@+id/ab_buffer"
-        android:weightSum="1" >
-
-        <ImageButton style="@style/button_c"
-            android:id="@+id/ab_share_media"
-            android:layout_width="56dip"
-            android:layout_height="match_parent"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_action_share" />
-
-        <ImageButton style="@style/button_c"
-            android:id="@+id/ab_to_fullscreen"
-            android:layout_width="56dip"
-            android:layout_height="match_parent"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_action_iba"
-            android:layout_marginRight="6dip" />
-    </LinearLayout>
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="6dip"
+        android:layout_marginRight="6dip"
+        android:layout_marginTop="6dip"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_action_share" />
 
     <View
         android:id="@+id/ab_buffer"

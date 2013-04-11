@@ -2,16 +2,13 @@ package org.witness.iwitness;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
 
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.InformaCam.LocalBinder;
 import org.witness.informacam.ui.WizardActivity;
-import org.witness.informacam.utils.Constants.Actions;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
-import org.witness.informacam.utils.InformaCamBroadcaster;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 
 import org.witness.iwitness.app.EditorActivity;
@@ -29,14 +26,18 @@ import org.witness.iwitness.utils.Constants.App.Login;
 import org.witness.iwitness.utils.Constants.App.Wizard;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
-public class IWitness extends Activity implements InformaCamEventListener, InformaCamStatusListener {
+public class IWitness extends Activity implements InformaCamStatusListener {
 	Intent init, route;
 	int routeCode;
 	
@@ -46,14 +47,10 @@ public class IWitness extends Activity implements InformaCamEventListener, Infor
 	private Handler h = new Handler();
 	
 	InformaCam informaCam;
-	List<InformaCamBroadcaster> icb;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		icb = new Vector<InformaCamBroadcaster>();
-		icb.add(new InformaCamBroadcaster(this, new IntentFilter(Actions.INFORMACAM_START)));
-		icb.add(new InformaCamBroadcaster(this, new IntentFilter(Actions.INFORMACAM_STOP)));
 		
 		packageName = getClass().getName();
 		
@@ -61,14 +58,29 @@ public class IWitness extends Activity implements InformaCamEventListener, Infor
 		init = getIntent();
 		
 		setContentView(R.layout.activity_main);
-		startService(new Intent(this, InformaCam.class));
+		ServiceConnection sc = new ServiceConnection() {
+
+			@SuppressWarnings("static-access")
+			@Override
+			public void onServiceConnected(ComponentName name, IBinder service) {
+				informaCam = ((LocalBinder) service).getService().getInstance(IWitness.this); 
+				
+			}
+
+			@Override
+			public void onServiceDisconnected(ComponentName name) {
+				informaCam = null;
+			}
+			
+		};
+		bindService(new Intent(this, InformaCam.class), sc, Context.BIND_AUTO_CREATE);
 		
 		try {
 			Iterator<String> i = savedInstanceState.keySet().iterator();
 			while(i.hasNext()) {
 				String outState = i.next();
 				if(outState.equals(Home.TAG) && savedInstanceState.getBoolean(App.TAG)) {
-					onInformaCamStart();
+					//onInformaCamStart();
 				}
 			}
 		} catch(NullPointerException e) {}
@@ -79,17 +91,12 @@ public class IWitness extends Activity implements InformaCamEventListener, Infor
 	public void onResume() {
 		super.onResume();
 		Log.d(LOG, "ON RESUME");
-		for(InformaCamBroadcaster icb_ : icb) {
-			registerReceiver(icb_, ((InformaCamBroadcaster) icb_).intentFilter);
-		}
+		//informaCam = InformaCam.getInstance(this);
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
-		for(InformaCamBroadcaster icb_ : icb) {
-			unregisterReceiver(icb_);
-		}
 	}
 	
 	@Override
@@ -149,16 +156,18 @@ public class IWitness extends Activity implements InformaCamEventListener, Infor
 		} else if("android.media.action.IMAGE_CAPTURE".equals(init.getAction())) {
 			route = new Intent(this, CameraActivity.class);
 			routeCode = Camera.ROUTE_CODE;
+		} else if(Intent.ACTION_VIEW.equals(init.getAction())) {
+			route.setData(init.getData());
 		}
 		
 		startActivityForResult(route, routeCode);
 	}
 
 	@Override
-	public void onUpdate(Message message) {
-		Log.d(LOG, "updating with " + message.getData().toString());
+	public void onInformaCamStart(Intent intent) {
+		Log.d(LOG, "STARTING INFORMACAM ON IWITNESS");
 		
-		int code = message.getData().getInt(org.witness.informacam.utils.Constants.Codes.Extras.MESSAGE_CODE);
+		int code = intent.getBundleExtra(org.witness.informacam.utils.Constants.Codes.Keys.SERVICE).getInt(org.witness.informacam.utils.Constants.Codes.Extras.MESSAGE_CODE);
 		
 		switch(code) {
 		case org.witness.informacam.utils.Constants.Codes.Messages.Wizard.INIT:
@@ -181,31 +190,10 @@ public class IWitness extends Activity implements InformaCamEventListener, Infor
 		}
 		
 		routeByIntent();
-		
 	}
 
 	@Override
-	public void onInformaCamStart() {
-		Log.d(LOG, "STARTING INFORMACAM ON IWITNESS");
-		h.post(new Runnable() {
-			@Override
-			public void run() {
-				Log.d(LOG, packageName + " activity is getting informa instance");
-				informaCam = InformaCam.getInstance(IWitness.this);
-				
-				if(informaCam.isAbsolutelyLoggedIn()) {
-					Log.d(LOG, "WE CAN BYPASS AUTH (isAbsolutelyLoggedIn = " + String.valueOf(informaCam.isAbsolutelyLoggedIn()) + ")");
-					route = new Intent(IWitness.this, HomeActivity.class);
-					routeCode = Home.ROUTE_CODE;
-					
-					routeByIntent();
-				}
-			}
-		});
-	}
-
-	@Override
-	public void onInformaCamStop() {
+	public void onInformaCamStop(Intent intent) {
 		// TODO Auto-generated method stub
 		
 	}
