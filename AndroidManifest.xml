@@ -41,6 +41,12 @@
                 <action android:name="org.witness.informacam.action.INFORMACAM_STOP" />
             </intent-filter>
             <intent-filter>
+                <action android:name="org.witness.informacam.action.INFORMA_SERVICE_START" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.witness.informacam.action.INFORMA_SERVICE_STOP" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="android.bluetooth.device.action.FOUND" />
             </intent-filter>
             <intent-filter>
@@ -83,14 +89,17 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.Sherlock.Light" />
         <activity
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:name="org.witness.iwitness.app.HomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Sherlock.Light.NoActionBar" />
         <activity
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:name="org.witness.iwitness.app.LoginActivity"
             android:label="@string/app_name" />
         <activity
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:name="org.witness.iwitness.app.WipeActivity"
             android:label="@string/app_name" />
         <activity
@@ -104,6 +113,7 @@
             android:label="@string/app_name"
             android:screenOrientation="landscape" />
         <activity
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:name="org.witness.informacam.ui.CameraActivity"
             android:label="@string/app_name" />
 

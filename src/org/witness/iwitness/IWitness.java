@@ -91,7 +91,11 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	public void onResume() {
 		super.onResume();
 		Log.d(LOG, "ON RESUME");
-		//informaCam = InformaCam.getInstance(this);
+		try {
+			informaCam = InformaCam.getInstance(this);
+		} catch(NullPointerException e) {
+			Log.e(LOG, "informacam has not started again yet");
+		}
 	}
 	
 	@Override
@@ -194,6 +198,18 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 
 	@Override
 	public void onInformaCamStop(Intent intent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onInformaStop(Intent intent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onInformaStart(Intent intent) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -23,6 +23,7 @@ import org.witness.iwitness.app.screens.menus.MediaActionMenu;
 import org.witness.iwitness.app.screens.popups.RenamePopup;
 import org.witness.iwitness.app.screens.popups.SharePopup;
 import org.witness.iwitness.app.screens.popups.TextareaPopup;
+import org.witness.iwitness.app.screens.popups.WaitPopup;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants;
@@ -56,7 +57,7 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.LinearLayout.LayoutParams;
 
-public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamEventListener {
+public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamStatusListener {
 	Intent init;
 	private final static String LOG = Constants.App.Home.LOG;
 	private String packageName;
@@ -77,8 +78,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	InformaCam informaCam;
 
 	Handler h = new Handler();
-	Waiter waiter;
 	MediaActionMenu mam;
+	WaitPopup waiter;
 
 	Intent toEditor, toCamera;
 
@@ -223,10 +224,15 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		Display display = getWindowManager().getDefaultDisplay();
 		return new int[] {display.getWidth(),display.getHeight()};
 	}
+	
+	public void launchCamera() {
+		startActivityForResult(toCamera, Routes.CAMERA);
+	}
 
 	@Override
 	public void launchEditor(IMedia media) {
 		toEditor.putExtra(Codes.Extras.EDIT_MEDIA, media.asJson().toString());
+		waiter = new WaitPopup(this);
 		informaCam.startInforma();
 		Log.d(LOG, "launching editor for " + media._id);		
 	}
@@ -308,17 +314,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		mam.Show();
 	}
 
-	public void launchCamera() {
-
-		h.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				startActivityForResult(toCamera, Routes.CAMERA);
-			}
-		}, 1000);
-
-	}
-
 	@Override
 	public void onBackPressed() {
 		setResult(Activity.RESULT_CANCELED);
@@ -350,35 +345,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				informaCam.stopInforma();
 				break;
 			}
-		}
-	}
-
-	@Override
-	public void onUpdate(Message message) {
-		// TODO Auto-generated method stub
-
-	}
-
-	class Waiter extends AlertDialog.Builder {
-		public Dialog alert;
-		public boolean isShowing = false;
-
-		protected Waiter(Context context) {
-			super(context);
-			setCancelable(false);
-
-			alert = create();
-			setView(LayoutInflater.from(context).inflate(R.layout.extras_waiter, null));
-		}
-
-		public void Show() {
-			isShowing = true;
-			alert = this.show();		
-		}
-
-		public void cancel() {
-			isShowing = false;
-			alert.cancel();
 		}
 	}
 
@@ -431,5 +397,20 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			return fragments.size();
 		}
 
+	}
+
+	@Override
+	public void onInformaCamStart(Intent intent) {}
+
+	@Override
+	public void onInformaCamStop(Intent intent) {}
+
+	@Override
+	public void onInformaStop(Intent intent) {}
+
+	@Override
+	public void onInformaStart(Intent intent) {
+		waiter.cancel();
+		startActivityForResult(toEditor, Routes.EDITOR);
 	}
 }

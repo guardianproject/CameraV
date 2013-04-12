@@ -72,10 +72,10 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		rootView = li.inflate(R.layout.fragment_editor_fullscreen_view, null);
 		toggleControls = (ImageButton) rootView.findViewById(R.id.toggle_controls);
 
-		int controlHolder = R.id.controls_holder_landscape;
+		int controlHolder = R.id.controls_holder_portrait;
 
 		if(getArguments().getInt(Codes.Extras.SET_ORIENTATION) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-			controlHolder = R.id.controls_holder_portrait;
+			controlHolder = R.id.controls_holder_landscape;
 		}
 
 		controlsHolder = (LinearLayout) rootView.findViewById(controlHolder);

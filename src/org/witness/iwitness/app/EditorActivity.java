@@ -7,7 +7,7 @@ import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.IManifest;
 import org.witness.informacam.utils.Constants.Models;
-import org.witness.informacam.utils.InformaCamMediaScanner.OnMediaScannedListener;
+import org.witness.informacam.storage.InformaCamMediaScanner.OnMediaScannedListener;
 import org.witness.informacam.models.IForm;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.IMediaManifest;
@@ -215,6 +215,7 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 
 	@Override
 	public void onMediaScanned(Uri uri) {
+		Log.d(LOG, "media scanned at uri: " + uri.toString());
 		((EditorActivityListener) fullscreenView).onMediaScanned(uri);
 		
 	}

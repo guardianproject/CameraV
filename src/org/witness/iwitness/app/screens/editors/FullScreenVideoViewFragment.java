@@ -6,7 +6,7 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
-import org.witness.informacam.utils.InformaCamMediaScanner;
+import org.witness.informacam.storage.InformaCamMediaScanner;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
