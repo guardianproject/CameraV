@@ -140,12 +140,11 @@
             android:layout_below="@+id/options_holder"
             android:layout_margin="6dip"
             android:gravity="center"
-            android:horizontalSpacing="10dip"
+            android:horizontalSpacing="6dip"
             android:numColumns="4"
             android:stretchMode="columnWidth"
-            android:verticalSpacing="10dip"
+            android:verticalSpacing="6dip"
             android:visibility="gone" />
-
         <ListView
             android:id="@+id/media_display_list"
             android:layout_width="match_parent"

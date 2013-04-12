@@ -112,8 +112,10 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 			info.guardianproject.iocipher.File formState = new info.guardianproject.iocipher.File(media.rootFolder, "form_" + System.currentTimeMillis());
 			info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(formState);
 			if(form.save(fos) != null) {
-				//IRegion region = media.addRegion();
-				//region.formReference = formState.getAbsolutePath();
+				overviewRegion.formPath = formState.getAbsolutePath();
+				overviewRegion.formNamespace = form.namespace;
+				
+				InformaCam.getInstance().mediaManifest.save();
 			}
 		} catch (FileNotFoundException e) {
 			Log.e(LOG, e.toString());
@@ -176,6 +178,8 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 			form.associate(a, answers[0], quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
 			form.associate(a, answers[1], audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
 		} else {
+			overviewRegion = media.addRegion();
+			
 			form.associate(a, quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
 			form.associate(a, audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
 		}

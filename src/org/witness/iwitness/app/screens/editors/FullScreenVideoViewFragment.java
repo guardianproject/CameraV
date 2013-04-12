@@ -34,7 +34,7 @@ import android.widget.VideoView;
 
 public class FullScreenVideoViewFragment extends FullScreenViewFragment implements OnCompletionListener, 
 OnErrorListener, OnInfoListener, OnBufferingUpdateListener, OnPreparedListener, OnSeekCompleteListener,
-OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, EditorActivityListener {
+OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener {
 	IVideo media;
 	
 	MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -64,8 +64,15 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, EditorActiv
 			public void run() {
 				// copy from iocipher to local :(
 				videoFile = new java.io.File(Storage.EXTERNAL_DIR, media.dcimEntry.name);
-				informaCam.ioService.saveBlob(informaCam.ioService.getBytes(media.dcimEntry.fileName, Type.IOCIPHER), videoFile);
-				InformaCamMediaScanner icms = new InformaCamMediaScanner(FullScreenVideoViewFragment.this.a, videoFile);
+				informaCam.ioService.saveBlob(informaCam.ioService.getBytes(media.dcimEntry.fileName, Type.IOCIPHER), videoFile, true);
+				InformaCamMediaScanner icms = new InformaCamMediaScanner(FullScreenVideoViewFragment.this.a, videoFile) {
+					@Override
+					public void onScanCompleted(String path, Uri uri) {
+						Log.d(LOG, "UH HI. read " + uri);
+						videoUri = uri;
+						initVideo();
+					}
+				};
 			}
 		}).start();
 	}
@@ -120,14 +127,6 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, EditorActiv
 		videoSeekBar = (ProgressBar) mediaHolder_.findViewById(R.id.video_seek_bar);
 		
 		mediaHolder.addView(mediaHolder_);
-	}
-
-	@Override
-	public void onMediaScanned(Uri uri) {
-		videoUri = uri;
-		
-		initVideo();
-		
 	}
 
 	@Override
