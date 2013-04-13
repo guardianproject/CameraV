@@ -42,7 +42,6 @@ public class VideoSeekBar extends SeekBar implements OnSeekBarChangeListener {
 	
 	public void init(MediaPlayer mp) {
 		this.mp = mp;
-		Log.d(LOG, "initing seek bar (duration " + mp.getDuration() + ")");
 		
 		setMax(mp.getDuration());
 		post(progressRunnable);

@@ -1,13 +1,16 @@
 package org.witness.iwitness.app.screens;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.models.media.IImage;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.forms.TagFormFragment;
 import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.App.Editor.Mode;
+import org.witness.iwitness.utils.actions.ContextMenuAction;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -28,6 +31,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class FullScreenViewFragment extends Fragment implements OnClickListener, OnTouchListener  {
 	protected View rootView;
@@ -83,9 +87,9 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		if(getArguments().getInt(Codes.Extras.SET_ORIENTATION) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
 			controlHolder = R.id.controls_holder_landscape;
 		}
-
+			
 		controlsHolder = (LinearLayout) rootView.findViewById(controlHolder);
-
+				
 		mediaHolderParent = (RelativeLayout) rootView.findViewById(R.id.media_holder_parent);
 		mediaHolder = (RelativeLayout) rootView.findViewById(R.id.media_holder);
 		formHolder = (FrameLayout) rootView.findViewById(R.id.fullscreen_form_holder);
@@ -96,7 +100,53 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected void initLayout() {
 		mediaHolderParent.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		showForms();
+		registerControls();
 		toggleControls();
+	}
+	
+	protected void registerControls() {
+		List<ContextMenuAction> controls = new ArrayList<ContextMenuAction>();
+		
+		ContextMenuAction action = new ContextMenuAction();
+		action.label = a.getString(R.string.notes);
+		action.iconResource = R.drawable.ic_edit_notes;
+		action.ocl = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Log.d(LOG, "clicked on notes");
+				
+			}
+		};
+		controls.add(action);
+		
+		action = new ContextMenuAction();
+		action.label = a.getString(R.string.delete_tag);
+		action.iconResource = R.drawable.ic_edit_delete;
+		action.ocl = new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Log.d(LOG, "clicked on delete");
+				
+			}
+		};
+		controls.add(action);
+		
+		for(ContextMenuAction cma : controls) {
+			View control = LayoutInflater.from(a).inflate(R.layout.adapter_context_menu_editor, null);
+			control.setLayoutParams(toggleControls.getLayoutParams());
+			
+			ImageView icon = (ImageView) control.findViewById(R.id.context_menu_item_icon);
+			icon.setImageDrawable(a.getResources().getDrawable(cma.iconResource));
+			
+			TextView label = (TextView) control.findViewById(R.id.context_menu_item_label);
+			label.setText(cma.label);
+			
+			control.setOnClickListener(cma.ocl);
+			controlsHolder.addView(control);
+		}
+		
 	}
 
 	protected void showForms() {

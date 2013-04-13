@@ -45,4 +45,6 @@
 	<string name="sharing_outside_of_informacam">Sharing outside of %1$s means that your media\'s chain-of-custody can be contested.  Share anyway?</string>
 	<string name="export_my_credentials">Export my credentials\u2026</string>
 	<string name="send_message">Send message\u2026</string>
+	<string name="notes">Notes</string>
+	<string name="delete_tag">Delete Tag</string>
 </resources>
