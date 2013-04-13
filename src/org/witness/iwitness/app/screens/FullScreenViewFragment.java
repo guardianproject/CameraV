@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.models.media.IRegion;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.forms.TagFormFragment;
@@ -15,6 +16,7 @@ import org.witness.iwitness.utils.actions.ContextMenuAction;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,6 +33,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class FullScreenViewFragment extends Fragment implements OnClickListener, OnTouchListener  {
@@ -43,6 +46,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected LinearLayout controlsHolder;
 	protected RelativeLayout mediaHolder;
 	protected Canvas regionDisplay;
+	protected ScrollView scrollRoot;
 	protected boolean controlsAreShowing = false;
 
 	protected FrameLayout formHolder;
@@ -50,6 +54,10 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected RelativeLayout mediaHolderParent;
 
 	protected int[] dims;
+	protected int scrollTarget;
+	
+	protected IRegion currentRegion = null; 
+	
 	// We can be in one of these 3 states
 	protected int mode = Mode.NONE;
 
@@ -68,6 +76,8 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected float minMoveDistance; // = ViewConfiguration.get(this).getScaledTouchSlop();
 
 	protected final static String LOG = App.Editor.LOG;
+	
+	protected Paint activePaint, inactivePaint;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,13 +89,18 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		super.onCreateView(li, container, savedInstanceState);
 
 		rootView = li.inflate(R.layout.fragment_editor_fullscreen_view, null);
+		
+		scrollRoot = (ScrollView) rootView.findViewById(R.id.scroll_root);
+		
 		toggleControls = (ImageButton) rootView.findViewById(R.id.toggle_controls);
 		toggleControls.setOnClickListener(this);
 
 		int controlHolder = R.id.controls_holder_portrait;
+		scrollTarget = InformaCam.getInstance().getDimensions()[0];
 
 		if(getArguments().getInt(Codes.Extras.SET_ORIENTATION) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
 			controlHolder = R.id.controls_holder_landscape;
+			scrollTarget = InformaCam.getInstance().getDimensions()[1];
 		}
 			
 		controlsHolder = (LinearLayout) rootView.findViewById(controlHolder);
@@ -102,6 +117,14 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		showForms();
 		registerControls();
 		toggleControls();
+		
+		activePaint = new Paint();
+		
+		inactivePaint = new Paint();
+	}
+	
+	protected void showForm() {
+		scrollRoot.scrollTo(0, scrollTarget);
 	}
 	
 	protected void registerControls() {
@@ -115,7 +138,8 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 			@Override
 			public void onClick(View v) {
 				Log.d(LOG, "clicked on notes");
-				
+				toggleControls();
+				showForm();
 			}
 		};
 		controls.add(action);
@@ -128,6 +152,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 			@Override
 			public void onClick(View v) {
 				Log.d(LOG, "clicked on delete");
+				toggleControls();
 				
 			}
 		};
@@ -206,7 +231,8 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		// TODO Auto-generated method stub
+		Log.d(LOG, "on touch called at " + event.getX() + "," + event.getY());
+		
 		return false;
 	}
 

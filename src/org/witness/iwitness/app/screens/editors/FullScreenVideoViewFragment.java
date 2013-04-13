@@ -130,11 +130,15 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 		vv_lp.height = (int) (((float) media.dcimEntry.exif.height) / ((float) media.dcimEntry.exif.width) * (float) dims[0]);
 
 		videoView.setLayoutParams(vv_lp);
+		videoView.setOnTouchListener(this);
+		
 		surfaceHolder = videoView.getHolder();
 		Log.d(LOG, "video view dims: " + videoView.getWidth() + " x " + videoView.getHeight());
 		Log.d(LOG, "surface holder dims: " + surfaceHolder.getSurfaceFrame().width() + " x " + surfaceHolder.getSurfaceFrame().height());
 		surfaceHolder.addCallback(this);
 		surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		
+		regionDisplay = surfaceHolder.lockCanvas();
 
 		videoControlsHolder = (LinearLayout) mediaHolder_.findViewById(R.id.video_controls_holder);		
 

@@ -8,6 +8,7 @@ import org.witness.iwitness.app.screens.FullScreenViewFragment;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Handler;
@@ -77,6 +78,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		
 		mediaHolder_ = new ImageView(a);
 		mediaHolder_.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
+		mediaHolder_.setOnTouchListener(this);
 		mediaHolder.addView(mediaHolder_);
 		
 		toggleControls.setOnClickListener(this);
@@ -145,6 +147,9 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		} 
 
 		mediaHolder_.setImageBitmap(bitmap);
+		
+		Bitmap bmpGrayscale = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.RGB_565);
+		regionDisplay = new Canvas(bmpGrayscale);
 
 		// Set the OnTouch and OnLongClick listeners to this (ImageEditor)
 		mediaHolder.setOnTouchListener(this);
