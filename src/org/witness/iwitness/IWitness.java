@@ -38,7 +38,8 @@ import android.os.Message;
 import android.util.Log;
 
 public class IWitness extends Activity implements InformaCamStatusListener {
-	Intent init, route;
+	Intent init = null;
+	Intent route = null;
 	int routeCode;
 	
 	private final static String LOG = Constants.App.Router.LOG;
@@ -93,6 +94,13 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 		Log.d(LOG, "ON RESUME");
 		try {
 			informaCam = InformaCam.getInstance(this);
+			if(route != null) {
+				//routeByIntent();
+				Log.d(LOG, "we have a route! lets go!");
+			} else {
+				Log.d(LOG, "route is null now, please wait");
+			}
+			
 		} catch(NullPointerException e) {
 			Log.e(LOG, "informacam has not started again yet");
 		}

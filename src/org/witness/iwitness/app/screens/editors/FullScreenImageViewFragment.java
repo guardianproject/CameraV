@@ -1,23 +1,17 @@
 package org.witness.iwitness.app.screens.editors;
 
-import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IImage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
-import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
-import org.witness.iwitness.app.screens.forms.TagFormFragment;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,17 +51,14 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
-		this.a = a;
-
+		
 		media = new IImage();
 		media.inflate(((EditorActivity) a).media.asJson());
-		informaCam = InformaCam.getInstance();
 	}
 	
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		// TODO: save state and cleanup bitmaps!
 		
 		try {
 			bitmap.recycle();
@@ -81,15 +72,8 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		
-		initLayout();
-	}
-
-	private void initLayout() {
-		Log.d(LOG, media.asJson().toString());
-		mediaHolderParent.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
+	protected void initLayout() {
+		super.initLayout();
 		
 		mediaHolder_ = new ImageView(a);
 		mediaHolder_.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
@@ -147,13 +131,6 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 
 		originalBitmap = bitmap;
 		setBitmap();
-		
-		tagFormFragment = Fragment.instantiate(a, TagFormFragment.class.getName());
-		
-		FragmentTransaction ft = ((EditorActivity) a).fm.beginTransaction();
-		ft.add(R.id.fullscreen_form_holder, tagFormFragment);
-		ft.addToBackStack(null);
-		ft.commit();
 	}
 
 	private void setBitmap() {

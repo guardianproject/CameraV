@@ -1,7 +1,10 @@
 package org.witness.iwitness.app.screens;
 
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.models.media.IImage;
 import org.witness.iwitness.R;
+import org.witness.iwitness.app.EditorActivity;
+import org.witness.iwitness.app.screens.forms.TagFormFragment;
 import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.App.Editor.Mode;
@@ -12,6 +15,8 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -64,13 +69,14 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater li, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(li, container, savedInstanceState);
 
 		rootView = li.inflate(R.layout.fragment_editor_fullscreen_view, null);
 		toggleControls = (ImageButton) rootView.findViewById(R.id.toggle_controls);
+		toggleControls.setOnClickListener(this);
 
 		int controlHolder = R.id.controls_holder_portrait;
 
@@ -87,6 +93,30 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		return rootView;
 	}
 	
+	protected void initLayout() {
+		mediaHolderParent.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
+		showForms();
+		toggleControls();
+	}
+
+	protected void showForms() {
+		tagFormFragment = Fragment.instantiate(a, TagFormFragment.class.getName());
+
+		FragmentTransaction ft = ((EditorActivity) a).fm.beginTransaction();
+		ft.add(R.id.fullscreen_form_holder, tagFormFragment);
+		ft.addToBackStack(null);
+		ft.commit();
+	}
+
+	
+	@Override
+	public void onAttach(Activity a) {
+		super.onAttach(a);
+		this.a = a;
+		
+		informaCam = InformaCam.getInstance();
+	}
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -96,10 +126,11 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		} else {
 			controlsHolder = (LinearLayout) rootView.findViewById(R.id.controls_holder_portrait);
 		}
-		
+
 		dims = informaCam.getDimensions();
+		initLayout();
 	}
-	
+
 	protected void toggleControls() {
 		int d = R.drawable.ic_edit_show_tags;
 
@@ -128,6 +159,6 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	
+
+
 }
