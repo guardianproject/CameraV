@@ -3,7 +3,8 @@
     android:layout_width="90dip"
     android:layout_height="90dip"
     android:layout_gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/extras_editor_item_background">
 
     <ImageView
         android:id="@+id/context_menu_item_icon"
@@ -21,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="6dip"
         android:text="Notes" />
 
 </RelativeLayout>

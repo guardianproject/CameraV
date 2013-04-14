@@ -1,10 +1,6 @@
 package org.witness.iwitness.app.screens.editors;
 
-import org.json.JSONException;
 import org.witness.informacam.models.media.IImage;
-import org.witness.informacam.models.media.IRegion;
-import org.witness.informacam.ui.IRegionDisplay;
-import org.witness.informacam.ui.IRegionDisplay.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
@@ -14,18 +10,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-public class FullScreenImageViewFragment extends FullScreenViewFragment implements IRegionDisplayListener {
-	IImage media;
+public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	Bitmap bitmap, originalBitmap, previewBitmap;
 	ImageView mediaHolder_;
+	IImage media_ = new IImage();
 
 	// sample sized used to downsize from native photo
 	int inSampleSize;
@@ -36,30 +28,10 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment implemen
 	// Saved Matrix for not allowing a current operation (over max zoom)
 	Matrix savedMatrix = new Matrix();
 
-	//handles threaded events for the UI thread
-	private Handler mHandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			switch (msg.what) {
-			case 1: // loaded?
-				Log.d(LOG, "bitmap loaded");
-				break;
-			default:
-				super.handleMessage(msg);
-			}
-		}
-
-	};
-
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
-
-		media = new IImage();
-		media.inflate(((EditorActivity) a).media.asJson());
+		media_.inflate(((EditorActivity) a).media.asJson());
 	}
 
 	@Override
@@ -93,12 +65,12 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment implemen
 		bfo.inPreferredConfig = Bitmap.Config.RGB_565;
 
 		byte[] bytes = null;
-		if(media.bitmap != null) {
-			bytes = informaCam.ioService.getBytes(media.bitmap, Type.IOCIPHER);
+		if(media_.bitmap != null) {
+			bytes = informaCam.ioService.getBytes(media_.bitmap, Type.IOCIPHER);
 		} else {
 			info.guardianproject.iocipher.File bitmapBytes = new info.guardianproject.iocipher.File(media.rootFolder, media.dcimEntry.name);
 			bytes = informaCam.ioService.getBytes(bitmapBytes.getAbsolutePath(), Type.IOCIPHER);
-			media.bitmap = bitmapBytes.getAbsolutePath();
+			media_.bitmap = bitmapBytes.getAbsolutePath();
 			Log.d(LOG, "we didn't have this bitmap before for some reason...");
 		}
 		bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -165,34 +137,5 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment implemen
 		matrix.postTranslate((float)((float) dims[0] -(float) bitmap.getWidth() * (float) matrixScale)/2f,(float)((float) dims[1] - (float) bitmap.getHeight() * matrixScale)/2f);
 
 		mediaHolder_.setImageMatrix(matrix);
-	}
-
-
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		if(!super.onTouch(v, event)) {
-			if(event.getAction() == MotionEvent.ACTION_UP) {
-				if(currentRegion == null) {
-					try {
-						setCurrentRegion(media.addRegion((int) event.getY() - (DEFAULT_REGION_HEIGHT/2), (int) event.getX() - (DEFAULT_REGION_WIDTH/2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT));
-						mediaHolder.addView(currentRegion.getRegionDisplay());
-					} catch (JSONException e) {
-						Log.e(LOG, e.toString());
-						e.printStackTrace();
-					}
-
-				}
-			}
-		} else {
-			v.performClick();
-		}
-
-		return true;
-	}
-
-	@Override
-	public void onSelected(IRegionDisplay regionDisplay) {
-		Log.d(LOG, "i am selecting this region");
-		setCurrentRegion(media.getRegionAtRect(regionDisplay));
 	}
 }

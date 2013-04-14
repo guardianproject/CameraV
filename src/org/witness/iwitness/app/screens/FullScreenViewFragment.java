@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.media.IRegionBounds;
 import org.witness.informacam.ui.IRegionDisplay;
 import org.witness.informacam.ui.IRegionDisplay.IRegionDisplayListener;
-import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.forms.TagFormFragment;
@@ -39,7 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class FullScreenViewFragment extends Fragment implements OnClickListener, OnTouchListener  {
+public class FullScreenViewFragment extends Fragment implements OnClickListener, OnTouchListener, IRegionDisplayListener  {
 	protected View rootView;
 	protected Activity a;
 
@@ -59,6 +59,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected int[] dims;
 	protected int scrollTarget;
 
+	protected IMedia media;
 	protected IRegion currentRegion = null; 
 
 	// We can be in one of these 3 states
@@ -79,6 +80,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected float minMoveDistance; // = ViewConfiguration.get(this).getScaledTouchSlop();
 
 	public int DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT;
+
 	private OnTouchListener noScroll = new OnTouchListener() {
 
 		@Override
@@ -87,7 +89,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		}
 
 	};
-	
+
 	private OnTouchListener withScroll = new OnTouchListener() {
 
 		@Override
@@ -97,7 +99,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 				scrollRoot.scrollTo(0, 0);
 				return true;
 			}
-			
+
 			return false;
 		}
 
@@ -156,6 +158,12 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		toggleControls();
 	}
 
+	protected void deleteTag() {
+		media.removeRegion(currentRegion);
+		mediaHolder.removeView(currentRegion.getRegionDisplay());
+		currentRegion = null;
+	}
+
 	protected void registerControls() {
 		List<ContextMenuAction> controls = new ArrayList<ContextMenuAction>();
 
@@ -166,9 +174,10 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 			@Override
 			public void onClick(View v) {
-				Log.d(LOG, "clicked on notes");
-				toggleControls();
-				showForm();
+				if(currentRegion != null) {
+					toggleControls();
+					showForm();
+				}
 			}
 		};
 		controls.add(action);
@@ -180,9 +189,10 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 			@Override
 			public void onClick(View v) {
-				Log.d(LOG, "clicked on delete");
-				toggleControls();
-
+				if(currentRegion != null) {
+					toggleControls();
+					deleteTag();
+				}
 			}
 		};
 		controls.add(action);
@@ -206,6 +216,12 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected void showForm() {
 		scrollRoot.scrollTo(0, scrollTarget);
 		scrollRoot.setOnTouchListener(withScroll);
+
+		if(currentRegion.formPath != null) {
+			// TODO: instantiate form with old values
+		} else {
+			// TODO: instantiate form without values
+		}
 	}
 
 	protected void showForms() {
@@ -218,9 +234,23 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	}
 
 	protected void setCurrentRegion(IRegion region) {
+		setCurrentRegion(region, false);
+	}
+	
+	protected void setCurrentRegion(IRegion region, boolean isNew) {
 		currentRegion = region;
 		currentRegion.getRegionDisplay().setOnTouchListener(this);
 		scrollRoot.setOnTouchListener(noScroll);
+		
+		if(isNew) {
+			mediaHolder.addView(currentRegion.getRegionDisplay());
+		}
+		
+		for(IRegion r : media.associatedRegions) {
+			if(!r.equals(currentRegion)) {
+				r.getRegionDisplay().setStatus(false);
+			}
+		}
 
 		toggleControls(true);
 	}
@@ -231,6 +261,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		this.a = a;
 
 		informaCam = InformaCam.getInstance();
+		media = ((EditorActivity) a).media;
 	}
 
 	@Override
@@ -245,7 +276,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 		initLayout();
 	}
-	
+
 	protected void toggleControls() {
 		toggleControls(false);
 	}
@@ -273,21 +304,20 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		if(v == toggleControls) {
 			toggleControls();
 		}
-
 	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		Log.d(LOG, "on touch called at " + event.getX() + "," + event.getY() + "\n on view: " + v.getClass().getName() + " (id " + v.getId() + ")\naction: " + event.getAction());
 		v.getParent().requestDisallowInterceptTouchEvent(true);
-		
+
 		if(v instanceof IRegionDisplay) {
 			float lastX = 0;
 			float lastY = 0;
 
 			switch(event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
-				
+
 				lastX = event.getX();
 				lastY = event.getY();
 				break;
@@ -306,17 +336,36 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 				lastX = x;
 				lastY = y;
 
-				((IRegionDisplay) v).update();				
+				((IRegionDisplay) v).update();
+
 
 				break;
 			case MotionEvent.ACTION_UP:
-				return true;
+				v.performClick();
+				break;
 			}
 		} else {
 			currentRegion = null;
+			if(event.getAction() == MotionEvent.ACTION_UP){
+				try {
+					setCurrentRegion(media.addRegion((int) event.getY() - (DEFAULT_REGION_HEIGHT/2), (int) event.getX() - (DEFAULT_REGION_WIDTH/2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT), true);
+					
+				} catch (JSONException e) {
+					Log.e(LOG, e.toString());
+					e.printStackTrace();
+				}
+
+			}
+
 		}
 
 		return false;
+	}
+
+	@Override
+	public void onSelected(IRegionDisplay regionDisplay) {
+		Log.d(LOG, "i am selecting this region");
+		setCurrentRegion(media.getRegionAtRect(regionDisplay));
 	}
 
 }

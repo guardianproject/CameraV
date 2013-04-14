@@ -2,15 +2,12 @@ package org.witness.iwitness.app.screens.editors;
 
 import java.io.IOException;
 
-import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.storage.InformaCamMediaScanner;
 import org.witness.iwitness.R;
-import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
-import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
 import android.app.Activity;
 import android.media.MediaMetadataRetriever;
@@ -23,7 +20,6 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -33,13 +29,12 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.ProgressBar;
 import android.widget.VideoView;
 
 public class FullScreenVideoViewFragment extends FullScreenViewFragment implements OnCompletionListener, 
 OnErrorListener, OnInfoListener, OnBufferingUpdateListener, OnPreparedListener, OnSeekCompleteListener,
 OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaController.MediaPlayerControl {
-	IVideo media;
+	IVideo media_ = new IVideo();
 
 	MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 	VideoView videoView;
@@ -62,8 +57,7 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 	public void onAttach(Activity a) {
 		super.onAttach(a);
 
-		media = new IVideo();
-		media.inflate(((EditorActivity) a).media.asJson());
+		media_.inflate(media.asJson());
 	}
 
 	private void initVideo() {
@@ -127,7 +121,7 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 
 		LayoutParams vv_lp = videoView.getLayoutParams();
 		vv_lp.width = dims[0];
-		vv_lp.height = (int) (((float) media.dcimEntry.exif.height) / ((float) media.dcimEntry.exif.width) * (float) dims[0]);
+		vv_lp.height = (int) (((float) media_.dcimEntry.exif.height) / ((float) media_.dcimEntry.exif.width) * (float) dims[0]);
 
 		videoView.setLayoutParams(vv_lp);
 		videoView.setOnTouchListener(this);
@@ -147,11 +141,12 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 		mediaHolder.addView(mediaHolder_);
 
 		new Thread(new Runnable() {
+			@SuppressWarnings("unused")
 			@Override
 			public void run() {
 				// copy from iocipher to local :(
-				videoFile = new java.io.File(Storage.EXTERNAL_DIR, media.dcimEntry.name);
-				informaCam.ioService.saveBlob(informaCam.ioService.getBytes(media.dcimEntry.fileName, Type.IOCIPHER), videoFile, true);
+				videoFile = new java.io.File(Storage.EXTERNAL_DIR, media_.dcimEntry.name);
+				informaCam.ioService.saveBlob(informaCam.ioService.getBytes(media_.dcimEntry.fileName, Type.IOCIPHER), videoFile, true);
 				InformaCamMediaScanner icms = new InformaCamMediaScanner(FullScreenVideoViewFragment.this.a, videoFile) {
 					@Override
 					public void onScanCompleted(String path, Uri uri) {
