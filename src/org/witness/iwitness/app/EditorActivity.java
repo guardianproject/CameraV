@@ -4,10 +4,11 @@ import java.util.List;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.storage.FormUtility;
+import org.witness.informacam.ui.IRegionDisplay;
+import org.witness.informacam.ui.IRegionDisplay.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.IManifest;
 import org.witness.informacam.utils.Constants.Models;
-import org.witness.informacam.storage.InformaCamMediaScanner.OnMediaScannedListener;
 import org.witness.informacam.models.IForm;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.IMediaManifest;
@@ -36,11 +37,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 
-public class EditorActivity extends SherlockFragmentActivity implements OnClickListener, EditorActivityListener, OnMediaScannedListener {
+public class EditorActivity extends SherlockFragmentActivity implements OnClickListener, EditorActivityListener, IRegionDisplayListener {
 	Intent init;
 
 	int fullscreenProxy, detailsProxy;
@@ -65,7 +64,7 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 		packageName = getClass().getName();
 
 		Log.d(LOG, "hello " + packageName);
-		informaCam = InformaCam.getInstance();
+		informaCam = InformaCam.getInstance(this);
 		
 		initData();
 		
@@ -217,8 +216,11 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 
 	@Override
 	public void onMediaScanned(Uri uri) {
-		Log.d(LOG, "media scanned at uri: " + uri.toString());
-		((EditorActivityListener) fullscreenView).onMediaScanned(uri);
-		
+		((EditorActivityListener) fullscreenView).onMediaScanned(uri);		
+	}
+
+	@Override
+	public void onSelected(IRegionDisplay regionDisplay) {
+		((IRegionDisplayListener) fullscreenView).onSelected(regionDisplay);
 	}
 }

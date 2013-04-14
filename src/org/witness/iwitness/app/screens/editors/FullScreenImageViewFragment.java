@@ -1,6 +1,10 @@
 package org.witness.iwitness.app.screens.editors;
 
+import org.json.JSONException;
 import org.witness.informacam.models.media.IImage;
+import org.witness.informacam.models.media.IRegion;
+import org.witness.informacam.ui.IRegionDisplay;
+import org.witness.informacam.ui.IRegionDisplay.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
@@ -8,16 +12,17 @@ import org.witness.iwitness.app.screens.FullScreenViewFragment;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-public class FullScreenImageViewFragment extends FullScreenViewFragment {
+public class FullScreenImageViewFragment extends FullScreenViewFragment implements IRegionDisplayListener {
 	IImage media;
 	Bitmap bitmap, originalBitmap, previewBitmap;
 	ImageView mediaHolder_;
@@ -52,15 +57,15 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
-		
+
 		media = new IImage();
 		media.inflate(((EditorActivity) a).media.asJson());
 	}
-	
+
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		
+
 		try {
 			bitmap.recycle();
 			originalBitmap.recycle();
@@ -69,18 +74,17 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 			Log.e(LOG, e.toString());
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Override
 	protected void initLayout() {
 		super.initLayout();
-		
+
 		mediaHolder_ = new ImageView(a);
 		mediaHolder_.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
-		mediaHolder_.setOnTouchListener(this);
 		mediaHolder.addView(mediaHolder_);
-		
+
 		toggleControls.setOnClickListener(this);
 		toggleControls();
 
@@ -147,9 +151,6 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		} 
 
 		mediaHolder_.setImageBitmap(bitmap);
-		
-		Bitmap bmpGrayscale = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.RGB_565);
-		regionDisplay = new Canvas(bmpGrayscale);
 
 		// Set the OnTouch and OnLongClick listeners to this (ImageEditor)
 		mediaHolder.setOnTouchListener(this);
@@ -164,5 +165,34 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		matrix.postTranslate((float)((float) dims[0] -(float) bitmap.getWidth() * (float) matrixScale)/2f,(float)((float) dims[1] - (float) bitmap.getHeight() * matrixScale)/2f);
 
 		mediaHolder_.setImageMatrix(matrix);
+	}
+
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		if(!super.onTouch(v, event)) {
+			if(event.getAction() == MotionEvent.ACTION_UP) {
+				if(currentRegion == null) {
+					try {
+						setCurrentRegion(media.addRegion((int) event.getY() - (DEFAULT_REGION_HEIGHT/2), (int) event.getX() - (DEFAULT_REGION_WIDTH/2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT));
+						mediaHolder.addView(currentRegion.getRegionDisplay());
+					} catch (JSONException e) {
+						Log.e(LOG, e.toString());
+						e.printStackTrace();
+					}
+
+				}
+			}
+		} else {
+			v.performClick();
+		}
+
+		return true;
+	}
+
+	@Override
+	public void onSelected(IRegionDisplay regionDisplay) {
+		Log.d(LOG, "i am selecting this region");
+		setCurrentRegion(media.getRegionAtRect(regionDisplay));
 	}
 }

@@ -3,8 +3,13 @@ package org.witness.iwitness.app.screens;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IRegion;
+import org.witness.informacam.models.media.IRegionBounds;
+import org.witness.informacam.ui.IRegionDisplay;
+import org.witness.informacam.ui.IRegionDisplay.IRegionDisplayListener;
+import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.forms.TagFormFragment;
@@ -15,8 +20,6 @@ import org.witness.iwitness.utils.actions.ContextMenuAction;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -45,8 +48,8 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected ImageButton toggleControls;
 	protected LinearLayout controlsHolder;
 	protected RelativeLayout mediaHolder;
-	protected Canvas regionDisplay;
 	protected ScrollView scrollRoot;
+
 	protected boolean controlsAreShowing = false;
 
 	protected FrameLayout formHolder;
@@ -55,9 +58,9 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	protected int[] dims;
 	protected int scrollTarget;
-	
+
 	protected IRegion currentRegion = null; 
-	
+
 	// We can be in one of these 3 states
 	protected int mode = Mode.NONE;
 
@@ -75,9 +78,32 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected float minMoveDistanceDP = 5f;
 	protected float minMoveDistance; // = ViewConfiguration.get(this).getScaledTouchSlop();
 
-	protected final static String LOG = App.Editor.LOG;
+	public int DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT;
+	private OnTouchListener noScroll = new OnTouchListener() {
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			return true;
+		}
+
+	};
 	
-	protected Paint activePaint, inactivePaint;
+	private OnTouchListener withScroll = new OnTouchListener() {
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			if(scrollRoot.getScrollY() == 0) {
+				scrollRoot.setOnTouchListener(noScroll);
+				scrollRoot.scrollTo(0, 0);
+				return true;
+			}
+			
+			return false;
+		}
+
+	};
+
+	protected final static String LOG = App.Editor.LOG;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,49 +113,52 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	@Override
 	public View onCreateView(LayoutInflater li, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(li, container, savedInstanceState);
+		dims = InformaCam.getInstance().getDimensions();
 
 		rootView = li.inflate(R.layout.fragment_editor_fullscreen_view, null);
-		
+
 		scrollRoot = (ScrollView) rootView.findViewById(R.id.scroll_root);
-		
+		scrollRoot.setOnTouchListener(noScroll);
+
 		toggleControls = (ImageButton) rootView.findViewById(R.id.toggle_controls);
 		toggleControls.setOnClickListener(this);
 
 		int controlHolder = R.id.controls_holder_portrait;
-		scrollTarget = InformaCam.getInstance().getDimensions()[0];
+
+		scrollTarget = dims[0];
+		DEFAULT_REGION_WIDTH = (int) (dims[0] * 0.2);
+		DEFAULT_REGION_HEIGHT = (int) (dims[1] * 0.3);
 
 		if(getArguments().getInt(Codes.Extras.SET_ORIENTATION) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
 			controlHolder = R.id.controls_holder_landscape;
-			scrollTarget = InformaCam.getInstance().getDimensions()[1];
+
+			scrollTarget = dims[1];
+			DEFAULT_REGION_WIDTH = (int) (dims[0] * 0.3);
+			DEFAULT_REGION_HEIGHT = (int) (dims[1] * 0.2);
 		}
-			
+
 		controlsHolder = (LinearLayout) rootView.findViewById(controlHolder);
-				
+
 		mediaHolderParent = (RelativeLayout) rootView.findViewById(R.id.media_holder_parent);
+
 		mediaHolder = (RelativeLayout) rootView.findViewById(R.id.media_holder);
+		mediaHolder.setOnTouchListener(this);
+
 		formHolder = (FrameLayout) rootView.findViewById(R.id.fullscreen_form_holder);
 
 		return rootView;
 	}
-	
+
 	protected void initLayout() {
 		mediaHolderParent.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		showForms();
 		registerControls();
 		toggleControls();
-		
-		activePaint = new Paint();
-		
-		inactivePaint = new Paint();
 	}
-	
-	protected void showForm() {
-		scrollRoot.scrollTo(0, scrollTarget);
-	}
-	
+
 	protected void registerControls() {
 		List<ContextMenuAction> controls = new ArrayList<ContextMenuAction>();
-		
+
 		ContextMenuAction action = new ContextMenuAction();
 		action.label = a.getString(R.string.notes);
 		action.iconResource = R.drawable.ic_edit_notes;
@@ -143,7 +172,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 			}
 		};
 		controls.add(action);
-		
+
 		action = new ContextMenuAction();
 		action.label = a.getString(R.string.delete_tag);
 		action.iconResource = R.drawable.ic_edit_delete;
@@ -153,25 +182,30 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 			public void onClick(View v) {
 				Log.d(LOG, "clicked on delete");
 				toggleControls();
-				
+
 			}
 		};
 		controls.add(action);
-		
+
 		for(ContextMenuAction cma : controls) {
 			View control = LayoutInflater.from(a).inflate(R.layout.adapter_context_menu_editor, null);
 			control.setLayoutParams(toggleControls.getLayoutParams());
-			
+
 			ImageView icon = (ImageView) control.findViewById(R.id.context_menu_item_icon);
 			icon.setImageDrawable(a.getResources().getDrawable(cma.iconResource));
-			
+
 			TextView label = (TextView) control.findViewById(R.id.context_menu_item_label);
 			label.setText(cma.label);
-			
+
 			control.setOnClickListener(cma.ocl);
 			controlsHolder.addView(control);
 		}
-		
+
+	}
+
+	protected void showForm() {
+		scrollRoot.scrollTo(0, scrollTarget);
+		scrollRoot.setOnTouchListener(withScroll);
 	}
 
 	protected void showForms() {
@@ -183,15 +217,22 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		ft.commit();
 	}
 
-	
+	protected void setCurrentRegion(IRegion region) {
+		currentRegion = region;
+		currentRegion.getRegionDisplay().setOnTouchListener(this);
+		scrollRoot.setOnTouchListener(noScroll);
+
+		toggleControls(true);
+	}
+
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
 		this.a = a;
-		
+
 		informaCam = InformaCam.getInstance();
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -202,12 +243,18 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 			controlsHolder = (LinearLayout) rootView.findViewById(R.id.controls_holder_portrait);
 		}
 
-		dims = informaCam.getDimensions();
 		initLayout();
 	}
-
+	
 	protected void toggleControls() {
+		toggleControls(false);
+	}
+
+	protected void toggleControls(boolean forceShow) {
 		int d = R.drawable.ic_edit_show_tags;
+		if(forceShow) {
+			controlsAreShowing = false;
+		}
 
 		if(controlsAreShowing) {
 			controlsHolder.setVisibility(View.GONE);
@@ -231,10 +278,45 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		Log.d(LOG, "on touch called at " + event.getX() + "," + event.getY());
+		Log.d(LOG, "on touch called at " + event.getX() + "," + event.getY() + "\n on view: " + v.getClass().getName() + " (id " + v.getId() + ")\naction: " + event.getAction());
+		v.getParent().requestDisallowInterceptTouchEvent(true);
 		
+		if(v instanceof IRegionDisplay) {
+			float lastX = 0;
+			float lastY = 0;
+
+			switch(event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				
+				lastX = event.getX();
+				lastY = event.getY();
+				break;
+			case MotionEvent.ACTION_MOVE:
+
+				final float x = event.getX();
+				final float y = event.getY();
+
+				final float dX = (x - lastX) - (DEFAULT_REGION_WIDTH/2);
+				final float dY = (y - lastY) - (DEFAULT_REGION_HEIGHT/2);
+
+				IRegionBounds bounds = ((IRegionDisplay) v).bounds;
+				bounds.displayLeft += dX;
+				bounds.displayTop += dY;
+
+				lastX = x;
+				lastY = y;
+
+				((IRegionDisplay) v).update();				
+
+				break;
+			case MotionEvent.ACTION_UP:
+				return true;
+			}
+		} else {
+			currentRegion = null;
+		}
+
 		return false;
 	}
-
 
 }

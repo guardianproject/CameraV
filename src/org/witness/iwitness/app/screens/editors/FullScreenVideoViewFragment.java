@@ -138,8 +138,6 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 		surfaceHolder.addCallback(this);
 		surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		
-		regionDisplay = surfaceHolder.lockCanvas();
-
 		videoControlsHolder = (LinearLayout) mediaHolder_.findViewById(R.id.video_controls_holder);		
 
 		videoSeekBar = (VideoSeekBar) mediaHolder_.findViewById(R.id.video_seek_bar);
