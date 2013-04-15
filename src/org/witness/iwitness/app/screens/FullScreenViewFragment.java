@@ -62,23 +62,6 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected IMedia media;
 	protected IRegion currentRegion = null; 
 
-	// We can be in one of these 3 states
-	protected int mode = Mode.NONE;
-
-	// For Zooming
-	protected float startFingerSpacing = 0f;
-	protected float endFingerSpacing = 0f;
-	protected PointF startFingerSpacingMidPoint = new PointF();
-
-	// For Dragging
-	protected PointF startPoint = new PointF();
-
-	// Don't allow it to move until the finger moves more than this amount
-	// Later in the code, the minMoveDistance in real pixels is calculated
-	// to account for different touch screen resolutions
-	protected float minMoveDistanceDP = 5f;
-	protected float minMoveDistance; // = ViewConfiguration.get(this).getScaledTouchSlop();
-
 	public int DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT;
 
 	private OnTouchListener noScroll = new OnTouchListener() {
