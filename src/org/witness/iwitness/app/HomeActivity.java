@@ -138,7 +138,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 					if(organization != null) {
 						viewPager.setCurrentItem(0);
 						// TODO: add to notifications
-						Log.d(LOG, "installed this: " + organization.asJson().toString());
 					} else {
 						// TODO: handle error
 					}

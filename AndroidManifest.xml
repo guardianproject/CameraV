@@ -78,8 +78,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW" />
                 <data
-                    android:mimeType="application/*"
-                    android:pathPattern=".*.ictd"
+                    android:mimeType="*/*"
+                    android:pathPattern=".*\\.ictd"
                     android:scheme="file" />
             </intent-filter>
         </activity>

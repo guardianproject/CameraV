@@ -1,35 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/organization_list_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="10dip" >
 
-    <Button
-        android:id="@+id/organizations_export_key"
-        style="@style/button_d"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_context_slide_right"
-        android:paddingLeft="10dip"
-        android:text="@string/export_my_credentials" />
+        android:layout_marginLeft="6dip"
+        android:layout_marginRight="6dip"
+        android:orientation="vertical" >
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dip" >
-
-        <LinearLayout
+        <Button
+            android:id="@+id/organizations_export_key"
+            style="@style/button_d"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:drawableLeft="@drawable/ic_context_slide_right"
+            android:paddingLeft="10dip"
+            android:layout_marginBottom="10dip"
+            android:text="@string/export_my_credentials" />
 
-            <ListView
-                android:id="@+id/organizations_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    </ScrollView>
+        <ListView
+            android:id="@+id/organizations_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

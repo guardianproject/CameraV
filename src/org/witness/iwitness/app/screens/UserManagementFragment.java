@@ -12,6 +12,7 @@ import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.Codes.Routes;
 import org.witness.iwitness.utils.Constants.App.Home.Tabs;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
+import org.witness.iwitness.utils.adapters.NotificationsListAdapter;
 import org.witness.iwitness.utils.adapters.OrganizationsListAdapter;
 
 import android.app.Activity;
@@ -39,7 +40,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	ImageButton emergencyWipe, toSettings, thumbnail;
 	Button exportCredentials;
 	
-	TextView alias, connectivity;
+	TextView alias, connectivity, notificationsNoNotifications;
 	ListView notificationsHolder, organizationsHolder;
 	
 	LayoutInflater li;
@@ -105,6 +106,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		tabHost.addTab(tab);
 		
 		notificationsHolder = (ListView) v.findViewById(R.id.notifications_list_view);
+		notificationsNoNotifications = (TextView) v.findViewById(R.id.notification_no_notifications);
 		
 		tab = tabHost.newTabSpec(Tabs.CameraChooser.TAG).setIndicator(generateTab(li, R.layout.user_management_fragment_tab, getResources().getString(R.string.organizations)));
 		v = li.inflate(R.layout.fragment_user_management_organizations, tabHost.getTabContentView(), true);
@@ -129,6 +131,12 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		installedOrganizations.inflate(informaCam.getModel(installedOrganizations));
 		organizationsHolder.setOnItemLongClickListener(this);
 		organizationsHolder.setAdapter(new OrganizationsListAdapter(installedOrganizations.organizations));
+		
+		if(informaCam.notificationsManifest.notifications.size() == 0) {
+			notificationsNoNotifications.setVisibility(View.VISIBLE);
+		} else {
+			notificationsHolder.setAdapter(new NotificationsListAdapter(informaCam.notificationsManifest.notifications));
+		}
 		
 	}
 	
@@ -179,7 +187,10 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l) {
-		((HomeActivityListener) a).getContextualMenuFor(installedOrganizations.organizations.get((int) l));
+		IOrganization org = installedOrganizations.organizations.get((int) l);
+		if(org.transportCredentials.certificatePath != null) {
+			((HomeActivityListener) a).getContextualMenuFor(org);
+		}
 		return true;
 	}
 }

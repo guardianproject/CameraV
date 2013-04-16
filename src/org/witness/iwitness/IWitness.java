@@ -46,6 +46,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	private String packageName;
 	
 	private Handler h = new Handler();
+	private ServiceConnection sc;
 	
 	InformaCam informaCam;
 	
@@ -59,7 +60,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 		init = getIntent();
 		
 		setContentView(R.layout.activity_main);
-		ServiceConnection sc = new ServiceConnection() {
+		sc = new ServiceConnection() {
 
 			@SuppressWarnings("static-access")
 			@Override
@@ -99,6 +100,13 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 				Log.d(LOG, "we have a route! lets go!");
 			} else {
 				Log.d(LOG, "route is null now, please wait");
+				if(informaCam.isAbsolutelyLoggedIn()) {
+					route = new Intent(this, HomeActivity.class);
+					routeCode = Home.ROUTE_CODE;
+					routeByIntent();
+				} else {
+					Log.d(LOG, "no, not logged in");
+				}
 			}
 			
 		} catch(NullPointerException e) {
@@ -118,6 +126,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	
 	@Override
 	public void onDestroy() {
+		unbindService(sc);
 		super.onDestroy();
 		
 	}
