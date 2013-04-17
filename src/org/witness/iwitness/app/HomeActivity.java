@@ -6,11 +6,9 @@ import java.util.Vector;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.ui.CameraActivity;
-import org.witness.informacam.utils.InformaCamBroadcaster;
-import org.witness.informacam.utils.Constants.Actions;
-import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
+import org.witness.informacam.models.connections.IConnection;
 import org.witness.informacam.models.connections.IMessage;
 import org.witness.informacam.models.IOrganization;
 import org.witness.informacam.models.media.IMedia;
@@ -34,15 +32,10 @@ import org.witness.iwitness.utils.actions.ContextMenuAction;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -250,7 +243,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				new TextareaPopup(HomeActivity.this, organization) {
 					@Override
 					public void cancel() {
-						IMessage connection = new IMessage(organization, this.prompt.getText().toString());
+						IConnection connection = new IMessage(organization, this.prompt.getText().toString());
 						informaCam.uploaderService.addToQueue(connection);
 						
 						super.cancel();
@@ -290,7 +283,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				new RenamePopup(HomeActivity.this, ((IMedia) informaCam.mediaManifest.getById(media._id)));
+				new RenamePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id));
 			}
 
 		};
@@ -303,7 +296,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				new SharePopup(HomeActivity.this, ((IMedia) informaCam.mediaManifest.getById(media._id)), true);
+				new SharePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id), true);
 			}
 
 		};

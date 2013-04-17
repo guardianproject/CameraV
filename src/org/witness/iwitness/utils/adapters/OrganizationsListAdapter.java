@@ -38,15 +38,16 @@ public class OrganizationsListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		final IOrganization organization = organizations.get(position);
 		convertView = LayoutInflater.from(InformaCam.getInstance().a).inflate(R.layout.adapter_organization_list_item, null);		
 		TextView name = (TextView) convertView.findViewById(R.id.organization_name);
-		name.setText(organizations.get(position).organizationName);
+		name.setText(organization.organizationName);
 		
 		TextView details = (TextView) convertView.findViewById(R.id.organization_details);
-		details.setText(organizations.get(position).organizationDetails);
+		details.setText(organization.organizationDetails);
 		
 		TextView isActive = (TextView) convertView.findViewById(R.id.organization_is_active);
-		int isActiveText = organizations.get(position).transportCredentials.certificatePath == null ? R.string.unverified : R.string.verified; 
+		int isActiveText = organization.transportCredentials.certificatePath == null ? R.string.unverified : R.string.verified; 
 		isActive.setText(InformaCam.getInstance().a.getString(isActiveText));
 		
 		return convertView;

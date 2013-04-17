@@ -7,6 +7,7 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.IInstalledOrganizations;
 import org.witness.informacam.models.IOrganization;
 import org.witness.informacam.models.media.IMedia;
+import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App.Home.Tabs;
 import org.witness.iwitness.utils.adapters.OrganizationsListAdapter;
@@ -14,12 +15,20 @@ import org.witness.iwitness.utils.adapters.OrganizationsListSpinnerAdapter;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -30,7 +39,7 @@ import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-public class SharePopup extends Popup implements OnClickListener, OnCancelListener, OnDismissListener {
+public class SharePopup extends Popup implements OnClickListener, OnCancelListener, OnDismissListener, OnItemClickListener {
 	TabHost tabHost;
 	LayoutInflater li;
 	Object context;
@@ -43,8 +52,9 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 	CheckBox encryptToggle;
 	Spinner encryptList;
 	Button encryptCommit;
-	
+
 	List<IOrganization> organizations;
+	IOrganization encryptTo = null;
 
 	public SharePopup(Activity a, final Object context) {
 		this(a, context, false);
@@ -123,6 +133,7 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 			noOrganizations.setVisibility(View.GONE);
 			organizationList.setVisibility(View.VISIBLE);
 			organizationList.setAdapter(new OrganizationsListAdapter(installedOrganizations.organizations));
+			organizationList.setOnItemClickListener(this);
 
 			if(organizations.size() == 1) {
 				encryptToggle.setText(a.getString(R.string.send_encrypted_to_x, installedOrganizations.organizations.get(0).organizationName));
@@ -138,16 +149,31 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 		label.setText(labelText);
 		return tab;
 	}
+	
+	private void export(boolean isShare) {
+		((IMedia) context).export(new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				Bundle b = msg.getData();
+				if(b.containsKey(Models.IMedia.VERSION)) {
+					SharePopup.this.cancel();
+				}
+			}
+		}, encryptTo, isShare);
+	}
 
 	@Override
 	public void onClick(View v) {
 		if(v == encryptToggle) {
-			if(((CheckBox) v).isChecked() && organizations.size() > 1) {
-				encryptList.performClick();
+			if(((CheckBox) v).isChecked()) {
+				if(organizations.size() > 1) {
+					encryptList.performClick();
+				} else {
+					encryptTo = organizations.get(0);
+				}
 			}
 		} else if(v == encryptCommit) {
-			((IMedia) context).export();
-			// TODO: with params.
+			export(true);
 		}
 
 	}
@@ -160,6 +186,13 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 	@Override
 	public void onCancel(DialogInterface dialog) {
 
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> adapterView, View view, int viewId, long position) {
+		encryptTo = organizations.get((int) position);
+		Log.d(LOG, "now exporting to " + encryptTo.organizationName);
+		export(false);
 	}
 
 }

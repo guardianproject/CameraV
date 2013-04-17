@@ -42,7 +42,6 @@ public class NotificationsListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Log.d(LOG, "notification: " + notifications.get(position).asJson().toString());
 		INotification notification = notifications.get(position);
 		
 		convertView = LayoutInflater.from(InformaCam.getInstance().a).inflate(R.layout.adapter_notification_list_item, null);
