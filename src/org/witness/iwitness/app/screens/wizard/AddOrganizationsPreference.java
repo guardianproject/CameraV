@@ -13,8 +13,8 @@ import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.IManifest;
 import org.witness.informacam.utils.Constants.WizardListener;
 import org.witness.informacam.models.connections.IConnection;
-import org.witness.informacam.models.IInstalledOrganizations;
-import org.witness.informacam.models.IOrganization;
+import org.witness.informacam.models.organizations.IInstalledOrganizations;
+import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App;
 

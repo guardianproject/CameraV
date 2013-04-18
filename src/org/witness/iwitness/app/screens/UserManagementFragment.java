@@ -1,9 +1,9 @@
 package org.witness.iwitness.app.screens;
 
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.models.IInstalledOrganizations;
-import org.witness.informacam.models.IOrganization;
-import org.witness.informacam.models.IUser;
+import org.witness.informacam.models.organizations.IInstalledOrganizations;
+import org.witness.informacam.models.organizations.IOrganization;
+import org.witness.informacam.models.credentials.IUser;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.WipeActivity;

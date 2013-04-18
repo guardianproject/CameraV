@@ -19,13 +19,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class GalleryListAdapter extends BaseAdapter {
-	List<IMedia> media;
+	List<? super IMedia> media;
 	LayoutInflater li;
 	Activity a;
 	
 	private final static String LOG = App.LOG;
 	
-	public GalleryListAdapter(Activity a, List<IMedia> media) throws NullPointerException {
+	public GalleryListAdapter(Activity a, List<? super IMedia> media) throws NullPointerException {
 		this.media = media;
 		this.a = a;
 		li = LayoutInflater.from(a);
@@ -48,18 +48,20 @@ public class GalleryListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
+		IMedia m = (IMedia) media.get(position);
+		
 		View view = li.inflate(R.layout.adapter_gallery_list, null);
 		
 		ImageView iv = (ImageView) view.findViewById(R.id.gallery_list);
 		
-		Bitmap bitmap = media.get(position).getBitmap(media.get(position).bitmapPreview);
+		Bitmap bitmap = m.getBitmap(m.bitmapPreview);
 		iv.setImageBitmap(bitmap);
 		
 		TextView tv = (TextView) view.findViewById(R.id.gallery_details);
-		tv.setText(media.get(position).renderDetailsAsText(1));
+		tv.setText(m.renderDetailsAsText(1));
 		
 		try {
-			if(!media.get(position).getBoolean(Models.IMediaManifest.Sort.IS_SHOWING)) {
+			if(!m.getBoolean(Models.IMediaManifest.Sort.IS_SHOWING)) {
 				view.setVisibility(View.GONE);
 			}
 		} catch (JSONException e) {

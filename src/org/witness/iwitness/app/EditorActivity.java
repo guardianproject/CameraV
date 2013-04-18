@@ -6,12 +6,9 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.IRegionDisplay;
 import org.witness.informacam.ui.IRegionDisplay.IRegionDisplayListener;
-import org.witness.informacam.utils.Constants.App.Storage.Type;
-import org.witness.informacam.utils.Constants.IManifest;
 import org.witness.informacam.utils.Constants.Models;
-import org.witness.informacam.models.IForm;
+import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
-import org.witness.informacam.models.IMediaManifest;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.DetailsViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenImageViewFragment;
@@ -99,21 +96,17 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 			setResult(Activity.RESULT_CANCELED);
 			finish();
 		}
-
-		IMediaManifest manifest = new IMediaManifest();
-		manifest.inflate(informaCam.ioService.getBytes(IManifest.MEDIA, Type.IOCIPHER));
 		
-		media = new IMedia();
-		media.inflate(getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA).getBytes());
+		String mId = getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA);
+		media = informaCam.mediaManifest.getById(mId);
 		informaCam.informaService.associateMedia(media);
-		
-		availableForms = FormUtility.getAvailableForms();
 
 		if(media == null) {
 			setResult(Activity.RESULT_CANCELED);
 			finish();
 		}
 
+		availableForms = FormUtility.getAvailableForms();
 		Log.d(LOG, "INITING MEDIA FOR EDIT:\n" + media.asJson().toString());		
 	}
 

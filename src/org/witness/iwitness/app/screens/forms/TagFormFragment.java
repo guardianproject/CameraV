@@ -1,6 +1,6 @@
 package org.witness.iwitness.app.screens.forms;
 
-import org.witness.informacam.models.IForm;
+import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.iwitness.R;

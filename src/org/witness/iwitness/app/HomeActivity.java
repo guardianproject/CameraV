@@ -10,7 +10,7 @@ import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 import org.witness.informacam.models.connections.IConnection;
 import org.witness.informacam.models.connections.IMessage;
-import org.witness.informacam.models.IOrganization;
+import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.media.IMedia;
 
 import org.witness.iwitness.R;
@@ -223,7 +223,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void launchEditor(IMedia media) {
-		toEditor.putExtra(Codes.Extras.EDIT_MEDIA, media.asJson().toString());
+		toEditor.putExtra(Codes.Extras.EDIT_MEDIA, media._id);
 		waiter = new WaitPopup(this);
 		informaCam.startInforma();
 		Log.d(LOG, "launching editor for " + media._id);		
@@ -268,7 +268,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				if(((IMedia) informaCam.mediaManifest.getById(media._id)).delete()) {
+				if((informaCam.mediaManifest.getById(media._id)).delete()) {
 					((GalleryFragment) galleryFragment).updateData();
 				}
 			}

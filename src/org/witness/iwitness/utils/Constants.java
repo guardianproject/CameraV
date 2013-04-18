@@ -1,6 +1,6 @@
 package org.witness.iwitness.utils;
 
-import org.witness.informacam.models.IOrganization;
+import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.media.IMedia;
 
 import android.net.Uri;
