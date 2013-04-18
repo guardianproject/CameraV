@@ -190,8 +190,6 @@ public class OverviewFormFragment extends Fragment implements OnClickListener {
 		overviewRegion.formPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
 		
 		form.associate(a, quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
-		form.associate(a, audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
-
 	}
 
 	public void cleanup() {
@@ -220,7 +218,8 @@ public class OverviewFormFragment extends Fragment implements OnClickListener {
 	}
 
 	private void recordAudio() {
-		new AudioNotePopup(a) {
+		new AudioNotePopup(a, form) {
+			
 			@Override
 			public void cancel() {
 				super.cancel();
