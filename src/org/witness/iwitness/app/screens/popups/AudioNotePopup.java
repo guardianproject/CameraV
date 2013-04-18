@@ -1,37 +1,22 @@
 package org.witness.iwitness.app.screens.popups;
 
-import info.guardianproject.iocipher.File;
 import info.guardianproject.odkparser.widgets.ODKSeekBar;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.utils.Constants.App.Storage;
-import org.witness.informacam.utils.Constants.App.Storage.Type;
-import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App.Editor.Forms;
 
 import android.app.Activity;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnInfoListener;
-import android.media.MediaRecorder;
 import android.os.Handler;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 
 public class AudioNotePopup extends Popup implements OnClickListener {
-	ODKSeekBar progress;
+	public ODKSeekBar progress;
 	ImageButton playPause, recordStop;
 	Button commit;
 
@@ -63,7 +48,6 @@ public class AudioNotePopup extends Popup implements OnClickListener {
 		progress.init(recordingFile);
 		form.associate(a, progress, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
 		
-		
 		Show();
 	}
 	
@@ -89,7 +73,7 @@ public class AudioNotePopup extends Popup implements OnClickListener {
 				}
 			}
 		} else if(v == commit) {
-			
+			cancel();
 		}
 
 	}

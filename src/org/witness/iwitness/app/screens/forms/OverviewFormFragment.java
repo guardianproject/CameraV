@@ -222,8 +222,9 @@ public class OverviewFormFragment extends Fragment implements OnClickListener {
 			
 			@Override
 			public void cancel() {
-				super.cancel();
 				form.answer(Forms.OverviewForm.AUDIO_NOTE_PROMPT);
+				progress.shutDown();
+				super.cancel();
 			}
 		};
 	}
