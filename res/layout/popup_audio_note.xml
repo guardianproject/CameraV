@@ -27,7 +27,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/ic_videop_play" />
 
-        <SeekBar
+        <info.guardianproject.odkparser.widgets.ODKSeekBar
             android:id="@+id/audio_progress"
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="0dip"
