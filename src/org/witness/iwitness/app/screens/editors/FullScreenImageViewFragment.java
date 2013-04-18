@@ -42,10 +42,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 			bitmap.recycle();
 			originalBitmap.recycle();
 			previewBitmap.recycle();
-		} catch(NullPointerException e) {
-			Log.e(LOG, e.toString());
-			e.printStackTrace();
-		}
+		} catch(NullPointerException e) {}
 
 	}
 

@@ -31,34 +31,6 @@
             android:src="@drawable/ic_context_audio_note" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/media_quick_note_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dip" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1" >
-
-        <TextView
-            android:id="@+id/media_audio_note_title"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8" />
-
-        <ImageButton
-            android:id="@+id/media_audio_note_play_toggle"
-            style="@style/button_a"
-            android:layout_width="0dip"
-            android:layout_height="46dip"
-            android:layout_weight="0.2"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_context_play" />
-    </LinearLayout>
-
     <include layout="@layout/extras_divider_blue" />
 
 </LinearLayout>

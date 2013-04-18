@@ -33,7 +33,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class OverviewFormFragment extends Fragment implements OnClickListener, OnFocusChangeListener {
+public class OverviewFormFragment extends Fragment implements OnClickListener {
 	View rootView, detailsView, topLevelAnnotationsView, tagsAndMessagesView;
 	LinearLayout overviewFormRoot;
 
@@ -42,9 +42,9 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 	IForm form = null;
 	FormUtility formUtility;
 
-	TextView alias, dateCaptured, timeCaptured, location, quickNoteHolder, messagesHolder, tagsHolder;
+	TextView alias, dateCaptured, timeCaptured, location, messagesHolder, tagsHolder;
 	EditText quickNotePrompt;
-	ImageButton audioNotePrompt, audioNotePlayToggle;
+	ImageButton audioNotePrompt;
 
 	IRegion overviewRegion;
 
@@ -75,15 +75,11 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 		timeCaptured = (TextView) detailsView.findViewById(R.id.media_time_captured);
 		location = (TextView) detailsView.findViewById(R.id.media_details_location);
 
-		quickNoteHolder = (TextView) topLevelAnnotationsView.findViewById(R.id.media_quick_note_holder);
 		quickNotePrompt = (EditText) topLevelAnnotationsView.findViewById(R.id.media_quick_note_prompt);
 		quickNotePrompt.setOnClickListener(this);
 
 		audioNotePrompt = (ImageButton) topLevelAnnotationsView.findViewById(R.id.media_audio_note_prompt);
 		audioNotePrompt.setOnClickListener(this);
-
-		audioNotePlayToggle = (ImageButton) topLevelAnnotationsView.findViewById(R.id.media_audio_note_play_toggle);
-		audioNotePlayToggle.setOnClickListener(this);
 
 		messagesHolder = (TextView) tagsAndMessagesView.findViewById(R.id.media_details_messages_holder);
 		tagsHolder = (TextView) tagsAndMessagesView.findViewById(R.id.media_details_tags_holder);
@@ -109,12 +105,9 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 		Log.d(LOG, "SHOULD SAVE FORM STATE!");
 
 		try {
-			info.guardianproject.iocipher.File formState = new info.guardianproject.iocipher.File(media.rootFolder, "form_" + System.currentTimeMillis());
-			info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(formState);
+			info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(overviewRegion.formPath);
+			
 			if(form.save(fos) != null) {
-				overviewRegion.formPath = formState.getAbsolutePath();
-				overviewRegion.formNamespace = form.namespace;
-				
 				InformaCam.getInstance().mediaManifest.save();
 			}
 		} catch (FileNotFoundException e) {
@@ -174,27 +167,42 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 
 		if(media.getRegionsWithForms() != null && media.getRegionsWithForms().size() > 0) {
 			overviewRegion = media.getRegionAtRect();
-			String[] answers = form.populateAnswers(InformaCam.getInstance().ioService.getBytes(overviewRegion.formPath, Type.IOCIPHER));
-			form.associate(a, answers[0], quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
-			form.associate(a, answers[1], audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
-		} else {
-			overviewRegion = media.addRegion();
-			
-			form.associate(a, quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
-			form.associate(a, audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
+
+			if(overviewRegion != null) {
+				Log.d(LOG, overviewRegion.asJson().toString());
+
+				byte[] answerBytes = InformaCam.getInstance().ioService.getBytes(overviewRegion.formPath, Type.IOCIPHER);
+				if(answerBytes != null) {
+					String[] answers = form.populateAnswers(answerBytes);
+					form.associate(a, answers[0], quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
+					form.associate(a, answers[1], audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
+				} else {
+					form.associate(a, quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
+					form.associate(a, audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
+				}
+
+				return;
+			}
 		}
+
+		overviewRegion = media.addRegion();
+		overviewRegion.formNamespace = form.namespace;
+		overviewRegion.formPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
+		
+		form.associate(a, quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
+		form.associate(a, audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
+
 	}
 
 	public void cleanup() {
 
 	}
 
-	private void swapForTextarea() {
+	private void addQuickNote() {
 		new TextareaPopup(a, media) {
 			@Override
 			public void cancel() {
 				super.cancel();
-				quickNoteHolder.setText(this.prompt.getText().toString());
 				quickNotePrompt.setText(this.prompt.getText().toString());
 				form.answer(Forms.OverviewForm.QUICK_NOTE_PROMPT);
 			}
@@ -226,16 +234,9 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 		if(v == alias) {
 			renameMedia();
 		} else if(v == quickNotePrompt) {
-			swapForTextarea();
+			addQuickNote();
 		} else if(v == audioNotePrompt) {
 			recordAudio();
-		}
-	}
-
-	@Override
-	public void onFocusChange(View v, boolean hasFocus) {
-		if(hasFocus) {
-			swapForTextarea();
 		}
 	}
 

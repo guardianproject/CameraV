@@ -46,7 +46,7 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 
 	ActionBar actionBar;
 	ImageButton abNavigationBack, abShareMedia;
-	
+
 
 	private final static String LOG = Constants.App.Editor.LOG;
 	private String packageName;
@@ -62,9 +62,9 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 
 		Log.d(LOG, "hello " + packageName);
 		informaCam = InformaCam.getInstance(this);
-		
+
 		initData();
-		
+
 		setContentView(R.layout.activity_editor);
 
 		actionBar = getSupportActionBar();
@@ -96,7 +96,7 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 			setResult(Activity.RESULT_CANCELED);
 			finish();
 		}
-		
+
 		String mId = getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA);
 		media = informaCam.mediaManifest.getById(mId);
 		informaCam.informaService.associateMedia(media);
@@ -137,7 +137,7 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 		} else if(media.dcimEntry.mediaType.equals(Models.IMedia.MimeType.VIDEO)) {
 			fullscreenView = Fragment.instantiate(this, FullScreenVideoViewFragment.class.getName(), fullscreenViewArgs);
 		}
-		
+
 		detailsView = Fragment.instantiate(this, DetailsViewFragment.class.getName(), detailsViewArgs);
 
 		View actionBarView = LayoutInflater.from(this).inflate(R.layout.action_bar_editor, null);
@@ -159,22 +159,27 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	}
 
 	private void swapLayout(Fragment fragment) {
-		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(R.id.main_fragment_root, fragment);
-		ft.addToBackStack(null);
-		ft.commit();
+		try {
+			FragmentTransaction ft = fm.beginTransaction();
+			ft.replace(R.id.main_fragment_root, fragment);
+			ft.addToBackStack(null);
+			ft.commit();
 
-		if(fragment == fullscreenView) {
-			actionBar.hide();
-		} else if(fragment == detailsView) {
-			actionBar.show();
+			if(fragment == fullscreenView) {
+				actionBar.hide();
+			} else if(fragment == detailsView) {
+				actionBar.show();
+			}
+
+			currentFragment = fragment;
+		} catch(IllegalStateException e) {
+			Log.e(LOG, e.toString());
+			e.printStackTrace();
 		}
-
-		currentFragment = fragment;
 	}
 
 	private void saveStateAndFinish() {
-		
+
 		informaCam.saveState(informaCam.mediaManifest);
 		setResult(Activity.RESULT_OK);
 		finish();
