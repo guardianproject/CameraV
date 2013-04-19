@@ -62,7 +62,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected int scrollTarget;
 
 	protected IMedia media;
-	protected IRegion currentRegion = null; 
+	protected IRegion currentRegion = null;
 
 	public int DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT;
 
@@ -90,6 +90,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	};
 
+	protected List<ContextMenuAction> controls = new ArrayList<ContextMenuAction>();
 	protected final static String LOG = App.Editor.LOG;
 
 	@Override
@@ -148,10 +149,40 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		mediaHolder.removeView(currentRegion.getRegionDisplay());
 		currentRegion = null;
 	}
+	
+	protected void initRegions() {
+		for(IRegion r : media.associatedRegions) {
+			Log.d(LOG, "setting old region: " + r.asJson().toString());
+			if(r.bounds.displayWidth != 0 && r.bounds.displayHeight != 0) {
+				r.init(r.bounds, false);
+				r.getRegionDisplay().setOnTouchListener(this);
+				mediaHolder.addView(r.getRegionDisplay());
+			} else {
+				Log.d(LOG, "skipping this one, it is top-level");
+			}
+		}
+		
+		updateRegionDisplay();
+	}
+	
+	protected void updateRegionDisplay() {
+		for(IRegion r : media.associatedRegions) {
+			Log.d(LOG, "this region: " + r.asJson().toString());
+			if(!r.equals(currentRegion) && r.getRegionDisplay() != null) {
+				r.getRegionDisplay().setStatus(false);
+			}
+		}
+		
+		if(currentRegion == null) {
+			toggleControls.setVisibility(View.INVISIBLE);
+		} else {
+			toggleControls.setVisibility(View.VISIBLE);
+		}
+	}
 
 	protected void registerControls() {
-		List<ContextMenuAction> controls = new ArrayList<ContextMenuAction>();
-
+		controls.clear();
+		
 		ContextMenuAction action = new ContextMenuAction();
 		action.label = a.getString(R.string.notes);
 		action.iconResource = R.drawable.ic_edit_notes;
@@ -231,11 +262,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 			mediaHolder.addView(currentRegion.getRegionDisplay());
 		}
 		
-		for(IRegion r : media.associatedRegions) {
-			if(!r.equals(currentRegion)) {
-				r.getRegionDisplay().setStatus(false);
-			}
-		}
+		updateRegionDisplay();
 
 		toggleControls(true);
 	}

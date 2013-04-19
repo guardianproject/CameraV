@@ -68,11 +68,12 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 			((IImage) media).bitmap = bitmapBytes.getAbsolutePath();
 			Log.d(LOG, "we didn't have this bitmap before for some reason...");
 		}
-		bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+		bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bfo);
 
 		// Ratios between the display and the image
 		double widthRatio =  Math.floor(bfo.outWidth / dims[0]);
 		double heightRatio = Math.floor(bfo.outHeight / dims[1]);
+		Log.d(LOG, "wRatio: " + widthRatio + ", hRatio: " + heightRatio);
 
 		// If both of the ratios are greater than 1,
 		// one of the sides of the image is greater than the screen
@@ -132,5 +133,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		matrix.postTranslate((float)((float) dims[0] -(float) bitmap.getWidth() * (float) matrixScale)/2f,(float)((float) dims[1] - (float) bitmap.getHeight() * matrixScale)/2f);
 
 		mediaHolder_.setImageMatrix(matrix);
+		
+		initRegions();
 	}
 }
