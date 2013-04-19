@@ -46,7 +46,7 @@ public class AudioNotePopup extends Popup implements OnClickListener {
 		
 		recordingFile = new java.io.File(Storage.EXTERNAL_DIR, "tmprecord_" + System.currentTimeMillis() + ".3gp");
 		progress.init(recordingFile);
-		form.associate(a, progress, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
+		form.associate(progress, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
 		
 		Show();
 	}

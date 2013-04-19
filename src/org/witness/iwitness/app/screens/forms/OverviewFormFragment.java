@@ -1,9 +1,9 @@
 package org.witness.iwitness.app.screens.forms;
 
-import info.guardianproject.odkparser.utils.Form.ODKFormListener;
+import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.forms.IForm;
@@ -11,7 +11,6 @@ import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.utils.Constants.App;
-import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.iwitness.R;
@@ -28,7 +27,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -121,12 +119,7 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 
 	private void initData() {
 		media = ((EditorActivity) a).media;
-		int displayNumTags = 0;
-		if(media.associatedRegions != null && media.associatedRegions.size() > 0) {
-			displayNumTags = media.getRegionsWithForms().size();
-		}
-		tagsHolder.setText(a.getResources().getString(R.string.x_tags, displayNumTags, (displayNumTags == 1 ? "" : "s")));
-
+		
 		int displayNumMessages = 0;
 		if(media.messages != null && media.messages.size() > 0) {
 			displayNumMessages = media.messages.size();
@@ -152,36 +145,29 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 	private void initForms() {
 		for(IForm form : ((EditorActivity) a).availableForms) {
 			if(form.namespace.equals(Forms.OverviewForm.TAG)) {
-				this.form = form;
+				byte[] answerBytes = null;
+				
+				overviewRegion = media.getRegionAtRect();
+				if(overviewRegion != null) {
+					answerBytes = InformaCam.getInstance().ioService.getBytes(overviewRegion.formPath, Type.IOCIPHER);
+					Log.d(LOG, overviewRegion.asJson().toString());
+				} else {
+					overviewRegion = media.addRegion();
+					overviewRegion.formNamespace = form.namespace;
+					overviewRegion.formPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
+				}
+				
+				this.form = new IForm(form, a, answerBytes);
+				this.form.associate(quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
 				break;
 			}
 		}
-
-		if(media.getRegionsWithForms() != null && media.getRegionsWithForms().size() > 0) {
-			overviewRegion = media.getRegionAtRect();
-
-			if(overviewRegion != null) {
-				Log.d(LOG, overviewRegion.asJson().toString());
-
-				byte[] answerBytes = InformaCam.getInstance().ioService.getBytes(overviewRegion.formPath, Type.IOCIPHER);
-				if(answerBytes != null) {
-					String[] answers = form.populateAnswers(answerBytes);
-					form.associate(a, answers[0], quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
-					//form.associate(a, answers[1], audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
-				} else {
-					form.associate(a, quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
-					//form.associate(a, audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
-				}
-
-				return;
-			}
-		}
-
-		overviewRegion = media.addRegion();
-		overviewRegion.formNamespace = form.namespace;
-		overviewRegion.formPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
 		
-		form.associate(a, quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
+		int displayNumTags = 0;
+		if(media.associatedRegions != null && media.associatedRegions.size() > 0) {
+			displayNumTags = media.getRegionsWithForms(Arrays.asList(new String[] {form.namespace})).size();
+		}
+		tagsHolder.setText(a.getResources().getString(R.string.x_tags, displayNumTags, (displayNumTags == 1 ? "" : "s")));
 	}
 
 	public void cleanup() {

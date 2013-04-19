@@ -1,6 +1,6 @@
 package org.witness.iwitness.app;
 
-import info.guardianproject.odkparser.utils.Form.ODKFormListener;
+import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
 import java.util.List;
 
@@ -16,6 +16,7 @@ import org.witness.iwitness.app.screens.DetailsViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenImageViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.iwitness.app.screens.popups.SharePopup;
+import org.witness.iwitness.app.screens.popups.WaitPopup;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
@@ -56,6 +57,8 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	private InformaCam informaCam;
 	public IMedia media;
 	public List<IForm> availableForms;
+	private WaitPopup waiter = null;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -181,8 +184,13 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	}
 
 	private void saveStateAndFinish() {
-
-		informaCam.saveState(informaCam.mediaManifest);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				informaCam.saveState(informaCam.mediaManifest);
+			}
+		}).start();
+		
 		setResult(Activity.RESULT_OK);
 		finish();
 	}
@@ -226,5 +234,17 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	@Override
 	public void onSelected(IRegionDisplay regionDisplay) {
 		((IRegionDisplayListener) fullscreenView).onSelected(regionDisplay);
+	}
+
+	@Override
+	public void waiter(boolean show) {
+		if(show) {
+			waiter = new WaitPopup(this);
+		} else {
+			if(waiter != null) {
+				waiter.cancel();
+			}
+		}
+		
 	}
 }

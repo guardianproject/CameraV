@@ -8,6 +8,7 @@ import android.net.Uri;
 public class Constants {	
 	public interface EditorActivityListener {
 		public void onMediaScanned(Uri uri);
+		public void waiter(boolean show);
 	}
 
 	public interface HomeActivityListener {

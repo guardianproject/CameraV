@@ -20,6 +20,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -89,6 +90,8 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 			mediaPlayer.pause();
 			
 			videoSeekBar.init(mediaPlayer);
+			
+			initRegions();
 
 		} catch (IllegalArgumentException e) {
 			Log.e(LOG, "setDataSource error: " + e.getMessage());
@@ -102,7 +105,7 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 
 		}
 	}
-
+	
 	@Override
 	public void onDetach() {
 		super.onDetach();

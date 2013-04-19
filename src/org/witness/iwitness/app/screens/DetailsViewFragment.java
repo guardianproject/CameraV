@@ -1,6 +1,7 @@
 package org.witness.iwitness.app.screens;
 
-import info.guardianproject.odkparser.utils.Form.ODKFormListener;
+
+import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
 import org.witness.informacam.models.media.IMedia;
 import org.witness.iwitness.R;
