@@ -65,6 +65,8 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected IRegion currentRegion = null;
 
 	public int DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT;
+	
+	protected boolean isEditingForm = false;
 
 	private OnTouchListener noScroll = new OnTouchListener() {
 
@@ -81,7 +83,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		public boolean onTouch(View v, MotionEvent event) {
 			if(scrollRoot.getScrollY() == 0) {
 				scrollRoot.setOnTouchListener(noScroll);
-				scrollRoot.scrollTo(0, 0);
+				scrollRoot.scrollTo(0, 0);				
 				return true;
 			}
 
@@ -230,14 +232,12 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	}
 
 	protected void showForm() {
+		((TagFormFragment) tagFormFragment).initTag(currentRegion);
+		
 		scrollRoot.scrollTo(0, scrollTarget);
 		scrollRoot.setOnTouchListener(withScroll);
-
-		if(currentRegion.formPath != null) {
-			// TODO: instantiate form with old values
-		} else {
-			// TODO: instantiate form without values
-		}
+		
+		isEditingForm = true;
 	}
 
 	protected void showForms() {
@@ -254,6 +254,12 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	}
 	
 	protected void setCurrentRegion(IRegion region, boolean isNew) {
+		if(isEditingForm) {
+			if(((TagFormFragment) tagFormFragment).saveTagFormData(currentRegion)) {
+				isEditingForm = false;
+			}
+		}
+		
 		currentRegion = region;
 		currentRegion.getRegionDisplay().setOnTouchListener(this);
 		scrollRoot.setOnTouchListener(noScroll);
@@ -320,7 +326,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		Log.d(LOG, "on touch called at " + event.getX() + "," + event.getY() + "\n on view: " + v.getClass().getName() + " (id " + v.getId() + ")\naction: " + event.getAction());
+		//Log.d(LOG, "on touch called at " + event.getX() + "," + event.getY() + "\n on view: " + v.getClass().getName() + " (id " + v.getId() + ")\naction: " + event.getAction());
 		v.getParent().requestDisallowInterceptTouchEvent(true);
 
 		if(v instanceof IRegionDisplay) {
@@ -376,8 +382,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public void onSelected(IRegionDisplay regionDisplay) {
-		Log.d(LOG, "i am selecting this region");
-		setCurrentRegion(media.getRegionAtRect(regionDisplay));
+		setCurrentRegion(regionDisplay.parent);
 	}
 
 	@Override

@@ -1,9 +1,13 @@
 package org.witness.iwitness.app.screens.forms;
 
+import java.io.FileNotFoundException;
+
 import info.guardianproject.odkparser.utils.Form.ODKFormListener;
 
+import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
+import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
@@ -73,7 +77,18 @@ public class TagFormFragment extends Fragment implements ODKFormListener {
 		media = ((EditorActivity) a).media;
 	}
 	
-	private void initLayout() {
+	private void initForms() {
+		for(IForm form : ((EditorActivity) a).availableForms) {
+			if(form.namespace.equals(Forms.TagForm.TAG)) {
+				this.form = form;
+				break;
+			}
+		}
+	}
+	
+	public void initTag(final IRegion region) {
+		tagFormRoot.removeAllViews();
+				
 		h.post(new Runnable() {
 			LayoutInflater li = LayoutInflater.from(a);
 			
@@ -82,25 +97,36 @@ public class TagFormFragment extends Fragment implements ODKFormListener {
 				int[] inputTemplate = new int[] {R.layout.forms_odk_input_template, R.id.odk_question, R.id.odk_hint, R.id.odk_answer};
 				int[] selectOneTemplate = new int[] {R.layout.forms_odk_select_one_template, R.id.odk_question, R.id.odk_hint, R.id.odk_selection_holder};
 				int[] selectMultipleTemplate = new int[] {R.layout.forms_odk_select_multiple_template, R.id.odk_question, R.id.odk_hint, R.id.odk_selection_holder};
-				for(View v : form.buildUI(a, null, inputTemplate, selectOneTemplate, selectMultipleTemplate, null)) {
+				for(View v : form.buildUI(a, region.formPath, inputTemplate, selectOneTemplate, selectMultipleTemplate, null)) {
 					tagFormRoot.addView(v);
-					
 				}
 			}
 		});
 	}
 	
-	private void initForms() {
-		for(IForm form : ((EditorActivity) a).availableForms) {
-			if(form.namespace.equals(Forms.TagForm.TAG)) {
-				this.form = form;
-				break;
-			}
+	public boolean saveTagFormData(IRegion region) {
+		Log.d(LOG, "saving form data for current region");
+		if(region.formNamespace == null) {
+			region.formNamespace = form.namespace;
 		}
 		
-		if(form != null) {
-			initLayout();
+		if(region.formPath == null) {
+			region.formPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
 		}
+		
+		try {
+			info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(region.formPath);
+			
+			if(form.save(fos) != null) {
+				InformaCam.getInstance().mediaManifest.save();
+				return true;
+			}
+		} catch (FileNotFoundException e) {
+			Log.e(LOG, e.toString());
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 
 	@Override
