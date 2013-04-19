@@ -6,6 +6,7 @@ import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.credentials.IUser;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.iwitness.R;
+import org.witness.iwitness.app.HomeActivity;
 import org.witness.iwitness.app.WipeActivity;
 import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.Codes;
@@ -20,6 +21,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -162,26 +164,13 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	public void onClick(View v) {
 		if(v == emergencyWipe) {
 			Intent wipeIntent = new Intent(a, WipeActivity.class);
-			startActivityForResult(wipeIntent, Routes.WIPE);
+			a.startActivityForResult(wipeIntent, Routes.WIPE);
 		} else if(v == toSettings) {
 			
 		} else if(v == thumbnail) {
 			
 		} else if(v == exportCredentials) {
 			exportCredentials();
-		}
-	}
-	
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		if(resultCode == Activity.RESULT_OK) {
-			switch(requestCode) {
-			case Codes.Routes.WIPE:
-				((HomeActivityListener) a).logoutUser();
-				break;
-			}
 		}
 	}
 

@@ -1,5 +1,7 @@
 package org.witness.iwitness.app.screens;
 
+import info.guardianproject.odkparser.utils.Form.ODKFormListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class FullScreenViewFragment extends Fragment implements OnClickListener, OnTouchListener, IRegionDisplayListener  {
+public class FullScreenViewFragment extends Fragment implements OnClickListener, OnTouchListener, IRegionDisplayListener, ODKFormListener  {
 	protected View rootView;
 	protected Activity a;
 
@@ -349,6 +351,11 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	public void onSelected(IRegionDisplay regionDisplay) {
 		Log.d(LOG, "i am selecting this region");
 		setCurrentRegion(media.getRegionAtRect(regionDisplay));
+	}
+
+	@Override
+	public boolean saveForm() {
+		return ((ODKFormListener) tagFormFragment).saveForm();
 	}
 
 }

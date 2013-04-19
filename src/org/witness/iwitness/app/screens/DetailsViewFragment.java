@@ -1,5 +1,7 @@
 package org.witness.iwitness.app.screens;
 
+import info.guardianproject.odkparser.utils.Form.ODKFormListener;
+
 import org.witness.informacam.models.media.IMedia;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
@@ -17,7 +19,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-public class DetailsViewFragment extends Fragment {
+public class DetailsViewFragment extends Fragment implements ODKFormListener {
 	View rootView;
 	Activity a;
 	
@@ -81,5 +83,10 @@ public class DetailsViewFragment extends Fragment {
 		ft.add(R.id.details_form_holder, overviewFormFragment);
 		ft.addToBackStack(null);
 		ft.commit();
+	}
+
+	@Override
+	public boolean saveForm() {
+		return ((ODKFormListener) overviewFormFragment).saveForm();
 	}
 }

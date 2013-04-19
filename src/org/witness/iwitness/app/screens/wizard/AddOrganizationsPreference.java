@@ -110,6 +110,7 @@ public class AddOrganizationsPreference extends Fragment implements WizardListen
 					connection.url = organization.requestUrl.substring(0, organization.requestUrl.lastIndexOf(":"));
 					connection.port = Integer.parseInt(organization.requestUrl.substring(organization.requestUrl.lastIndexOf(":") + 1));
 					connection.destination = organization;
+					connection.isHeld = true;
 					
 					informaCam.uploaderService.addToQueue(connection);
 				}

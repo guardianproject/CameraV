@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	Bitmap bitmap, originalBitmap, previewBitmap;
 	ImageView mediaHolder_;
-	IImage media_ = new IImage();
 
 	// sample sized used to downsize from native photo
 	int inSampleSize;
@@ -31,7 +30,6 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
-		media_.inflate(((EditorActivity) a).media.asJson());
 	}
 
 	@Override
@@ -62,12 +60,12 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		bfo.inPreferredConfig = Bitmap.Config.RGB_565;
 
 		byte[] bytes = null;
-		if(media_.bitmap != null) {
-			bytes = informaCam.ioService.getBytes(media_.bitmap, Type.IOCIPHER);
+		if(((IImage) media).bitmap != null) {
+			bytes = informaCam.ioService.getBytes(((IImage) media).bitmap, Type.IOCIPHER);
 		} else {
 			info.guardianproject.iocipher.File bitmapBytes = new info.guardianproject.iocipher.File(media.rootFolder, media.dcimEntry.name);
 			bytes = informaCam.ioService.getBytes(bitmapBytes.getAbsolutePath(), Type.IOCIPHER);
-			media_.bitmap = bitmapBytes.getAbsolutePath();
+			((IImage) media).bitmap = bitmapBytes.getAbsolutePath();
 			Log.d(LOG, "we didn't have this bitmap before for some reason...");
 		}
 		bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);

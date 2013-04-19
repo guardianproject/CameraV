@@ -15,9 +15,8 @@
 	<string name="organizations">Organizations</string>
 	<string name="get_in">Get In</string>
 	<string name="we_could_not_log">We could not log you in.  Please try again.</string>
-	<string name="change_settings">Change Settings</string>
-	<string name="cancel">Cancel</string>
-	<string name="pull_down_to_wipe">Pull down to wipe yoru contents</string>
+	<string name="change_settings"><u>Change Settings</u></string>
+	<string name="cancel"><u>Cancel</u></string>
 	<string name="log_out">Log Out</string>
 	<string name="no_notifications">No notifications.</string>
 	<string name="connect_with_organizations">Connect with organizations:</string>
@@ -50,4 +49,6 @@
 	<string name="delete_tag">Delete Tag</string>
 	<string name="unverified">Unverified</string>
 	<string name="verified">Verified</string>
+	<string name="pull_down_to_wipe">Pull down to wipe your contents</string>
+	<string name="or">\u2014 or \u2014</string>
 </resources>

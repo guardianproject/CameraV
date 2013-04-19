@@ -1,5 +1,7 @@
 package org.witness.iwitness.app.screens.forms;
 
+import info.guardianproject.odkparser.utils.Form.ODKFormListener;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
@@ -33,7 +35,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class OverviewFormFragment extends Fragment implements OnClickListener {
+public class OverviewFormFragment extends Fragment implements OnClickListener, ODKFormListener {
 	View rootView, detailsView, topLevelAnnotationsView, tagsAndMessagesView;
 	LinearLayout overviewFormRoot;
 
@@ -104,17 +106,7 @@ public class OverviewFormFragment extends Fragment implements OnClickListener {
 	public void onDetach() {
 		Log.d(LOG, "SHOULD SAVE FORM STATE!");
 
-		try {
-			info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(overviewRegion.formPath);
-			
-			if(form.save(fos) != null) {
-				InformaCam.getInstance().mediaManifest.save();
-			}
-		} catch (FileNotFoundException e) {
-			Log.e(LOG, e.toString());
-			e.printStackTrace();
-		}
-
+		
 		super.onDetach();
 	}
 
@@ -175,10 +167,10 @@ public class OverviewFormFragment extends Fragment implements OnClickListener {
 				if(answerBytes != null) {
 					String[] answers = form.populateAnswers(answerBytes);
 					form.associate(a, answers[0], quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
-					form.associate(a, answers[1], audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
+					//form.associate(a, answers[1], audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
 				} else {
 					form.associate(a, quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
-					form.associate(a, audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
+					//form.associate(a, audioNotePrompt, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
 				}
 
 				return;
@@ -238,6 +230,24 @@ public class OverviewFormFragment extends Fragment implements OnClickListener {
 		} else if(v == audioNotePrompt) {
 			recordAudio();
 		}
+	}
+
+	@Override
+	public boolean saveForm() {
+		Log.d(LOG, "OK I AM SAVING FORM");
+		try {
+			info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(overviewRegion.formPath);
+			
+			if(form.save(fos) != null) {
+				InformaCam.getInstance().mediaManifest.save();
+				
+			}
+		} catch (FileNotFoundException e) {
+			Log.e(LOG, e.toString());
+			e.printStackTrace();
+		}
+
+		return true;
 	}
 
 }

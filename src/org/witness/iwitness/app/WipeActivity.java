@@ -64,6 +64,9 @@ public class WipeActivity extends Activity implements OnClickListener {
 				setResult(Activity.RESULT_OK);
 				finish();
 			}
+		} else if(v == cancel) {
+			setResult(Activity.RESULT_CANCELED);
+			finish();
 		}
 		
 	}

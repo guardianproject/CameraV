@@ -96,7 +96,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 		try {
 			informaCam = InformaCam.getInstance(this);
 			if(route != null) {
-				//routeByIntent();
+				routeByIntent();
 				Log.d(LOG, "we have a route! lets go!");
 			} else {
 				Log.d(LOG, "route is null now, please wait");
@@ -139,10 +139,9 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	}
 	
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {		
 		if(resultCode == Activity.RESULT_CANCELED) {
 			Log.d(LOG, "finishing with request code " + requestCode);
-			// TODO: LOG OUT IF PREFERENCES SAY SO
 			finish();
 		} else if(resultCode == Activity.RESULT_OK) {
 			route = new Intent(this, HomeActivity.class);
@@ -162,6 +161,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 				break;
 			case Codes.Routes.LOGIN:
 				Log.d(LOG, "hi i logged in!");
+				informaCam.startup();
 				break;
 			}
 			
@@ -181,6 +181,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 			route.setData(init.getData());
 		}
 		
+		route.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivityForResult(route, routeCode);
 	}
 
@@ -216,7 +217,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	@Override
 	public void onInformaCamStop(Intent intent) {
 		// TODO Auto-generated method stub
-		
+		Log.d(LOG, "I STOPPED INFORMACAM");
 	}
 
 	@Override

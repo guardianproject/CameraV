@@ -94,5 +94,11 @@
         <item name="android:padding">5dip</item>
         <item name="android:textSize">25sp</item>
     </style>
+    
+    <style name="button_f">
+        <item name="android:background">#00000000</item>
+        <item name="android:textColor">@drawable/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 
 </resources>

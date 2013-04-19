@@ -314,9 +314,10 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void logoutUser() {
+		Log.d(LOG, "LOGGING OUT?");
+		getIntent().putExtra(Codes.Extras.LOGOUT_USER, true);
 		setResult(Activity.RESULT_CANCELED);
 		finish();
-
 	}
 
 	@Override
@@ -335,6 +336,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				break;
 			case Codes.Routes.EDITOR:
 				informaCam.stopInforma();
+				break;
+			case Codes.Routes.WIPE:
+				logoutUser();
 				break;
 			}
 		}

@@ -1,5 +1,7 @@
 package org.witness.iwitness.app.screens.forms;
 
+import info.guardianproject.odkparser.utils.Form.ODKFormListener;
+
 import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.storage.FormUtility;
@@ -18,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-public class TagFormFragment extends Fragment {
+public class TagFormFragment extends Fragment implements ODKFormListener {
 	View rootView;
 	LinearLayout tagFormRoot;
 	
@@ -99,5 +101,11 @@ public class TagFormFragment extends Fragment {
 		if(form != null) {
 			initLayout();
 		}
+	}
+
+	@Override
+	public boolean saveForm() {
+		return true;
+		
 	}
 }

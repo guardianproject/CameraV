@@ -1,5 +1,7 @@
 package org.witness.iwitness.app;
 
+import info.guardianproject.odkparser.utils.Form.ODKFormListener;
+
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
@@ -188,13 +190,17 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	@Override
 	public void onConfigurationChanged(Configuration config) {
 		super.onConfigurationChanged(config);
-		if(config.orientation == detailsProxy) {
-			swapLayout(detailsView);
-		} else if(config.orientation == fullscreenProxy) {
-			swapLayout(fullscreenView);
-		}
 
-		Log.d(LOG, "new orientation: " + config.orientation);
+		if(((ODKFormListener) currentFragment).saveForm()) {
+
+			if(config.orientation == detailsProxy) {
+				swapLayout(detailsView);
+			} else if(config.orientation == fullscreenProxy) {
+				swapLayout(fullscreenView);
+			}
+
+			Log.d(LOG, "new orientation: " + config.orientation);
+		}
 	}
 
 	@Override
