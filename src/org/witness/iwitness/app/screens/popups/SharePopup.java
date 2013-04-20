@@ -7,6 +7,7 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.organizations.IInstalledOrganizations;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.media.IMedia;
+import org.witness.informacam.utils.Constants.Codes;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App.Home.Tabs;
@@ -24,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -31,6 +33,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
@@ -49,9 +52,11 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 	CheckBox encryptToggle;
 	Spinner encryptList;
 	Button encryptCommit;
+	ProgressBar inProgressBar;
 
 	List<IOrganization> organizations;
 	IOrganization encryptTo = null;
+	WaitPopup waiter;
 
 	public SharePopup(Activity a, final Object context) {
 		this(a, context, false);
@@ -148,12 +153,21 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 	}
 	
 	private void export(boolean isShare) {
+		View inProgressView = LayoutInflater.from(a).inflate(R.layout.popup_share_in_progress, null);
+		inProgressBar = (ProgressBar) inProgressView.findViewById(R.id.share_in_progress_bar);
+		
+		ViewGroup currentTab = (ViewGroup) tabHost.getCurrentTabView();
+		currentTab.removeAllViews();
+		currentTab.addView(inProgressView);
+		
 		((IMedia) context).export(new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				Bundle b = msg.getData();
 				if(b.containsKey(Models.IMedia.VERSION)) {
 					SharePopup.this.cancel();
+				} else if(b.containsKey(Codes.Keys.UI.PROGRESS)) {
+					inProgressBar.setProgress(b.getInt(Codes.Keys.UI.PROGRESS));
 				}
 			}
 		}, encryptTo, isShare);

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dip"
+    android:layout_gravity="center"
+    android:id="@+id/send_direct_root" >
+    <TextView style="@style/iwitness_h3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/please_wait" />
+    <ProgressBar
+        android:id="@+id/share_in_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:max="100"
+        android:layout_marginTop="10dip"
+        android:progress="0" />
+    
+
+</LinearLayout>
