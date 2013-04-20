@@ -2,7 +2,6 @@ package org.witness.iwitness.app.screens.editors;
 
 import org.witness.informacam.models.media.IImage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
-import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
 
 import android.app.Activity;
@@ -51,9 +50,6 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		mediaHolder_ = new ImageView(a);
 		mediaHolder_.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		mediaHolder.addView(mediaHolder_);
-
-		toggleControls.setOnClickListener(this);
-		toggleControls();
 
 		BitmapFactory.Options bfo = new BitmapFactory.Options();
 		bfo.inJustDecodeBounds = true;
@@ -120,11 +116,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 
 		mediaHolder_.setImageBitmap(bitmap);
 
-		// Set the OnTouch and OnLongClick listeners to this (ImageEditor)
-		mediaHolder.setOnTouchListener(this);
-		mediaHolder.setOnClickListener(this);
-
-
+		
 		//PointF midpoint = new PointF((float)imageBitmap.getWidth()/2f, (float)imageBitmap.getHeight()/2f);
 		matrix.postScale(matrixScale, matrixScale);
 

@@ -12,8 +12,10 @@ import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.media.IRegionBounds;
 import org.witness.informacam.ui.IRegionDisplay;
 import org.witness.informacam.ui.IRegionDisplay.IRegionDisplayListener;
+import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
+import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.iwitness.app.screens.forms.TagFormFragment;
 import org.witness.iwitness.app.screens.popups.WaitPopup;
 import org.witness.iwitness.utils.Constants.App;
@@ -175,6 +177,10 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	}
 
 	protected void initRegions() {
+		mediaHolder.setOnTouchListener(this);
+		mediaHolder.setOnClickListener(this);
+		toggleControls.setOnClickListener(this);
+		
 		if(media.associatedRegions != null) {
 			for(IRegion r : media.associatedRegions) {
 				Log.d(LOG, "setting old region: " + r.asJson().toString());
@@ -201,7 +207,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	protected void updateRegionDisplay() {
 		for(IRegion r : media.associatedRegions) {
-			Log.d(LOG, "this region: " + r.asJson().toString());
+			
 			if(!r.equals(currentRegion) && r.getRegionDisplay() != null) {
 				r.getRegionDisplay().setStatus(false);
 			}
@@ -276,7 +282,6 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	public void doScroll() {
 		scrollRoot.scrollTo(0, scrollTarget);
-		Log.d(LOG, "HEY I AM AT " + scrollRoot.getScrollY() + " (scrollTarget: " + scrollTarget + ")");
 		scrollRoot.setOnTouchListener(withScroll);
 		isEditingForm = true;
 	}
@@ -302,7 +307,8 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	protected void setCurrentRegion(IRegion region, boolean isNew) {
 
-
+		Log.d(LOG, "this region: " + region.asJson().toString());
+		
 		currentRegion = region;
 		currentRegion.getRegionDisplay().setOnTouchListener(this);
 		scrollRoot.setOnTouchListener(noScroll);
@@ -416,7 +422,11 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 			currentRegion = null;
 			if(event.getAction() == MotionEvent.ACTION_UP){
 				try {
-					setCurrentRegion(media.addRegion((int) event.getY() - (DEFAULT_REGION_HEIGHT/2), (int) event.getX() - (DEFAULT_REGION_WIDTH/2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT), true);
+					if(media.dcimEntry.mediaType.equals(MimeType.IMAGE)) {
+						setCurrentRegion(media.addRegion((int) event.getY() - (DEFAULT_REGION_HEIGHT/2), (int) event.getX() - (DEFAULT_REGION_WIDTH/2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT), true);
+					} else if(media.dcimEntry.mediaType.equals(MimeType.VIDEO)) {
+						setCurrentRegion(media.addRegion((int) event.getY() - (DEFAULT_REGION_HEIGHT/2), (int) event.getX() - (DEFAULT_REGION_WIDTH/2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT, ((FullScreenVideoViewFragment) this).getCurrentPosition(), ((FullScreenVideoViewFragment) this).getDuration()), true);
+					}
 
 				} catch (JSONException e) {
 					Log.e(LOG, e.toString());

@@ -3,11 +3,16 @@ package org.witness.iwitness.app.screens.editors;
 import java.io.IOException;
 
 import org.witness.informacam.models.media.IVideo;
+import org.witness.informacam.models.media.IVideoRegion;
+import org.witness.informacam.ui.IRegionDisplay;
 import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.storage.InformaCamMediaScanner;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
+
+import com.efor18.rangeseekbar.RangeSeekBar;
+import com.efor18.rangeseekbar.RangeSeekBar.OnRangeSeekBarChangeListener;
 
 import android.app.Activity;
 import android.media.MediaMetadataRetriever;
@@ -34,7 +39,8 @@ import android.widget.VideoView;
 
 public class FullScreenVideoViewFragment extends FullScreenViewFragment implements OnCompletionListener, 
 OnErrorListener, OnInfoListener, OnBufferingUpdateListener, OnPreparedListener, OnSeekCompleteListener,
-OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaController.MediaPlayerControl {
+OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaController.MediaPlayerControl, 
+OnRangeSeekBarChangeListener<Integer> {
 	IVideo media_ = new IVideo();
 
 	MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -44,7 +50,7 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 	MediaPlayer mediaPlayer;
 	MediaController mediaController;
 
-	LinearLayout videoControlsHolder;
+	LinearLayout videoControlsHolder, endpointHolder;
 	VideoSeekBar videoSeekBar;
 	ImageButton playPauseToggle;
 
@@ -52,7 +58,7 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 	java.io.File videoFile;
 
 	long duration = 0L;
-	int currentCue = 0;
+	int currentCue = 1;
 
 	@Override
 	public void onAttach(Activity a) {
@@ -60,7 +66,7 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 
 		media_.inflate(media.asJson());
 	}
-
+	
 	private void initVideo() {
 		retriever.setDataSource(videoFile.getAbsolutePath());
 
@@ -89,10 +95,17 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 			mediaPlayer.seekTo(currentCue);
 			mediaPlayer.pause();
 			
-			videoSeekBar.init(mediaPlayer);
+			h.post(new Runnable() {
+				@Override
+				public void run() {
+					RangeSeekBar<Integer> rsb = videoSeekBar.init(mediaPlayer);
+					rsb.setOnRangeSeekBarChangeListener(FullScreenVideoViewFragment.this);
+					endpointHolder.addView(rsb);
+					videoSeekBar.hideEndpoints();
+					initRegions();
+				}
+			});
 			
-			initRegions();
-
 		} catch (IllegalArgumentException e) {
 			Log.e(LOG, "setDataSource error: " + e.getMessage());
 			e.printStackTrace();
@@ -118,6 +131,13 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 	protected void initLayout() {
 		super.initLayout();
 
+		h.post(new Runnable() {
+			@Override
+			public void run() {
+				toggleControls.setVisibility(View.INVISIBLE);
+			}
+		});
+		
 		View mediaHolder_ = LayoutInflater.from(a).inflate(R.layout.editors_video, null);
 
 		videoView = (VideoView) mediaHolder_.findViewById(R.id.video_view);
@@ -138,6 +158,8 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 		videoControlsHolder = (LinearLayout) mediaHolder_.findViewById(R.id.video_controls_holder);		
 
 		videoSeekBar = (VideoSeekBar) mediaHolder_.findViewById(R.id.video_seek_bar);
+		endpointHolder = (LinearLayout) mediaHolder_.findViewById(R.id.video_seek_bar_endpoint_holder);
+		
 		playPauseToggle = (ImageButton) mediaHolder_.findViewById(R.id.video_play_pause_toggle);
 		playPauseToggle.setOnClickListener(this);
 
@@ -159,7 +181,15 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 				};
 			}
 		}).start();
-
+	}
+	
+	@Override
+	public void onSelected(IRegionDisplay regionDisplay) {		
+		IVideoRegion r = new IVideoRegion();
+		r = (IVideoRegion) regionDisplay.parent;
+		
+		setCurrentRegion(r);
+		videoSeekBar.showEndpoints(r);
 	}
 
 	@Override
@@ -297,4 +327,19 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 		mediaPlayer.start();
 		videoSeekBar.play();
 	}
+
+	@Override
+	public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+		Log.d(LOG, "new range: " + minValue + " - " + maxValue);
+		if(currentRegion != null) {
+			currentRegion.bounds.startTime = minValue;
+			currentRegion.bounds.endTime = maxValue;
+		}
+	}
+
+	@Override
+	public void onStartTrackingTouch(RangeSeekBar<?> bar) {}
+
+	@Override
+	public void onStopTrackingTouch(RangeSeekBar<?> bar) {}
 }

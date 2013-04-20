@@ -1,24 +1,30 @@
 package org.witness.iwitness.app.screens.editors;
 
+import org.witness.informacam.models.media.IVideoRegion;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App;
+
+import com.efor18.rangeseekbar.RangeSeekBar;
+import com.efor18.rangeseekbar.RangeSeekBar.OnRangeSeekBarChangeListener;
 
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.ImageView;
+import android.view.View;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;;
 
 public class VideoSeekBar extends SeekBar implements OnSeekBarChangeListener {
 	MediaPlayer mp;
-	ImageView startThumb, endThumb;
 	int thumbInactive = R.drawable.ic_videol_mark_un;
 	int thumbActive = R.drawable.ic_videol_mark_selected;
 	
 	private boolean isPlaying = false;
 	public boolean isEditing = false;
+	
+	RangeSeekBar<Integer> endpointBar;
+	Context context;
 	
 	private final static String LOG = App.Editor.LOG;
 	
@@ -35,17 +41,19 @@ public class VideoSeekBar extends SeekBar implements OnSeekBarChangeListener {
 	
 	public VideoSeekBar(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		
-		startThumb = new ImageView(context);
-		endThumb = new ImageView(context);
+		this.context = context;
 	}
 	
-	public void init(MediaPlayer mp) {
+	public RangeSeekBar<Integer> init(MediaPlayer mp) {
 		this.mp = mp;
 		
 		setMax(mp.getDuration());
 		post(progressRunnable);
 		setOnSeekBarChangeListener(this);
+		
+		endpointBar = new RangeSeekBar<Integer>(0, mp.getDuration(), context);		
+		return endpointBar;
+		
 	}
 	
 	public void update() {
@@ -54,10 +62,26 @@ public class VideoSeekBar extends SeekBar implements OnSeekBarChangeListener {
 	
 	public void play() {
 		isPlaying = true;
+		hideEndpoints();
 	}
 	
 	public void pause() {
 		isPlaying = false;
+	}
+	
+	public void showEndpoints(IVideoRegion region) {
+		Log.d(LOG, "showing endpoints for " + region.asJson().toString());
+		
+		endpointBar.setVisibility(View.VISIBLE);
+		setVisibility(View.GONE);
+		
+		endpointBar.setSelectedMinValue((int) region.bounds.startTime);
+		endpointBar.setSelectedMaxValue((int) region.bounds.endTime);
+	}
+	
+	public void hideEndpoints() {
+		setVisibility(View.VISIBLE);
+		endpointBar.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -65,7 +89,6 @@ public class VideoSeekBar extends SeekBar implements OnSeekBarChangeListener {
 		if(fromUser) {
 			mp.seekTo(progress);
 		}
-		
 	}
 
 	@Override
@@ -79,7 +102,4 @@ public class VideoSeekBar extends SeekBar implements OnSeekBarChangeListener {
 		Log.d(LOG, "stop tracking touch");
 		
 	}
-
-	
-
 }

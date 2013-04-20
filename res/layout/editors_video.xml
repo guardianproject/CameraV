@@ -15,35 +15,46 @@
         android:id="@+id/video_controls_holder"
         android:layout_width="match_parent"
         android:layout_height="40dip"
-        android:layout_marginBottom="20dip"
         android:layout_alignBottom="@+id/video_view"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="20dip"
         android:background="@drawable/trans_black"
         android:orientation="horizontal"
         android:weightSum="1" >
 
         <ImageButton
-            android:background="#00000000"
             android:id="@+id/video_play_pause_toggle"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="0.15"
+            android:background="#00000000"
             android:src="@drawable/ic_videol_play" />
 
-        <org.witness.iwitness.app.screens.editors.VideoSeekBar
-            android:id="@+id/video_seek_bar"
+        <RelativeLayout
             android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_weight="0.85"
-            android:gravity="center"
-            android:indeterminate="false"
-            android:indeterminateOnly="false"
-            android:padding="4dip"
             android:layout_marginLeft="2dip"
             android:layout_marginRight="2dip"
-            android:secondaryProgress="0"
-            android:thumb="@drawable/ic_videop_mark_un"
-            android:thumbOffset="0dip" />
+            android:layout_weight="0.85"
+            android:gravity="center"
+            android:padding="4dip" >
+
+            <org.witness.iwitness.app.screens.editors.VideoSeekBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/video_seek_bar"
+                android:indeterminate="false"
+                android:indeterminateOnly="false"
+                android:secondaryProgress="0"
+                android:thumb="@drawable/ic_videop_mark_un"
+                android:thumbOffset="0dip" />
+
+            <LinearLayout
+                android:id="@+id/video_seek_bar_endpoint_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000" />
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>
