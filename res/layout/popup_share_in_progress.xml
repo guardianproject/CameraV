@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dip"
-    android:layout_gravity="center"
-    android:id="@+id/send_direct_root" >
+    android:layout_gravity="center" >
     <TextView style="@style/iwitness_h3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

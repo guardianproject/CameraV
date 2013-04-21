@@ -17,6 +17,7 @@ public class Constants {
 		public void logoutUser();
 		public void getContextualMenuFor(IOrganization organization);
 		public void getContextualMenuFor(IMedia media);
+		public void waiter(boolean show);
 	}
 
 	public class Codes {

@@ -5,15 +5,19 @@ import java.util.List;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.App;
+import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.iwitness.R;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class NotificationsListAdapter extends BaseAdapter {
@@ -62,6 +66,20 @@ public class NotificationsListAdapter extends BaseAdapter {
 		if(notification.content != null) {
 			TextView content = (TextView) convertView.findViewById(R.id.notification_content);
 			content.setText(notification.content);
+		}
+		
+		if(notification.icon != null) {
+			byte[] iconBytes = null;
+			if(notification.iconSource == Type.IOCIPHER) {
+				iconBytes = InformaCam.getInstance().ioService.getBytes(notification.icon, Type.IOCIPHER);
+			}
+			
+			if(iconBytes != null) {
+				ImageView icon = (ImageView) convertView.findViewById(R.id.notification_icon);
+				Bitmap b = BitmapFactory.decodeByteArray(iconBytes, 0, iconBytes.length);
+				icon.setImageBitmap(b);
+			}
+			
 		}
 		
 		return convertView;

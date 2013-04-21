@@ -14,6 +14,7 @@ import org.witness.iwitness.utils.Constants.App.Home.Tabs;
 import org.witness.iwitness.utils.adapters.OrganizationsListAdapter;
 import org.witness.iwitness.utils.adapters.OrganizationsListSpinnerAdapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -25,7 +26,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -53,15 +53,18 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 	Spinner encryptList;
 	Button encryptCommit;
 	ProgressBar inProgressBar;
+	LinearLayout inProgressRoot;
 
 	List<IOrganization> organizations;
 	IOrganization encryptTo = null;
-	WaitPopup waiter;
+	
+	Handler h;
 
 	public SharePopup(Activity a, final Object context) {
 		this(a, context, false);
 	}
 
+	@SuppressLint("HandlerLeak")
 	public SharePopup(Activity a, final Object context, boolean startsInforma) {
 		super(a, R.layout.popup_share);
 		this.context = context;
@@ -69,8 +72,23 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 		informaCam = InformaCam.getInstance();
 
 		tabHost = (TabHost) layout.findViewById(android.R.id.tabhost);
+		inProgressRoot = (LinearLayout) layout.findViewById(R.id.share_in_progress_root);
+		inProgressBar = (ProgressBar) layout.findViewById(R.id.share_in_progress_bar);
 		li = LayoutInflater.from(a);
 		initLayout();
+		
+		h = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				Bundle b = msg.getData();
+				if(b.containsKey(Models.IMedia.VERSION)) {
+					inProgressBar.setProgress(100);
+					SharePopup.this.cancel();
+				} else if(b.containsKey(Codes.Keys.UI.PROGRESS)) {
+					inProgressBar.setProgress(b.getInt(Codes.Keys.UI.PROGRESS));
+				}
+			}
+		};
 
 		Show();
 
@@ -152,25 +170,15 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 		return tab;
 	}
 	
-	private void export(boolean isShare) {
-		View inProgressView = LayoutInflater.from(a).inflate(R.layout.popup_share_in_progress, null);
-		inProgressBar = (ProgressBar) inProgressView.findViewById(R.id.share_in_progress_bar);
-		
-		ViewGroup currentTab = (ViewGroup) tabHost.getCurrentTabView();
-		currentTab.removeAllViews();
-		currentTab.addView(inProgressView);
-		
-		((IMedia) context).export(new Handler() {
+	private void export(final boolean isShare) {
+		tabHost.setVisibility(View.GONE);
+		inProgressRoot.setVisibility(View.VISIBLE);
+		new Thread(new Runnable() {
 			@Override
-			public void handleMessage(Message msg) {
-				Bundle b = msg.getData();
-				if(b.containsKey(Models.IMedia.VERSION)) {
-					SharePopup.this.cancel();
-				} else if(b.containsKey(Codes.Keys.UI.PROGRESS)) {
-					inProgressBar.setProgress(b.getInt(Codes.Keys.UI.PROGRESS));
-				}
+			public void run() {
+				((IMedia) context).export(h, encryptTo, isShare);
 			}
-		}, encryptTo, isShare);
+		}).start();
 	}
 
 	@Override

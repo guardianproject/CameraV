@@ -61,6 +61,7 @@
         <item name="android:paddingBottom">8dip</item>
         <item name="android:paddingLeft">4dip</item>
         <item name="android:paddingRight">4dip</item>
+        <item name="android:background">@drawable/extras_list_item_selector</item>
     </style>
     
     <style name="iwitness_edittext">

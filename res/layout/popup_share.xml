@@ -31,4 +31,9 @@
         </LinearLayout>
     </TabHost>
 
+    <include
+        android:id="@+id/share_in_progress_root"
+        android:visibility="gone"
+        layout="@layout/popup_share_in_progress" />
+
 </LinearLayout>

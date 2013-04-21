@@ -409,4 +409,15 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		waiter.cancel();
 		startActivityForResult(toEditor, Routes.EDITOR);
 	}
+
+	@Override
+	public void waiter(boolean show) {
+		if(show) {
+			waiter = new WaitPopup(this);
+		} else {
+			if(waiter != null) {
+				waiter.cancel();
+			}
+		}
+	}
 }

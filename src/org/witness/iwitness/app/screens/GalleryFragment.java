@@ -3,8 +3,10 @@ package org.witness.iwitness.app.screens;
 import java.util.List;
 import java.util.Vector;
 
+import org.json.JSONException;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IMedia;
+import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants.App.Home;
@@ -13,6 +15,7 @@ import org.witness.iwitness.utils.adapters.GalleryListAdapter;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,9 +50,10 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	LinearLayout batchEditHolder;
 
 	Activity a;
-	
+
 	boolean isInMultiSelectMode;
 	List<IMedia> batch;
+	Handler h = new Handler();
 
 	private static final String LOG = Home.LOG;	
 	private InformaCam informaCam = InformaCam.getInstance();
@@ -66,23 +70,23 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		rootView = li.inflate(R.layout.fragment_home_gallery, null);
 		displayToggle = (Spinner) rootView.findViewById(R.id.display_toggle);
 		displaySort = (Spinner) rootView.findViewById(R.id.display_sort);
-		
+
 		displayToggleTrigger = (Button) rootView.findViewById(R.id.display_toggle_trigger);
 		displayToggleTrigger.setOnClickListener(this);
-		
+
 		displaySortTrigger = (ImageButton) rootView.findViewById(R.id.display_sort_trigger);
 		displaySortTrigger.setOnClickListener(this);
-		
+
 		multiSelect = (ImageButton) rootView.findViewById(R.id.multi_select);
 		multiSelect.setOnClickListener(this);
 
 		mediaDisplayGrid = (GridView) rootView.findViewById(R.id.media_display_grid);
 		mediaDisplayList = (ListView) rootView.findViewById(R.id.media_display_list);
-		
+
 		noMedia = (RelativeLayout) rootView.findViewById(R.id.media_display_no_media);
-		
+
 		batchEditHolder = (LinearLayout) rootView.findViewById(R.id.media_batch_edit_holder);
-		
+
 		batchShare = (Button) rootView.findViewById(R.id.media_batch_share);
 		batchShare.setOnClickListener(this);
 
@@ -113,11 +117,11 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 				mediaDisplayGrid.setAdapter(galleryGridAdapter);
 				mediaDisplayGrid.setOnItemLongClickListener(this);
 				mediaDisplayGrid.setOnItemClickListener(this);
-				
+
 				mediaDisplayList.setAdapter(galleryListAdapter);
 				mediaDisplayList.setOnItemLongClickListener(this);
 				mediaDisplayList.setOnItemClickListener(this);
-				
+
 				noMedia.setVisibility(View.GONE);
 			} else {
 				noMedia.setVisibility(View.VISIBLE);
@@ -125,7 +129,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		} catch(NullPointerException e) {
 			Log.e(LOG, e.toString());
 			e.printStackTrace();
-			
+
 			noMedia.setVisibility(View.VISIBLE);
 		}
 	}
@@ -136,12 +140,12 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 
 		initData();
 	}
-	
+
 	public void toggleMultiSelectMode(boolean mode) {
 		isInMultiSelectMode = mode;
 		toggleMultiSelectMode();
 	}
-	
+
 	public void toggleMultiSelectMode() {
 		multiSelect.setImageDrawable(a.getResources().getDrawable(isInMultiSelectMode ? R.drawable.ic_action_selected : R.drawable.ic_action_select));
 		if(isInMultiSelectMode) {
@@ -150,10 +154,10 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		} else {
 			batch = null;
 			batchEditHolder.setVisibility(View.GONE);
-			
+
 		}
 		initData();
-		
+
 	}
 
 	private void initLayout(Bundle savedInstanceState) {
@@ -207,7 +211,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 			} else {
 				isInMultiSelectMode = true;
 			}
-			
+
 			toggleMultiSelectMode();
 		} else if(v == displaySortTrigger) {
 			displaySort.performClick();
@@ -216,10 +220,25 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		} else if(v == batchShare) {
 			// TODO
 		} else if(v == batchDelete) {
-			for(IMedia m : batch) {
-				m.delete();
-			}
-			updateData();
+			((HomeActivityListener) a).waiter(true);
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					for(IMedia m : batch) {
+						m.delete();
+					}
+					h.post(new Runnable() {
+						@Override
+						public void run() {
+							updateData();
+							toggleMultiSelectMode(false);
+							((HomeActivityListener) a).waiter(false);
+						}
+					});
+				}
+			}).start();
+			
+			
 		}
 
 	}
@@ -230,13 +249,36 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int viewId, long l) {
 		if(!isInMultiSelectMode) {
 			((HomeActivityListener) a).launchEditor(((IMedia) informaCam.mediaManifest.media.get((int) l)));
 		} else {
-			batch.add((IMedia) informaCam.mediaManifest.media.get((int) l));
+			try {
+				IMedia m = (IMedia) informaCam.mediaManifest.media.get((int) l);
+				
+				if(!m.has(Models.IMedia.TempKeys.IS_SELECTED)) {
+					m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
+				}
+				
+				int selectedColor = R.drawable.blue;
+				if(m.getBoolean(Models.IMedia.TempKeys.IS_SELECTED)) {
+					selectedColor = R.drawable.white;
+					m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
+					batch.remove(m);
+				} else {
+					m.put(Models.IMedia.TempKeys.IS_SELECTED, true);
+					batch.add(m);
+				}
+				
+				LinearLayout ll = (LinearLayout) view.findViewById(R.id.gallery_thumb_holder);
+				ll.setBackgroundDrawable(getResources().getDrawable(selectedColor));
+			} catch(JSONException e) {
+				Log.e(LOG, e.toString());
+				e.printStackTrace();
+			}
 		}
-		
+
 	}
 }
