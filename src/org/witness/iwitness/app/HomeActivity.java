@@ -1,5 +1,7 @@
 package org.witness.iwitness.app;
 
+import info.guardianproject.onionkit.ui.OrbotHelper;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -10,6 +12,7 @@ import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 import org.witness.informacam.models.connections.IConnection;
 import org.witness.informacam.models.connections.IMessage;
+import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.media.IMedia;
 
@@ -36,6 +39,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -341,7 +345,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				logoutUser();
 				break;
 			}
-		}
+		}		
 	}
 
 	class TabPager extends FragmentStatePagerAdapter implements TabHost.OnTabChangeListener, OnPageChangeListener {
@@ -419,5 +423,11 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				waiter.cancel();
 			}
 		}
+	}
+
+	@Override
+	public void updateNotifications(INotification notification, Message message) {
+		// TODO update notifications for progress.
+		
 	}
 }

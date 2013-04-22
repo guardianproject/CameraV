@@ -9,8 +9,11 @@ import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.IRegionDisplay;
 import org.witness.informacam.ui.IRegionDisplay.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.Models;
+import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.informacam.models.forms.IForm;
+import org.witness.informacam.models.media.IImage;
 import org.witness.informacam.models.media.IMedia;
+import org.witness.informacam.models.media.IVideo;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.DetailsViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenImageViewFragment;
@@ -104,12 +107,21 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 
 		String mId = getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA);
 		media = informaCam.mediaManifest.getById(mId);
-		informaCam.informaService.associateMedia(media);
-
 		if(media == null) {
 			setResult(Activity.RESULT_CANCELED);
 			finish();
 		}
+		
+		if(media.dcimEntry.mediaType.equals(MimeType.IMAGE)) {
+			IImage image = new IImage(media);
+			media = image;
+		} else if(media.dcimEntry.mediaType.equals(MimeType.VIDEO)) {
+			// XXX: wtf.
+			media.associatedRegions.clear();
+			IVideo video = new IVideo(media);
+			media = video;
+		}
+		informaCam.informaService.associateMedia(media);
 
 		availableForms = FormUtility.getAvailableForms();
 		Log.d(LOG, "INITING MEDIA FOR EDIT:\n" + media.asJson().toString());		
@@ -187,7 +199,7 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				informaCam.saveState(informaCam.mediaManifest);
+				media.save();
 			}
 		}).start();
 		

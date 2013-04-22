@@ -5,6 +5,7 @@ import java.util.List;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.App;
+import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.iwitness.R;
@@ -19,11 +20,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.LinearLayout;
 
 public class NotificationsListAdapter extends BaseAdapter {
 	List<INotification> notifications;
 	
 	private static final String LOG = App.LOG;
+
+	private static final String LinearLayout = null;
 	
 	public NotificationsListAdapter(List<INotification> notifications) {
 		this.notifications = notifications;
@@ -79,7 +83,11 @@ public class NotificationsListAdapter extends BaseAdapter {
 				Bitmap b = BitmapFactory.decodeByteArray(iconBytes, 0, iconBytes.length);
 				icon.setImageBitmap(b);
 			}
-			
+		}
+		
+		if(notification.type == Models.INotification.Type.SHARED_MEDIA) {
+			View progress = LayoutInflater.from(InformaCam.getInstance().a).inflate(R.layout.extras_notification_progress, null);
+			((LinearLayout) convertView.findViewById(R.id.notification_view_root)).addView(progress);
 		}
 		
 		return convertView;

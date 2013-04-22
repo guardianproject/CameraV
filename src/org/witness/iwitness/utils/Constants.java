@@ -1,9 +1,11 @@
 package org.witness.iwitness.utils;
 
+import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.media.IMedia;
 
 import android.net.Uri;
+import android.os.Message;
 
 public class Constants {	
 	public interface EditorActivityListener {
@@ -18,6 +20,7 @@ public class Constants {
 		public void getContextualMenuFor(IOrganization organization);
 		public void getContextualMenuFor(IMedia media);
 		public void waiter(boolean show);
+		public void updateNotifications(INotification notification, Message message);
 	}
 
 	public class Codes {
