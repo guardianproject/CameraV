@@ -119,6 +119,7 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 			// XXX: wtf.
 			media.associatedRegions.clear();
 			IVideo video = new IVideo(media);
+			Log.d(LOG, "AND TO CHECK: this video\n" + video.asJson().toString());
 			media = video;
 		}
 		informaCam.informaService.associateMedia(media);
@@ -258,5 +259,10 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 			}
 		}
 		
+	}
+
+	@Override
+	public IMedia media() {
+		return media;
 	}
 }

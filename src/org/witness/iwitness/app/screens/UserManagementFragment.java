@@ -131,12 +131,13 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		
 		installedOrganizations = new IInstalledOrganizations();
 		installedOrganizations.inflate(informaCam.getModel(installedOrganizations));
+		Log.d(LOG, "installed orgs\n" + installedOrganizations.asJson().toString());
+		
 		organizationsHolder.setOnItemLongClickListener(this);
 		organizationsHolder.setAdapter(new OrganizationsListAdapter(installedOrganizations.organizations));
 		
-		if(informaCam.notificationsManifest.notifications.size() == 0) {
+		if(informaCam.notificationsManifest.notifications != null && informaCam.notificationsManifest.notifications.size() > 0) {
 			notificationsNoNotifications.setVisibility(View.VISIBLE);
-		} else {
 			notificationsHolder.setAdapter(new NotificationsListAdapter(informaCam.notificationsManifest.notifications));
 		}
 		
@@ -166,9 +167,9 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			Intent wipeIntent = new Intent(a, WipeActivity.class);
 			a.startActivityForResult(wipeIntent, Routes.WIPE);
 		} else if(v == toSettings) {
-			
+			// TODO
 		} else if(v == thumbnail) {
-			
+			// TODO
 		} else if(v == exportCredentials) {
 			exportCredentials();
 		}

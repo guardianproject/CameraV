@@ -19,6 +19,7 @@ import org.witness.iwitness.app.screens.popups.AudioNotePopup;
 import org.witness.iwitness.app.screens.popups.RenamePopup;
 import org.witness.iwitness.app.screens.popups.TextareaPopup;
 import org.witness.iwitness.utils.Constants.App.Editor.Forms;
+import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -38,7 +39,6 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 	LinearLayout overviewFormRoot;
 
 	Activity a;
-	IMedia media;
 	IForm form = null;
 	FormUtility formUtility;
 
@@ -117,25 +117,23 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 		initForms();
 	}
 
-	private void initData() {
-		media = ((EditorActivity) a).media;
-		
+	private void initData() {		
 		int displayNumMessages = 0;
-		if(media.messages != null && media.messages.size() > 0) {
-			displayNumMessages = media.messages.size();
+		if(((EditorActivityListener) a).media().messages != null && ((EditorActivityListener) a).media().messages.size() > 0) {
+			displayNumMessages = ((EditorActivityListener) a).media().messages.size();
 		}
 		messagesHolder.setText(a.getResources().getString(R.string.x_messages, displayNumMessages, (displayNumMessages == 1 ? "" : "s")));
 
-		String[] dateAndTime = TimeUtility.millisecondsToDatestampAndTimestamp(media.dcimEntry.timeCaptured);
+		String[] dateAndTime = TimeUtility.millisecondsToDatestampAndTimestamp(((EditorActivityListener) a).media().dcimEntry.timeCaptured);
 		dateCaptured.setText(dateAndTime[0]);
 		timeCaptured.setText(dateAndTime[1]);
 
-		if(media.alias != null) {
-			alias.setText(media.alias);
+		if(((EditorActivityListener) a).media().alias != null) {
+			alias.setText(((EditorActivityListener) a).media().alias);
 		}
 
-		if(media.dcimEntry.exif.location != null) {
-			location.setText(a.getString(R.string.x_location, media.dcimEntry.exif.location[0], media.dcimEntry.exif.location[1]));
+		if(((EditorActivityListener) a).media().dcimEntry.exif.location != null) {
+			location.setText(a.getString(R.string.x_location, ((EditorActivityListener) a).media().dcimEntry.exif.location[0], ((EditorActivityListener) a).media().dcimEntry.exif.location[1]));
 		} else {
 			location.setText(a.getString(R.string.location_unknown));
 		}
@@ -147,14 +145,14 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 			if(form.namespace.equals(Forms.OverviewForm.TAG)) {
 				byte[] answerBytes = null;
 				
-				overviewRegion = media.getRegionAtRect();
+				overviewRegion = ((EditorActivityListener) a).media().getRegionAtRect();
 				if(overviewRegion != null) {
 					answerBytes = InformaCam.getInstance().ioService.getBytes(overviewRegion.formPath, Type.IOCIPHER);
 					Log.d(LOG, overviewRegion.asJson().toString());
 				} else {
-					overviewRegion = media.addRegion();
+					overviewRegion = ((EditorActivityListener) a).media().addRegion();
 					overviewRegion.formNamespace = form.namespace;
-					overviewRegion.formPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
+					overviewRegion.formPath = new info.guardianproject.iocipher.File(((EditorActivityListener) a).media().rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
 				}
 				
 				this.form = new IForm(form, a, answerBytes);
@@ -164,8 +162,8 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 		}
 		
 		int displayNumTags = 0;
-		if(media.associatedRegions != null && media.associatedRegions.size() > 0) {
-			displayNumTags = media.getRegionsWithForms(Arrays.asList(new String[] {form.namespace})).size();
+		if(((EditorActivityListener) a).media().associatedRegions != null && ((EditorActivityListener) a).media().associatedRegions.size() > 0) {
+			displayNumTags = ((EditorActivityListener) a).media().getRegionsWithForms(Arrays.asList(new String[] {form.namespace})).size();
 		}
 		tagsHolder.setText(a.getResources().getString(R.string.x_tags, displayNumTags, (displayNumTags == 1 ? "" : "s")));
 	}
@@ -175,7 +173,7 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 	}
 
 	private void addQuickNote() {
-		new TextareaPopup(a, media) {
+		new TextareaPopup(a, ((EditorActivityListener) a).media()) {
 			@Override
 			public void cancel() {
 				super.cancel();
@@ -186,11 +184,11 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 	}
 
 	private void renameMedia() {
-		new RenamePopup(a, media) {
+		new RenamePopup(a, ((EditorActivityListener) a).media()) {
 			@Override
 			public void cancel() {
 				super.cancel();
-				alias.setText(media.alias);
+				alias.setText(((EditorActivityListener) a).media().alias);
 			}
 		};
 	}

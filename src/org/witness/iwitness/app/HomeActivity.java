@@ -1,7 +1,5 @@
 package org.witness.iwitness.app;
 
-import info.guardianproject.onionkit.ui.OrbotHelper;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -134,7 +132,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 					IOrganization organization = informaCam.installICTD(ictdURI);
 					if(organization != null) {
 						viewPager.setCurrentItem(0);
-						// TODO: add to notifications
 					} else {
 						// TODO: handle error
 					}
@@ -369,10 +366,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		}
 
 		@Override
-		public void onPageScrollStateChanged(int state) {
-			// TODO Auto-generated method stub
-
-		}
+		public void onPageScrollStateChanged(int state) {}
 
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2) {}

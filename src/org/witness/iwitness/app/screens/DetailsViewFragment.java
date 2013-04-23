@@ -3,11 +3,11 @@ package org.witness.iwitness.app.screens;
 
 import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
-import org.witness.informacam.models.media.IMedia;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.forms.OverviewFormFragment;
 import org.witness.iwitness.utils.Constants.Codes;
+import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -28,9 +28,7 @@ public class DetailsViewFragment extends Fragment implements ODKFormListener {
 	
 	FrameLayout formHolder;
 	Fragment overviewFormFragment;
-	
-	IMedia media;
-	
+		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,7 +55,6 @@ public class DetailsViewFragment extends Fragment implements ODKFormListener {
 		super.onAttach(a);
 		
 		this.a = a;
-		this.media = ((EditorActivity) a).media;
 	}
 	
 	@Override
@@ -76,7 +73,7 @@ public class DetailsViewFragment extends Fragment implements ODKFormListener {
 	}
 	
 	private void initLayout() {
-		mediaPreview.setImageBitmap(media.getBitmap(media.bitmapPreview));
+		mediaPreview.setImageBitmap(((EditorActivityListener) a).media().getBitmap(((EditorActivityListener) a).media().bitmapPreview));
 		
 		overviewFormFragment = Fragment.instantiate(a, OverviewFormFragment.class.getName());
 		

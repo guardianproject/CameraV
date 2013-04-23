@@ -26,8 +26,6 @@ public class NotificationsListAdapter extends BaseAdapter {
 	List<INotification> notifications;
 	
 	private static final String LOG = App.LOG;
-
-	private static final String LinearLayout = null;
 	
 	public NotificationsListAdapter(List<INotification> notifications) {
 		this.notifications = notifications;

@@ -45,7 +45,12 @@ public class OrganizationsListAdapter extends BaseAdapter {
 		details.setText(organization.organizationDetails);
 		
 		TextView isActive = (TextView) convertView.findViewById(R.id.organization_is_active);
-		int isActiveText = organization.transportCredentials.certificatePath == null ? R.string.unverified : R.string.verified; 
+		
+		int isActiveText = R.string.unverified;
+		if(organization.transportCredentials != null) {
+			isActiveText = organization.transportCredentials.certificatePath == null ? R.string.unverified : R.string.verified;
+		}
+		
 		isActive.setText(InformaCam.getInstance().a.getString(isActiveText));
 		
 		return convertView;
