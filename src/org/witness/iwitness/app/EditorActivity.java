@@ -117,7 +117,8 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 			media = image;
 		} else if(media.dcimEntry.mediaType.equals(MimeType.VIDEO)) {
 			// XXX: wtf.
-			media.associatedRegions.clear();
+			
+			
 			IVideo video = new IVideo(media);
 			Log.d(LOG, "AND TO CHECK: this video\n" + video.asJson().toString());
 			media = video;

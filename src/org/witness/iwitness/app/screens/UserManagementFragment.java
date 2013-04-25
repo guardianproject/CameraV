@@ -131,7 +131,6 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		
 		installedOrganizations = new IInstalledOrganizations();
 		installedOrganizations.inflate(informaCam.getModel(installedOrganizations));
-		Log.d(LOG, "installed orgs\n" + installedOrganizations.asJson().toString());
 		
 		organizationsHolder.setOnItemLongClickListener(this);
 		organizationsHolder.setAdapter(new OrganizationsListAdapter(installedOrganizations.organizations));
