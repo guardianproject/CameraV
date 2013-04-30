@@ -3,16 +3,18 @@ package org.witness.iwitness.utils.adapters;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.models.Model;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.iwitness.R;
+import org.witness.iwitness.utils.Constants.ListAdapterListener;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,15 +24,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 
-public class NotificationsListAdapter extends BaseAdapter {
+public class NotificationsListAdapter extends BaseAdapter implements ListAdapterListener {
 	List<INotification> notifications;
+	int currentSort = Models.INotificationManifest.Sort.DATE_DESC;
 	
 	private static final String LOG = App.LOG;
 	
 	public NotificationsListAdapter(List<INotification> notifications) {
 		this.notifications = notifications;
-		
 	}
+	
 	@Override
 	public int getCount() {
 		return notifications.size();
@@ -89,6 +92,18 @@ public class NotificationsListAdapter extends BaseAdapter {
 		}
 		
 		return convertView;
+	}
+
+	@Override
+	public void addData(Model newData) {
+		notifications.add((INotification) newData);
+		
+	}
+
+	@Override
+	public void updateData(int position, Message message) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

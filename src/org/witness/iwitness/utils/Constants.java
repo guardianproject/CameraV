@@ -1,5 +1,6 @@
 package org.witness.iwitness.utils;
 
+import org.witness.informacam.models.Model;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.media.IMedia;
@@ -20,8 +21,15 @@ public class Constants {
 		public void logoutUser();
 		public void getContextualMenuFor(IOrganization organization);
 		public void getContextualMenuFor(IMedia media);
+		public void getContextualMenuFor(INotification notification);
 		public void waiter(boolean show);
-		public void updateNotifications(INotification notification, Message message);
+		public void updateData(INotification notification, Message message);
+		public void updateData(IOrganization organization, Message message);
+	}
+	
+	public interface ListAdapterListener {
+		public void addData(Model newData);
+		public void updateData(int position, Message message);
 	}
 
 	public class Codes {

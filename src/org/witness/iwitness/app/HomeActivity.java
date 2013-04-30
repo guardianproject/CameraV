@@ -229,6 +229,22 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		informaCam.startInforma();
 		Log.d(LOG, "launching editor for " + media._id);		
 	}
+	
+	@Override
+	public void getContextualMenuFor(final INotification notification) {
+		List<ContextMenuAction> actions = new Vector<ContextMenuAction>();
+		
+		ContextMenuAction action = new ContextMenuAction();
+		action.label = getResources().getString(R.string.delete);
+		action.ocl = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mam.cancel();
+				informaCam.notificationsManifest.getById(notification._id).delete();
+			}
+		};
+		actions.add(action);
+	}
 
 	@Override
 	public void getContextualMenuFor(final IOrganization organization) {
@@ -420,8 +436,14 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	}
 
 	@Override
-	public void updateNotifications(INotification notification, Message message) {
+	public void updateData(INotification notification, Message message) {
 		// TODO update notifications for progress.
+		
+	}
+
+	@Override
+	public void updateData(IOrganization organization, Message message) {
+		// TODO Auto-generated method stub
 		
 	}
 }
