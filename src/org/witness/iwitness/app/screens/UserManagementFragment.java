@@ -177,7 +177,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l) {
 		IOrganization org = installedOrganizations.organizations.get((int) l);
-		if(org.transportCredentials.certificatePath != null) {
+		if(org.transportCredentials != null && org.transportCredentials.certificatePath != null) {
 			((HomeActivityListener) a).getContextualMenuFor(org);
 		}
 		return true;
