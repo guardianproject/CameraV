@@ -3,18 +3,15 @@ package org.witness.iwitness.utils.adapters;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.models.Model;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.iwitness.R;
-import org.witness.iwitness.utils.Constants.ListAdapterListener;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 
-public class NotificationsListAdapter extends BaseAdapter implements ListAdapterListener {
+public class NotificationsListAdapter extends BaseAdapter {
 	List<INotification> notifications;
 	int currentSort = Models.INotificationManifest.Sort.DATE_DESC;
 	
@@ -86,24 +83,11 @@ public class NotificationsListAdapter extends BaseAdapter implements ListAdapter
 			}
 		}
 		
-		if(notification.type == Models.INotification.Type.SHARED_MEDIA) {
+		if(notification.type == Models.INotification.Type.EXPORTED_MEDIA) {
 			View progress = LayoutInflater.from(InformaCam.getInstance().a).inflate(R.layout.extras_notification_progress, null);
 			((LinearLayout) convertView.findViewById(R.id.notification_view_root)).addView(progress);
 		}
 		
 		return convertView;
 	}
-
-	@Override
-	public void addData(Model newData) {
-		notifications.add((INotification) newData);
-		
-	}
-
-	@Override
-	public void updateData(int position, Message message) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

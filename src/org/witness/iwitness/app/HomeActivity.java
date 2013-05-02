@@ -25,6 +25,7 @@ import org.witness.iwitness.app.screens.popups.TextareaPopup;
 import org.witness.iwitness.app.screens.popups.WaitPopup;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
+import org.witness.iwitness.utils.Constants.ListAdapterListener;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.Codes.Routes;
@@ -72,7 +73,21 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	InformaCam informaCam;
 
-	Handler h = new Handler();
+	Handler h = new Handler() {
+		
+		@Override
+		public void handleMessage(Message msg) {
+			Bundle msgData = msg.getData();
+			if(msgData.containsKey(Models.INotification.CLASS)) {
+				switch(msgData.getInt(Models.INotification.CLASS)) {
+				case Models.INotification.Type.NEW_KEY:
+					
+					break;
+				}
+			}
+		}
+	};
+	
 	MediaActionMenu mam;
 	WaitPopup waiter;
 
@@ -129,7 +144,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			h.post(new Runnable() {
 				@Override
 				public void run() {
-					IOrganization organization = informaCam.installICTD(ictdURI);
+					IOrganization organization = informaCam.installICTD(ictdURI, h);
 					if(organization != null) {
 						viewPager.setCurrentItem(0);
 					} else {
@@ -241,9 +256,14 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			public void onClick(View v) {
 				mam.cancel();
 				informaCam.notificationsManifest.getById(notification._id).delete();
+				
+				((ListAdapterListener) userManagementFragment).updateAdapter(Codes.Adapters.NOTIFICATIONS);
 			}
 		};
 		actions.add(action);
+		
+		mam = new MediaActionMenu(this, actions);
+		mam.Show();
 	}
 
 	@Override
@@ -342,8 +362,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		if(responseCode == Activity.RESULT_OK) {
 			switch(requestCode) {
 			case Codes.Routes.CAMERA:
-				Log.d(LOG, "we returned these values: " + data.getStringExtra(Codes.Extras.RETURNED_MEDIA));
-
 				informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
 				Log.d(LOG, informaCam.mediaManifest.asJson().toString());
 				((GalleryFragment) galleryFragment).updateData();

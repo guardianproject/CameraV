@@ -7,6 +7,7 @@ import org.witness.informacam.models.media.IMedia;
 
 import android.net.Uri;
 import android.os.Message;
+import android.widget.BaseAdapter;
 
 public class Constants {	
 	public interface EditorActivityListener {
@@ -28,8 +29,7 @@ public class Constants {
 	}
 	
 	public interface ListAdapterListener {
-		public void addData(Model newData);
-		public void updateData(int position, Message message);
+		public void updateAdapter(int which);
 	}
 
 	public class Codes {
@@ -41,6 +41,13 @@ public class Constants {
 			public static final int LOGIN = org.witness.informacam.utils.Constants.Codes.Messages.Login.DO_LOGIN;
 			public static final int LOGOUT = org.witness.informacam.utils.Constants.Codes.Messages.Login.DO_LOGOUT;
 			public static final int WIPE = 4;
+		}
+		
+		public class Adapters {
+			public static final int NOTIFICATIONS = 1;
+			public static final int ORGANIZATIONS = 2;
+			public static final int GALLERY_GRID = 3;
+			public static final int GALLERY_LIST = 4;
 		}
 
 		public class Media {
