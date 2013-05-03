@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -53,6 +54,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 
 	LayoutInflater li;
 	Activity a;
+	Handler h = new Handler();
 
 	int[] dims;
 
@@ -135,8 +137,13 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		int connectivityLabel = informaCam.uploaderService.isConnectedToTor() ? R.string.connected_to_tor : R.string.not_connected_to_tor;
 		connectivity.setText(getResources().getString(connectivityLabel));
 
-		initOrganizations();
-		initNotifications();
+		h.post(new Runnable() {
+			@Override
+			public void run() {
+				initNotifications();
+				initOrganizations();
+			}
+		});
 
 	}
 	
@@ -160,6 +167,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	}
 
 	private void initNotifications() {
+		
 		if(informaCam.notificationsManifest.notifications != null) {
 			if(informaCam.notificationsManifest.notifications.size() > 0) {
 				notificationsNoNotifications.setVisibility(View.GONE);
@@ -220,10 +228,22 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	public void updateAdapter(int which) {
 		switch(which) {
 		case Codes.Adapters.NOTIFICATIONS:
-			initNotifications();
+			h.post(new Runnable() {
+				@Override
+				public void run() {
+					initNotifications();
+				}
+			});
+			
 			break;
 		case Codes.Adapters.ORGANIZATIONS:
-			initOrganizations();
+			h.post(new Runnable() {
+				@Override
+				public void run() {
+					initOrganizations();
+				}
+			});
+			
 			break;
 
 		}
