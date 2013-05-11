@@ -85,7 +85,6 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		alias = (TextView) rootView.findViewById(R.id.user_alias);
 		connectivity = (TextView) rootView.findViewById(R.id.user_connectivity);
 
-
 		return rootView;
 	}
 
@@ -128,7 +127,6 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		exportCredentials.setOnClickListener(this);
 
 		tabHost.setCurrentTab(0);
-
 	}
 
 	private void initData() {

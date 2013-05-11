@@ -70,4 +70,7 @@ public class OriginalImagePreference extends Fragment implements WizardListener 
 
 	@Override
 	public void wizardCompleted() {}
+
+	@Override
+	public void onSubFragmentInitialized() {}
 }

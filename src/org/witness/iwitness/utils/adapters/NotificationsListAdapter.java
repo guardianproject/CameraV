@@ -83,10 +83,12 @@ public class NotificationsListAdapter extends BaseAdapter {
 			}
 		}
 		
+		/*
 		if(notification.type == Models.INotification.Type.EXPORTED_MEDIA) {
 			View progress = LayoutInflater.from(InformaCam.getInstance().a).inflate(R.layout.extras_notification_progress, null);
 			((LinearLayout) convertView.findViewById(R.id.notification_view_root)).addView(progress);
 		}
+		*/
 		
 		return convertView;
 	}

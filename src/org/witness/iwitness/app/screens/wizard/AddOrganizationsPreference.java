@@ -129,4 +129,7 @@ public class AddOrganizationsPreference extends Fragment implements WizardListen
 
 	@Override
 	public void wizardCompleted() {}
+
+	@Override
+	public void onSubFragmentInitialized() {}
 }
