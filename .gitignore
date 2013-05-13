@@ -1,7 +1,5 @@
 .DS_Store
-gen/*
-bin/*
-.classpath
-project.properties
-assets/includedOrganizations/*
-.settings/*
+app/gen/*
+app/bin/*
+app/assets/includedOrganizations/*
+app/.settings/*
