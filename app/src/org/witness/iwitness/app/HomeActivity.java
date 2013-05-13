@@ -54,7 +54,7 @@ import android.widget.TabHost;
 import android.widget.LinearLayout.LayoutParams;
 
 public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamStatusListener {
-	Intent init;
+	Intent init, route;
 	private final static String LOG = Constants.App.Home.LOG;
 	private String packageName;
 
@@ -74,20 +74,20 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	InformaCam informaCam;
 
 	Handler h = new Handler() {
-		
+
 		@Override
 		public void handleMessage(Message msg) {
 			Bundle msgData = msg.getData();
 			if(msgData.containsKey(Models.INotification.CLASS)) {
 				switch(msgData.getInt(Models.INotification.CLASS)) {
 				case Models.INotification.Type.NEW_KEY:
-					
+
 					break;
 				}
 			}
 		}
 	};
-	
+
 	MediaActionMenu mam;
 	WaitPopup waiter;
 
@@ -114,6 +114,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 		toEditor = new Intent(this, EditorActivity.class);
 		toCamera = new Intent(this, CameraActivity.class);
+		route = null;
 
 		userManagementFragment = Fragment.instantiate(this, UserManagementFragment.class.getName());
 		galleryFragment = Fragment.instantiate(this, GalleryFragment.class.getName());
@@ -122,7 +123,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		fragments.add(userManagementFragment);
 		fragments.add(galleryFragment);
 		fragments.add(cameraFragment);
-		
+
 		init = getIntent();
 	}
 
@@ -136,11 +137,11 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		if(initUploads) {
 			informaCam.initUploads();
 		}
-		
+
 		if(init.getData() != null) {
 			final Uri ictdURI = init.getData();
 			Log.d(LOG, "INIT KEY: " + ictdURI);
-			
+
 			h.post(new Runnable() {
 				@Override
 				public void run() {
@@ -232,23 +233,28 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		Display display = getWindowManager().getDefaultDisplay();
 		return new int[] {display.getWidth(),display.getHeight()};
 	}
-	
+
 	public void launchCamera() {
-		startActivityForResult(toCamera, Routes.CAMERA);
+		route = toCamera;
+
+		waiter = new WaitPopup(this);
+		informaCam.startInforma();
 	}
 
 	@Override
 	public void launchEditor(IMedia media) {
 		toEditor.putExtra(Codes.Extras.EDIT_MEDIA, media._id);
+
+		route = toEditor;
 		waiter = new WaitPopup(this);
 		informaCam.startInforma();
 		Log.d(LOG, "launching editor for " + media._id);		
 	}
-	
+
 	@Override
 	public void getContextualMenuFor(final INotification notification) {
 		List<ContextMenuAction> actions = new Vector<ContextMenuAction>();
-		
+
 		ContextMenuAction action = new ContextMenuAction();
 		action.label = getResources().getString(R.string.delete);
 		action.ocl = new OnClickListener() {
@@ -256,12 +262,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			public void onClick(View v) {
 				mam.cancel();
 				informaCam.notificationsManifest.getById(notification._id).delete();
-				
+
 				((ListAdapterListener) userManagementFragment).updateAdapter(Codes.Adapters.NOTIFICATIONS);
 			}
 		};
 		actions.add(action);
-		
+
 		mam = new MediaActionMenu(this, actions);
 		mam.Show();
 	}
@@ -273,7 +279,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		ContextMenuAction action = new ContextMenuAction();
 		action.label = getResources().getString(R.string.send_message);
 		action.ocl = new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
@@ -282,14 +288,14 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 					public void cancel() {
 						IConnection connection = new IMessage(organization, this.prompt.getText().toString());
 						informaCam.uploaderService.addToQueue(connection);
-						
+
 						super.cancel();
 					}
 				};
 			}
 		};
 		actions.add(action);
-		
+
 		mam = new MediaActionMenu(this, actions);
 		mam.Show();
 	}
@@ -365,12 +371,16 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
 				Log.d(LOG, informaCam.mediaManifest.asJson().toString());
 				((GalleryFragment) galleryFragment).updateData();
+				
+				informaCam.stopInforma();
+				route = null;
 				break;
 			case Codes.Routes.LOGOUT:
 				logoutUser();
 				break;
 			case Codes.Routes.EDITOR:
 				informaCam.stopInforma();
+				route = null;
 				break;
 			case Codes.Routes.WIPE:
 				logoutUser();
@@ -434,12 +444,21 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void onInformaCamStop(Intent intent) {}
 
 	@Override
-	public void onInformaStop(Intent intent) {}
+	public void onInformaStop(Intent intent) {
+		route = null;
+	}
 
 	@Override
 	public void onInformaStart(Intent intent) {
+		// TODO: is it camera intent or editor intent?
 		waiter.cancel();
-		startActivityForResult(toEditor, Routes.EDITOR);
+		if(route != null) {
+			if(route.equals(toEditor)) {
+				startActivityForResult(toEditor, Routes.EDITOR);
+			} else if(route.equals(toCamera)) {
+				startActivityForResult(toCamera, Routes.CAMERA);
+			}
+		}
 	}
 
 	@Override
@@ -456,12 +475,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void updateData(INotification notification, Message message) {
 		// TODO update notifications for progress.
-		
+
 	}
 
 	@Override
 	public void updateData(IOrganization organization, Message message) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
