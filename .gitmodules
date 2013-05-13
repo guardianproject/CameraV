@@ -1,0 +1,6 @@
+[submodule "externals/InformaCam"]
+	path = externals/InformaCam
+	url = git://github.com/guardianproject/InformaCam.git
+[submodule "externals/ActionBarSherlock"]
+	path = externals/ActionBarSherlock
+	url = git://github.com/JakeWharton/ActionBarSherlock.git
