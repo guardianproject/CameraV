@@ -1,6 +1,5 @@
 .DS_Store
 app/gen/*
 app/bin/*
-app/assets/includedOrganizations/*
 app/.settings/*
 app/project.properties
