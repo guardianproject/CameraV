@@ -140,7 +140,7 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 		if(installedOrganizations.organizations != null && installedOrganizations.organizations.size() > 0) {
 			if(installedOrganizations.organizations != null && installedOrganizations.organizations.size() > 0) {
 				for(IOrganization org : installedOrganizations.organizations) {
-					if(org.transportCredentials.certificatePath != null) {
+					if(org.transportCredentials != null && org.transportCredentials.certificatePath != null) {
 						organizations.add(org);
 					}
 				}

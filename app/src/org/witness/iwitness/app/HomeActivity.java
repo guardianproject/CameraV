@@ -155,7 +155,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			});
 		}
 
-		initUploads = false;
+		//initUploads = false;
 		initLayout();
 	}
 
