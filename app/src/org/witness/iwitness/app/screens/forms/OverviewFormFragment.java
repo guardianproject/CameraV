@@ -132,7 +132,7 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 			alias.setText(((EditorActivityListener) a).media().alias);
 		}
 
-		if(((EditorActivityListener) a).media().dcimEntry.exif.location != null) {
+		if(((EditorActivityListener) a).media().dcimEntry.exif.location != null && ((EditorActivityListener) a).media().dcimEntry.exif.location != new float[] {0.0f, 0.0f}) {
 			location.setText(a.getString(R.string.x_location, ((EditorActivityListener) a).media().dcimEntry.exif.location[0], ((EditorActivityListener) a).media().dcimEntry.exif.location[1]));
 		} else {
 			location.setText(a.getString(R.string.location_unknown));

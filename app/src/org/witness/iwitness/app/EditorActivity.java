@@ -197,7 +197,9 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				media.save();
+				if(((ODKFormListener) currentFragment).saveForm()) {
+					media.save();
+				}
 			}
 		}).start();
 		

@@ -67,9 +67,7 @@ public class DetailsViewFragment extends Fragment implements ODKFormListener {
 	
 	@Override
 	public void onDetach() {
-		super.onDetach();
-		
-		// TODO: save state and cleanup bitmaps!
+		super.onDetach();		
 	}
 	
 	private void initLayout() {
