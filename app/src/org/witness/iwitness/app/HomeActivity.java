@@ -505,7 +505,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void updateAdapter(int which) {
-		Log.d(LOG, "I GOTTA UPDATE AN ADAPTER!");
 		try {
 			((ListAdapterListener) fragments.get(viewPager.getCurrentItem())).updateAdapter(which);
 		} catch(ClassCastException e) {
