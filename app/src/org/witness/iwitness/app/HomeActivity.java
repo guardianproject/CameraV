@@ -428,6 +428,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			Log.d(LOG, "setting current page as " + page);
 			if(page == 2) {
 				launchCamera();
+			} else {
+				updateAdapter(0);
 			}
 		}
 
@@ -503,7 +505,16 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void updateAdapter(int which) {
-		((ListAdapterListener) fragments.get(viewPager.getCurrentItem())).updateAdapter(which);
+		Log.d(LOG, "I GOTTA UPDATE AN ADAPTER!");
+		try {
+			((ListAdapterListener) fragments.get(viewPager.getCurrentItem())).updateAdapter(which);
+		} catch(ClassCastException e) {
+			Log.e(LOG, "CONSIDERED HANDLED:\n" + e.toString());
+			e.printStackTrace();
+		} catch(NullPointerException e) {
+			Log.e(LOG, "CONSIDERED HANDLED:\n" + e.toString());
+			e.printStackTrace();
+		}
 	}
 
 }

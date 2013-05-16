@@ -38,6 +38,7 @@ public class Constants {
 		}
 		
 		public class Adapters {
+			public static final int ALL = org.witness.informacam.utils.Constants.Codes.Adapters.ALL;
 			public static final int NOTIFICATIONS = org.witness.informacam.utils.Constants.Codes.Adapters.NOTIFICATIONS;
 			public static final int ORGANIZATIONS = org.witness.informacam.utils.Constants.Codes.Adapters.ORGANIZATIONS;
 			public static final int GALLERY_GRID = 3;

@@ -186,9 +186,9 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	private void exportCredentials() {
 		java.io.File credentials = informaCam.ioService.getPublicCredentials();
 		Intent intent = new Intent()
-		.setAction(Intent.ACTION_SEND)
-		.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(credentials))
-		.setType("file/");
+			.setAction(Intent.ACTION_SEND)
+			.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(credentials))
+			.setType("file/");
 
 		startActivity(Intent.createChooser(intent, getString(R.string.send)));
 
@@ -236,7 +236,14 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			});
 			
 			break;
-
+		case Codes.Adapters.ALL:
+			if(tabHost.getCurrentTab() == 0) {
+				updateAdapter(Codes.Adapters.NOTIFICATIONS);
+			} else if(tabHost.getCurrentTab() == 1) {
+				updateAdapter(Codes.Adapters.ORGANIZATIONS);
+			}
+			
+			break;
 		}
 	}
 }
