@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notification_view_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/notification_view_root" >
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,10 +17,10 @@
             android:textColor="@drawable/blue" />
 
         <TextView
-            android:layout_marginLeft="6dip"
             android:id="@+id/notification_label"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="6dip"
             android:textColor="@drawable/grey" />
     </LinearLayout>
 
@@ -37,11 +37,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.8" />
 
-        <ImageView
-            android:id="@+id/notification_icon"
+        <RelativeLayout
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2" />
+            android:layout_weight="0.2" >
+
+            <ImageView
+                android:id="@+id/notification_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY" />
+
+            <ImageView
+                android:id="@+id/notification_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

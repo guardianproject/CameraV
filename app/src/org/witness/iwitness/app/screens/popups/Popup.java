@@ -1,6 +1,6 @@
 package org.witness.iwitness.app.screens.popups;
 
-import org.witness.informacam.utils.Constants.App;
+import org.witness.iwitness.utils.Constants.App;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,7 +15,7 @@ public class Popup extends AlertDialog.Builder   {
 	public Dialog alert;
 	public View layout;
 	
-	protected final static String LOG = App.LOG;
+	protected final static String LOG = App.Home.LOG;
 	
 	interface PopupListener {
 		public void perform();

@@ -9,6 +9,7 @@ import net.hockeyapp.android.UpdateManager;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.ui.CameraActivity;
+import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 import org.witness.informacam.models.connections.IConnection;
@@ -28,7 +29,6 @@ import org.witness.iwitness.app.screens.popups.TextareaPopup;
 import org.witness.iwitness.app.screens.popups.WaitPopup;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
-import org.witness.iwitness.utils.Constants.ListAdapterListener;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.Codes.Routes;
@@ -56,7 +56,7 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.LinearLayout.LayoutParams;
 
-public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamStatusListener {
+public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamStatusListener, ListAdapterListener {
 	Intent init, route;
 	private final static String LOG = Constants.App.Home.LOG;
 	private String packageName;
@@ -457,7 +457,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void onInformaStart(Intent intent) {
-		// TODO: is it camera intent or editor intent?
 		waiter.cancel();
 		if(route != null) {
 			if(route.equals(toEditor)) {
@@ -501,5 +500,10 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	   // Remove this for store builds!
 	   UpdateManager.register(this, HOCKEY_APP_ID);
 	 }
+
+	@Override
+	public void updateAdapter(int which) {
+		((ListAdapterListener) fragments.get(viewPager.getCurrentItem())).updateAdapter(which);
+	}
 
 }

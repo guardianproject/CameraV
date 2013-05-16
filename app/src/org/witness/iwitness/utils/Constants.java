@@ -1,13 +1,11 @@
 package org.witness.iwitness.utils;
 
-import org.witness.informacam.models.Model;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.media.IMedia;
 
 import android.net.Uri;
 import android.os.Message;
-import android.widget.BaseAdapter;
 
 public class Constants {	
 	public interface EditorActivityListener {
@@ -27,10 +25,6 @@ public class Constants {
 		public void updateData(INotification notification, Message message);
 		public void updateData(IOrganization organization, Message message);
 	}
-	
-	public interface ListAdapterListener {
-		public void updateAdapter(int which);
-	}
 
 	public class Codes {
 		public class Routes {
@@ -44,8 +38,8 @@ public class Constants {
 		}
 		
 		public class Adapters {
-			public static final int NOTIFICATIONS = 1;
-			public static final int ORGANIZATIONS = 2;
+			public static final int NOTIFICATIONS = org.witness.informacam.utils.Constants.Codes.Adapters.NOTIFICATIONS;
+			public static final int ORGANIZATIONS = org.witness.informacam.utils.Constants.Codes.Adapters.ORGANIZATIONS;
 			public static final int GALLERY_GRID = 3;
 			public static final int GALLERY_LIST = 4;
 		}

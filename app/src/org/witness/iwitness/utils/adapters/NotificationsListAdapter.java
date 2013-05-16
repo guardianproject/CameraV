@@ -83,12 +83,17 @@ public class NotificationsListAdapter extends BaseAdapter {
 			}
 		}
 		
-		/*
 		if(notification.type == Models.INotification.Type.EXPORTED_MEDIA) {
-			View progress = LayoutInflater.from(InformaCam.getInstance().a).inflate(R.layout.extras_notification_progress, null);
-			((LinearLayout) convertView.findViewById(R.id.notification_view_root)).addView(progress);
+			ImageView statusIcon = (ImageView) convertView.findViewById(R.id.notification_status);
+			
+			int d = R.drawable.ic_notification_waiting;
+			if(notification.taskComplete) {
+				d = R.drawable.ic_notification_accepted;
+			}
+			
+			statusIcon.setImageDrawable(InformaCam.getInstance().a.getResources().getDrawable(d));
+			statusIcon.setVisibility(View.VISIBLE);
 		}
-		*/
 		
 		return convertView;
 	}
