@@ -4,20 +4,21 @@ import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONException;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.media.IRegionBounds;
 import org.witness.informacam.ui.IRegionDisplay;
-import org.witness.informacam.ui.IRegionDisplay.IRegionDisplayListener;
+import org.witness.informacam.utils.Constants.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.iwitness.app.screens.forms.TagFormFragment;
-import org.witness.iwitness.app.screens.popups.WaitPopup;
 import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
@@ -416,6 +417,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 				break;
 			case MotionEvent.ACTION_UP:
 				v.performClick();
+				((IRegionDisplay) v).parent.update();
 				break;
 			}
 		} else {
@@ -449,6 +451,15 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	public boolean saveForm() {
 
 		return true;
+	}
+
+	@Override
+	public int[] getSpecs() {
+		List<Integer> specs = new ArrayList<Integer>();
+		specs.add(media.width);
+		specs.add(media.height);
+		
+		return ArrayUtils.toPrimitive(specs.toArray(new Integer[specs.size()]));
 	}
 
 }

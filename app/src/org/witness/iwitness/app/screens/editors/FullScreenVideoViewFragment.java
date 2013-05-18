@@ -1,7 +1,12 @@
 package org.witness.iwitness.app.screens.editors;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.models.media.IVideoRegion;
 import org.witness.informacam.ui.IRegionDisplay;
@@ -25,7 +30,6 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -122,8 +126,6 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		// TODO: save state and cleanup bitmaps!
-
 	}
 
 	@SuppressWarnings("deprecation")
@@ -185,8 +187,8 @@ OnRangeSeekBarChangeListener<Integer> {
 	
 	@Override
 	public void onSelected(IRegionDisplay regionDisplay) {		
-		IVideoRegion r = new IVideoRegion();
-		r = (IVideoRegion) regionDisplay.parent;
+		IVideoRegion r = new IVideoRegion(regionDisplay.parent);
+		r.timestampInQuestion = mediaPlayer.getCurrentPosition();
 		
 		setCurrentRegion(r);
 		videoSeekBar.showEndpoints(r);
@@ -342,4 +344,24 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	@Override
 	public void onStopTrackingTouch(RangeSeekBar<?> bar) {}
+	
+	@Override
+	public int[] getSpecs() {
+		Log.d(LOG, "RECALCULATING FOR VIDEO");
+		List<Integer> specs = new ArrayList<Integer>(Arrays.asList(ArrayUtils.toObject(super.getSpecs())));
+		
+		int[] locationInWindow = new int[2];
+		videoView.getLocationInWindow(locationInWindow);
+		for(int i : locationInWindow) {
+			specs.add(i);
+		}
+		
+		// these might not be needed
+		specs.add(videoView.getWidth());
+		specs.add(videoView.getHeight());
+		
+		Log.d(LOG, "position on screen : " + locationInWindow[0] + ", " + locationInWindow[1]);
+		
+		return ArrayUtils.toPrimitive(specs.toArray(new Integer[specs.size()]));
+	}
 }

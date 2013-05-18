@@ -5,7 +5,6 @@ import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App;
 
 import com.efor18.rangeseekbar.RangeSeekBar;
-import com.efor18.rangeseekbar.RangeSeekBar.OnRangeSeekBarChangeListener;
 
 import android.content.Context;
 import android.media.MediaPlayer;

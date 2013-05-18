@@ -1,5 +1,11 @@
 package org.witness.iwitness.app.screens.editors;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.models.media.IImage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
@@ -127,5 +133,29 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		mediaHolder_.setImageMatrix(matrix);
 		
 		initRegions();
+	}
+	
+	@Override
+	public int[] getSpecs() {
+		Log.d(LOG, "RECALCULATING FOR IMAGE");
+		
+		List<Integer> specs = new ArrayList<Integer>(Arrays.asList(ArrayUtils.toObject(super.getSpecs())));
+		
+		int[] locationInWindow = new int[2];
+		mediaHolder_.getLocationInWindow(locationInWindow);
+		for(int i : locationInWindow) {
+			specs.add(i);
+		}
+		
+		specs.add(mediaHolder_.getWidth());
+		specs.add(mediaHolder_.getHeight());
+		
+		// these might not be needed
+		specs.add(media.width);
+		specs.add(media.height);
+		
+		Log.d(LOG, "position on screen : " + locationInWindow[0] + ", " + locationInWindow[1]);
+		
+		return ArrayUtils.toPrimitive(specs.toArray(new Integer[specs.size()]));
 	}
 }

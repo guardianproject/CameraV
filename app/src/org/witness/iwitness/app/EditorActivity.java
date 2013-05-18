@@ -7,7 +7,7 @@ import java.util.List;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.IRegionDisplay;
-import org.witness.informacam.ui.IRegionDisplay.IRegionDisplayListener;
+import org.witness.informacam.utils.Constants.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.informacam.models.forms.IForm;
@@ -263,5 +263,10 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	@Override
 	public IMedia media() {
 		return media;
+	}
+
+	@Override
+	public int[] getSpecs() {
+		return ((IRegionDisplayListener) fullscreenView).getSpecs();
 	}
 }
