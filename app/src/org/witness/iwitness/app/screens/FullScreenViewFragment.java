@@ -456,6 +456,8 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	@Override
 	public int[] getSpecs() {
 		List<Integer> specs = new ArrayList<Integer>();
+		Log.d(LOG, media.asJson().toString());
+		
 		specs.add(media.width);
 		specs.add(media.height);
 		

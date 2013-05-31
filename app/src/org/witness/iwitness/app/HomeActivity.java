@@ -2,6 +2,7 @@ package org.witness.iwitness.app;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
 import net.hockeyapp.android.CrashManager;
@@ -32,16 +33,19 @@ import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.Codes.Routes;
+import org.witness.iwitness.utils.Constants.Preferences;
 import org.witness.iwitness.utils.actions.ContextMenuAction;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -60,6 +64,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	Intent init, route;
 	private final static String LOG = Constants.App.Home.LOG;
 	private String packageName;
+	private String lastLocale = null;
 
 	List<Fragment> fragments = new Vector<Fragment>();
 	Fragment userManagementFragment, galleryFragment, cameraFragment;
@@ -76,7 +81,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	InformaCam informaCam;
 
-	Handler h = new Handler() {
+	static Handler h = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -136,9 +141,14 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void onResume() {
 		super.onResume();
 		
+		String currentLocale = PreferenceManager.getDefaultSharedPreferences(this).getString(Preferences.LANGUAGE, "0");
+		if(lastLocale != null && !lastLocale.equals(currentLocale)) {
+			setNewLocale(currentLocale);
+			return;
+		}
+		
 		 checkForCrashes();
 
-		Log.d(LOG, packageName + " activity is getting informa instance");
 		informaCam = InformaCam.getInstance(HomeActivity.this);
 
 		if(initUploads) {
@@ -164,6 +174,32 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 		//initUploads = false;
 		initLayout();
+	}
+	
+	private void setNewLocale(String locale_code) {
+		Configuration configuration = new Configuration();
+		switch(Integer.parseInt(locale_code)) {
+		case Preferences.Locales.DEFAULT:
+			configuration.locale = new Locale(Locale.getDefault().getLanguage());
+			break;
+		case Preferences.Locales.EN:
+			configuration.locale = new Locale("en");
+			break;
+		case Preferences.Locales.ES:
+			configuration.locale = new Locale("es");
+			break;
+		case Preferences.Locales.FR:
+			configuration.locale = new Locale("fr");
+			break;
+		case Preferences.Locales.AR:
+			configuration.locale = new Locale("ar");
+			break;
+		}
+		getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+		getIntent().putExtra(Constants.Codes.Extras.CHANGE_LOCALE, true);
+		setResult(Activity.RESULT_OK, new Intent().putExtra(Constants.Codes.Extras.CHANGE_LOCALE, true));
+		finish();
 	}
 
 	private void initLayout() {

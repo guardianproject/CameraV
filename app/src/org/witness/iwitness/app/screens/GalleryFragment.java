@@ -237,8 +237,6 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 					});
 				}
 			}).start();
-			
-			
 		}
 
 	}

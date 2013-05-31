@@ -1,45 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/black"
     android:orientation="vertical"
     android:padding="10dip" >
 
+    <RelativeLayout
+        android:id="@+id/audio_action_toggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/audio_action_toggle_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/audio_action_toggle_icon_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_audio_pause" />
+
+            <TextView
+                android:id="@+id/audio_action_toggle_label"
+                style="@style/H1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@drawable/white" />
+
+            <TextView
+                android:id="@+id/audio_action_clock"
+                style="@style/H1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@drawable/white" />
+        </LinearLayout>
+    </RelativeLayout>
+
     <LinearLayout
+        android:id="@+id/audio_action_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1" >
-
-        <ImageButton style="@style/button_a"
-            android:id="@+id/audio_record_stop_toggle"
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="0.15"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_context_audio_note" />
-
-        <ImageButton style="@style/button_a"
-            android:id="@+id/audio_play_pause_toggle"
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="0.15"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_videop_play" />
+        android:layout_below="@+id/audio_action_toggle"
+        android:orientation="vertical"
+        android:paddingTop="20dip" >
 
         <info.guardianproject.odkparser.widgets.ODKSeekBar
-            android:id="@+id/audio_progress"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="0.7"
-            android:progress="0" />
-    </LinearLayout>
-    <Button style="@style/button_c"
-        android:layout_marginTop="10dip"
-        android:id="@+id/audio_commit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/ok" />
+            android:id="@+id/audio_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="20dip"
+            android:weightSum="1" >
+
+            <Button
+                android:id="@+id/audio_action_redo"
+                style="@style/button_c"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.33"
+                android:drawableLeft="@drawable/ic_audio_redo"
+                android:paddingLeft="10dip"
+                android:text="@string/redo" />
+
+            <Button
+                android:id="@+id/audio_action_play"
+                style="@style/button_c"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.33"
+                android:drawableLeft="@drawable/ic_audio_play"
+                android:paddingLeft="10dip"
+                android:text="@string/play" />
+
+            <Button
+                android:id="@+id/audio_action_done"
+                style="@style/button_c"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.33"
+                android:drawableLeft="@drawable/ic_audio_done"
+                android:paddingLeft="10dip"
+                android:text="@string/done" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

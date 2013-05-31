@@ -57,6 +57,7 @@ public class Constants {
 		public class Extras {
 			public final static String EDIT_MEDIA = "edit_media";
 			public static final String SET_ORIENTATION = "set_orientation";
+			public static final String CHANGE_LOCALE = "changeLocale";
 			public static final String WIZARD_SUPPLEMENT = org.witness.informacam.utils.Constants.Codes.Extras.WIZARD_SUPPLEMENT;
 			public static final String MESSAGE_CODE = org.witness.informacam.utils.Constants.Codes.Extras.MESSAGE_CODE;
 			public static final String RETURNED_MEDIA = org.witness.informacam.utils.Constants.Codes.Extras.RETURNED_MEDIA;
@@ -78,6 +79,16 @@ public class Constants {
 			public final static int DELETE_ORIGINAL = 0;
 			public final static int SAVE_ORIGINAL = 1;
 		}
+		
+		public static final String LANGUAGE = "iw_language";
+		public class Locales {
+			public final static int DEFAULT = 0;
+			public final static int EN = 1;
+			public final static int ES = 2;
+			public final static int FR = 3;
+			public final static int AR = 4;
+		}
+	
 	}
 
 
