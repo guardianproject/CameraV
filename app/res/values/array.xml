@@ -12,6 +12,15 @@
         <item>@string/video</item>
     </string-array>
     
+    <string-array name="originalImageOptions">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="originalImageOptions_">
+        <item>@string/trashed</item>
+        <item>@string/saved</item>
+    </string-array>
+    
     <string-array name="languages">
         <item>0</item>
         <item>1</item>

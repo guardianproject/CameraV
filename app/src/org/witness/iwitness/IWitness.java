@@ -88,7 +88,6 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.d(LOG, "ON RESUME");
 		try {
 			informaCam = InformaCam.getInstance(this);
 			if(route != null) {

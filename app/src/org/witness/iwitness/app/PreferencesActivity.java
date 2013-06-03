@@ -11,7 +11,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 public class PreferencesActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
-ListPreference language;
+	ListPreference language, originalImage;
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -21,6 +21,9 @@ ListPreference language;
 		
 		language = (ListPreference) findPreference(Preferences.Keys.LANGUAGE);
 		updateSummaryWithChoice(language, language.getValue(), getResources().getStringArray(R.array.languages_));
+		
+		originalImage = (ListPreference) findPreference(Preferences.Keys.ORIGINAL_IMAGE_HANDLING);
+		updateSummaryWithChoice(originalImage, originalImage.getValue(), getResources().getStringArray(R.array.originalImageOptions_));
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -41,6 +44,8 @@ ListPreference language;
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if(key.equals(Preferences.Keys.LANGUAGE)) {
 			updateSummaryWithChoice(language, sharedPreferences.getString(key, "0"), getResources().getStringArray(R.array.languages_));
+		} else if(key.equals(Preferences.Keys.ORIGINAL_IMAGE_HANDLING)) {
+			updateSummaryWithChoice(originalImage, sharedPreferences.getString(key, "0"), getResources().getStringArray(R.array.originalImageOptions_));
 		}
 		
 	}

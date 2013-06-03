@@ -10,6 +10,7 @@ import net.hockeyapp.android.UpdateManager;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.ui.CameraActivity;
+import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
@@ -60,7 +61,7 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.LinearLayout.LayoutParams;
 
-public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamStatusListener, ListAdapterListener {
+public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamStatusListener, InformaCamEventListener, ListAdapterListener {
 	Intent init, route;
 	private final static String LOG = Constants.App.Home.LOG;
 	private String packageName;
@@ -406,7 +407,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void logoutUser() {
-		Log.d(LOG, "LOGGING OUT?");
 		getIntent().putExtra(Codes.Extras.LOGOUT_USER, true);
 		setResult(Activity.RESULT_CANCELED);
 		finish();
@@ -467,7 +467,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		@Override
 		public void onPageSelected(int page) {
 			tabHost.setCurrentTab(page);
-			Log.d(LOG, "setting current page as " + page);
 			if(page == 2) {
 				launchCamera();
 			} else {
@@ -523,16 +522,10 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	}
 
 	@Override
-	public void updateData(INotification notification, Message message) {
-		// TODO update notifications for progress.
-
-	}
+	public void updateData(INotification notification, Message message) {}
 
 	@Override
-	public void updateData(IOrganization organization, Message message) {
-		// TODO Auto-generated method stub
-
-	}
+	public void updateData(IOrganization organization, Message message) {}
 	
 	private final static String HOCKEY_APP_ID = "819d2172183272c9d84cd3a4dbd9296b";
 	
@@ -566,6 +559,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public String getLocale() {
 		return lastLocale;
+	}
+
+	@Override
+	public void onUpdate(Message message) {
+		Log.d(LOG, "MSG RECEIVED: " + message.getData().toString());
+		
 	}
 
 }
