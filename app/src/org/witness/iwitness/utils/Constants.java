@@ -24,6 +24,8 @@ public class Constants {
 		public void waiter(boolean show);
 		public void updateData(INotification notification, Message message);
 		public void updateData(IOrganization organization, Message message);
+		public void setLocale(String newLocale);
+		public String getLocale();
 	}
 
 	public class Codes {
@@ -73,6 +75,7 @@ public class Constants {
 	public class Preferences {
 		public class Keys {
 			public final static String ORIGINAL_IMAGE_HANDLING = "originalImageHandling";
+			public static final String LANGUAGE = "iw_language";
 		}
 
 		public class OriginalImageHandling {
@@ -80,12 +83,11 @@ public class Constants {
 			public final static int SAVE_ORIGINAL = 1;
 		}
 		
-		public static final String LANGUAGE = "iw_language";
 		public class Locales {
 			public final static int DEFAULT = 0;
 			public final static int EN = 1;
-			public final static int ES = 2;
-			public final static int FR = 3;
+			public final static int FR = 2;
+			public final static int ES = 3;
 			public final static int AR = 4;
 		}
 	

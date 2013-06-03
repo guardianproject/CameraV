@@ -11,4 +11,26 @@
         <item>@string/photo</item>
         <item>@string/video</item>
     </string-array>
+    
+    <string-array name="languages">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+    <string-array name="languages_">
+        <item>@string/pref_languages_default</item>
+        <item>@string/pref_languages_en_us</item>
+        <item>@string/pref_languages_fr</item>
+        <item>@string/pref_languages_es</item>
+        <item>@string/pref_languages_ar</item>
+    </string-array>
+    <string-array name="locales">
+        <item>default</item>
+        <item>en</item>
+        <item>fr</item>
+        <item>es</item>
+        <item>ar</item>
+    </string-array>
 </resources>

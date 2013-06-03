@@ -7,12 +7,14 @@ import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.credentials.IUser;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.iwitness.R;
+import org.witness.iwitness.app.PreferencesActivity;
 import org.witness.iwitness.app.WipeActivity;
 import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.Codes.Routes;
 import org.witness.iwitness.utils.Constants.App.Home.Tabs;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
+import org.witness.iwitness.utils.Constants.Preferences;
 import org.witness.iwitness.utils.adapters.NotificationsListAdapter;
 import org.witness.iwitness.utils.adapters.OrganizationsListAdapter;
 
@@ -21,6 +23,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -207,7 +210,9 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			Intent wipeIntent = new Intent(a, WipeActivity.class);
 			a.startActivityForResult(wipeIntent, Routes.WIPE);
 		} else if(v == toSettings) {
-			// TODO
+			((HomeActivityListener) a).setLocale(PreferenceManager.getDefaultSharedPreferences(a).getString(Preferences.Keys.LANGUAGE, "0"));
+			Intent settingIntent = new Intent(a, PreferencesActivity.class);
+			a.startActivity(settingIntent);
 		} else if(v == thumbnail) {
 			// TODO
 		} else if(v == exportCredentials) {

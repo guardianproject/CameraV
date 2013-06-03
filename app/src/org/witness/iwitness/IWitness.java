@@ -43,7 +43,6 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	int routeCode;
 	
 	private final static String LOG = Constants.App.Router.LOG;
-	private String packageName;
 	
 	private Handler h = new Handler();
 	private ServiceConnection sc;
@@ -53,10 +52,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		packageName = getClass().getName();
-		
-		Log.d(LOG, "hello " + packageName);
+				
 		init = getIntent();
 		
 		setContentView(R.layout.activity_main);
@@ -160,8 +156,14 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 				
 				break;
 			case Codes.Routes.LOGIN:
-				Log.d(LOG, "hi i logged in!");
 				informaCam.startup();
+				break;
+			case Codes.Routes.HOME:
+				if(data != null && data.hasExtra(Codes.Extras.CHANGE_LOCALE)) {
+					route.putExtra(Codes.Extras.CHANGE_LOCALE, true);
+					break;
+				}
+				
 				break;
 			}
 			
@@ -215,20 +217,11 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	}
 
 	@Override
-	public void onInformaCamStop(Intent intent) {
-		// TODO Auto-generated method stub
-		Log.d(LOG, "I STOPPED INFORMACAM");
-	}
+	public void onInformaCamStop(Intent intent) {}
 
 	@Override
-	public void onInformaStop(Intent intent) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onInformaStop(Intent intent) {}
 
 	@Override
-	public void onInformaStart(Intent intent) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onInformaStart(Intent intent) {}
 }

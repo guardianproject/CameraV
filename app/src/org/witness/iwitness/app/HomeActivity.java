@@ -141,7 +141,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void onResume() {
 		super.onResume();
 		
-		String currentLocale = PreferenceManager.getDefaultSharedPreferences(this).getString(Preferences.LANGUAGE, "0");
+		if(getIntent().hasExtra(Constants.Codes.Extras.CHANGE_LOCALE)) {
+			getIntent().removeExtra(Constants.Codes.Extras.CHANGE_LOCALE);
+		}
+		
+		String currentLocale = PreferenceManager.getDefaultSharedPreferences(this).getString(Preferences.Keys.LANGUAGE, "0");
+		
 		if(lastLocale != null && !lastLocale.equals(currentLocale)) {
 			setNewLocale(currentLocale);
 			return;
@@ -177,6 +182,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	}
 	
 	private void setNewLocale(String locale_code) {
+		Log.d(LOG, "***************** setting new LOCALE!");
 		Configuration configuration = new Configuration();
 		switch(Integer.parseInt(locale_code)) {
 		case Preferences.Locales.DEFAULT:
@@ -550,6 +556,16 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			Log.e(LOG, "CONSIDERED HANDLED:\n" + e.toString());
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void setLocale(String newLocale) {
+		lastLocale = newLocale;
+	}
+
+	@Override
+	public String getLocale() {
+		return lastLocale;
 	}
 
 }
