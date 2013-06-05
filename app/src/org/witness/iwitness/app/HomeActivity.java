@@ -418,7 +418,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			switch(requestCode) {
 			case Codes.Routes.CAMERA:
 				informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
-				Log.d(LOG, informaCam.mediaManifest.asJson().toString());
+				Log.d(LOG, "new dcim:\n" + data.getIntExtra(Codes.Extras.RETURNED_MEDIA, 0));
 				((GalleryFragment) galleryFragment).updateData();
 				
 				informaCam.stopInforma();
