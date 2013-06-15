@@ -176,7 +176,7 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				((IMedia) context).export(h, encryptTo, isShare);
+				((IMedia) context).export(a, h, encryptTo, isShare);
 			}
 		}).start();
 	}

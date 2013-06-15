@@ -50,7 +50,7 @@ public class NotificationsListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		INotification notification = notifications.get(position);
 		
-		convertView = LayoutInflater.from(InformaCam.getInstance().a).inflate(R.layout.adapter_notification_list_item, null);
+		convertView = LayoutInflater.from(parent.getContext().getApplicationContext()).inflate(R.layout.adapter_notification_list_item, null);
 		
 		TextView metadata = (TextView) convertView.findViewById(R.id.notification_metadata);
 		StringBuffer sb = new StringBuffer();
@@ -91,7 +91,7 @@ public class NotificationsListAdapter extends BaseAdapter {
 				d = R.drawable.ic_notification_accepted;
 			}
 			
-			statusIcon.setImageDrawable(InformaCam.getInstance().a.getResources().getDrawable(d));
+			statusIcon.setImageDrawable(parent.getContext().getApplicationContext().getResources().getDrawable(d));
 			statusIcon.setVisibility(View.VISIBLE);
 		}
 		

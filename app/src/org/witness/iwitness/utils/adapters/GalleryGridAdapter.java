@@ -65,14 +65,15 @@ public class GalleryGridAdapter extends BaseAdapter {
 			iv.setImageDrawable(a.getResources().getDrawable(R.drawable.ic_action_video));
 		}
 
+		/*
 		try {
-			if(!m.getBoolean(Models.IMediaManifest.Sort.IS_SHOWING)) {
-				view.setVisibility(View.GONE);
-			}
+			//if(!m.getBoolean(Models.IMediaManifest.Sort.IS_SHOWING)) {
+			//	view.setVisibility(View.GONE);
+			//}
 		} catch (JSONException e) {
 			Log.e(LOG, e.toString());
 			e.printStackTrace();
-		}
+		}*/
 
 		return view;
 	}

@@ -6,10 +6,11 @@ import java.util.Vector;
 import org.json.JSONException;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IMedia;
+import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
-import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants.App.Home;
+import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.adapters.GalleryGridAdapter;
 import org.witness.iwitness.utils.adapters.GalleryListAdapter;
 
@@ -35,7 +36,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
-public class GalleryFragment extends Fragment implements OnItemSelectedListener, OnClickListener, OnItemClickListener, OnItemLongClickListener {
+public class GalleryFragment extends Fragment implements OnItemSelectedListener, OnClickListener, OnItemClickListener, OnItemLongClickListener, ListAdapterListener {
 	View rootView;
 	Spinner displayToggle, displaySort;
 	ImageButton multiSelect, displaySortTrigger;
@@ -108,35 +109,45 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		initLayout(savedInstanceState);	
 	}
 
-	public void initData() {
-		try {
-			if(informaCam.mediaManifest.media != null && informaCam.mediaManifest.media.size() > 0) {
-				galleryGridAdapter = new GalleryGridAdapter(a, informaCam.mediaManifest.media);
-				galleryListAdapter = new GalleryListAdapter(a, informaCam.mediaManifest.media);
+	private void initData() {
+		
+		List<IMedia> listMedia = informaCam.mediaManifest.getMediaList();
+		
+		if(listMedia != null && listMedia.size() > 0) {
+			
+			galleryGridAdapter = new GalleryGridAdapter(a, listMedia);
+			galleryListAdapter = new GalleryListAdapter(a, listMedia);
 
+			if (mediaDisplayGrid != null)
+			{
 				mediaDisplayGrid.setAdapter(galleryGridAdapter);
 				mediaDisplayGrid.setOnItemLongClickListener(this);
 				mediaDisplayGrid.setOnItemClickListener(this);
-
+			}
+			
+			if (mediaDisplayList != null)
+			{
 				mediaDisplayList.setAdapter(galleryListAdapter);
 				mediaDisplayList.setOnItemLongClickListener(this);
 				mediaDisplayList.setOnItemClickListener(this);
-
-				noMedia.setVisibility(View.GONE);
-			} else {
-				noMedia.setVisibility(View.VISIBLE);
 			}
-		} catch(NullPointerException e) {
-			Log.e(LOG, e.toString());
-			e.printStackTrace();
-
-			noMedia.setVisibility(View.VISIBLE);
+			
+			if (noMedia != null)
+				noMedia.setVisibility(View.GONE);
+		} else {
+			
+			if (noMedia != null)
+				noMedia.setVisibility(View.VISIBLE);
 		}
+		
 	}
 
 	public void updateData() {
-		mediaDisplayGrid.removeAllViewsInLayout();
-		mediaDisplayList.removeAllViewsInLayout();
+		if (mediaDisplayGrid != null)
+			mediaDisplayGrid.removeAllViewsInLayout();
+
+		if (mediaDisplayList != null)
+			mediaDisplayList.removeAllViewsInLayout();
 
 		initData();
 	}
@@ -243,7 +254,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l) {
-		((HomeActivityListener) a).getContextualMenuFor(((IMedia) informaCam.mediaManifest.media.get((int) l)));
+		((HomeActivityListener) a).getContextualMenuFor(((IMedia) informaCam.mediaManifest.getMediaItem((int) l)));
 		return true;
 	}
 
@@ -251,10 +262,10 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int viewId, long l) {
 		if(!isInMultiSelectMode) {
-			((HomeActivityListener) a).launchEditor(((IMedia) informaCam.mediaManifest.media.get((int) l)));
+			((HomeActivityListener) a).launchEditor(((IMedia) informaCam.mediaManifest.getMediaItem((int) l)));
 		} else {
 			try {
-				IMedia m = (IMedia) informaCam.mediaManifest.media.get((int) l);
+				IMedia m = (IMedia) informaCam.mediaManifest.getMediaItem((int) l);
 				
 				if(!m.has(Models.IMedia.TempKeys.IS_SELECTED)) {
 					m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
@@ -278,5 +289,17 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 			}
 		}
 
+	}
+
+	@Override
+	public void updateAdapter(int which) {
+	
+		initData();
+		
+		if (this.mediaDisplayGrid != null)
+			mediaDisplayGrid.invalidate();
+		
+		if (this.mediaDisplayList != null)
+			mediaDisplayList.invalidate();
 	}
 }

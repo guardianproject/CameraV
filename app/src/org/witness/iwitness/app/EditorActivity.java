@@ -41,6 +41,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class EditorActivity extends SherlockFragmentActivity implements OnClickListener, EditorActivityListener, IRegionDisplayListener {
 	Intent init;
@@ -59,6 +60,7 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 
 	private InformaCam informaCam;
 	public IMedia media;
+	private String mediaId;
 	public List<IForm> availableForms;
 	private WaitPopup waiter = null;
 
@@ -68,19 +70,28 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 		super.onCreate(savedInstanceState);
 		packageName = getClass().getName();
 
-		Log.d(LOG, "hello " + packageName);
-		informaCam = InformaCam.getInstance(this);
+		informaCam = (InformaCam)getApplication();
 
 		initData();
+		
+		if (media.bitmapPreview != null)
+		{
 
-		setContentView(R.layout.activity_editor);
-
-		actionBar = getSupportActionBar();
-		actionBar.setDisplayShowCustomEnabled(true);
-		actionBar.setDisplayShowHomeEnabled(false);
-		actionBar.setDisplayShowTitleEnabled(false);
-
-		fm = getSupportFragmentManager();
+			setContentView(R.layout.activity_editor);
+	
+			actionBar = getSupportActionBar();
+			actionBar.setDisplayShowCustomEnabled(true);
+			actionBar.setDisplayShowHomeEnabled(false);
+			actionBar.setDisplayShowTitleEnabled(false);
+	
+			fm = getSupportFragmentManager();
+			
+		}
+		else
+		{
+			Toast.makeText(this, "Could not open image", Toast.LENGTH_LONG).show();
+			finish();
+		}
 	}
 
 	@Override
@@ -105,8 +116,8 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 			finish();
 		}
 
-		String mId = getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA);
-		media = informaCam.mediaManifest.getById(mId);
+		mediaId = getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA);
+		media = informaCam.mediaManifest.getById(mediaId);
 		if(media == null) {
 			setResult(Activity.RESULT_CANCELED);
 			finish();
@@ -122,7 +133,7 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 		informaCam.informaService.associateMedia(media);
 
 		availableForms = FormUtility.getAvailableForms();
-		Log.d(LOG, "INITING MEDIA FOR EDIT:\n" + media.asJson().toString());		
+	//	Log.d(LOG, "INITING MEDIA FOR EDIT:\n" + media.asJson().toString());		
 	}
 
 	private void initLayout() {
@@ -145,14 +156,16 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 		}
 
 		fullscreenViewArgs.putInt(Codes.Extras.SET_ORIENTATION, fullscreenOrientation);
+		fullscreenViewArgs.putString("mediaId", mediaId);
 		detailsViewArgs.putInt(Codes.Extras.SET_ORIENTATION, detailsOrientation);
+		detailsViewArgs.putString("mediaId", mediaId);
 
 		if(media.dcimEntry.mediaType.equals(Models.IMedia.MimeType.IMAGE)) {
 			fullscreenView = Fragment.instantiate(this, FullScreenImageViewFragment.class.getName(), fullscreenViewArgs);
 		} else if(media.dcimEntry.mediaType.equals(Models.IMedia.MimeType.VIDEO)) {
 			fullscreenView = Fragment.instantiate(this, FullScreenVideoViewFragment.class.getName(), fullscreenViewArgs);
 		}
-
+		
 		detailsView = Fragment.instantiate(this, DetailsViewFragment.class.getName(), detailsViewArgs);
 
 		View actionBarView = LayoutInflater.from(this).inflate(R.layout.action_bar_editor, null);

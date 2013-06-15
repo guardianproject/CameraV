@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IImage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
@@ -33,11 +34,6 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	Matrix savedMatrix = new Matrix();
 
 	@Override
-	public void onAttach(Activity a) {
-		super.onAttach(a);
-	}
-
-	@Override
 	public void onDetach() {
 		super.onDetach();
 
@@ -53,7 +49,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	protected void initLayout() {
 		super.initLayout();
 
-		mediaHolder_ = new ImageView(a);
+		mediaHolder_ = new ImageView(getActivity());
 		mediaHolder_.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		mediaHolder.addView(mediaHolder_);
 
@@ -62,12 +58,12 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		bfo.inPreferredConfig = Bitmap.Config.RGB_565;
 
 		byte[] bytes = null;
-		if(((IImage) media).bitmap != null) {
-			bytes = informaCam.ioService.getBytes(((IImage) media).bitmap, Type.IOCIPHER);
+		if(((IImage) getMediaItem()).bitmap != null) {
+			bytes = InformaCam.getInstance().ioService.getBytes(((IImage) getMediaItem()).bitmap, Type.IOCIPHER);
 		} else {
-			info.guardianproject.iocipher.File bitmapBytes = new info.guardianproject.iocipher.File(media.rootFolder, media.dcimEntry.name);
-			bytes = informaCam.ioService.getBytes(bitmapBytes.getAbsolutePath(), Type.IOCIPHER);
-			((IImage) media).bitmap = bitmapBytes.getAbsolutePath();
+			info.guardianproject.iocipher.File bitmapBytes = new info.guardianproject.iocipher.File(getMediaItem().rootFolder, getMediaItem().dcimEntry.name);
+			bytes = InformaCam.getInstance().ioService.getBytes(bitmapBytes.getAbsolutePath(), Type.IOCIPHER);
+			((IImage) getMediaItem()).bitmap = bitmapBytes.getAbsolutePath();
 			Log.d(LOG, "we didn't have this bitmap before for some reason...");
 		}
 		bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bfo);
@@ -93,12 +89,12 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bfo);
 		bytes = null;
 
-		if (media.dcimEntry.exif.orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+		if (getMediaItem().dcimEntry.exif.orientation == ExifInterface.ORIENTATION_ROTATE_90) {
 			Log.d(LOG, "Rotating Bitmap 90");
 			Matrix rotateMatrix = new Matrix();
 			rotateMatrix.postRotate(90);
 			bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),rotateMatrix,false);
-		} else if (media.dcimEntry.exif.orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+		} else if (getMediaItem().dcimEntry.exif.orientation == ExifInterface.ORIENTATION_ROTATE_270) {
 			Log.d(LOG,"Rotating Bitmap 270");
 			Matrix rotateMatrix = new Matrix();
 			rotateMatrix.postRotate(270);
@@ -151,8 +147,8 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		specs.add(mediaHolder_.getHeight());
 		
 		// these might not be needed
-		specs.add(media.width);
-		specs.add(media.height);
+		specs.add(getMediaItem().width);
+		specs.add(getMediaItem().height);
 		
 		Log.d(LOG, "position on screen : " + locationInWindow[0] + ", " + locationInWindow[1]);
 		
