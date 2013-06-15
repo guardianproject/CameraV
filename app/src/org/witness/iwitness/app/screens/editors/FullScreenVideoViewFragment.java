@@ -4,20 +4,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.models.media.IVideoRegion;
+import org.witness.informacam.storage.InformaCamMediaScanner;
+import org.witness.informacam.storage.InformaCamMediaScanner.OnMediaScannedListener;
 import org.witness.informacam.ui.IRegionDisplay;
 import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
-import org.witness.informacam.storage.InformaCamMediaScanner;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
-
-import com.efor18.rangeseekbar.RangeSeekBar;
-import com.efor18.rangeseekbar.RangeSeekBar.OnRangeSeekBarChangeListener;
 
 import android.app.Activity;
 import android.media.MediaMetadataRetriever;
@@ -40,6 +38,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import com.efor18.rangeseekbar.RangeSeekBar;
+import com.efor18.rangeseekbar.RangeSeekBar.OnRangeSeekBarChangeListener;
 
 public class FullScreenVideoViewFragment extends FullScreenViewFragment implements OnCompletionListener, 
 OnErrorListener, OnInfoListener, OnBufferingUpdateListener, OnPreparedListener, OnSeekCompleteListener,
@@ -68,7 +69,7 @@ OnRangeSeekBarChangeListener<Integer> {
 	public void onAttach(Activity a) {
 		super.onAttach(a);
 
-		media_.inflate(media.asJson());
+		media_.inflate(getMediaItem().asJson());
 	}
 	
 	private void initVideo() {
@@ -140,7 +141,7 @@ OnRangeSeekBarChangeListener<Integer> {
 			}
 		});
 		
-		View mediaHolder_ = LayoutInflater.from(a).inflate(R.layout.editors_video, null);
+		View mediaHolder_ = LayoutInflater.from(getActivity()).inflate(R.layout.editors_video, null);
 
 		videoView = (VideoView) mediaHolder_.findViewById(R.id.video_view);
 
@@ -173,8 +174,11 @@ OnRangeSeekBarChangeListener<Integer> {
 			public void run() {
 				// copy from iocipher to local :(
 				videoFile = new java.io.File(Storage.EXTERNAL_DIR, media_.dcimEntry.name);
-				informaCam.ioService.saveBlob(informaCam.ioService.getBytes(media_.dcimEntry.fileName, Type.IOCIPHER), videoFile, true);
-				InformaCamMediaScanner icms = new InformaCamMediaScanner(FullScreenVideoViewFragment.this.a, videoFile) {
+				InformaCam.getInstance().ioService.saveBlob(InformaCam.getInstance().ioService.getBytes(media_.dcimEntry.fileName, Type.IOCIPHER), videoFile, true);
+				
+				OnMediaScannedListener listener = null;
+				
+				InformaCamMediaScanner icms = new InformaCamMediaScanner(getActivity(), videoFile, listener) {
 					@Override
 					public void onScanCompleted(String path, Uri uri) {
 						videoUri = uri;
@@ -312,7 +316,7 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	@Override
 	public void pause() {
-		playPauseToggle.setImageDrawable(a.getResources().getDrawable(R.drawable.ic_videol_play));
+		playPauseToggle.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_videol_play));
 		videoSeekBar.pause();
 		mediaPlayer.pause();
 	}
@@ -325,7 +329,7 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	@Override
 	public void start() {
-		playPauseToggle.setImageDrawable(a.getResources().getDrawable(R.drawable.ic_videol_pause));
+		playPauseToggle.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_videol_pause));
 		mediaPlayer.start();
 		videoSeekBar.play();
 	}

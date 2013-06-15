@@ -9,17 +9,16 @@ import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.models.connections.IConnection;
+import org.witness.informacam.models.connections.IMessage;
+import org.witness.informacam.models.media.IMedia;
+import org.witness.informacam.models.notifications.INotification;
+import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
-import org.witness.informacam.models.connections.IConnection;
-import org.witness.informacam.models.connections.IMessage;
-import org.witness.informacam.models.notifications.INotification;
-import org.witness.informacam.models.organizations.IOrganization;
-import org.witness.informacam.models.media.IMedia;
-
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.CameraFragment;
 import org.witness.iwitness.app.screens.GalleryFragment;
@@ -29,15 +28,13 @@ import org.witness.iwitness.app.screens.popups.RenamePopup;
 import org.witness.iwitness.app.screens.popups.SharePopup;
 import org.witness.iwitness.app.screens.popups.TextareaPopup;
 import org.witness.iwitness.app.screens.popups.WaitPopup;
-import org.witness.iwitness.utils.Constants.App.Home;
-import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants;
+import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.Codes.Routes;
+import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants.Preferences;
 import org.witness.iwitness.utils.actions.ContextMenuAction;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -58,8 +55,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
-import android.widget.TabHost;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TabHost;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamStatusListener, InformaCamEventListener, ListAdapterListener {
 	Intent init, route;
@@ -107,7 +106,11 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		super.onCreate(savedInstanceState);
 		packageName = getClass().getName();
 
-		Log.d(LOG, "hello " + packageName);
+		informaCam = (InformaCam)getApplication();
+		informaCam.setStatusListener(this);
+		informaCam.setEventListener(this);
+		informaCam.setListAdapterListener(this);
+		
 		setContentView(R.layout.activity_home);
 
 		try {
@@ -155,7 +158,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		
 		 checkForCrashes();
 
-		informaCam = InformaCam.getInstance(HomeActivity.this);
+		informaCam = (InformaCam)getApplication();
 
 		if(initUploads) {
 			informaCam.initUploads();
@@ -540,14 +543,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void updateAdapter(int which) {
-		try {
-			((ListAdapterListener) fragments.get(viewPager.getCurrentItem())).updateAdapter(which);
-		} catch(ClassCastException e) {
-			Log.e(LOG, "CONSIDERED HANDLED:\n" + e.toString());
-			e.printStackTrace();
-		} catch(NullPointerException e) {
-			Log.e(LOG, "CONSIDERED HANDLED:\n" + e.toString());
-			e.printStackTrace();
+		
+		Fragment f= fragments.get(viewPager.getCurrentItem());
+		
+		if (f instanceof ListAdapterListener)
+		{
+			((ListAdapterListener)f).updateAdapter(which);
 		}
 	}
 
@@ -565,6 +566,21 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void onUpdate(Message message) {
 		Log.d(LOG, "MSG RECEIVED: " + message.getData().toString());
 		
+		mHandlerUI.sendEmptyMessage(0);
+		
 	}
+	
+	private Handler mHandlerUI = new Handler ()
+	{
+
+		@Override
+		public void handleMessage(Message msg) {
+			
+			super.handleMessage(msg);
+			
+			updateAdapter(msg.what);
+		}
+		
+	};
 
 }

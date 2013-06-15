@@ -6,6 +6,7 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.iwitness.R;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,11 @@ public class OrganizationsListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		
+		Context context = parent.getContext().getApplicationContext();
+		
 		final IOrganization organization = organizations.get(position);
-		convertView = LayoutInflater.from(InformaCam.getInstance().a).inflate(R.layout.adapter_organization_list_item, null);		
+		convertView = LayoutInflater.from(context).inflate(R.layout.adapter_organization_list_item, null);		
 		TextView name = (TextView) convertView.findViewById(R.id.organization_name);
 		name.setText(organization.organizationName);
 		
@@ -51,7 +55,7 @@ public class OrganizationsListAdapter extends BaseAdapter {
 			isActiveText = organization.transportCredentials.certificatePath == null ? R.string.unverified : R.string.verified;
 		}
 		
-		isActive.setText(InformaCam.getInstance().a.getString(isActiveText));
+		isActive.setText(context.getString(isActiveText));
 		
 		return convertView;
 	}

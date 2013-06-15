@@ -3,14 +3,11 @@ package org.witness.iwitness;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.witness.informacam.InformaCam;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.CameraActivity;
-import org.witness.informacam.InformaCam;
-import org.witness.informacam.InformaCam.LocalBinder;
 import org.witness.informacam.ui.WizardActivity;
-import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
-
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.HomeActivity;
 import org.witness.iwitness.app.LoginActivity;
@@ -18,23 +15,17 @@ import org.witness.iwitness.app.screens.wizard.AddOrganizationsPreference;
 import org.witness.iwitness.app.screens.wizard.OriginalImagePreference;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.App;
-import org.witness.iwitness.utils.Constants.App.Editor;
-import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.App.Camera;
+import org.witness.iwitness.utils.Constants.App.Editor;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.App.Login;
 import org.witness.iwitness.utils.Constants.App.Wizard;
+import org.witness.iwitness.utils.Constants.Codes;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
 
 public class IWitness extends Activity implements InformaCamStatusListener {
@@ -45,7 +36,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	private final static String LOG = Constants.App.Router.LOG;
 	
 	private Handler h = new Handler();
-	private ServiceConnection sc;
+	//private ServiceConnection sc;
 	
 	InformaCam informaCam;
 	
@@ -56,6 +47,11 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 		init = getIntent();
 		
 		setContentView(R.layout.activity_main);
+		
+		informaCam = (InformaCam)getApplication();
+		informaCam.setStatusListener(this);
+		
+		/*
 		sc = new ServiceConnection() {
 
 			@SuppressWarnings("static-access")
@@ -72,6 +68,8 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 			
 		};
 		bindService(new Intent(this, InformaCam.class), sc, Context.BIND_AUTO_CREATE);
+		*/
+		
 		
 		try {
 			Iterator<String> i = savedInstanceState.keySet().iterator();
@@ -88,8 +86,10 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		informaCam = (InformaCam)getApplication();
+		
 		try {
-			informaCam = InformaCam.getInstance(this);
 			if(route != null) {
 				routeByIntent();
 				Log.d(LOG, "we have a route! lets go!");
@@ -121,7 +121,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	
 	@Override
 	public void onDestroy() {
-		unbindService(sc);
+	//	unbindService(sc);
 		super.onDestroy();
 		
 	}
@@ -129,7 +129,6 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean(App.TAG, true);
-		Log.d(LOG, "ON SAVE STATE INSTANCE");
 		super.onSaveInstanceState(outState);
 	}
 	

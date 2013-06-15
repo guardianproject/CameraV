@@ -39,7 +39,7 @@ public class OrganizationsListSpinnerAdapter extends BaseAdapter implements Spin
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
-		convertView = LayoutInflater.from(InformaCam.getInstance().a).inflate(R.layout.adapter_organization_spinner_list_item, null);
+		convertView = LayoutInflater.from(parent.getContext().getApplicationContext()).inflate(R.layout.adapter_organization_spinner_list_item, null);
 		TextView organizationName = (TextView) convertView.findViewById(R.id.organization_name);
 		organizationName.setText(organizations.get(position).organizationName);
 		
