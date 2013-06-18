@@ -1,8 +1,10 @@
 package org.witness.iwitness;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.CameraActivity;
@@ -15,6 +17,7 @@ import org.witness.iwitness.app.screens.wizard.AddOrganizationsPreference;
 import org.witness.iwitness.app.screens.wizard.OriginalImagePreference;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.App;
+import org.witness.iwitness.utils.Constants.Preferences;
 import org.witness.iwitness.utils.Constants.App.Camera;
 import org.witness.iwitness.utils.Constants.App.Editor;
 import org.witness.iwitness.utils.Constants.App.Home;
@@ -196,9 +199,11 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 			ArrayList<String> wizardFragments = new ArrayList<String>();
 			wizardFragments.add(OriginalImagePreference.class.getName());
 			wizardFragments.add(AddOrganizationsPreference.class.getName());
-			
+						
 			route = new Intent(this, WizardActivity.class);
 			route.putStringArrayListExtra(Codes.Extras.WIZARD_SUPPLEMENT, wizardFragments);
+			route.putStringArrayListExtra(Codes.Extras.SET_LOCALES, new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.languages_))));
+			route.putExtra(Codes.Extras.LOCALE_PREF_KEY, Preferences.Keys.LANGUAGE);
 			routeCode = Wizard.ROUTE_CODE;
 			break;
 		case org.witness.informacam.utils.Constants.Codes.Messages.Login.DO_LOGIN:

@@ -65,6 +65,8 @@ public class Constants {
 			public static final String RETURNED_MEDIA = org.witness.informacam.utils.Constants.Codes.Extras.RETURNED_MEDIA;
 			public static final String INSTALL_NEW_KEY = org.witness.informacam.utils.Constants.Codes.Extras.INSTALL_NEW_KEY;
 			public static final String LOGOUT_USER = org.witness.informacam.utils.Constants.Codes.Extras.LOGOUT_USER;
+			public static final String SET_LOCALES = org.witness.informacam.utils.Constants.Codes.Extras.SET_LOCALES;
+			public static final String LOCALE_PREF_KEY = org.witness.informacam.utils.Constants.Codes.Extras.LOCALE_PREF_KEY;
 		}
 	}
 
