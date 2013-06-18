@@ -130,12 +130,6 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name" />
 
-        <!-- 
-        <service
-            android:name="org.witness.informacam.InformaCam"
-            android:enabled="true"
-            android:exported="false" /> -->
-            
         <service
             android:name="org.witness.informacam.informa.InformaService"
             android:enabled="true"
@@ -144,18 +138,9 @@
             android:name="org.witness.informacam.utils.BackgroundProcessor"
             android:enabled="true"
             android:exported="false" />
-       <!--  <service
-            android:name="org.witness.informacam.storage.IOService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name="org.witness.informacam.transport.UploaderService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name="org.witness.informacam.crypto.SignatureService"
-            android:enabled="true"
-            android:exported="false" /> -->
+       <service android:name="info.guardianproject.cacheword.CacheWordService" 
+           android:enabled="true" 
+           android:exported="false" />
        
     </application>
 

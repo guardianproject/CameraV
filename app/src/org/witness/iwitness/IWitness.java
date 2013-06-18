@@ -2,9 +2,7 @@ package org.witness.iwitness;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.CameraActivity;
@@ -53,37 +51,6 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 		
 		informaCam = (InformaCam)getApplication();
 		informaCam.setStatusListener(this);
-		
-		/*
-		sc = new ServiceConnection() {
-
-			@SuppressWarnings("static-access")
-			@Override
-			public void onServiceConnected(ComponentName name, IBinder service) {
-				informaCam = ((LocalBinder) service).getService().getInstance(IWitness.this); 
-				
-			}
-
-			@Override
-			public void onServiceDisconnected(ComponentName name) {
-				informaCam = null;
-			}
-			
-		};
-		bindService(new Intent(this, InformaCam.class), sc, Context.BIND_AUTO_CREATE);
-		*/
-		
-		
-		try {
-			Iterator<String> i = savedInstanceState.keySet().iterator();
-			while(i.hasNext()) {
-				String outState = i.next();
-				if(outState.equals(Home.TAG) && savedInstanceState.getBoolean(App.TAG)) {
-					//onInformaCamStart();
-				}
-			}
-		} catch(NullPointerException e) {}
-		
 	}
 	
 	@Override
@@ -98,7 +65,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 				Log.d(LOG, "we have a route! lets go!");
 			} else {
 				Log.d(LOG, "route is null now, please wait");
-				if(informaCam.isAbsolutelyLoggedIn()) {
+				if(informaCam.hasCredentialManager() && informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED) {
 					route = new Intent(this, HomeActivity.class);
 					routeCode = Home.ROUTE_CODE;
 					routeByIntent();
