@@ -37,7 +37,6 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	private final static String LOG = Constants.App.Router.LOG;
 	
 	private Handler h = new Handler();
-	//private ServiceConnection sc;
 	
 	InformaCam informaCam;
 	
