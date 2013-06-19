@@ -7,6 +7,7 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.ui.WizardActivity;
+import org.witness.informacam.utils.Constants.Models.IUser;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.HomeActivity;
@@ -61,12 +62,22 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 		try {
 			if(route != null) {
 				routeByIntent();
-				Log.d(LOG, "we have a route! lets go!");
 			} else {
 				Log.d(LOG, "route is null now, please wait");
-				if(informaCam.hasCredentialManager() && informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED) {
-					route = new Intent(this, HomeActivity.class);
-					routeCode = Home.ROUTE_CODE;
+				Log.d(LOG, "hasCredentialManager? " + String.valueOf(informaCam.hasCredentialManager()));
+				Log.d(LOG, "credentialManagerStatus? " + informaCam.getCredentialManagerStatus());
+				
+				if(informaCam.hasCredentialManager()) {
+					switch(informaCam.getCredentialManagerStatus()) {
+					case org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED:
+						route = new Intent(this, HomeActivity.class);
+						routeCode = Home.ROUTE_CODE;
+						break;
+					case org.witness.informacam.utils.Constants.Codes.Status.LOCKED:
+						route = new Intent(this, LoginActivity.class);
+						routeCode = Login.ROUTE_CODE;
+					}
+					
 					routeByIntent();
 				} else {
 					Log.d(LOG, "no, not logged in");
@@ -123,7 +134,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 				
 				break;
 			case Codes.Routes.LOGIN:
-				informaCam.startup();
+				
 				break;
 			case Codes.Routes.HOME:
 				if(data != null && data.hasExtra(Codes.Extras.CHANGE_LOCALE)) {
@@ -156,9 +167,8 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 
 	@Override
 	public void onInformaCamStart(Intent intent) {
-		Log.d(LOG, "STARTING INFORMACAM ON IWITNESS");
-		
 		int code = intent.getBundleExtra(org.witness.informacam.utils.Constants.Codes.Keys.SERVICE).getInt(org.witness.informacam.utils.Constants.Codes.Extras.MESSAGE_CODE);
+		Log.d(LOG, "STARTING INFORMACAM ON IWITNESS (routeCode = " + code + ")");
 		
 		switch(code) {
 		case org.witness.informacam.utils.Constants.Codes.Messages.Wizard.INIT:

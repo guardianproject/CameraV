@@ -6,3 +6,4 @@ app/project.properties
 # generated ant files
 app/build.xml
 app/local.properties
+bin/*
