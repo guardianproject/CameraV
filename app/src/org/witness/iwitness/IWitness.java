@@ -118,6 +118,8 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 			Log.d(LOG, "finishing with request code " + requestCode);
 			finish();
 		} else if(resultCode == Activity.RESULT_OK) {
+			Log.d(LOG, "returning with request code " + requestCode);
+			
 			route = new Intent(this, HomeActivity.class);
 			routeCode = Home.ROUTE_CODE;
 			

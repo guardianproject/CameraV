@@ -8,6 +8,10 @@ import java.util.Vector;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.connections.IConnection;
 import org.witness.informacam.models.connections.IMessage;
@@ -63,7 +67,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamStatusListener, InformaCamEventListener, ListAdapterListener {
 	Intent init, route;
 	private final static String LOG = Constants.App.Home.LOG;
-	private String packageName;
 	private String lastLocale = null;
 
 	List<Fragment> fragments = new Vector<Fragment>();
@@ -104,7 +107,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		packageName = getClass().getName();
 
 		informaCam = (InformaCam)getApplication();
 		informaCam.setStatusListener(this);
@@ -138,6 +140,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 		init = getIntent();
 		
+		initLayout();
 		checkForUpdates();
 	}
 
@@ -182,7 +185,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		}
 
 		//initUploads = false;
-		initLayout();
 	}
 	
 	private void setNewLocale(String locale_code) {
@@ -253,10 +255,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		}
 
 		viewPager.setCurrentItem(1);
-
-		if(initGallery) {
-			((GalleryFragment) galleryFragment).updateData();
-		}
 	}
 
 	private static View generateTab(final LayoutInflater li, final int resource) {
@@ -418,11 +416,21 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void onActivityResult(int requestCode, int responseCode, Intent data) {
 		if(responseCode == Activity.RESULT_OK) {
+			informaCam.setStatusListener(this);
+			
 			switch(requestCode) {
 			case Codes.Routes.CAMERA:
+				viewPager.setCurrentItem(1);
+				
 				informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
-				Log.d(LOG, "new dcim:\n" + data.getIntExtra(Codes.Extras.RETURNED_MEDIA, 0));
-				((GalleryFragment) galleryFragment).updateData();
+				Log.d(LOG, "new dcim:\n" + data.getStringExtra(Codes.Extras.RETURNED_MEDIA));
+				try {
+					JSONArray newMedia = (JSONArray) new JSONTokener(data.getStringExtra(Codes.Extras.RETURNED_MEDIA)).nextValue();
+					((GalleryFragment) galleryFragment).updateData(newMedia);
+				} catch (JSONException e) {
+					Log.e(LOG, e.toString());
+					e.printStackTrace();
+				}
 				
 				informaCam.stopInforma();
 				route = null;
@@ -543,12 +551,13 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void updateAdapter(int which) {
-		
-		Fragment f= fragments.get(viewPager.getCurrentItem());
-		
-		if (f instanceof ListAdapterListener)
-		{
-			((ListAdapterListener)f).updateAdapter(which);
+		if(informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED) {
+			Fragment f= fragments.get(viewPager.getCurrentItem());
+
+			if (f instanceof ListAdapterListener)
+			{
+				((ListAdapterListener)f).updateAdapter(which);
+			}
 		}
 	}
 
@@ -564,9 +573,18 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void onUpdate(Message message) {
-		Log.d(LOG, "MSG RECEIVED: " + message.getData().toString());
+		int code = message.getData().getInt(Codes.Extras.MESSAGE_CODE);
 		
-		mHandlerUI.sendEmptyMessage(0);
+		switch(code) {
+		case org.witness.informacam.utils.Constants.Codes.Messages.DCIM.STOP:
+			//
+			mHandlerUI.sendEmptyMessage(0);
+			break;
+			
+		}
+		
+		
+		
 		
 	}
 	
