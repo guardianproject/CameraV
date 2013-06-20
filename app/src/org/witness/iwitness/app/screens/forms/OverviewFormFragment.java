@@ -10,8 +10,10 @@ import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.storage.FormUtility;
+import org.witness.informacam.ui.IRegionDisplay;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
+import org.witness.informacam.utils.Constants.IRegionDisplayListener;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
@@ -150,7 +152,7 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 					answerBytes = InformaCam.getInstance().ioService.getBytes(overviewRegion.formPath, Type.IOCIPHER);
 					Log.d(LOG, overviewRegion.asJson().toString());
 				} else {
-					overviewRegion = ((EditorActivityListener) a).media().addRegion();
+					overviewRegion = ((EditorActivityListener) a).media().addRegion(a, null);
 					overviewRegion.formNamespace = form.namespace;
 					overviewRegion.formPath = new info.guardianproject.iocipher.File(((EditorActivityListener) a).media().rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
 				}
@@ -233,5 +235,4 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 
 		return true;
 	}
-
 }

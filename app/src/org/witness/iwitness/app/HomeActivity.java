@@ -183,8 +183,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				}
 			});
 		}
-
-		//initUploads = false;
 	}
 	
 	private void setNewLocale(String locale_code) {
@@ -545,7 +543,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	 }
 
 	 private void checkForUpdates() {
-	   // Remove this for store builds!
+	   // XXX: Remove this for store builds!
 	   UpdateManager.register(this, HOCKEY_APP_ID);
 	 }
 
@@ -577,15 +575,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		
 		switch(code) {
 		case org.witness.informacam.utils.Constants.Codes.Messages.DCIM.STOP:
-			//
 			mHandlerUI.sendEmptyMessage(0);
 			break;
-			
 		}
-		
-		
-		
-		
 	}
 	
 	private Handler mHandlerUI = new Handler ()

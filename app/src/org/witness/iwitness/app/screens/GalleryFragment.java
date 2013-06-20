@@ -363,6 +363,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 				for(IPlaceholder placeholder : placeholders) {
 					if(placeholder.index.equals(media.dcimEntry.jobId)) {
 						pop.add(placeholder);
+						media.dcimEntry.jobId = null;
 						break;
 					}
 				}
