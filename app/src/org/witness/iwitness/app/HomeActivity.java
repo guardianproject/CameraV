@@ -185,25 +185,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	}
 	
 	private void setNewLocale(String locale_code) {
-		Log.d(LOG, "***************** setting new LOCALE!");
 		Configuration configuration = new Configuration();
-		switch(Integer.parseInt(locale_code)) {
-		case Preferences.Locales.DEFAULT:
-			configuration.locale = new Locale(Locale.getDefault().getLanguage());
-			break;
-		case Preferences.Locales.EN:
-			configuration.locale = new Locale("en");
-			break;
-		case Preferences.Locales.ES:
-			configuration.locale = new Locale("es");
-			break;
-		case Preferences.Locales.FR:
-			configuration.locale = new Locale("fr");
-			break;
-		case Preferences.Locales.AR:
-			configuration.locale = new Locale("ar");
-			break;
-		}
+		configuration.locale = new Locale(informaCam.languageMap.getCode(Integer.parseInt(locale_code)));
+		
 		getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
 		
 		getIntent().putExtra(Constants.Codes.Extras.CHANGE_LOCALE, true);

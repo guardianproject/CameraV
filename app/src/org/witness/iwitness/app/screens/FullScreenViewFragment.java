@@ -12,7 +12,7 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.media.IRegionBounds;
-import org.witness.informacam.ui.IRegionDisplay;
+import org.witness.informacam.models.utils.IRegionDisplay;
 import org.witness.informacam.utils.Constants.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.iwitness.R;

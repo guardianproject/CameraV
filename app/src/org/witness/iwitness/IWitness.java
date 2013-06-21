@@ -3,11 +3,11 @@ package org.witness.iwitness;
 import java.util.ArrayList;
 
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.models.utils.ILanguageMap;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.ui.WizardActivity;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
-import org.witness.informacam.utils.LanguageMap;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.HomeActivity;
 import org.witness.iwitness.app.LoginActivity;
@@ -55,8 +55,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	
 	@Override
 	public void onResume() {
-		super.onResume();
-		
+		super.onResume();		
 		informaCam = (InformaCam)getApplication();
 		
 		try {
@@ -101,7 +100,6 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	
 	@Override
 	public void onDestroy() {
-	//	unbindService(sc);
 		super.onDestroy();
 		
 	}
@@ -113,9 +111,10 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	}
 	
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {		
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == Activity.RESULT_CANCELED) {
 			Log.d(LOG, "finishing with request code " + requestCode);
+			
 			finish();
 		} else if(resultCode == Activity.RESULT_OK) {
 			Log.d(LOG, "returning with request code " + requestCode);
@@ -141,7 +140,6 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 			case Codes.Routes.HOME:
 				if(data != null && data.hasExtra(Codes.Extras.CHANGE_LOCALE)) {
 					route.putExtra(Codes.Extras.CHANGE_LOCALE, true);
-					break;
 				}
 				
 				break;
@@ -150,8 +148,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 			routeByIntent();
 		} else if(resultCode == Activity.RESULT_FIRST_USER) {
 			if(data.hasExtra(Codes.Extras.CHANGE_LOCALE) && data.getBooleanExtra(Codes.Extras.CHANGE_LOCALE, false)) {
-				finish();				
-				startActivity(route.putExtra(Codes.Extras.CHANGE_LOCALE, true));
+				route.putExtra(Codes.Extras.CHANGE_LOCALE, true);
 			}
 			
 		}
@@ -187,7 +184,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 			route = new Intent(this, WizardActivity.class);
 			
 			route.putStringArrayListExtra(Codes.Extras.WIZARD_SUPPLEMENT, wizardFragments);
-			LanguageMap languageMap = new LanguageMap();
+			ILanguageMap languageMap = new ILanguageMap();
 			
 			for(int l=0; l<getResources().getStringArray(R.array.languages_).length; l++) {
 				languageMap.add(getResources().getStringArray(R.array.locales)[l], getResources().getStringArray(R.array.languages_)[l]);

@@ -27,6 +27,11 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
     </string-array>
     <string-array name="languages_">
         <item>@string/pref_languages_default</item>
@@ -34,6 +39,11 @@
         <item>@string/pref_languages_fr</item>
         <item>@string/pref_languages_es</item>
         <item>@string/pref_languages_ar</item>
+        <item>@string/pref_languages_no</item>
+        <item>@string/pref_languages_sv</item>
+        <item>@string/pref_languages_pt_PT</item>
+        <item>@string/pref_languages_si_LK</item>
+        <item>@string/pref_languages_tr_TR</item>
     </string-array>
     <string-array name="locales">
         <item>default</item>
@@ -41,5 +51,10 @@
         <item>fr</item>
         <item>es</item>
         <item>ar</item>
+        <item>no</item>
+        <item>sv</item>
+        <item>pt_PT</item>
+        <item>si_LK</item>
+        <item>tr_TR</item>
     </string-array>
 </resources>
