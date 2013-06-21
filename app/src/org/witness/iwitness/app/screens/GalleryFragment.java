@@ -60,7 +60,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	RelativeLayout noMedia;
 	LinearLayout batchEditHolder;
 
-	private List<IPlaceholder> placeholders = null;
+	private List<IPlaceholder> placeholders = new ArrayList<IPlaceholder>();
 
 	Activity a = null;
 
@@ -124,7 +124,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 
 	private void initData() {
 		listMedia = new ArrayList<IMedia>();
-		
+
 		for(IMedia m : informaCam.mediaManifest.getMediaList()) {
 			IMedia copy = new IMedia();
 			copy.inflate(m.asJson());
@@ -136,7 +136,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 				listMedia.add(0, p);
 			}
 		}
-		
+
 		consolidateEntries();
 
 		if(listMedia != null && listMedia.size() > 0) {
@@ -178,10 +178,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 
 		if(newMedia != null) {
 			try {
-				if(placeholders == null) {
-					placeholders = new ArrayList<IPlaceholder>();
-				}
-
+				
 				for(int n=0; n< newMedia.length(); n++) {
 					IPlaceholder placeholder = new IPlaceholder(newMedia.getJSONObject(n), a);
 					Log.d(LOG, "adding to list: " + placeholder.asJson().toString());
@@ -304,38 +301,45 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l) {
-		((HomeActivityListener) a).getContextualMenuFor(((IMedia) informaCam.mediaManifest.getMediaItem((int) l)));
+		IMedia m = (IMedia) listMedia.get((int) l);
+		if(!placeholders.contains(m)) {		
+			((HomeActivityListener) a).getContextualMenuFor(((IMedia) informaCam.mediaManifest.getMediaItem((int) l)));
+		}
+		
 		return true;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int viewId, long l) {
-		if(!isInMultiSelectMode) {
-			((HomeActivityListener) a).launchEditor(((IMedia) informaCam.mediaManifest.getMediaItem((int) l)));
-		} else {
-			try {
-				IMedia m = (IMedia) informaCam.mediaManifest.getMediaItem((int) l);
+		IMedia m = (IMedia) listMedia.get((int) l);
+		if(!placeholders.contains(m)) {
+			if(!isInMultiSelectMode) {
+				((HomeActivityListener) a).launchEditor(((IMedia) informaCam.mediaManifest.getMediaItem((int) l)));
+			} else {
+				try {
+					m = (IMedia) informaCam.mediaManifest.getMediaItem((int) l);
 
-				if(!m.has(Models.IMedia.TempKeys.IS_SELECTED)) {
-					m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
+					if(!m.has(Models.IMedia.TempKeys.IS_SELECTED)) {
+						m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
+					}
+
+					int selectedColor = R.drawable.blue;
+					if(m.getBoolean(Models.IMedia.TempKeys.IS_SELECTED)) {
+						selectedColor = R.drawable.white;
+						m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
+						batch.remove(m);
+					} else {
+						m.put(Models.IMedia.TempKeys.IS_SELECTED, true);
+						batch.add(m);
+					}
+
+					LinearLayout ll = (LinearLayout) view.findViewById(R.id.gallery_thumb_holder);
+					ll.setBackgroundDrawable(getResources().getDrawable(selectedColor));
+				} catch(JSONException e) {
+					Log.e(LOG, e.toString());
+					e.printStackTrace();
 				}
-
-				int selectedColor = R.drawable.blue;
-				if(m.getBoolean(Models.IMedia.TempKeys.IS_SELECTED)) {
-					selectedColor = R.drawable.white;
-					m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
-					batch.remove(m);
-				} else {
-					m.put(Models.IMedia.TempKeys.IS_SELECTED, true);
-					batch.add(m);
-				}
-
-				LinearLayout ll = (LinearLayout) view.findViewById(R.id.gallery_thumb_holder);
-				ll.setBackgroundDrawable(getResources().getDrawable(selectedColor));
-			} catch(JSONException e) {
-				Log.e(LOG, e.toString());
-				e.printStackTrace();
 			}
 		}
 
@@ -353,12 +357,12 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 				mediaDisplayList.invalidate();
 		}
 	}
-	
+
 
 	public void consolidateEntries() {
 		if(placeholders != null) {
 			List<IMedia> pop = new ArrayList<IMedia>();
-			
+
 			for(IMedia media : listMedia) {				
 				for(IPlaceholder placeholder : placeholders) {
 					if(placeholder.index.equals(media.dcimEntry.jobId)) {
@@ -368,10 +372,11 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 					}
 				}
 			}
-			
+
 			listMedia.removeAll(pop);
+			placeholders.removeAll(pop);
 		}
-		
+
 	}
 
 }
