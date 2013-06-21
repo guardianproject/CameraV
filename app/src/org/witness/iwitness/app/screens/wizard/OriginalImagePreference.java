@@ -73,4 +73,5 @@ public class OriginalImagePreference extends Fragment implements WizardListener 
 
 	@Override
 	public void onSubFragmentInitialized() {}
+
 }

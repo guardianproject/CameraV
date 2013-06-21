@@ -59,7 +59,7 @@ public class Constants {
 		public class Extras {
 			public final static String EDIT_MEDIA = "edit_media";
 			public static final String SET_ORIENTATION = "set_orientation";
-			public static final String CHANGE_LOCALE = "changeLocale";
+			public static final String CHANGE_LOCALE = org.witness.informacam.utils.Constants.Codes.Extras.CHANGE_LOCALE;
 			public static final String WIZARD_SUPPLEMENT = org.witness.informacam.utils.Constants.Codes.Extras.WIZARD_SUPPLEMENT;
 			public static final String MESSAGE_CODE = org.witness.informacam.utils.Constants.Codes.Extras.MESSAGE_CODE;
 			public static final String RETURNED_MEDIA = org.witness.informacam.utils.Constants.Codes.Extras.RETURNED_MEDIA;

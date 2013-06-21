@@ -10,7 +10,6 @@ import net.hockeyapp.android.UpdateManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.connections.IConnection;
@@ -205,8 +204,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			configuration.locale = new Locale("ar");
 			break;
 		}
-		getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
-
+		getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
+		
 		getIntent().putExtra(Constants.Codes.Extras.CHANGE_LOCALE, true);
 		setResult(Activity.RESULT_OK, new Intent().putExtra(Constants.Codes.Extras.CHANGE_LOCALE, true));
 		finish();

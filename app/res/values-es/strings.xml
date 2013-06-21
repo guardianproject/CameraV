@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
+  <string name="app_name">eyeWitness</string>
   <string name="photo">Foto</string>
   <string name="video">Vídeo</string>
   <string name="menu_all_media">Todos los tipos de multimedia</string>
@@ -14,7 +15,10 @@
   <string name="organizations">Organizaciones</string>
   <string name="get_in">Entrar En</string>
   <string name="we_could_not_log">No hemos podido conectarte. Por favor, intentalo de nuevo.</string>
+  <string name="change_settings"><u>Editar configuración</u></string>
+  <string name="cancel"><u>Cancelar</u></string>
   <string name="log_out">Desconectarse</string>
+  <string name="no_notifications">No hay notificaciones.</string>
   <string name="connect_with_organizations">Conectarse con organizaciones:</string>
   <string name="original_images_should_be">Las imágenes originales deberian ser:</string>
   <string name="delete">Borrar</string>
@@ -35,8 +39,28 @@
   <string name="share_via">Compartir Via</string>
   <string name="choose_an_organization">Elige una organización</string>
   <string name="send_encrypted_to_organization">Comparte lo encriptado con la organización\u2026</string>
+  <string name="send_encrypted_to_x">Compartir cifrado con %1$s</string>
   <string name="sending_encrypted_to_x">Compartiendo lo encriptado con %1$s. (¿Cambiar?)</string>
   <string name="there_are_no_organizations">No hay organizaciones a las que le puedas enviar algo. Mejor intenta compartir los tipos de multimedia.</string>
   <string name="sharing_outside_of_informacam">Compartiendo fuera de %1$s significa que la cadena de custodia de tus tipos de multimedia pueden competir con otros. ¿Quieres compartir de todas formas?</string>
   <string name="export_my_credentials">Exportar mis credenciales\u2026</string>
+  <string name="send_message">Enviar mensaje\u2026</string>
+  <string name="notes">Notas</string>
+  <string name="delete_tag">Eliminar etiqueta</string>
+  <string name="unverified">Sin verificar</string>
+  <string name="verified">Verificado</string>
+  <string name="pull_down_to_wipe">Presionar botón desplegable para eliminar su contenido</string>
+  <string name="or">\u2014 o \u2014</string>
+  <string name="please_wait">Por favor, espere\u2026</string>
+  <string name="record">Grabar</string>
+  <string name="resume">Reanudar</string>
+  <string name="redo">Rehacer</string>
+  <string name="play">Reproducir</string>
+  <string name="preferences">Preferencias</string>
+  <string name="prefs_language_title">Idioma</string>
+  <string name="pref_languages_default">Predeterminado del sistema</string>
+  <string name="pref_languages_en_us">Inglés (EEUU)</string>
+  <string name="pref_languages_fr">Francés</string>
+  <string name="pref_languages_es">Español</string>
+  <string name="pref_languages_ar">Árabe</string>
 </resources>
