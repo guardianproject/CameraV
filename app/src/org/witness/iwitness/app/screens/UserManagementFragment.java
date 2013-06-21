@@ -40,7 +40,7 @@ import android.widget.TextView;
 
 public class UserManagementFragment extends Fragment implements OnClickListener, ListAdapterListener {
 	View rootView;
-	TabHost tabHost;
+	TabHost tabHost = null;
 
 	ImageButton emergencyWipe, toSettings, thumbnail;
 	Button exportCredentials;
@@ -123,6 +123,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		exportCredentials.setOnClickListener(this);
 
 		tabHost.setCurrentTab(0);
+		updateAdapter(Codes.Adapters.ALL);
 	}
 
 	private void initData() {
@@ -242,12 +243,13 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			
 			break;
 		case Codes.Adapters.ALL:
-			if(tabHost.getCurrentTab() == 0) {
-				updateAdapter(Codes.Adapters.NOTIFICATIONS);
-			} else if(tabHost.getCurrentTab() == 1) {
-				updateAdapter(Codes.Adapters.ORGANIZATIONS);
+			if(tabHost != null) {
+				if(tabHost.getCurrentTab() == 0) {
+					updateAdapter(Codes.Adapters.NOTIFICATIONS);
+				} else if(tabHost.getCurrentTab() == 1) {
+					updateAdapter(Codes.Adapters.ORGANIZATIONS);
+				}
 			}
-			
 			break;
 		}
 	}
