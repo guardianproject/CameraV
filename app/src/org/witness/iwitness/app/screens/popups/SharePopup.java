@@ -19,6 +19,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -57,6 +59,7 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 
 	List<IOrganization> organizations;
 	IOrganization encryptTo = null;
+	boolean isShare = false;
 	
 	Handler h;
 
@@ -65,7 +68,7 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 	}
 
 	@SuppressLint("HandlerLeak")
-	public SharePopup(Activity a, final Object context, boolean startsInforma) {
+	public SharePopup(final Activity a, final Object context, boolean startsInforma) {
 		super(a, R.layout.popup_share);
 		this.context = context;
 
@@ -84,6 +87,15 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 				if(b.containsKey(Models.IMedia.VERSION)) {
 					inProgressBar.setProgress(100);
 					SharePopup.this.cancel();
+					
+					if(isShare) {
+						Intent intent = new Intent()
+							.setAction(Intent.ACTION_SEND)
+							.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new java.io.File(b.getString(Models.IMedia.VERSION))))
+							.setType("file/");
+
+						a.startActivity(Intent.createChooser(intent, a.getString(R.string.send)));
+					}
 				} else if(b.containsKey(Codes.Keys.UI.PROGRESS)) {
 					inProgressBar.setProgress(b.getInt(Codes.Keys.UI.PROGRESS));
 				}
@@ -173,6 +185,8 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 	private void export(final boolean isShare) {
 		tabHost.setVisibility(View.GONE);
 		inProgressRoot.setVisibility(View.VISIBLE);
+		this.isShare = isShare;
+		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
