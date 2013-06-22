@@ -404,14 +404,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				viewPager.setCurrentItem(1);
 				
 				informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
-				Log.d(LOG, "new dcim:\n" + data.getStringExtra(Codes.Extras.RETURNED_MEDIA));
-				try {
-					JSONArray newMedia = (JSONArray) new JSONTokener(data.getStringExtra(Codes.Extras.RETURNED_MEDIA)).nextValue();
-					((GalleryFragment) galleryFragment).updateData(newMedia);
-				} catch (JSONException e) {
-					Log.e(LOG, e.toString());
-					e.printStackTrace();
-				}
+				Log.d(LOG, "new dcim:\n" + data.getStringArrayListExtra(Codes.Extras.RETURNED_MEDIA));
+				((GalleryFragment) galleryFragment).updateData(data.getStringArrayListExtra(Codes.Extras.RETURNED_MEDIA));
+				
 				
 				informaCam.stopInforma();
 				route = null;

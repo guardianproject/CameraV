@@ -168,7 +168,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 
 	}
 
-	public void updateData(JSONArray newMedia) {
+	public void updateData(ArrayList<String> newMedia) {
 		// adds placeholders
 		if (mediaDisplayGrid != null)
 			mediaDisplayGrid.removeAllViewsInLayout();
@@ -177,18 +177,10 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 			mediaDisplayList.removeAllViewsInLayout();
 
 		if(newMedia != null) {
-			try {
-				
-				for(int n=0; n< newMedia.length(); n++) {
-					IPlaceholder placeholder = new IPlaceholder(newMedia.getJSONObject(n), a);
-					Log.d(LOG, "adding to list: " + placeholder.asJson().toString());
-					placeholders.add(placeholder);
-				}
-
-
-			} catch (JSONException e) {
-				Log.e(LOG, e.toString());
-				e.printStackTrace();
+			for(int n=0; n< newMedia.size(); n++) {
+				IPlaceholder placeholder = new IPlaceholder(newMedia.get(n), a);
+				Log.d(LOG, "adding to list: " + placeholder.asJson().toString());
+				placeholders.add(placeholder);
 			}
 		}
 
@@ -363,13 +355,20 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		if(placeholders != null) {
 			List<IMedia> pop = new ArrayList<IMedia>();
 
-			for(IMedia media : listMedia) {				
-				for(IPlaceholder placeholder : placeholders) {
-					if(placeholder.index.equals(media.dcimEntry.jobId)) {
-						pop.add(placeholder);
-						media.dcimEntry.jobId = null;
-						break;
+			for(IMedia media : listMedia) {
+				try {
+					for(IPlaceholder placeholder : placeholders) {
+						if(placeholder.index.equals(media.dcimEntry.jobId)) {
+							pop.add(placeholder);
+							media.dcimEntry.jobId = null;
+							break;
+						}
 					}
+				} catch(NullPointerException e) {
+					Log.e(LOG, "CONSIDERED HANDLED:\n" + e);
+					e.printStackTrace();
+					
+					continue;
 				}
 			}
 
