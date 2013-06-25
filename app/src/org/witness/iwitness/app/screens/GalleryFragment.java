@@ -352,6 +352,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 
 
 	public void consolidateEntries() {
+		/*
 		if(placeholders != null) {
 			List<IMedia> pop = new ArrayList<IMedia>();
 
@@ -375,6 +376,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 			listMedia.removeAll(pop);
 			placeholders.removeAll(pop);
 		}
+		*/
 
 	}
 

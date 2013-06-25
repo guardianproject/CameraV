@@ -158,7 +158,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			return;
 		}
 		
-		 checkForCrashes();
+		checkForCrashes();
 
 		informaCam = (InformaCam)getApplication();
 
@@ -404,8 +404,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				viewPager.setCurrentItem(1);
 				
 				informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
-				Log.d(LOG, "new dcim:\n" + data.getStringArrayListExtra(Codes.Extras.RETURNED_MEDIA));
-				((GalleryFragment) galleryFragment).updateData(data.getStringArrayListExtra(Codes.Extras.RETURNED_MEDIA));
+				Log.d(LOG, "new dcim:\n" + data.getStringExtra(Codes.Extras.RETURNED_MEDIA));
+				//((GalleryFragment) galleryFragment).updateData(data.getStringArrayListExtra(Codes.Extras.RETURNED_MEDIA));
 				
 				
 				informaCam.stopInforma();
@@ -552,7 +552,10 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		int code = message.getData().getInt(Codes.Extras.MESSAGE_CODE);
 		
 		switch(code) {
-		case org.witness.informacam.utils.Constants.Codes.Messages.DCIM.STOP:
+		case org.witness.informacam.utils.Constants.Codes.Messages.DCIM.ADD:
+			Log.d(LOG, "I HEAR THAT NEW MEDIA WAS ADDED: ");
+			Log.d(LOG, message.getData().getString(Codes.Extras.CONSOLIDATE_MEDIA));
+			
 			mHandlerUI.sendEmptyMessage(0);
 			break;
 		}
