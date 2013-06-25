@@ -344,7 +344,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			public void onClick(View v) {
 				mam.cancel();
 				if((informaCam.mediaManifest.getById(media._id)).delete()) {
-					((GalleryFragment) galleryFragment).updateData();
+					((GalleryFragment) galleryFragment).updateAdapter(0);
 				}
 			}
 
@@ -404,9 +404,18 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				viewPager.setCurrentItem(1);
 				
 				informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
-				Log.d(LOG, "new dcim:\n" + data.getStringExtra(Codes.Extras.RETURNED_MEDIA));
-				//((GalleryFragment) galleryFragment).updateData(data.getStringArrayListExtra(Codes.Extras.RETURNED_MEDIA));
-				
+				/*
+				 *  XXX: Other developers, take note:
+				 *  
+				 *   the returned media can be JSONified.  
+				 *   It represents the media has been captured, but that may or may not have been processed.
+				 *   
+				 *   InformaCam will send a message whenever a new media item has been processed.
+				 *   The message contains the Codes.Extras.Messages.DCIM.ADD code, which is handled by "onUpdate()"
+				 *   
+				 */
+				 
+				Log.d(LOG, "new dcim:\n" + data.getStringExtra(Codes.Extras.RETURNED_MEDIA));				
 				
 				informaCam.stopInforma();
 				route = null;
@@ -457,7 +466,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			if(page == 2) {
 				launchCamera();
 			} else {
-				updateAdapter(0);
+				//updateAdapter(0);
 			}
 		}
 
@@ -555,6 +564,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		case org.witness.informacam.utils.Constants.Codes.Messages.DCIM.ADD:
 			Log.d(LOG, "I HEAR THAT NEW MEDIA WAS ADDED: ");
 			Log.d(LOG, message.getData().getString(Codes.Extras.CONSOLIDATE_MEDIA));
+			Log.d(LOG, "manifest size: " + informaCam.mediaManifest.listMedia.size());
 			
 			mHandlerUI.sendEmptyMessage(0);
 			break;

@@ -31,6 +31,16 @@ public class GalleryListAdapter extends BaseAdapter {
 		li = LayoutInflater.from(a);
 	}
 	
+	public void update(List<IMedia> newMedia) {
+		media = newMedia;
+		notifyDataSetChanged();
+	}
+	
+	public void update(IMedia newMedia) {
+		media.add(newMedia);
+		notifyDataSetChanged();
+	}
+	
 	@Override
 	public int getCount() {
 		return media.size();

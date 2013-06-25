@@ -12,14 +12,12 @@ import org.witness.iwitness.R;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.LinearLayout;
 
 public class NotificationsListAdapter extends BaseAdapter {
 	List<INotification> notifications;
@@ -29,6 +27,16 @@ public class NotificationsListAdapter extends BaseAdapter {
 	
 	public NotificationsListAdapter(List<INotification> notifications) {
 		this.notifications = notifications;
+	}
+	
+	public void update(List<INotification> newNotifications) {
+		notifications = newNotifications;
+		notifyDataSetChanged();
+	}
+	
+	public void update(INotification newNotification) {		
+		notifications.add(newNotification);
+		notifyDataSetChanged();
 	}
 	
 	@Override

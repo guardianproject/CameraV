@@ -2,10 +2,8 @@ package org.witness.iwitness.utils.adapters;
 
 import java.util.List;
 
-import org.json.JSONException;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.utils.Constants.App;
-import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
 
 import android.app.Activity;
@@ -29,6 +27,16 @@ public class GalleryGridAdapter extends BaseAdapter {
 		this.media = media;
 		this.a = a;
 		li = LayoutInflater.from(a);
+	}
+	
+	public void update(List<IMedia> newMedia) {
+		media = newMedia;
+		notifyDataSetChanged();
+	}
+	
+	public void update(IMedia newMedia) {		
+		media.add(newMedia);
+		notifyDataSetChanged();
 	}
 
 	@Override

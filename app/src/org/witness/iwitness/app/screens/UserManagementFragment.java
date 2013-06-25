@@ -1,5 +1,7 @@
 package org.witness.iwitness.app.screens;
 
+import java.util.List;
+
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IInstalledOrganizations;
@@ -56,7 +58,12 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 
 	InformaCam informaCam = InformaCam.getInstance();
 	IUser user = informaCam.user;
-	IInstalledOrganizations installedOrganizations;
+
+	List<IOrganization> listOrganizations;
+	OrganizationsListAdapter listOrganizationsAdapter;
+	
+	List<INotification> listNotifications;
+	NotificationsListAdapter listNotificationsAdapter;
 
 	@SuppressWarnings("unused")
 	private static final String LOG = App.Home.LOG;
@@ -123,7 +130,6 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		exportCredentials.setOnClickListener(this);
 
 		tabHost.setCurrentTab(0);
-		updateAdapter(Codes.Adapters.ALL);
 	}
 
 	private void initData() {
@@ -143,14 +149,13 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	}
 	
 	private void initOrganizations() {
-		installedOrganizations = new IInstalledOrganizations();
-		installedOrganizations.inflate(informaCam.getModel(installedOrganizations));
+		listOrganizations = informaCam.installedOrganizations.listOrganizations();
 
 		organizationsHolder.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l) {
-				IOrganization org = installedOrganizations.organizations.get((int) l);
+				IOrganization org = listOrganizations.get((int) l);
 				if(org.transportCredentials != null && org.transportCredentials.certificatePath != null) {
 					((HomeActivityListener) a).getContextualMenuFor(org);
 				}
@@ -158,31 +163,34 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 				return true;
 			}
 		});
-		organizationsHolder.setAdapter(new OrganizationsListAdapter(installedOrganizations.organizations));
+		
+		listOrganizationsAdapter = new OrganizationsListAdapter(listOrganizations);
+		organizationsHolder.setAdapter(listOrganizationsAdapter);
 	}
 
 	private void initNotifications() {
+		listNotifications = informaCam.notificationsManifest.listNotifications();
 		
-		if(informaCam.notificationsManifest.notifications != null) {
-			if(informaCam.notificationsManifest.notifications.size() > 0) {
-				notificationsNoNotifications.setVisibility(View.GONE);
-				
-				notificationsHolder.setOnItemLongClickListener(new OnItemLongClickListener() {
+		notificationsHolder.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-					@Override
-					public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l) {
-						INotification notification = informaCam.notificationsManifest.notifications.get((int) l);
-						((HomeActivityListener) a).getContextualMenuFor(notification);
+			@Override
+			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l) {
+				INotification notification = informaCam.notificationsManifest.notifications.get((int) l);
+				((HomeActivityListener) a).getContextualMenuFor(notification);
 
-						return true;
-					}
-
-				});
-				
-				notificationsHolder.setAdapter(new NotificationsListAdapter(informaCam.notificationsManifest.notifications));
-				return;
+				return true;
 			}
+
+		});
+		
+		listNotificationsAdapter = new NotificationsListAdapter(listNotifications);
+		notificationsHolder.setAdapter(listNotificationsAdapter);
+	
+		if(listNotifications.size() > 0) {
+			notificationsNoNotifications.setVisibility(View.GONE);
+			return;
 		}
+	
 		
 		notificationsNoNotifications.setVisibility(View.VISIBLE);
 	}
@@ -225,21 +233,13 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	public void updateAdapter(int which) {
 		switch(which) {
 		case Codes.Adapters.NOTIFICATIONS:
-			h.post(new Runnable() {
-				@Override
-				public void run() {
-					initNotifications();
-				}
-			});
+			listNotificationsAdapter.update(listNotifications);
+			notificationsHolder.invalidate();
 			
 			break;
 		case Codes.Adapters.ORGANIZATIONS:
-			h.post(new Runnable() {
-				@Override
-				public void run() {
-					initOrganizations();
-				}
-			});
+			listOrganizationsAdapter.update(listOrganizations);
+			organizationsHolder.invalidate();
 			
 			break;
 		case Codes.Adapters.ALL:
@@ -249,6 +249,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 				} else if(tabHost.getCurrentTab() == 1) {
 					updateAdapter(Codes.Adapters.ORGANIZATIONS);
 				}
+				
 			}
 			break;
 		}
