@@ -172,19 +172,28 @@ OnRangeSeekBarChangeListener<Integer> {
 			@SuppressWarnings("unused")
 			@Override
 			public void run() {
+				
 				// copy from iocipher to local :(
 				videoFile = new java.io.File(Storage.EXTERNAL_DIR, media_.dcimEntry.name);
-				InformaCam.getInstance().ioService.saveBlob(InformaCam.getInstance().ioService.getBytes(media_.dcimEntry.fileName, Type.IOCIPHER), videoFile, true);
 				
-				OnMediaScannedListener listener = null;
-				
-				InformaCamMediaScanner icms = new InformaCamMediaScanner(getActivity(), videoFile, listener) {
-					@Override
-					public void onScanCompleted(String path, Uri uri) {
-						videoUri = uri;
-						initVideo();
-					}
-				};
+				try
+				{
+					InformaCam.getInstance().ioService.saveBlob(InformaCam.getInstance().ioService.getBytes(media_.dcimEntry.fileName, Type.IOCIPHER), videoFile, true);
+					
+					OnMediaScannedListener listener = null;
+					
+					InformaCamMediaScanner icms = new InformaCamMediaScanner(getActivity(), videoFile, listener) {
+						@Override
+						public void onScanCompleted(String path, Uri uri) {
+							videoUri = uri;
+							initVideo();
+						}
+					};
+				}
+				catch (IOException ioe)
+				{
+					Log.e(LOG,"error copying from iocipher to local",ioe);
+				}
 			}
 		}).start();
 	}

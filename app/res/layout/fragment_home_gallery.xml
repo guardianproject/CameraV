@@ -92,7 +92,7 @@
             android:orientation="vertical"
             android:paddingLeft="10dip"
             android:paddingRight="10dip"
-            android:visibility="gone" >
+            >
 
             <TextView
                 android:id="@+id/media_display_no_media_1"
@@ -138,13 +138,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/options_holder"
-            android:layout_margin="6dip"
+            android:layout_margin="3dip"
             android:gravity="center"
-            android:horizontalSpacing="6dip"
-            android:numColumns="4"
+            android:horizontalSpacing="3dip"
+            android:numColumns="3"
             android:stretchMode="columnWidth"
             android:verticalSpacing="6dip"
-            android:visibility="gone" />
+            android:visibility="visible"
+             />
         <ListView
             android:id="@+id/media_display_list"
             android:layout_width="match_parent"

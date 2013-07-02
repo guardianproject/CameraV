@@ -123,6 +123,8 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	}
 
 	private void initData() {
+
+		informaCam.mediaManifest.sortBy(0);
 		listMedia = informaCam.mediaManifest.getMediaList();
 		
 		galleryGridAdapter = new GalleryGridAdapter(a, listMedia);
@@ -151,6 +153,8 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 				noMedia.setVisibility(View.VISIBLE);
 		}
 
+		
+		updateAdapters();			
 	}
 
 	public void toggleMultiSelectMode(boolean mode) {
@@ -304,6 +308,17 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 
 		if (this.mediaDisplayList != null)
 			mediaDisplayList.invalidate();
+		
+		
+		if(listMedia != null && listMedia.size() > 0) {
+			if (noMedia != null)
+				noMedia.setVisibility(View.GONE);
+		} else {
+
+			if (noMedia != null)
+				noMedia.setVisibility(View.VISIBLE);
+		}
+
 	}
 	
 	@Override

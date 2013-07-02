@@ -30,7 +30,6 @@ import org.witness.iwitness.app.screens.menus.MediaActionMenu;
 import org.witness.iwitness.app.screens.popups.RenamePopup;
 import org.witness.iwitness.app.screens.popups.SharePopup;
 import org.witness.iwitness.app.screens.popups.TextareaPopup;
-import org.witness.iwitness.app.screens.popups.WaitPopup;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.Codes;
@@ -99,7 +98,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	};
 
 	MediaActionMenu mam;
-	WaitPopup waiter;
+//	WaitPopup waiter;
 
 	Intent toEditor, toCamera;
 
@@ -269,7 +268,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void launchCamera() {
 		route = toCamera;
 
-		waiter = new WaitPopup(this);
+	//	waiter = new WaitPopup(this);
 		informaCam.startInforma();
 	}
 
@@ -278,7 +277,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		toEditor.putExtra(Codes.Extras.EDIT_MEDIA, media._id);
 
 		route = toEditor;
-		waiter = new WaitPopup(this);
+	//	waiter = new WaitPopup(this);
 		informaCam.startInforma();
 		Log.d(LOG, "launching editor for " + media._id);		
 	}
@@ -496,7 +495,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void onInformaStart(Intent intent) {
-		waiter.cancel();
+	//	waiter.cancel();
 		if(route != null) {
 			if(route.equals(toEditor)) {
 				startActivityForResult(toEditor, Routes.EDITOR);
@@ -508,13 +507,14 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void waiter(boolean show) {
+		/*
 		if(show) {
 			waiter = new WaitPopup(this);
 		} else {
 			if(waiter != null) {
 				waiter.cancel();
 			}
-		}
+		}*/
 	}
 
 	@Override

@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="64dip"
+    android:layout_height="64dip"
     android:padding="3dip"
     android:orientation="vertical"
-    android:id="@+id/gallery_thumb_holder" >
+    android:id="@+id/gallery_thumb_holder" 
+    android:background="#cccccc"
+    android:gravity="center"
+    >
 
     <ImageView
         android:id="@+id/gallery_thumb"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="64dip"
+        android:layout_height="64dip"
         android:padding="3dip"
-        android:scaleType="center"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher" />
 
 </LinearLayout>
