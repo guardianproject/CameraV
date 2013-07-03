@@ -1,21 +1,13 @@
 package org.witness.iwitness.app.screens;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.models.j3m.IDCIMEntry;
 import org.witness.informacam.models.media.IMedia;
-import org.witness.informacam.models.media.IPlaceholder;
-import org.witness.informacam.storage.IOUtility;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Models;
-import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
@@ -23,8 +15,6 @@ import org.witness.iwitness.utils.adapters.GalleryGridAdapter;
 import org.witness.iwitness.utils.adapters.GalleryListAdapter;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -123,6 +113,8 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	}
 
 	private void initData() {
+
+		informaCam.mediaManifest.sortBy(0);
 		listMedia = informaCam.mediaManifest.getMediaList();
 		
 		galleryGridAdapter = new GalleryGridAdapter(a, listMedia);
@@ -151,6 +143,8 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 				noMedia.setVisibility(View.VISIBLE);
 		}
 
+		
+		updateAdapters();			
 	}
 
 	public void toggleMultiSelectMode(boolean mode) {
@@ -208,10 +202,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 				break;
 			}
 		} else if(parent == displaySort) {
-			Log.d(LOG, "selecting " + pos + " from displaySort");
-			informaCam.mediaManifest.sortBy(pos);
-			listMedia = informaCam.mediaManifest.listMedia;
-			
+			listMedia = informaCam.mediaManifest.sortBy(pos);
 			updateAdapters();			
 		}
 	}
@@ -304,12 +295,24 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 
 		if (this.mediaDisplayList != null)
 			mediaDisplayList.invalidate();
+		
+		
+		if(listMedia != null && listMedia.size() > 0) {
+			if (noMedia != null)
+				noMedia.setVisibility(View.GONE);
+		} else {
+
+			if (noMedia != null)
+				noMedia.setVisibility(View.VISIBLE);
+		}
+
 	}
 	
 	@Override
 	public void updateAdapter(int which) {
+		Log.d(LOG, "UPDATING OUR ADAPTERS");
 		if(a != null) {
-			listMedia = informaCam.mediaManifest.listMedia;
+			listMedia = informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
 			updateAdapters();
 		}
 	}

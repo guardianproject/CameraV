@@ -4,19 +4,27 @@ iWitness
 
 An InformaCam app to generate verifiable media.
 
-
 Building
 --------
 
-git clone https://github.com/guardianproject/iWitnes
+git clone https://github.com/guardianproject/iWitness
+
 cd iWitness/
+
 git submodules update --init --recursive
+
 ./setup-ant.sh
+
 ./build-native.sh
+
 cd app/
+
 ant clean debug
+
 =======
 # InformaCam
+
+This is information for building the primary submodule for iWitness, the InformaCam Core Library, located at external/InformCam
 
 ## Setting up Development Environment
 

@@ -8,12 +8,7 @@ import java.util.Vector;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONTokener;
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.models.connections.IConnection;
-import org.witness.informacam.models.connections.IMessage;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
@@ -30,7 +25,6 @@ import org.witness.iwitness.app.screens.menus.MediaActionMenu;
 import org.witness.iwitness.app.screens.popups.RenamePopup;
 import org.witness.iwitness.app.screens.popups.SharePopup;
 import org.witness.iwitness.app.screens.popups.TextareaPopup;
-import org.witness.iwitness.app.screens.popups.WaitPopup;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.Codes;
@@ -71,7 +65,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	List<Fragment> fragments = new Vector<Fragment>();
 	Fragment userManagementFragment, galleryFragment, cameraFragment;
 
-	boolean initUploads = true;
 	boolean initGallery = false;
 
 	int visibility = View.VISIBLE;
@@ -99,7 +92,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	};
 
 	MediaActionMenu mam;
-	WaitPopup waiter;
+//	WaitPopup waiter;
 
 	Intent toEditor, toCamera;
 
@@ -119,7 +112,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			while(i.hasNext()) {
 				String outState = i.next();
 				if(outState.equals(Home.TAG) && savedInstanceState.getBoolean(Home.TAG)) {
-					initUploads = false;
 					initGallery = true;
 				}
 			}
@@ -161,10 +153,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		checkForCrashes();
 
 		informaCam = (InformaCam)getApplication();
-
-		if(initUploads) {
-			informaCam.initUploads();
-		}
 
 		if(init.getData() != null) {
 			final Uri ictdURI = init.getData();
@@ -269,7 +257,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void launchCamera() {
 		route = toCamera;
 
-		waiter = new WaitPopup(this);
+	//	waiter = new WaitPopup(this);
 		informaCam.startInforma();
 	}
 
@@ -278,7 +266,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		toEditor.putExtra(Codes.Extras.EDIT_MEDIA, media._id);
 
 		route = toEditor;
-		waiter = new WaitPopup(this);
+	//	waiter = new WaitPopup(this);
 		informaCam.startInforma();
 		Log.d(LOG, "launching editor for " + media._id);		
 	}
@@ -318,9 +306,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				new TextareaPopup(HomeActivity.this, organization) {
 					@Override
 					public void cancel() {
-						IConnection connection = new IMessage(organization, this.prompt.getText().toString());
-						informaCam.uploaderService.addToQueue(connection);
-
+						// TODO: send a message...
+						
 						super.cancel();
 					}
 				};
@@ -496,7 +483,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void onInformaStart(Intent intent) {
-		waiter.cancel();
+	//	waiter.cancel();
 		if(route != null) {
 			if(route.equals(toEditor)) {
 				startActivityForResult(toEditor, Routes.EDITOR);
@@ -508,13 +495,14 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void waiter(boolean show) {
+		/*
 		if(show) {
 			waiter = new WaitPopup(this);
 		} else {
 			if(waiter != null) {
 				waiter.cancel();
 			}
-		}
+		}*/
 	}
 
 	@Override

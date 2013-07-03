@@ -32,7 +32,9 @@
                 android:id="@+id/view_pager_root"
                 android:layout_width="match_parent"
                 android:layout_height="0dip"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:background="#333333"
+                 />
         </LinearLayout>
     </TabHost>
 

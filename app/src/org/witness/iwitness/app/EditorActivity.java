@@ -19,7 +19,6 @@ import org.witness.iwitness.app.screens.DetailsViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenImageViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.iwitness.app.screens.popups.SharePopup;
-import org.witness.iwitness.app.screens.popups.WaitPopup;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
@@ -62,7 +61,6 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	public IMedia media;
 	private String mediaId;
 	public List<IForm> availableForms;
-	private WaitPopup waiter = null;
 
 
 	@Override
@@ -263,13 +261,6 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 
 	@Override
 	public void waiter(boolean show) {
-		if(show) {
-			waiter = new WaitPopup(this);
-		} else {
-			if(waiter != null) {
-				waiter.cancel();
-			}
-		}
 		
 	}
 

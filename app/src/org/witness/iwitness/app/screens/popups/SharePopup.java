@@ -88,7 +88,7 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 					inProgressBar.setProgress(100);
 					SharePopup.this.cancel();
 					
-					if(isShare) {
+					if(isShare && b.getString(Models.IMedia.VERSION) != null) {
 						Intent intent = new Intent()
 							.setAction(Intent.ACTION_SEND)
 							.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new java.io.File(b.getString(Models.IMedia.VERSION))))
@@ -152,9 +152,7 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 		if(installedOrganizations.organizations != null && installedOrganizations.organizations.size() > 0) {
 			if(installedOrganizations.organizations != null && installedOrganizations.organizations.size() > 0) {
 				for(IOrganization org : installedOrganizations.organizations) {
-					if(org.transportCredentials != null && org.transportCredentials.certificatePath != null) {
-						organizations.add(org);
-					}
+					organizations.add(org);
 				}
 			}
 		}

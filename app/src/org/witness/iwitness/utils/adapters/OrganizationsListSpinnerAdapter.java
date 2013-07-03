@@ -2,7 +2,6 @@ package org.witness.iwitness.utils.adapters;
 
 import java.util.List;
 
-import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.iwitness.R;
 

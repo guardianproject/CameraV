@@ -135,8 +135,8 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	private void initData() {
 		alias.setText(user.alias);
 
-		int connectivityLabel = informaCam.uploaderService.isConnectedToTor() ? R.string.connected_to_tor : R.string.not_connected_to_tor;
-		connectivity.setText(getResources().getString(connectivityLabel));
+		//int connectivityLabel = informaCam.uploaderService.isConnectedToTor() ? R.string.connected_to_tor : R.string.not_connected_to_tor;
+		//connectivity.setText(getResources().getString(connectivityLabel));
 
 		h.post(new Runnable() {
 			@Override
@@ -156,9 +156,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			@Override
 			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l) {
 				IOrganization org = listOrganizations.get((int) l);
-				if(org.transportCredentials != null && org.transportCredentials.certificatePath != null) {
-					((HomeActivityListener) a).getContextualMenuFor(org);
-				}
+				((HomeActivityListener) a).getContextualMenuFor(org);
 
 				return true;
 			}

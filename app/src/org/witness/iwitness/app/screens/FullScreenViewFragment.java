@@ -4,7 +4,6 @@ import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONException;
@@ -24,7 +23,6 @@ import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
 import org.witness.iwitness.utils.actions.ContextMenuAction;
 
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -118,6 +116,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		super.onDestroy();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public View onCreateView(LayoutInflater li, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(li, container, savedInstanceState);

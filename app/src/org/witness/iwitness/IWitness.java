@@ -11,7 +11,6 @@ import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListen
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.HomeActivity;
 import org.witness.iwitness.app.LoginActivity;
-import org.witness.iwitness.app.screens.wizard.AddOrganizationsPreference;
 import org.witness.iwitness.app.screens.wizard.OriginalImagePreference;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.App;
@@ -123,9 +122,6 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 			routeCode = Home.ROUTE_CODE;
 			
 			switch(requestCode) {
-			case Codes.Routes.WIZARD:
-				FormUtility.installIncludedForms(this);
-				break;
 			case Codes.Routes.CAMERA:
 				route = new Intent(this, EditorActivity.class);
 				routeCode = Editor.ROUTE_CODE;
@@ -179,7 +175,6 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 		case org.witness.informacam.utils.Constants.Codes.Messages.Wizard.INIT:
 			ArrayList<String> wizardFragments = new ArrayList<String>();
 			wizardFragments.add(OriginalImagePreference.class.getName());
-			wizardFragments.add(AddOrganizationsPreference.class.getName());
 						
 			route = new Intent(this, WizardActivity.class);
 			

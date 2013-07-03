@@ -61,27 +61,19 @@ public class GalleryGridAdapter extends BaseAdapter {
 		View view = li.inflate(R.layout.adapter_gallery_grid, null);
 		
 		ImageView iv = (ImageView) view.findViewById(R.id.gallery_thumb);
+		
 		LinearLayout iv_holder = (LinearLayout) view.findViewById(R.id.gallery_thumb_holder);
 		if(m.isNew) {
 			iv_holder.setBackgroundDrawable(a.getResources().getDrawable(R.drawable.extras_is_new_background));
 		}
 
 		try {
-			Bitmap bitmap = m.getBitmap(m.bitmapThumb);
+			Bitmap bitmap = m.getThumbnail();
 			iv.setImageBitmap(bitmap);
 		} catch(NullPointerException e) {
 			iv.setImageDrawable(a.getResources().getDrawable(R.drawable.ic_action_video));
 		}
 
-		/*
-		try {
-			//if(!m.getBoolean(Models.IMediaManifest.Sort.IS_SHOWING)) {
-			//	view.setVisibility(View.GONE);
-			//}
-		} catch (JSONException e) {
-			Log.e(LOG, e.toString());
-			e.printStackTrace();
-		}*/
 
 		return view;
 	}
