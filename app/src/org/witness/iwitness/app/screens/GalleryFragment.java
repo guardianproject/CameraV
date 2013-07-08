@@ -53,8 +53,8 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	Activity a = null;
 
 	boolean isInMultiSelectMode;
-	List<IMedia> batch;
-	List<IMedia> listMedia;
+	List<IMedia> batch = null;
+	List<IMedia> listMedia = null;
 	Handler h = new Handler();
 
 	private static final String LOG = Home.LOG;	
@@ -288,22 +288,24 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	}
 
 	private void updateAdapters() {
-		this.galleryGridAdapter.update(listMedia);
-		
-		if (this.mediaDisplayGrid != null)
-			mediaDisplayGrid.invalidate();
+		if(listMedia != null) {
+			this.galleryGridAdapter.update(listMedia);
 
-		if (this.mediaDisplayList != null)
-			mediaDisplayList.invalidate();
-		
-		
-		if(listMedia != null && listMedia.size() > 0) {
-			if (noMedia != null)
-				noMedia.setVisibility(View.GONE);
-		} else {
+			if (this.mediaDisplayGrid != null)
+				mediaDisplayGrid.invalidate();
 
-			if (noMedia != null)
-				noMedia.setVisibility(View.VISIBLE);
+			if (this.mediaDisplayList != null)
+				mediaDisplayList.invalidate();
+
+
+			if(listMedia != null && listMedia.size() > 0) {
+				if (noMedia != null)
+					noMedia.setVisibility(View.GONE);
+			} else {
+
+				if (noMedia != null)
+					noMedia.setVisibility(View.VISIBLE);
+			}
 		}
 
 	}
