@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.notifications.INotification;
-import org.witness.informacam.models.organizations.IInstalledOrganizations;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.credentials.IUser;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
@@ -194,7 +193,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	}
 
 	private void exportCredentials() {
-		java.io.File credentials = informaCam.ioService.getPublicCredentials();
+		java.io.File credentials = informaCam.getPublicCredentials();
 		Intent intent = new Intent()
 			.setAction(Intent.ACTION_SEND)
 			.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(credentials))
