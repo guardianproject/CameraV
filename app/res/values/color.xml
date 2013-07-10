@@ -12,5 +12,11 @@
     <drawable name="eyewitness_dark_grey">#ff231f20</drawable>
     <drawable name="eyewitness_light_grey">#ff818285</drawable>
     
+    <color name="actionbar_background">#ff020D26</color>
+    <color name="actionbar_bottom_edge">#ff00AEEF</color>
+    <color name="actionbar_actionmode_background">#ff00AEEF</color>
+    <color name="actionbar_actionmode_bottom_edge">#ff020D26</color>
     
+    <color name="context_menu_background">#a0444444</color>
+    <color name="context_menu_background_selected">#ff444444</color>
 </resources>

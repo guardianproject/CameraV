@@ -136,14 +136,7 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	protected void initLayout() {
 		super.initLayout();
-
-		h.post(new Runnable() {
-			@Override
-			public void run() {
-				toggleControls.setVisibility(View.INVISIBLE);
-			}
-		});
-		
+	
 		View mediaHolder_ = LayoutInflater.from(getActivity()).inflate(R.layout.editors_video, null);
 
 		videoView = (VideoView) mediaHolder_.findViewById(R.id.video_view);

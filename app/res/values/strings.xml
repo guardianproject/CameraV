@@ -70,4 +70,13 @@
     <string name="pref_languages_pt_PT">Portuguese (Portugal)</string>
     <string name="pref_languages_si_LK">Sinhala (Sri Lanka)</string>
     <string name="pref_languages_tr_TR">Turkish (Turkey)</string>
+    
+    <string name="menu_share">Share</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_done">Done</string>
+    <string name="menu_save">Save</string>
+    
+    <string name="editor_tags_form">Form</string>
+    <string name="editor_tags_add">Add Tags</string>
+    <string name="editor_form_edit">Tag Info</string>
 </resources>

@@ -102,4 +102,21 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="context_menu_button">
+        <item name="android:background">@drawable/context_menu_button_selector</item>
+        <item name="android:textColor">@drawable/white</item>
+    </style>
+    
+    <style name="EditorTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+		<item name="actionBarStyle">@style/EditorActionBar</item>
+        <item name="android:actionBarStyle">@style/EditorActionBar</item>
+    	<item name="actionModeBackground">@drawable/actionbar_actionmode_background</item>
+    	<item name="android:actionModeBackground">@drawable/actionbar_actionmode_background</item>
+        </style>
+    
+    <style name="EditorActionBar" parent="@style/Widget.Sherlock.Light.ActionBar">
+    	<item name="background">@drawable/actionbar_background</item>
+    	<item name="android:background">@drawable/actionbar_background</item>
+    </style>
+
 </resources>
