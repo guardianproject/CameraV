@@ -17,6 +17,7 @@ import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
+import org.witness.iwitness.utils.app.ChevronRegionView;
 
 import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
@@ -37,7 +38,6 @@ import android.widget.RelativeLayout;
 
 public class FullScreenViewFragment extends Fragment implements OnClickListener, OnTouchListener, IRegionDisplayListener, ODKFormListener, OnLongClickListener
 {
-
 	public enum Mode
 	{
 		Normal, Edit, AddTags
@@ -48,13 +48,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	protected RelativeLayout mediaHolder;
 
-	protected boolean controlsAreShowing = false;
-
-	// protected FrameLayout formHolder;
-	protected Fragment tagFormFragment;
-
 	protected int[] dims;
-	protected int scrollTarget;
 
 	protected IRegion currentRegion = null;
 
@@ -103,7 +97,6 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 		rootView = li.inflate(R.layout.fragment_editor_media_view, null);
 
-		scrollTarget = dims[0];
 		DEFAULT_REGION_WIDTH = (int) (dims[0] * 0.15);
 		DEFAULT_REGION_HEIGHT = (int) (dims[1] * 0.1);
 
@@ -122,8 +115,21 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected void deleteTag()
 	{
 		((EditorActivityListener) a).media().removeRegion(currentRegion);
-		mediaHolder.removeView(currentRegion.getRegionDisplay());
+		mediaHolder.removeView(getTagViewByRegion(currentRegion));
 		currentRegion = null;
+	}
+
+	protected IRegionDisplay getTagViewByRegion(IRegion region)
+	{
+		for (int i = 0; i < mediaHolder.getChildCount(); i++)
+		{
+			View child = mediaHolder.getChildAt(i);
+			if (child instanceof IRegionDisplay && ((IRegionDisplay) child).parent == region)
+			{
+				return (IRegionDisplay) child;
+			}
+		}
+		return null;
 	}
 
 	protected void initRegions()
@@ -143,7 +149,12 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 					r.getRegionDisplay().setOnTouchListener(this);
 					r.getRegionDisplay().setOnLongClickListener(this);
 					r.getRegionDisplay().setSoundEffectsEnabled(false);
-					mediaHolder.addView(r.getRegionDisplay());
+					View newView = new ChevronRegionView(getActivity(), r, this);
+					newView.setOnTouchListener(this);
+					newView.setOnLongClickListener(this);
+					newView.setSoundEffectsEnabled(false);
+					mediaHolder.addView(newView);
+					// mediaHolder.addView(r.getRegionDisplay());
 				}
 				else
 				{
@@ -166,12 +177,16 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	protected void updateRegionDisplay()
 	{
-		for (IRegion r : ((EditorActivityListener) a).media().associatedRegions)
+		if (((EditorActivityListener) a).media().associatedRegions != null)
 		{
-
-			if (!r.equals(currentRegion) && r.getRegionDisplay() != null)
+			for (IRegion r : ((EditorActivityListener) a).media().associatedRegions)
 			{
-				r.getRegionDisplay().setStatus(false);
+				if (!r.equals(currentRegion) || currentMode == Mode.Normal)
+				{
+					IRegionDisplay display = getTagViewByRegion(r);
+					if (display != null)
+						display.setStatus(false);
+				}
 			}
 		}
 	}
@@ -190,7 +205,12 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 		if (isNew)
 		{
-			mediaHolder.addView(currentRegion.getRegionDisplay());
+			View newView = new ChevronRegionView(getActivity(), currentRegion, this);
+			newView.setOnLongClickListener(this);
+			newView.setSoundEffectsEnabled(false);
+			newView.setOnTouchListener(this);
+			mediaHolder.addView(newView);
+			// mediaHolder.addView(currentRegion.getRegionDisplay());
 			currentRegion.getRegionDisplay().setOnLongClickListener(this);
 			currentRegion.getRegionDisplay().setSoundEffectsEnabled(false);
 		}

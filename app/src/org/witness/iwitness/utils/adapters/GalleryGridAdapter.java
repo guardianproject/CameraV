@@ -41,6 +41,8 @@ public class GalleryGridAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
+		if (media == null)
+			return 0;
 		return media.size();
 	}
 

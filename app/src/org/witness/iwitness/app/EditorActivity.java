@@ -16,8 +16,8 @@ import org.witness.informacam.utils.Constants.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.iwitness.R;
-import org.witness.iwitness.app.screens.DetailsViewFragment;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
+import org.witness.iwitness.app.screens.MediaDetailsFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenImageViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.iwitness.app.screens.forms.TagFormFragment;
@@ -173,7 +173,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			fullscreenView = Fragment.instantiate(this, FullScreenVideoViewFragment.class.getName(), fullscreenViewArgs);
 		}
 
-		detailsView = Fragment.instantiate(this, DetailsViewFragment.class.getName(), detailsViewArgs);
+		detailsView = Fragment.instantiate(this, MediaDetailsFragment.class.getName(), detailsViewArgs);
 
 		formView = Fragment.instantiate(this, TagFormFragment.class.getName());
 

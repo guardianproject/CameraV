@@ -1,49 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-    
-<LinearLayout 
-    android:id="@+id/root_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <FrameLayout
-        android:id="@+id/media_holder"
+    <LinearLayout
+        android:id="@+id/root_main"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="0dip"
-        android:layout_weight="0.5"
-        android:padding="0dip"/>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5" >
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
         <FrameLayout
-            android:id="@+id/details_form_holder"
+            android:id="@+id/media_holder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="2dip"
-            android:paddingRight="6dip" />
-    </ScrollView>
+            android:layout_height="0dp"
+            android:layout_margin="0dip"
+            android:layout_weight="0.5"
+            android:padding="0dip" />
 
-    <include
-        android:id="@+id/toolbar_bottom"
+        <RelativeLayout
+            android:id="@+id/rlBottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" >
+
+            <include
+                android:id="@+id/toolbar_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                layout="@layout/fragment_editor_toolbar_bottom" />
+
+            <ScrollView
+                android:id="@+id/ScrollView1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_above="@id/toolbar_bottom"
+                android:layout_alignParentTop="true"
+                android:layout_alignWithParentIfMissing="true"
+                android:fillViewport="true" >
+
+                <FrameLayout
+                    android:id="@+id/details_form_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="2dip"
+                    android:paddingRight="6dip" >
+                </FrameLayout>
+            </ScrollView>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/root_form"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        layout="@layout/fragment_editor_toolbar_bottom" />
-    
-</LinearLayout>
-
-<FrameLayout
-    android:id="@+id/root_form"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="0dip"
-    android:padding="0dip" />
+        android:layout_height="match_parent"
+        android:layout_margin="0dip"
+        android:padding="0dip" />
 
 </FrameLayout>
