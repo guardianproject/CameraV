@@ -80,22 +80,20 @@
             </intent-filter>
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <action android:name="android.intent.action.VIEW" />
 
                 <data
-                    android:mimeType="application/*"
-                    android:pathPattern=".*.ictd"
+                    android:host="*"
+                    android:mimeType="application/ictd"
                     android:scheme="content" />
             </intent-filter>
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <action android:name="android.intent.action.VIEW" />
 
                 <data
-                    android:mimeType="*/*"
-                    android:pathPattern=".*\\.ictd"
+                    android:host="*"
+                    android:mimeType="application/ictd"
                     android:scheme="file" />
             </intent-filter>
         </activity>

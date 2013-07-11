@@ -7,9 +7,11 @@ import java.util.Arrays;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.forms.IForm;
+import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.utils.Constants.App;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.iwitness.R;
@@ -38,7 +40,10 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 	LinearLayout overviewFormRoot;
 
 	Activity a;
-	IForm form = null;
+	IMedia media;
+	IForm textForm = null;
+	IForm audioForm = null;
+
 	FormUtility formUtility;
 
 	TextView alias, dateCaptured, timeCaptured, location, messagesHolder, tagsHolder;
@@ -103,7 +108,7 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 	public void onDetach() {
 		Log.d(LOG, "SHOULD SAVE FORM STATE!");
 
-		
+
 		super.onDetach();
 	}
 
@@ -116,23 +121,25 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 		initForms();
 	}
 
-	private void initData() {		
+	private void initData() {
+		media = ((EditorActivity) a).media;
+
 		int displayNumMessages = 0;
-		if(((EditorActivityListener) a).media().messages != null && ((EditorActivityListener) a).media().messages.size() > 0) {
-			displayNumMessages = ((EditorActivityListener) a).media().messages.size();
+		if(media.messages != null && media.messages.size() > 0) {
+			displayNumMessages = media.messages.size();
 		}
 		messagesHolder.setText(a.getResources().getString(R.string.x_messages, displayNumMessages, (displayNumMessages == 1 ? "" : "s")));
 
-		String[] dateAndTime = TimeUtility.millisecondsToDatestampAndTimestamp(((EditorActivityListener) a).media().dcimEntry.timeCaptured);
+		String[] dateAndTime = TimeUtility.millisecondsToDatestampAndTimestamp(media.dcimEntry.timeCaptured);
 		dateCaptured.setText(dateAndTime[0]);
 		timeCaptured.setText(dateAndTime[1]);
 
-		if(((EditorActivityListener) a).media().alias != null) {
-			alias.setText(((EditorActivityListener) a).media().alias);
+		if(media.alias != null) {
+			alias.setText(media.alias);
 		}
 
-		if(((EditorActivityListener) a).media().dcimEntry.exif.location != null && ((EditorActivityListener) a).media().dcimEntry.exif.location != new float[] {0.0f, 0.0f}) {
-			location.setText(a.getString(R.string.x_location, ((EditorActivityListener) a).media().dcimEntry.exif.location[0], ((EditorActivityListener) a).media().dcimEntry.exif.location[1]));
+		if(media.dcimEntry.exif.location != null && media.dcimEntry.exif.location != new float[] {0.0f, 0.0f}) {
+			location.setText(a.getString(R.string.x_location, media.dcimEntry.exif.location[0], media.dcimEntry.exif.location[1]));
 		} else {
 			location.setText(a.getString(R.string.location_unknown));
 		}
@@ -140,29 +147,52 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 	}
 
 	private void initForms() {
+		Logger.d(LOG, media.asJson().toString());
+		InformaCam informaCam = InformaCam.getInstance();
+
+		byte[] textFormAnswerBytes = null;
+		byte[] audioFormAnswerBytes = null;
+
+		String textFormAnswerPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_t" + System.currentTimeMillis()).getAbsolutePath();
+		String audioFormAnswerPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_a" + System.currentTimeMillis()).getAbsolutePath();
+
+		overviewRegion = media.getRegionAtRect();
+
+		if(overviewRegion != null) {
+			textForm = overviewRegion.getFormByNamespace(Forms.FreeText.TAG);
+			audioForm = overviewRegion.getFormByNamespace(Forms.FreeAudio.TAG);
+
+			textFormAnswerPath = textForm.answerPath;
+			audioFormAnswerPath = audioForm.answerPath;
+
+			textFormAnswerBytes = informaCam.ioService.getBytes(textFormAnswerPath, Type.IOCIPHER);
+			audioFormAnswerBytes = informaCam.ioService.getBytes(audioFormAnswerPath, Type.IOCIPHER);
+
+		}
+
 		for(IForm form : ((EditorActivity) a).availableForms) {
-			if(form.namespace.equals(Forms.OverviewForm.TAG)) {
-				byte[] answerBytes = null;
-				
-				overviewRegion = ((EditorActivityListener) a).media().getRegionAtRect();
-				if(overviewRegion != null) {
-					answerBytes = InformaCam.getInstance().ioService.getBytes(overviewRegion.formPath, Type.IOCIPHER);
-					Log.d(LOG, overviewRegion.asJson().toString());
-				} else {
-					overviewRegion = ((EditorActivityListener) a).media().addRegion(a, null);
-					overviewRegion.formNamespace = form.namespace;
-					overviewRegion.formPath = new info.guardianproject.iocipher.File(((EditorActivityListener) a).media().rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
-				}
-				
-				this.form = new IForm(form, a, answerBytes);
-				this.form.associate(quickNotePrompt, Forms.OverviewForm.QUICK_NOTE_PROMPT);
-				break;
+			if(form.namespace.equals(Forms.FreeText.TAG)) {
+				textForm = new IForm(form, a, textFormAnswerBytes);
+				textForm.associate(quickNotePrompt, Forms.FreeText.PROMPT);
+				textForm.answerPath = textFormAnswerPath;
+			}
+
+			if(form.namespace.equals(Forms.FreeAudio.TAG)) {
+				audioForm = new IForm(form, a, audioFormAnswerBytes);
+				audioForm.answerPath = audioFormAnswerPath;
 			}
 		}
-		
+
+		if(overviewRegion == null) {
+			overviewRegion = media.addRegion(a, null);
+
+			overviewRegion.associatedForms.add(textForm);
+			overviewRegion.associatedForms.add(audioForm);
+		}
+
 		int displayNumTags = 0;
-		if(((EditorActivityListener) a).media().associatedRegions != null && ((EditorActivityListener) a).media().associatedRegions.size() > 0) {
-			displayNumTags = ((EditorActivityListener) a).media().getRegionsWithForms(Arrays.asList(new String[] {form.namespace})).size();
+		if(media.associatedRegions != null && media.associatedRegions.size() > 0) {
+			displayNumTags = media.getRegionsWithForms(Arrays.asList(new String[] {textForm.namespace, audioForm.namespace})).size();
 		}
 		tagsHolder.setText(a.getResources().getString(R.string.x_tags, displayNumTags, (displayNumTags == 1 ? "" : "s")));
 	}
@@ -171,13 +201,22 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 
 	}
 
-	private void addQuickNote() {
-		new TextareaPopup(a, ((EditorActivityListener) a).media()) {
+	private void addQuickNote() {		
+		new TextareaPopup(a, media) {
+			@Override
+			public void Show() {
+				if(textForm.getQuestionDefByTitleId(Forms.FreeText.PROMPT).initialValue != null) {
+					prompt.setText(textForm.getQuestionDefByTitleId(Forms.FreeText.PROMPT).initialValue);
+				}
+
+				super.Show();
+			}
+			
 			@Override
 			public void cancel() {
 				super.cancel();
 				quickNotePrompt.setText(this.prompt.getText().toString());
-				form.answer(Forms.OverviewForm.QUICK_NOTE_PROMPT);
+				textForm.answer(Forms.FreeText.PROMPT);
 			}
 		};
 	}
@@ -193,11 +232,11 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 	}
 
 	private void recordAudio() {
-		new AudioNotePopup(a, form) {
-			
+		new AudioNotePopup(a, audioForm) {
+
 			@Override
 			public void cancel() {
-				form.answer(Forms.OverviewForm.AUDIO_NOTE_PROMPT);
+				audioForm.answer(Forms.FreeAudio.PROMPT);
 				progress.shutDown();
 				super.cancel();
 			}
@@ -218,18 +257,19 @@ public class OverviewFormFragment extends Fragment implements OnClickListener, O
 	@Override
 	public boolean saveForm() {
 		Log.d(LOG, "OK I AM SAVING FORM");
+
 		try {
-			info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(overviewRegion.formPath);
-			
-			if(form.save(fos) != null) {
-				InformaCam.getInstance().mediaManifest.save();
-				
-			}
+			textForm.save(new info.guardianproject.iocipher.FileOutputStream(textForm.answerPath));
 		} catch (FileNotFoundException e) {
-			Log.e(LOG, e.toString());
-			e.printStackTrace();
+			Logger.e(LOG, e);
 		}
 
-		return true;
+		try {
+			audioForm.save(new info.guardianproject.iocipher.FileOutputStream(audioForm.answerPath));
+		} catch (FileNotFoundException e) {
+			Logger.e(LOG, e);
+		}
+
+		return InformaCam.getInstance().mediaManifest.save();
 	}
 }

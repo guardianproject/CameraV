@@ -1,6 +1,5 @@
 package org.witness.iwitness.app.screens.popups;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import info.guardianproject.odkparser.Constants.RecorderState;
@@ -9,7 +8,6 @@ import info.guardianproject.odkparser.widgets.ODKSeekBar;
 import info.guardianproject.odkparser.widgets.ODKSeekBar.OnMediaRecorderStopListener;
 
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.informa.embed.VideoConstructor;
 import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.TimeUtility;
@@ -24,7 +22,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -132,7 +129,7 @@ public class AudioNotePopup extends Popup implements OnClickListener, OnCompleti
 	private void initData() {
 		progress.init(new java.io.File(Storage.EXTERNAL_DIR, "tmprecord_" + System.currentTimeMillis() + ".3gp"), this);
 		
-		QD qd = form.getQuestionDefByTitleId(Forms.OverviewForm.AUDIO_NOTE_PROMPT);
+		QD qd = form.getQuestionDefByTitleId(Forms.FreeAudio.PROMPT);
 		if(qd.hasInitialValue) {
 			progress.setRawAudioData(qd.initialValue.getBytes());
 			res = resumeRes;
@@ -142,7 +139,7 @@ public class AudioNotePopup extends Popup implements OnClickListener, OnCompleti
 		}
 		
 		updateLayout(qd.hasInitialValue);
-		this.form.associate(progress, Forms.OverviewForm.AUDIO_NOTE_PROMPT);
+		this.form.associate(progress, Forms.FreeAudio.PROMPT);
 	}
 	
 

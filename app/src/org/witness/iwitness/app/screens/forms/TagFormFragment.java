@@ -9,6 +9,7 @@ import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.storage.FormUtility;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
@@ -81,47 +82,40 @@ public class TagFormFragment extends Fragment implements ODKFormListener {
 	
 	public boolean initTag(final IRegion region) {
 		tagFormRoot.removeAllViews();
-		Log.d(LOG, "form at: " + String.valueOf(region.formPath));
 		
-		for(IForm form : ((EditorActivity) a).availableForms) {
-			if(form.namespace.equals(Forms.TagForm.TAG)) {
-				byte[] answerBytes = null;
-				region.formNamespace = form.namespace;
-				if(region.formPath != null) {
-					answerBytes = InformaCam.getInstance().ioService.getBytes(region.formPath, Type.IOCIPHER);
+		byte[] answerBytes = null;
+		try {
+			answerBytes = InformaCam.getInstance().ioService.getBytes(region.associatedForms.get(0).answerPath, Type.IOCIPHER);
+		} catch(IndexOutOfBoundsException e) {
+			for(IForm form : ((EditorActivity) a).availableForms) {
+				if(form.namespace.equals(Forms.TagForm.TAG)) {
+					region.associatedForms.add(form);
+					region.associatedForms.get(0).answerPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
+					break;
 				}
-				
-				this.form = new IForm(form, a, answerBytes);
-				h.post(new Runnable() {
-					LayoutInflater li = LayoutInflater.from(a);
-					
-					@Override
-					public void run() {
-						int[] inputTemplate = new int[] {R.layout.forms_odk_input_template, R.id.odk_question, R.id.odk_hint, R.id.odk_answer};
-						int[] selectOneTemplate = new int[] {R.layout.forms_odk_select_one_template, R.id.odk_question, R.id.odk_hint, R.id.odk_selection_holder};
-						int[] selectMultipleTemplate = new int[] {R.layout.forms_odk_select_multiple_template, R.id.odk_question, R.id.odk_hint, R.id.odk_selection_holder};
-						for(View v : TagFormFragment.this.form.buildUI(inputTemplate, selectOneTemplate, selectMultipleTemplate, null)) {
-							tagFormRoot.addView(v);							
-						}
-					}
-				});
-				
-				break;
 			}
 		}
+		
+		this.form = new IForm(region.associatedForms.get(0), a, answerBytes);
+		h.post(new Runnable() {
+			LayoutInflater li = LayoutInflater.from(a);
+			
+			@Override
+			public void run() {
+				int[] inputTemplate = new int[] {R.layout.forms_odk_input_template, R.id.odk_question, R.id.odk_hint, R.id.odk_answer};
+				int[] selectOneTemplate = new int[] {R.layout.forms_odk_select_one_template, R.id.odk_question, R.id.odk_hint, R.id.odk_selection_holder};
+				int[] selectMultipleTemplate = new int[] {R.layout.forms_odk_select_multiple_template, R.id.odk_question, R.id.odk_hint, R.id.odk_selection_holder};
+				for(View v : TagFormFragment.this.form.buildUI(inputTemplate, selectOneTemplate, selectMultipleTemplate, null)) {
+					tagFormRoot.addView(v);							
+				}
+			}
+		});		
 		
 		return true;
 	}
 	
 	public void saveTagFormData(final IRegion region) {
 		Log.d(LOG, "saving form data for current region");
-		if(region.formNamespace == null) {
-			region.formNamespace = form.namespace;
-		}
-		
-		if(region.formPath == null) {
-			region.formPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
-		}
 		
 		new Thread(new Runnable() {
 			@Override
@@ -129,7 +123,7 @@ public class TagFormFragment extends Fragment implements ODKFormListener {
 				form.answerAll();
 				
 				try {
-					info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(region.formPath);
+					info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(region.associatedForms.get(0).answerPath);
 					
 					if(form.save(fos) != null) {
 						InformaCam.getInstance().mediaManifest.save();

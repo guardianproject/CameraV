@@ -121,18 +121,22 @@ public class Constants {
 			}
 			
 			public class Forms {
-				public static final String OVERVIEW_FORM = "iWitness Top Level Annotations";
+				public static final String FREE_AUDIO = "iWitness Free Audio Annotation";
+				public static final String FREE_TEXT = "iWitness Free Text Annotations";
 				public static final String TAG_FORM = "iWitness v 1.0";
 				
-				public class OverviewForm {
-					public static final String TAG = "iWitness Top Level Annotations";
-					public static final String QUICK_NOTE_PROMPT = "iW_quick_note";
-					public static final String AUDIO_NOTE_PROMPT = "iW_audio_note";
-					
+				public class FreeText {
+					public static final String TAG = Forms.FREE_TEXT;
+					public static final String PROMPT = "iW_free_text";
+				}
+				
+				public class FreeAudio {
+					public static final String TAG = Forms.FREE_AUDIO;
+					public static final String PROMPT = "iW_free_audio";
 				}
 				
 				public class TagForm {
-					public static final String TAG = "iWitness v 1.0";
+					public static final String TAG = Forms.TAG_FORM;
 				}
 			}
 
