@@ -74,6 +74,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 					case org.witness.informacam.utils.Constants.Codes.Status.LOCKED:
 						route = new Intent(this, LoginActivity.class);
 						routeCode = Login.ROUTE_CODE;
+						break;
 					}
 					
 					routeByIntent();

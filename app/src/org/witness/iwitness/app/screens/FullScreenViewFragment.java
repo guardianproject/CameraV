@@ -7,8 +7,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONException;
-import org.witness.informacam.InformaCam;
-import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.media.IRegionBounds;
 import org.witness.informacam.models.utils.IRegionDisplay;
@@ -23,6 +21,7 @@ import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
 import org.witness.iwitness.utils.actions.ContextMenuAction;
 
+import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -61,13 +60,14 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected int[] dims;
 	protected int scrollTarget;
 
-	private IMedia mMediaItem;
 	protected IRegion currentRegion = null;
 
 	public int DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT;
 
 	protected boolean isEditingForm = false;
 	protected Handler h = new Handler();
+	
+	protected Activity a;
 
 	private OnTouchListener noScroll = new OnTouchListener() {
 
@@ -104,6 +104,13 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	protected List<ContextMenuAction> controls = new ArrayList<ContextMenuAction>();
 	protected final static String LOG = App.Editor.LOG;
+	
+	@Override
+	public void onAttach(Activity a) {
+		super.onAttach(a);
+		
+		this.a = a;
+	}
 	
 	@Override
 	public void onDestroy() {
@@ -168,19 +175,8 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		toggleControls();
 	}
 
-	protected synchronized IMedia getMediaItem ()
-	{
-		if (mMediaItem == null)
-		{
-			String mediaId = this.getArguments().getString("mediaId");
-			mMediaItem = InformaCam.getInstance().mediaManifest.getById(mediaId);
-			
-		}
-		
-		return mMediaItem;
-	}
 	protected void deleteTag() {
-		getMediaItem ().removeRegion(currentRegion);
+		((EditorActivityListener) a).media().removeRegion(currentRegion);
 		mediaHolder.removeView(currentRegion.getRegionDisplay());
 		currentRegion = null;
 	}
@@ -190,8 +186,8 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		mediaHolder.setOnClickListener(this);
 		toggleControls.setOnClickListener(this);
 		
-		if(getMediaItem ().associatedRegions != null) {
-			for(IRegion r : getMediaItem ().associatedRegions) {
+		if(((EditorActivityListener) a).media().associatedRegions != null) {
+			for(IRegion r : ((EditorActivityListener) a).media().associatedRegions) {
 				Log.d(LOG, "setting old region: " + r.asJson().toString());
 				if(r.bounds.displayWidth != 0 && r.bounds.displayHeight != 0) {
 					r.init(getActivity(), r.bounds, false, this);
@@ -215,7 +211,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	}
 
 	protected void updateRegionDisplay() {
-		for(IRegion r : getMediaItem ().associatedRegions) {
+		for(IRegion r : ((EditorActivityListener) a).media().associatedRegions) {
 			
 			if(!r.equals(currentRegion) && r.getRegionDisplay() != null) {
 				r.getRegionDisplay().setStatus(false);
@@ -424,14 +420,14 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 				try {
 					
 					
-					if(getMediaItem ().dcimEntry.mediaType.equals(MimeType.IMAGE)) {
+					if(((EditorActivityListener) a).media().dcimEntry.mediaType.equals(MimeType.IMAGE)) {
 						
-						IRegion region = getMediaItem ().addRegion(getActivity(),(int) event.getY() - (DEFAULT_REGION_HEIGHT/2), (int) event.getX() - (DEFAULT_REGION_WIDTH/2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT,this);
+						IRegion region = ((EditorActivityListener) a).media().addRegion(getActivity(),(int) event.getY() - (DEFAULT_REGION_HEIGHT/2), (int) event.getX() - (DEFAULT_REGION_WIDTH/2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT,this);
 								
 						setCurrentRegion(region, true);
-					} else if(getMediaItem ().dcimEntry.mediaType.equals(MimeType.VIDEO)) {
+					} else if(((EditorActivityListener) a).media().dcimEntry.mediaType.equals(MimeType.VIDEO)) {
 						
-						IRegion region = getMediaItem ().addRegion(getActivity(),(int) event.getY() - (DEFAULT_REGION_HEIGHT/2), (int) event.getX() - (DEFAULT_REGION_WIDTH/2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT, ((FullScreenVideoViewFragment) this).getCurrentPosition(), ((FullScreenVideoViewFragment) this).getDuration(), this);
+						IRegion region = ((EditorActivityListener) a).media().addRegion(getActivity(),(int) event.getY() - (DEFAULT_REGION_HEIGHT/2), (int) event.getX() - (DEFAULT_REGION_WIDTH/2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT, ((FullScreenVideoViewFragment) this).getCurrentPosition(), ((FullScreenVideoViewFragment) this).getDuration(), this);
 						setCurrentRegion(region, true);
 					}
 
@@ -461,12 +457,12 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	@Override
 	public int[] getSpecs() {
 		
-		if (getMediaItem() != null)
+		if (((EditorActivityListener) a).media() != null)
 		{
 			List<Integer> specs = new ArrayList<Integer>();
 			
-			specs.add(getMediaItem().width);
-			specs.add(getMediaItem().height);
+			specs.add(((EditorActivityListener) a).media().width);
+			specs.add(((EditorActivityListener) a).media().height);
 			
 			return ArrayUtils.toPrimitive(specs.toArray(new Integer[specs.size()]));
 		}

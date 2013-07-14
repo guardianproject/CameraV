@@ -92,7 +92,7 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 						Intent intent = new Intent()
 							.setAction(Intent.ACTION_SEND)
 							.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new java.io.File(b.getString(Models.IMedia.VERSION))))
-							.setType("file/");
+							.setType("*/*");
 
 						a.startActivity(Intent.createChooser(intent, a.getString(R.string.send)));
 					}

@@ -140,9 +140,10 @@
             android:name="org.witness.informacam.informa.InformaService"
             android:enabled="true"
             android:exported="false" />
-       <service android:name="info.guardianproject.cacheword.CacheWordService" 
-           android:enabled="true" 
-           android:exported="false" />
+        <service
+            android:name="info.guardianproject.cacheword.CacheWordService"
+            android:enabled="true"
+            android:exported="false" />
        
     </application>
 

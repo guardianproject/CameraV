@@ -6,14 +6,13 @@ import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.forms.IForm;
-import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
-import org.witness.iwitness.app.screens.FullScreenViewFragment;
+import org.witness.iwitness.utils.Constants.EditorActivityListener;
 import org.witness.iwitness.utils.Constants.App.Editor;
 import org.witness.iwitness.utils.Constants.App.Editor.Forms;
 
@@ -25,7 +24,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
 public class TagFormFragment extends Fragment implements ODKFormListener {
@@ -33,7 +31,6 @@ public class TagFormFragment extends Fragment implements ODKFormListener {
 	LinearLayout tagFormRoot;
 	
 	Activity a;
-	IMedia media;
 	IForm form = null;
 	FormUtility formUtility;
 	
@@ -67,7 +64,6 @@ public class TagFormFragment extends Fragment implements ODKFormListener {
 		super.onActivityCreated(savedInstanceState);
 		
 		h = new Handler();
-		initData();
 	}
 	
 	@Override
@@ -76,29 +72,26 @@ public class TagFormFragment extends Fragment implements ODKFormListener {
 		Log.d(LOG, "SHOULD SAVE FORM STATE!");
 	}
 	
-	private void initData() {
-		media = ((EditorActivity) a).media;
-	}
-	
 	public boolean initTag(final IRegion region) {
 		tagFormRoot.removeAllViews();
-		
-		byte[] answerBytes = null;
-		try {
-			answerBytes = InformaCam.getInstance().ioService.getBytes(region.associatedForms.get(0).answerPath, Type.IOCIPHER);
-		} catch(IndexOutOfBoundsException e) {
+		if(!region.associatedForms.isEmpty()) {
+			IForm form = region.associatedForms.get(0);
+			this.form = new IForm(form, a, InformaCam.getInstance().ioService.getBytes(form.answerPath, Type.IOCIPHER));
+		} else {
 			for(IForm form : ((EditorActivity) a).availableForms) {
 				if(form.namespace.equals(Forms.TagForm.TAG)) {
-					region.associatedForms.add(form);
-					region.associatedForms.get(0).answerPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
+					this.form = new IForm(form, a);
+					this.form.answerPath = new info.guardianproject.iocipher.File(((EditorActivityListener) a).media().rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
+					region.addForm(this.form);
+					Logger.d(LOG, ((EditorActivityListener) a).media().asJson().toString());
+					
 					break;
 				}
 			}
 		}
-		
-		this.form = new IForm(region.associatedForms.get(0), a, answerBytes);
+
 		h.post(new Runnable() {
-			LayoutInflater li = LayoutInflater.from(a);
+			//LayoutInflater li = LayoutInflater.from(a);
 			
 			@Override
 			public void run() {
@@ -120,17 +113,21 @@ public class TagFormFragment extends Fragment implements ODKFormListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				form.answerAll();
-				
 				try {
-					info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(region.associatedForms.get(0).answerPath);
-					
-					if(form.save(fos) != null) {
-						InformaCam.getInstance().mediaManifest.save();
+					form.answerAll();
+
+					try {
+						info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(region.associatedForms.get(0).answerPath);
+
+						if(form.save(fos) != null) {
+							((EditorActivityListener) a).media().save();
+							Logger.d(LOG, ((EditorActivityListener) a).media().asJson().toString());
+						}
+					} catch (FileNotFoundException e) {
+						Logger.e(LOG, e);
 					}
-				} catch (FileNotFoundException e) {
-					Log.e(LOG, e.toString());
-					e.printStackTrace();
+				} catch(NullPointerException e) {
+					Logger.e(LOG, e);
 				}
 			}
 		}).start();

@@ -9,9 +9,7 @@ import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.forms.OverviewFormFragment;
 import org.witness.iwitness.utils.Constants.Codes;
-import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;

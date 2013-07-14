@@ -15,7 +15,9 @@ import org.witness.informacam.storage.InformaCamMediaScanner.OnMediaScannedListe
 import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.iwitness.R;
+import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
+import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
 import android.app.Activity;
 import android.media.MediaMetadataRetriever;
@@ -46,7 +48,7 @@ public class FullScreenVideoViewFragment extends FullScreenViewFragment implemen
 OnErrorListener, OnInfoListener, OnBufferingUpdateListener, OnPreparedListener, OnSeekCompleteListener,
 OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaController.MediaPlayerControl, 
 OnRangeSeekBarChangeListener<Integer> {
-	IVideo media_ = new IVideo();
+	IVideo media_;
 
 	MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 	VideoView videoView;
@@ -68,8 +70,9 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
+		this.a = a;
 
-		media_.inflate(getMediaItem().asJson());
+		media_ = new IVideo(((EditorActivityListener) a).media());
 	}
 	
 	private void initVideo() {
