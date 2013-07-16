@@ -76,11 +76,11 @@ public class TagFormFragment extends Fragment implements ODKFormListener {
 		tagFormRoot.removeAllViews();
 		if(!region.associatedForms.isEmpty()) {
 			IForm form = region.associatedForms.get(0);
-			this.form = new IForm(form, a, InformaCam.getInstance().ioService.getBytes(form.answerPath, Type.IOCIPHER));
+			this.form = IForm.Activate(form, a, InformaCam.getInstance().ioService.getBytes(form.answerPath, Type.IOCIPHER));
 		} else {
 			for(IForm form : ((EditorActivity) a).availableForms) {
 				if(form.namespace.equals(Forms.TagForm.TAG)) {
-					this.form = new IForm(form, a);
+					this.form = IForm.Activate(form, a);
 					this.form.answerPath = new info.guardianproject.iocipher.File(((EditorActivityListener) a).media().rootFolder, "form_" + System.currentTimeMillis()).getAbsolutePath();
 					region.addForm(this.form);
 					Logger.d(LOG, ((EditorActivityListener) a).media().asJson().toString());

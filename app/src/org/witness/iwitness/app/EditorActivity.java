@@ -55,7 +55,6 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 
 
 	private final static String LOG = Constants.App.Editor.LOG;
-	private String packageName;
 
 	private InformaCam informaCam;
 	public IMedia media;
@@ -66,7 +65,6 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		packageName = getClass().getName();
 
 		informaCam = (InformaCam)getApplication();
 

@@ -1,6 +1,6 @@
 package org.witness.iwitness.app.screens.wizard;
 
-import org.witness.informacam.utils.Constants.WizardListener;
+import org.witness.informacam.utils.WizardSupplement;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.Preferences;
 
@@ -8,15 +8,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-public class OriginalImagePreference extends Fragment implements WizardListener {
+public class OriginalImagePreference extends WizardSupplement {
 	View rootView;
 	Activity a;
 	
@@ -51,7 +49,7 @@ public class OriginalImagePreference extends Fragment implements WizardListener 
 
 	@Override
 	public void onSubFragmentCompleted() {
-		SharedPreferences sp = a.getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+		SharedPreferences sp = a.getSharedPreferences(a.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
 		SharedPreferences.Editor ed = sp.edit();
 		
 		for(int i=0; i<originalImagePreferenceHolder.getChildCount(); i++) {
@@ -62,16 +60,4 @@ public class OriginalImagePreference extends Fragment implements WizardListener 
 		}
 		
 	}
-
-	@Override
-	public FragmentManager returnFragmentManager() {
-		return null;
-	}
-
-	@Override
-	public void wizardCompleted() {}
-
-	@Override
-	public void onSubFragmentInitialized() {}
-
 }
