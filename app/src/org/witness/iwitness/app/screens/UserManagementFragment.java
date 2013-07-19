@@ -5,8 +5,12 @@ import java.util.List;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
+import org.witness.informacam.models.utils.ITransportStub;
 import org.witness.informacam.models.credentials.IUser;
+import org.witness.informacam.utils.TransportUtility;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
+import org.witness.informacam.utils.Constants.Models;
+import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.PreferencesActivity;
 import org.witness.iwitness.app.WipeActivity;
@@ -192,17 +196,6 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		notificationsNoNotifications.setVisibility(View.VISIBLE);
 	}
 
-	private void exportCredentials() {
-		java.io.File credentials = informaCam.getPublicCredentials();
-		Intent intent = new Intent()
-			.setAction(Intent.ACTION_SEND)
-			.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(credentials))
-			.setType("file/");
-
-		startActivity(Intent.createChooser(intent, getString(R.string.send)));
-
-	}
-
 	private static View generateTab(final LayoutInflater li, final int layout, final String labelText) {
 		View tab = li.inflate(layout, null);
 		TextView label = (TextView) tab.findViewById(R.id.tab_label);
@@ -222,7 +215,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		} else if(v == thumbnail) {
 			// TODO
 		} else if(v == exportCredentials) {
-			exportCredentials();
+			informaCam.exportCredentials();
 		}
 	}
 

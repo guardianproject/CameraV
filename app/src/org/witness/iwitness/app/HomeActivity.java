@@ -34,6 +34,7 @@ import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants.Preferences;
 import org.witness.iwitness.utils.actions.ContextMenuAction;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -53,11 +54,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TabHost;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
+@SuppressLint("HandlerLeak")
 public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamStatusListener, InformaCamEventListener, ListAdapterListener {
 	Intent init, route;
 	private final static String LOG = Constants.App.Home.LOG;
@@ -312,6 +315,20 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 						super.cancel();
 					}
 				};
+			}
+		};
+		actions.add(action);
+		
+		action = new ContextMenuAction();
+		action.label = getResources().getString(R.string.resend_credentials);
+		action.ocl = new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				informaCam.resendCredentials(organization);
+				Toast
+					.makeText(HomeActivity.this, getResources().getString(R.string.you_have_resent_your_credentials_to_x, organization.organizationName), Toast.LENGTH_LONG)
+					.show();
 			}
 		};
 		actions.add(action);
