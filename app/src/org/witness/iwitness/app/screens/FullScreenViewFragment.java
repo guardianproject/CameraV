@@ -311,7 +311,6 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	}
 
 	protected void setCurrentRegion(IRegion region, boolean isNew) {
-
 		Log.d(LOG, "this region: " + region.asJson().toString());
 		
 		currentRegion = region;
@@ -415,6 +414,10 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 				break;
 			}
 		} else {
+			if(currentRegion != null) {
+				((TagFormFragment) tagFormFragment).saveTagFormData(currentRegion);
+			}
+			
 			currentRegion = null;
 			if(event.getAction() == MotionEvent.ACTION_UP){
 				try {
