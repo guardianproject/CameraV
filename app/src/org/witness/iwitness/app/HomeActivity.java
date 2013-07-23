@@ -325,6 +325,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			
 			@Override
 			public void onClick(View v) {
+				mam.cancel();
 				informaCam.resendCredentials(organization);
 				Toast
 					.makeText(HomeActivity.this, getResources().getString(R.string.you_have_resent_your_credentials_to_x, organization.organizationName), Toast.LENGTH_LONG)
