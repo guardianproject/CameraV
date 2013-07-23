@@ -65,7 +65,7 @@
     </style>
     
     <style name="iwitness_edittext">
-        <item name="android:background">@drawable/extras_button_d_background_inactive</item>
+        <item name="android:background">@drawable/edit_text_background_selector</item>
         <item name="android:padding">8dip</item>
         <item name="android:textStyle">italic</item>
     </style>

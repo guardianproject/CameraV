@@ -3,21 +3,17 @@ package org.witness.iwitness.app.screens;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.models.credentials.IUser;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
-import org.witness.informacam.models.utils.ITransportStub;
-import org.witness.informacam.models.credentials.IUser;
-import org.witness.informacam.utils.TransportUtility;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
-import org.witness.informacam.utils.Constants.Models;
-import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.PreferencesActivity;
 import org.witness.iwitness.app.WipeActivity;
 import org.witness.iwitness.utils.Constants.App;
+import org.witness.iwitness.utils.Constants.App.Home.Tabs;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.Codes.Routes;
-import org.witness.iwitness.utils.Constants.App.Home.Tabs;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants.Preferences;
 import org.witness.iwitness.utils.adapters.NotificationsListAdapter;
@@ -25,7 +21,6 @@ import org.witness.iwitness.utils.adapters.OrganizationsListAdapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -43,7 +38,8 @@ import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-public class UserManagementFragment extends Fragment implements OnClickListener, ListAdapterListener {
+public class UserManagementFragment extends Fragment implements OnClickListener, ListAdapterListener
+{
 	View rootView;
 	TabHost tabHost = null;
 
@@ -64,7 +60,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 
 	List<IOrganization> listOrganizations;
 	OrganizationsListAdapter listOrganizationsAdapter;
-	
+
 	List<INotification> listNotifications;
 	NotificationsListAdapter listNotificationsAdapter;
 
@@ -72,7 +68,8 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	private static final String LOG = App.Home.LOG;
 
 	@Override
-	public View onCreateView(LayoutInflater li, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater li, ViewGroup container, Bundle savedInstanceState)
+	{
 		super.onCreateView(li, container, savedInstanceState);
 		this.li = li;
 
@@ -95,7 +92,8 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	}
 
 	@Override
-	public void onAttach(Activity a) {
+	public void onAttach(Activity a)
+	{
 		super.onAttach(a);
 		this.a = a;
 
@@ -103,19 +101,22 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
 		super.onActivityCreated(savedInstanceState);
 		initLayout(savedInstanceState);
 		initData();
 	}
 
-	private void initLayout(Bundle savedInstanceState) {
+	private void initLayout(Bundle savedInstanceState)
+	{
 		View v = null;
 
 		tabHost.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		tabHost.setup();
 
-		TabHost.TabSpec tab = tabHost.newTabSpec(Tabs.CameraChooser.TAG).setIndicator(generateTab(li, R.layout.user_management_fragment_tab, getResources().getString(R.string.notifications)));
+		TabHost.TabSpec tab = tabHost.newTabSpec(Tabs.CameraChooser.TAG).setIndicator(
+				generateTab(li, R.layout.user_management_fragment_tab, getResources().getString(R.string.notifications)));
 		v = li.inflate(R.layout.fragment_user_management_notifications, tabHost.getTabContentView(), true);
 		tab.setContent(R.id.notification_list_root);
 		tabHost.addTab(tab);
@@ -123,7 +124,8 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		notificationsHolder = (ListView) v.findViewById(R.id.notifications_list_view);
 		notificationsNoNotifications = (TextView) v.findViewById(R.id.notification_no_notifications);
 
-		tab = tabHost.newTabSpec(Tabs.CameraChooser.TAG).setIndicator(generateTab(li, R.layout.user_management_fragment_tab, getResources().getString(R.string.organizations)));
+		tab = tabHost.newTabSpec(Tabs.CameraChooser.TAG).setIndicator(
+				generateTab(li, R.layout.user_management_fragment_tab, getResources().getString(R.string.organizations)));
 		v = li.inflate(R.layout.fragment_user_management_organizations, tabHost.getTabContentView(), true);
 		tab.setContent(R.id.organization_list_root);
 		tabHost.addTab(tab);
@@ -135,47 +137,57 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		tabHost.setCurrentTab(0);
 	}
 
-	private void initData() {
+	private void initData()
+	{
 		alias.setText(user.alias);
 
-		//int connectivityLabel = informaCam.uploaderService.isConnectedToTor() ? R.string.connected_to_tor : R.string.not_connected_to_tor;
-		//connectivity.setText(getResources().getString(connectivityLabel));
+		// int connectivityLabel = informaCam.uploaderService.isConnectedToTor()
+		// ? R.string.connected_to_tor : R.string.not_connected_to_tor;
+		// connectivity.setText(getResources().getString(connectivityLabel));
 
-		h.post(new Runnable() {
+		h.post(new Runnable()
+		{
 			@Override
-			public void run() {
+			public void run()
+			{
 				initNotifications();
 				initOrganizations();
 			}
 		});
 
 	}
-	
-	private void initOrganizations() {
+
+	private void initOrganizations()
+	{
 		listOrganizations = informaCam.installedOrganizations.listOrganizations();
 
-		organizationsHolder.setOnItemLongClickListener(new OnItemLongClickListener() {
+		organizationsHolder.setOnItemLongClickListener(new OnItemLongClickListener()
+		{
 
 			@Override
-			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l) {
+			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l)
+			{
 				IOrganization org = listOrganizations.get((int) l);
 				((HomeActivityListener) a).getContextualMenuFor(org);
 
 				return true;
 			}
 		});
-		
+
 		listOrganizationsAdapter = new OrganizationsListAdapter(listOrganizations);
 		organizationsHolder.setAdapter(listOrganizationsAdapter);
 	}
 
-	private void initNotifications() {
+	private void initNotifications()
+	{
 		listNotifications = informaCam.notificationsManifest.listNotifications();
-		
-		notificationsHolder.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+		notificationsHolder.setOnItemLongClickListener(new OnItemLongClickListener()
+		{
 
 			@Override
-			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l) {
+			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l)
+			{
 				INotification notification = informaCam.notificationsManifest.notifications.get((int) l);
 				((HomeActivityListener) a).getContextualMenuFor(notification);
 
@@ -183,20 +195,21 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			}
 
 		});
-		
+
 		listNotificationsAdapter = new NotificationsListAdapter(listNotifications);
 		notificationsHolder.setAdapter(listNotificationsAdapter);
-	
-		if(listNotifications.size() > 0) {
+
+		if (listNotifications.size() > 0)
+		{
 			notificationsNoNotifications.setVisibility(View.GONE);
 			return;
 		}
-	
-		
+
 		notificationsNoNotifications.setVisibility(View.VISIBLE);
 	}
 
-	private static View generateTab(final LayoutInflater li, final int layout, final String labelText) {
+	private static View generateTab(final LayoutInflater li, final int layout, final String labelText)
+	{
 		View tab = li.inflate(layout, null);
 		TextView label = (TextView) tab.findViewById(R.id.tab_label);
 		label.setText(labelText);
@@ -204,42 +217,56 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	}
 
 	@Override
-	public void onClick(View v) {
-		if(v == emergencyWipe) {
+	public void onClick(View v)
+	{
+		if (v == emergencyWipe)
+		{
 			Intent wipeIntent = new Intent(a, WipeActivity.class);
 			a.startActivityForResult(wipeIntent, Routes.WIPE);
-		} else if(v == toSettings) {
+		}
+		else if (v == toSettings)
+		{
 			((HomeActivityListener) a).setLocale(PreferenceManager.getDefaultSharedPreferences(a).getString(Preferences.Keys.LANGUAGE, "0"));
 			Intent settingIntent = new Intent(a, PreferencesActivity.class);
 			a.startActivity(settingIntent);
-		} else if(v == thumbnail) {
+		}
+		else if (v == thumbnail)
+		{
 			// TODO
-		} else if(v == exportCredentials) {
-			informaCam.exportCredentials();
+		}
+		else if (v == exportCredentials)
+		{
+			// informaCam.exportCredentials();
 		}
 	}
 
 	@Override
-	public void updateAdapter(int which) {
-		switch(which) {
+	public void updateAdapter(int which)
+	{
+		switch (which)
+		{
 		case Codes.Adapters.NOTIFICATIONS:
 			listNotificationsAdapter.update(listNotifications);
 			notificationsHolder.invalidate();
-			
+
 			break;
 		case Codes.Adapters.ORGANIZATIONS:
 			listOrganizationsAdapter.update(listOrganizations);
 			organizationsHolder.invalidate();
-			
+
 			break;
 		case Codes.Adapters.ALL:
-			if(tabHost != null) {
-				if(tabHost.getCurrentTab() == 0) {
+			if (tabHost != null)
+			{
+				if (tabHost.getCurrentTab() == 0)
+				{
 					updateAdapter(Codes.Adapters.NOTIFICATIONS);
-				} else if(tabHost.getCurrentTab() == 1) {
+				}
+				else if (tabHost.getCurrentTab() == 1)
+				{
 					updateAdapter(Codes.Adapters.ORGANIZATIONS);
 				}
-				
+
 			}
 			break;
 		}

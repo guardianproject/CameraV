@@ -15,9 +15,9 @@ import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
+import org.witness.iwitness.app.views.ChevronRegionView;
 import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
-import org.witness.iwitness.utils.app.ChevronRegionView;
 
 import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
@@ -420,17 +420,6 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 				protected void onSelected()
 				{
 					deleteTag();
-				}
-			});
-
-			// Notes
-			//
-			View btnNotes = content.findViewById(R.id.btnNotes);
-			btnNotes.setOnClickListener(new PopupClickListener(mMenuPopup)
-			{
-				@Override
-				protected void onSelected()
-				{
 				}
 			});
 

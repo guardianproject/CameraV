@@ -1,4 +1,4 @@
-package org.witness.iwitness.utils.app;
+package org.witness.iwitness.app.views;
 
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.utils.IRegionDisplay;

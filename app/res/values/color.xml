@@ -10,11 +10,17 @@
     <drawable name="blue">#ff09bdff</drawable>
     <drawable name="eyewitness_blue">#ff4db1e4</drawable>
     <drawable name="eyewitness_dark_grey">#ff231f20</drawable>
-    <drawable name="eyewitness_light_grey">#ff818285</drawable>
     
-    <color name="actionbar_background">#ff020D26</color>
-    <color name="actionbar_bottom_edge">#ff00AEEF</color>
-    <color name="actionbar_actionmode_background">#ff00AEEF</color>
+    <color name="grey_dark">#ff404040</color>
+    <color name="grey_medium">#FF999999</color>
+    <color name="grey_medium_light">#FFCECDCD</color>
+    <color name="grey_light">#FFD1D3D4</color>
+    <color name="grey_light_light">#FFEFEFEF</color>
+    <color name="blue_washed">#FF2B3549</color>
+    
+    <color name="actionbar_background">#ff231F20</color>
+    <color name="actionbar_bottom_edge">#ff4AAEE2</color>
+    <color name="actionbar_actionmode_background">#ff4AAEE2</color>
     <color name="actionbar_actionmode_bottom_edge">#ff020D26</color>
     
     <color name="context_menu_background">#a0444444</color>

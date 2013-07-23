@@ -79,4 +79,5 @@
     <string name="editor_tags_form">Form</string>
     <string name="editor_tags_add">Add Tags</string>
     <string name="editor_form_edit">Tag Info</string>
+    <string name="editor_write_text">Write Text</string>
 </resources>

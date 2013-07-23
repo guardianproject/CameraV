@@ -17,9 +17,9 @@ import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
-import org.witness.iwitness.app.screens.MediaDetailsFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenImageViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
+import org.witness.iwitness.app.screens.forms.OverviewFormFragment;
 import org.witness.iwitness.app.screens.forms.TagFormFragment;
 import org.witness.iwitness.app.screens.popups.SharePopup;
 import org.witness.iwitness.utils.Constants;
@@ -35,6 +35,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -48,9 +49,13 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 {
 	Intent init;
 
-	View rootMain, rootForm, toolbarBottom;
-	Fragment fullscreenView, detailsView, formView;
+	View rootMain, rootForm;
+	Fragment fullscreenView, formView;
+	OverviewFormFragment detailsView;
 	public FragmentManager fm;
+
+	View toolbarBottom;
+	boolean toolbarBottomEnabled;
 
 	ActionBar actionBar;
 	ImageButton abNavigationBack, abShareMedia;
@@ -86,6 +91,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			rootMain = findViewById(R.id.root_main);
 			rootForm = findViewById(R.id.root_form);
 			toolbarBottom = findViewById(R.id.toolbar_bottom);
+			toolbarBottom.setVisibility(View.GONE);
 
 			actionBar = getSupportActionBar();
 			actionBar.setDisplayShowCustomEnabled(true);
@@ -173,7 +179,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			fullscreenView = Fragment.instantiate(this, FullScreenVideoViewFragment.class.getName(), fullscreenViewArgs);
 		}
 
-		detailsView = Fragment.instantiate(this, MediaDetailsFragment.class.getName(), detailsViewArgs);
+		detailsView = (OverviewFormFragment) Fragment.instantiate(this, OverviewFormFragment.class.getName(), detailsViewArgs);
 
 		formView = Fragment.instantiate(this, TagFormFragment.class.getName());
 
@@ -195,12 +201,22 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 
 	private void initToolbar()
 	{
+		toolbarBottom.findViewById(R.id.btnWriteText).setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				if (toolbarBottomEnabled)
+					detailsView.editNotes();
+			}
+		});
+
 		toolbarBottom.findViewById(R.id.btnAddTags).setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
 			{
-				if (mActionMode == ActivityActionMode.Edit)
+				if (toolbarBottomEnabled && mActionMode == ActivityActionMode.Edit)
 					setActionMode(ActivityActionMode.AddTags);
 			}
 		});
@@ -450,23 +466,38 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		case EditForm:
 			rootMain.setVisibility(View.GONE);
 			rootForm.setVisibility(View.VISIBLE);
-			toolbarBottom.setVisibility(View.VISIBLE);
+			showToolbar(true);
 			break;
 		case AddTags:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
-			toolbarBottom.setVisibility(View.VISIBLE);
+			showToolbar(true);
 			break;
 		case Edit:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
-			toolbarBottom.setVisibility(View.VISIBLE);
+			showToolbar(true);
 			break;
 		default:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
-			toolbarBottom.setVisibility(View.GONE);
+			showToolbar(false);
 			break;
+		}
+	}
+
+	private void showToolbar(boolean show)
+	{
+		if (show)
+		{
+			toolbarBottom.startAnimation(AnimationUtils.loadAnimation(this, R.anim.toolbar_slide_in));
+			toolbarBottom.setVisibility(View.VISIBLE);
+			toolbarBottomEnabled = true;
+		}
+		else
+		{
+			toolbarBottomEnabled = false;
+			toolbarBottom.startAnimation(AnimationUtils.loadAnimation(this, R.anim.toolbar_slide_out));
 		}
 	}
 
@@ -478,5 +509,4 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			((TagFormFragment) formView).initTag(region);
 		}
 	}
-
 }
