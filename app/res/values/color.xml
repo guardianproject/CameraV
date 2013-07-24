@@ -17,6 +17,9 @@
     <color name="grey_light">#FFD1D3D4</color>
     <color name="grey_light_light">#FFEFEFEF</color>
     <color name="blue_washed">#FF2B3549</color>
+
+    <color name="blue_light">#ff4AAEE2</color>
+    <color name="blue_light_semi">#804AAEE2</color>
     
     <color name="actionbar_background">#ff231F20</color>
     <color name="actionbar_bottom_edge">#ff4AAEE2</color>

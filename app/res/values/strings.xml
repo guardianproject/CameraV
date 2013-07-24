@@ -75,6 +75,7 @@
     <string name="menu_edit">Edit</string>
     <string name="menu_done">Done</string>
     <string name="menu_save">Save</string>
+    <string name="menu_view">View</string>
     
     <string name="editor_tags_form">Form</string>
     <string name="editor_tags_add">Add Tags</string>

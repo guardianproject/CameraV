@@ -34,7 +34,7 @@
 
         <Button
             android:id="@+id/textarea_save"
-            style="@style/button_b"
+            style="@style/button_d"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"

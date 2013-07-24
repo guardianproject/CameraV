@@ -96,13 +96,14 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			toolbarBottom.setVisibility(View.GONE);
 
 			actionBar = getSupportActionBar();
-			actionBar.setDisplayShowCustomEnabled(true);
-			actionBar.setDisplayShowHomeEnabled(false);
-			actionBar.setDisplayShowTitleEnabled(false);
+//			actionBar.setDisplayShowCustomEnabled(false);
+//			actionBar.setDisplayShowHomeEnabled(false);
+//			actionBar.setDisplayShowTitleEnabled(true);
 
 			fm = getSupportFragmentManager();
 
 			initToolbar();
+			updateUIBasedOnActionMode();
 		}
 		else
 		{
@@ -185,6 +186,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 
 		formView = Fragment.instantiate(this, TagFormFragment.class.getName());
 
+		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(false);
 		actionBar.setHomeButtonEnabled(true);
@@ -276,7 +278,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			setActionMode(ActivityActionMode.Edit);
 			return true;
 		}
-		case R.id.menu_save:
+		case R.id.menu_done:
 		{
 			setActionMode(ActivityActionMode.Normal);
 			return true;
@@ -476,21 +478,25 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			rootMain.setVisibility(View.GONE);
 			rootForm.setVisibility(View.VISIBLE);
 			showToolbar(true);
+			getSupportActionBar().setTitle(R.string.editor_form_edit);
 			break;
 		case AddTags:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
 			showToolbar(true);
+			getSupportActionBar().setTitle(R.string.editor_tags_add);
 			break;
 		case Edit:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
 			showToolbar(true);
+			getSupportActionBar().setTitle(R.string.menu_edit);
 			break;
 		default:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
 			showToolbar(false);
+			getSupportActionBar().setTitle(R.string.menu_view);
 			break;
 		}
 	}
