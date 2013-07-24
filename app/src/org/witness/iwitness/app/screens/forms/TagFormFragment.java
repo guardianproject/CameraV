@@ -52,7 +52,7 @@ public class TagFormFragment extends Fragment implements ODKFormListener
 		super.onCreateView(li, container, savedInstanceState);
 
 		rootView = li.inflate(R.layout.fragment_forms_fullscreen, null);
-		tagFormRoot = (LinearLayout) rootView.findViewById(R.id.details_form_root);
+		tagFormRoot = (LinearLayout) rootView.findViewById(R.id.details_form_list);
 
 		return rootView;
 	}
