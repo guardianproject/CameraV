@@ -223,13 +223,23 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	public void updateAdapter(int which) {
 		switch(which) {
 		case Codes.Adapters.NOTIFICATIONS:
-			listNotificationsAdapter.update(listNotifications);
-			notificationsHolder.invalidate();
+			h.post(new Runnable() {
+				@Override
+				public void run() {
+					listNotificationsAdapter.update(listNotifications);
+					notificationsHolder.invalidate();
+				}
+			});			
 			
 			break;
 		case Codes.Adapters.ORGANIZATIONS:
-			listOrganizationsAdapter.update(listOrganizations);
-			organizationsHolder.invalidate();
+			h.post(new Runnable() {
+				@Override
+				public void run() {
+					listOrganizationsAdapter.update(listOrganizations);
+					organizationsHolder.invalidate();
+				}
+			});
 			
 			break;
 		case Codes.Adapters.ALL:

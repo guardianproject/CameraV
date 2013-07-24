@@ -564,17 +564,22 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	}
 
 	@Override
-	public void onUpdate(Message message) {
+	public void onUpdate(final Message message) {
 		int code = message.getData().getInt(Codes.Extras.MESSAGE_CODE);
 		
 		switch(code) {
 		case org.witness.informacam.utils.Constants.Codes.Messages.DCIM.ADD:
-			Log.d(LOG, "I HEAR THAT NEW MEDIA WAS ADDED: ");
 			Log.d(LOG, message.getData().getString(Codes.Extras.CONSOLIDATE_MEDIA));
-			Log.d(LOG, "manifest size: " + informaCam.mediaManifest.listMedia.size());
 			
 			mHandlerUI.sendEmptyMessage(0);
 			break;
+		case org.witness.informacam.utils.Constants.Codes.Messages.Transport.GENERAL_FAILURE:
+			mHandlerUI.post(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(HomeActivity.this, message.getData().getString(Codes.Extras.GENERAL_FAILURE), Toast.LENGTH_LONG).show();
+				}
+			});
 		}
 	}
 	

@@ -90,9 +90,7 @@ public class TagFormFragment extends Fragment implements ODKFormListener {
 			}
 		}
 
-		h.post(new Runnable() {
-			//LayoutInflater li = LayoutInflater.from(a);
-			
+		h.post(new Runnable() {			
 			@Override
 			public void run() {
 				int[] inputTemplate = new int[] {R.layout.forms_odk_input_template, R.id.odk_question, R.id.odk_hint, R.id.odk_answer};

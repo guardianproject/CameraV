@@ -82,7 +82,6 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-			//Log.d(LOG, "scrolling to: " + scrollRoot.getScrollY() + " (from scrollTarget " + scrollTarget + ")");
 
 			if(scrollRoot.getScrollY() < scrollTarget/2) {
 				if(isEditingForm) {
@@ -188,13 +187,10 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		
 		if(((EditorActivityListener) a).media().associatedRegions != null) {
 			for(IRegion r : ((EditorActivityListener) a).media().associatedRegions) {
-				Log.d(LOG, "setting old region: " + r.asJson().toString());
 				if(r.bounds.displayWidth != 0 && r.bounds.displayHeight != 0) {
 					r.init(getActivity(), r.bounds, false, this);
 					r.getRegionDisplay().setOnTouchListener(this);
 					mediaHolder.addView(r.getRegionDisplay());
-				} else {
-					Log.d(LOG, "skipping this one, it is top-level");
 				}
 			}
 
@@ -376,7 +372,6 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		//Log.d(LOG, "on touch called at " + event.getX() + "," + event.getY() + "\n on view: " + v.getClass().getName() + " (id " + v.getId() + ")\naction: " + event.getAction());
 		v.getParent().requestDisallowInterceptTouchEvent(true);
 
 		if(v instanceof IRegionDisplay) {
@@ -453,7 +448,10 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public boolean saveForm() {
-
+		if(currentRegion != null) {
+			((TagFormFragment) tagFormFragment).saveTagFormData(currentRegion);
+		}
+		
 		return true;
 	}
 
