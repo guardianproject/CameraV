@@ -1,5 +1,7 @@
 package org.witness.iwitness.app.screens.popups;
 
+import info.guardianproject.onionkit.ui.OrbotHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +100,16 @@ public class SharePopup extends Popup implements OnClickListener, OnCancelListen
 					}
 				} else if(b.containsKey(Codes.Keys.UI.PROGRESS)) {
 					inProgressBar.setProgress(b.getInt(Codes.Keys.UI.PROGRESS));
+				}
+				else if (msg.what == 81181)
+				{
+					OrbotHelper oh = new OrbotHelper(a);
+					oh.promptToInstall(a);
+				}
+				else if (msg.what == 81182)
+				{
+					OrbotHelper oh = new OrbotHelper(a);
+					oh.requestOrbotStart(a);
 				}
 			}
 		};
