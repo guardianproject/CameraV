@@ -176,24 +176,32 @@ public class AudioNotePopup extends Popup implements OnClickListener, OnCompleti
 				break;
 			}
 		} else if(v == actionDone) {
+			if(state == RecorderState.IS_PLAYING) {
+				progress.pause();
+			} else if(state == RecorderState.IS_RECORDING) {
+				progress.stop();
+			}
+			state = RecorderState.IS_IDLE;
+			
 			form.answer(Forms.FreeAudio.PROMPT);
 			cancel();
 			return;
 		} else if(v == actionRedo) {
+			if(state == RecorderState.IS_PLAYING) {
+				progress.pause();
+			} else if(state == RecorderState.IS_RECORDING) {
+				progress.stop();
+			}
 			
-			newRecording();
+			form.getQuestionDefByTitleId(Forms.FreeAudio.PROMPT).clear();
+			progress.reInit(new java.io.File(Storage.EXTERNAL_DIR, "tmprecord_" + System.currentTimeMillis() + ".3gp"), this);
+			updateLayout(false);
 			return;
 		}
 		
 		updateLayout();
 	}
 	
-	private void newRecording() {
-		form.getQuestionDefByTitleId(Forms.FreeAudio.PROMPT).clear();
-		progress.init(new java.io.File(Storage.EXTERNAL_DIR, "tmprecord_" + System.currentTimeMillis() + ".3gp"), this);
-		updateLayout(false);
-	}
-
 	@Override
 	public void onCompletion(MediaPlayer mp) {
 		Log.d(LOG, "FINISHED PLAYING MEDIA FILE");
