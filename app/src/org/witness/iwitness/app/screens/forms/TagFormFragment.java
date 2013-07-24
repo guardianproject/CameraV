@@ -84,7 +84,7 @@ public class TagFormFragment extends Fragment implements ODKFormListener
 		tagFormRoot.removeAllViews();
 		if (!region.associatedForms.isEmpty())
 		{
-			for (IForm form : ((EditorActivity) a).availableForms)
+			for (IForm form : region.associatedForms)
 			{
 				if (form.namespace.equals(Forms.TagForm.TAG))
 				{
@@ -112,7 +112,7 @@ public class TagFormFragment extends Fragment implements ODKFormListener
 				else if (this.formNote == null && form.namespace.equals(Forms.FreeText.TAG))
 				{
 					this.formNote = IForm.Activate(form, a);
-					this.formNote.answerPath = new info.guardianproject.iocipher.File(((EditorActivityListener) a).media().rootFolder, "form_"
+					this.formNote.answerPath = new info.guardianproject.iocipher.File(((EditorActivityListener) a).media().rootFolder, "form_t"
 							+ System.currentTimeMillis()).getAbsolutePath();
 					region.addForm(this.formNote);
 					Logger.d(LOG, ((EditorActivityListener) a).media().asJson().toString());
@@ -138,8 +138,10 @@ public class TagFormFragment extends Fragment implements ODKFormListener
 					tagFormRoot.addView(v);
 				}
 
-				// TODO - mvp - divider?
-
+				LayoutInflater inflater = LayoutInflater.from(a);
+				View divider = inflater.inflate(R.layout.extras_divider_blue, tagFormRoot, false);
+				tagFormRoot.addView(divider);
+				
 				// UI for tag form
 				for (View v : TagFormFragment.this.form.buildUI(inputTemplate, selectOneTemplate, selectMultipleTemplate, null))
 				{

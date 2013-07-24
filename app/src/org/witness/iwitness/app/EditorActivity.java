@@ -35,6 +35,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -286,7 +288,14 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 	@Override
 	public void onBackPressed()
 	{
-		saveStateAndFinish();
+		if (mActionMode == ActivityActionMode.EditForm)
+			this.setActionMode(ActivityActionMode.Edit);
+		else if (mActionMode == ActivityActionMode.AddTags)
+			this.setActionMode(ActivityActionMode.Edit);
+		else if (mActionMode == ActivityActionMode.Edit)
+			this.setActionMode(ActivityActionMode.Normal);
+		else
+			saveStateAndFinish();
 	}
 
 	@Override
@@ -497,7 +506,24 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		else
 		{
 			toolbarBottomEnabled = false;
-			toolbarBottom.startAnimation(AnimationUtils.loadAnimation(this, R.anim.toolbar_slide_out));
+			Animation anim = AnimationUtils.loadAnimation(this, R.anim.toolbar_slide_out);
+			anim.setAnimationListener(new AnimationListener()
+			{
+
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					toolbarBottom.setVisibility(View.GONE);
+				}
+
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+				}
+
+				@Override
+				public void onAnimationStart(Animation animation) {
+				}			
+			});
+			toolbarBottom.startAnimation(anim);
 		}
 	}
 
@@ -509,4 +535,6 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			((TagFormFragment) formView).initTag(region);
 		}
 	}
+	
+	
 }

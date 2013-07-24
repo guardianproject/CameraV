@@ -330,7 +330,20 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 			}
 			return true;
 		}
-
+		else if (currentMode == Mode.Edit)
+		{
+			// Clicking outside of a tag in edit mode means "select none"
+			//
+			switch (event.getAction())
+			{
+			case MotionEvent.ACTION_DOWN:
+			{
+				currentRegion = null;
+				updateRegionDisplay();
+			}
+			break;
+			}
+		}
 		return false;
 	}
 
