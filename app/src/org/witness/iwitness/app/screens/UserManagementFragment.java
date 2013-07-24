@@ -233,10 +233,8 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		else if (v == thumbnail)
 		{
 			// TODO
-		}
-		else if (v == exportCredentials)
-		{
-			// informaCam.exportCredentials();
+		} else if(v == exportCredentials) {
+			a.startActivity(informaCam.exportCredentials());
 		}
 	}
 

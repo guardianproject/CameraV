@@ -72,27 +72,16 @@
                 style="@style/button_c"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.33"
+                android:layout_weight="0.5"
                 android:drawableLeft="@drawable/ic_audio_redo"
                 android:paddingLeft="10dip"
                 android:text="@string/redo" />
-
-            <Button
-                android:id="@+id/audio_action_play"
-                style="@style/button_c"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.33"
-                android:drawableLeft="@drawable/ic_audio_play"
-                android:paddingLeft="10dip"
-                android:text="@string/play" />
-
             <Button
                 android:id="@+id/audio_action_done"
                 style="@style/button_c"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.33"
+                android:layout_weight="0.5"
                 android:drawableLeft="@drawable/ic_audio_done"
                 android:paddingLeft="10dip"
                 android:text="@string/done" />

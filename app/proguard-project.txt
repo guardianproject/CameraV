@@ -20,6 +20,7 @@
 #}
 
 # Needed to keep generic types and @Key annotations accessed via reflection
+
 -keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault
 
 -keepclassmembers class * {

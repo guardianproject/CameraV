@@ -43,7 +43,10 @@ public class GalleryListAdapter extends BaseAdapter {
 	
 	@Override
 	public int getCount() {
-		return media.size();
+		if (media != null)
+			return media.size();
+		else
+			return 0;
 	}
 
 	@Override
