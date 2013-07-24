@@ -1,7 +1,5 @@
 package org.witness.iwitness.app.screens.popups;
 
-import java.util.List;
-
 import info.guardianproject.odkparser.Constants.RecorderState;
 import info.guardianproject.odkparser.utils.QD;
 import info.guardianproject.odkparser.widgets.ODKSeekBar;
@@ -32,17 +30,16 @@ public class AudioNotePopup extends Popup implements OnClickListener, OnCompleti
 	LinearLayout actionHolder;
 	ImageView actionToggleIcon, actionToggleIcon2;
 	TextView actionToggleLabel, actionClock;
-	Button actionRedo, actionPlay, actionDone;
+	Button actionRedo, actionDone;
 	public ODKSeekBar progress;
 	
 	int state = RecorderState.IS_IDLE;
 	
-	int recordRes, pauseRes, resumeRes, playRes;
+	int recordRes, pauseRes, playRes;
 	int recordLabel, pauseLabel, resumeLabel;
 	int res, label;
 
 	Handler h = new Handler();
-	List<java.io.File> recordingFiles;
 
 	IForm form;
 	InformaCam informaCam = InformaCam.getInstance();
@@ -62,19 +59,15 @@ public class AudioNotePopup extends Popup implements OnClickListener, OnCompleti
 		actionToggleLabel = (TextView) layout.findViewById(R.id.audio_action_toggle_label);
 		actionClock = (TextView) layout.findViewById(R.id.audio_action_clock);
 
-		recordRes = R.drawable.ic_audio_btn_record;
+		recordRes = R.drawable.ic_audio_btn_pause;
 		pauseRes = R.drawable.ic_audio_btn_pause;
-		resumeRes = R.drawable.ic_audio_btn_resume;
 		playRes = R.drawable.ic_audio_play;
 
 		progress = (ODKSeekBar) layout.findViewById(R.id.audio_seekbar);
 		
 		actionRedo = (Button) layout.findViewById(R.id.audio_action_redo);
 		actionRedo.setOnClickListener(this);
-		
-		actionPlay = (Button) layout.findViewById(R.id.audio_action_play);
-		actionPlay.setOnClickListener(this);
-		
+				
 		actionDone = (Button) layout.findViewById(R.id.audio_action_done);
 		actionDone.setOnClickListener(this);
 		
@@ -103,8 +96,8 @@ public class AudioNotePopup extends Popup implements OnClickListener, OnCompleti
 			actionClock.setVisibility(View.VISIBLE);
 			actionHolder.setVisibility(View.VISIBLE);
 			
-			res = resumeRes;
-			label = R.string.resume;
+			res = pauseRes;
+			label = R.string.play;
 			
 			updateClock(progress.mp.getDuration());
 		} else {
@@ -128,13 +121,9 @@ public class AudioNotePopup extends Popup implements OnClickListener, OnCompleti
 	
 	private void initData() {
 		progress.init(new java.io.File(Storage.EXTERNAL_DIR, "tmprecord_" + System.currentTimeMillis() + ".3gp"), this);
-		
 		QD qd = form.getQuestionDefByTitleId(Forms.FreeAudio.PROMPT);
 		if(qd.hasInitialValue) {
-			progress.setRawAudioData(qd.initialValue.getBytes());
-			res = resumeRes;
-			label = R.string.resume;
-			
+			progress.setRawAudioData(qd.initialValue.getBytes());			
 			updateClock(progress.mp.getDuration());
 		}
 		
@@ -148,51 +137,61 @@ public class AudioNotePopup extends Popup implements OnClickListener, OnCompleti
 		if(v == actionToggle) {
 			switch(state) {
 			case RecorderState.IS_IDLE:
-				progress.record();
-				state = RecorderState.IS_RECORDING;
+				if(progress.rawAudioData == null) {
+					// record
+					progress.record();
+					state = RecorderState.IS_RECORDING;
+				} else {
+					if(state != RecorderState.IS_IDLE) {
+						if(state == RecorderState.IS_RECORDING) {
+							progress.stop();
+						} else if(state == RecorderState.IS_PLAYING) {
+							progress.pause();
+						}
+						state = RecorderState.IS_IDLE;
+					}
+					
+					res = pauseRes;
+					
+					progress.play();
+					state = RecorderState.IS_PLAYING;
+				}
+				
 				break;
 			case RecorderState.IS_RECORDING:
 				progress.stop();
 				state = RecorderState.IS_IDLE;
+				
+				res = recordRes;
+				
+				form.answer(Forms.FreeAudio.PROMPT);
 				break;
 			case RecorderState.IS_PLAYING:
+				
+				res = recordRes;
+				
 				progress.pause();
 				state = RecorderState.IS_IDLE;
 				v.performClick();
 				break;
 			}
 		} else if(v == actionDone) {
+			form.answer(Forms.FreeAudio.PROMPT);
 			cancel();
 			return;
-		} else if(v == actionPlay) {
-			if(state != RecorderState.IS_IDLE) {
-				if(state == RecorderState.IS_RECORDING) {
-					progress.stop();
-				} else if(state == RecorderState.IS_PLAYING) {
-					progress.pause();
-				}
-				state = RecorderState.IS_IDLE;
-			}
-			
-			progress.play();
-			state = RecorderState.IS_PLAYING;
 		} else if(v == actionRedo) {
-			if(recordingFiles != null) {
-				recordingFiles.clear();
-				recordingFiles = null;
-			}
 			
 			newRecording();
+			return;
 		}
 		
 		updateLayout();
 	}
 	
-	private java.io.File newRecording() {
-		java.io.File recordingFile = new java.io.File(Storage.EXTERNAL_DIR, "tmprecord_" + System.currentTimeMillis() + ".3gp");
-		progress.recordingFile = recordingFile;
-		
-		return recordingFile;
+	private void newRecording() {
+		form.getQuestionDefByTitleId(Forms.FreeAudio.PROMPT).clear();
+		progress.init(new java.io.File(Storage.EXTERNAL_DIR, "tmprecord_" + System.currentTimeMillis() + ".3gp"), this);
+		updateLayout(false);
 	}
 
 	@Override
