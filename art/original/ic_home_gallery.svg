@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px" height="60px"
+	 viewBox="0 0 60 60" enable-background="new 0 0 60 60" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  x="-5.957" y="0.019" width="58.915" height="48.963" bottomLeftOrigin="true"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<rect x="12.444" y="11.065" transform="matrix(0.9869 0.1614 -0.1614 0.9869 4.5825 -5.1136)" fill="#FFFFFF" width="42.643" height="29.166"/>
+<path fill="#2E3849" d="M54.105,45.777L8.073,38.251l5.354-32.732l46.031,7.528L54.105,45.777z M12.667,34.947l38.135,6.236
+	l4.062-24.836L16.73,10.111L12.667,34.947z"/>
+<rect x="2.543" y="23.316" fill="#FFFFFF" width="42.643" height="29.165"/>
+<path fill="#2E3849" d="M47.186,54.481H0.543V21.316h46.643V54.481z M4.543,50.481h38.643V25.316H4.543V50.481z"/>
+</svg>
