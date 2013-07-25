@@ -56,9 +56,11 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 	OverviewFormFragment detailsView;
 	public FragmentManager fm;
 
-	View toolbarBottom;
-	boolean toolbarBottomEnabled;
-
+	private View toolbarBottom;
+	private boolean toolbarBottomShown;
+	private View toolbarBtnWriteText;
+	private View toolbarBtnAddTags;
+	
 	ActionBar actionBar;
 	ImageButton abNavigationBack, abShareMedia;
 
@@ -200,31 +202,6 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		ft.commit();
 
 		updateUIBasedOnActionMode();
-	}
-
-	private void initToolbar()
-	{
-		toolbarBottom.findViewById(R.id.btnWriteText).setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				if (toolbarBottomEnabled)
-					detailsView.editNotes();
-			}
-		});
-
-		toolbarBottom.findViewById(R.id.btnAddTags).setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				if (toolbarBottomEnabled && mActionMode == ActivityActionMode.Edit)
-					setActionMode(ActivityActionMode.AddTags);
-			}
-		});
-		
-		showToolbar(false);
 	}
 
 	private void saveStateAndFinish()
@@ -478,18 +455,21 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		case EditForm:
 			rootMain.setVisibility(View.GONE);
 			rootForm.setVisibility(View.VISIBLE);
+			enableToolbar(false);
 			showToolbar(true);
 			getSupportActionBar().setTitle(R.string.editor_form_edit);
 			break;
 		case AddTags:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
+			enableToolbar(false);
 			showToolbar(true);
 			getSupportActionBar().setTitle(R.string.editor_tags_add);
 			break;
 		case Edit:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
+			enableToolbar(true);
 			showToolbar(true);
 			getSupportActionBar().setTitle(R.string.menu_edit);
 			break;
@@ -502,20 +482,55 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		}
 	}
 
+	private void initToolbar()
+	{
+		toolbarBtnWriteText = toolbarBottom.findViewById(R.id.btnWriteText);
+		toolbarBtnWriteText.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				if (toolbarBottomShown)
+					detailsView.editNotes();
+			}
+		});
+
+		toolbarBtnAddTags = toolbarBottom.findViewById(R.id.btnAddTags);
+		toolbarBtnAddTags.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				if (toolbarBottomShown && mActionMode == ActivityActionMode.Edit)
+					setActionMode(ActivityActionMode.AddTags);
+			}
+		});
+		
+		showToolbar(false);
+	}
+	
+	private void enableToolbar(boolean enable)
+	{
+		this.toolbarBtnWriteText.setEnabled(enable);
+		this.toolbarBtnAddTags.setEnabled(enable);
+	}
+	
 	private void showToolbar(boolean show)
 	{
 		if (show)
 		{
-			if (!toolbarBottomEnabled)
+			if (!toolbarBottomShown)
 			{
+				enableToolbar(true);
 				toolbarBottom.startAnimation(AnimationUtils.loadAnimation(this, R.anim.toolbar_slide_in));
 				toolbarBottom.setVisibility(View.VISIBLE);
-				toolbarBottomEnabled = true;
+				toolbarBottomShown = true;
 			}
 		}
 		else
 		{
-			toolbarBottomEnabled = false;
+			enableToolbar(false);
+			toolbarBottomShown = false;
 			Animation anim = AnimationUtils.loadAnimation(this, R.anim.toolbar_slide_out);
 			anim.setAnimationListener(new AnimationListener()
 			{
