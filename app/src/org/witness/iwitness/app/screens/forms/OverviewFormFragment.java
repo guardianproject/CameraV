@@ -278,6 +278,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 			public void Show()
 			{
 				prompt.setText(notesAnswerHolder.getText());
+				prompt.setSelection(prompt.getText().length());
 				// if (textForm != null &&
 				// textForm.getQuestionDefByTitleId(Forms.FreeText.PROMPT).initialValue
 				// != null)

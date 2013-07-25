@@ -22,14 +22,13 @@
             android:id="@+id/ImageView01"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_edit_notes" />
+            android:src="@drawable/ic_edit_textnote" />
 
         <TextView
             android:id="@+id/TextView01"
             style="@style/EditorBottomToolbarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:text="@string/editor_write_text"
             android:textAllCaps="true"
             android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -54,14 +53,13 @@
             android:id="@+id/imageView1"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_edit_show_tags" />
+            android:src="@drawable/ic_edit_add_tag" />
 
         <TextView
             android:id="@+id/textView1"
             style="@style/EditorBottomToolbarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:text="@string/editor_tags_add"
             android:textAllCaps="true"
             android:textAppearance="?android:attr/textAppearanceSmall" />

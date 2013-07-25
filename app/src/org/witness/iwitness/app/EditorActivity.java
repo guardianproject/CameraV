@@ -223,6 +223,8 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 					setActionMode(ActivityActionMode.AddTags);
 			}
 		});
+		
+		showToolbar(false);
 	}
 
 	private void saveStateAndFinish()
@@ -504,9 +506,12 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 	{
 		if (show)
 		{
-			toolbarBottom.startAnimation(AnimationUtils.loadAnimation(this, R.anim.toolbar_slide_in));
-			toolbarBottom.setVisibility(View.VISIBLE);
-			toolbarBottomEnabled = true;
+			if (!toolbarBottomEnabled)
+			{
+				toolbarBottom.startAnimation(AnimationUtils.loadAnimation(this, R.anim.toolbar_slide_in));
+				toolbarBottom.setVisibility(View.VISIBLE);
+				toolbarBottomEnabled = true;
+			}
 		}
 		else
 		{
