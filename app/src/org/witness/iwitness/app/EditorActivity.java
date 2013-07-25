@@ -160,7 +160,6 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		informaCam.informaService.associateMedia(media);
 
 		availableForms = FormUtility.getAvailableForms();
-		// Log.d(LOG, "INITING MEDIA FOR EDIT:\n" + media.asJson().toString());
 	}
 
 	private void initLayout()

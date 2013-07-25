@@ -120,10 +120,7 @@ public class TagFormFragment extends Fragment implements ODKFormListener
 			}
 		}
 
-		h.post(new Runnable()
-		{
-			// LayoutInflater li = LayoutInflater.from(a);
-
+		h.post(new Runnable() {			
 			@Override
 			public void run()
 			{
