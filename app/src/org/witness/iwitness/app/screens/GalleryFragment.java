@@ -27,6 +27,7 @@ import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -223,11 +224,23 @@ public class GalleryFragment extends SherlockFragment implements
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.activity_home_gallery, menu);
+
+		ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(false);
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setLogo(this.getResources().getDrawable(
+				R.drawable.ic_action_up));
+		actionBar.setDisplayUseLogoEnabled(true);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			((HomeActivityListener) a).launchMain();
+			return true;
 		case R.id.menu_select: {
 			mActionMode = getSherlockActivity().startActionMode(
 					mActionModeSelect);

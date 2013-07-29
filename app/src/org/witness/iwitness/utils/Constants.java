@@ -1,8 +1,8 @@
 package org.witness.iwitness.utils;
 
+import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
-import org.witness.informacam.models.media.IMedia;
 
 import android.net.Uri;
 import android.os.Message;
@@ -26,6 +26,10 @@ public class Constants {
 		public void updateData(IOrganization organization, Message message);
 		public void setLocale(String newLocale);
 		public String getLocale();
+		public void launchMain();
+		public void launchGallery();
+		public void launchCamera();
+		public void launchVideo();
 	}
 
 	public class Codes {

@@ -21,6 +21,7 @@ import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListen
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.CameraFragment;
 import org.witness.iwitness.app.screens.GalleryFragment;
+import org.witness.iwitness.app.screens.HomeFragment;
 import org.witness.iwitness.app.screens.UserManagementFragment;
 import org.witness.iwitness.app.screens.menus.MediaActionMenu;
 import org.witness.iwitness.app.screens.popups.RenamePopup;
@@ -50,12 +51,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -66,18 +63,22 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		HomeActivityListener, InformaCamStatusListener,
 		InformaCamEventListener, ListAdapterListener {
 	Intent init, route;
+
 	private final static String LOG = Constants.App.Home.LOG;
+
+	private static final int INDEX_MAIN = 0;
+	private static final int INDEX_GALLERY = 2;
+
 	private String lastLocale = null;
 
 	List<Fragment> fragments = new Vector<Fragment>();
-	Fragment userManagementFragment, galleryFragment, cameraFragment;
+	Fragment mainFragment, userManagementFragment, galleryFragment,
+			cameraFragment;
 
 	boolean initGallery = false;
 
 	int visibility = View.VISIBLE;
 
-	LayoutInflater li;
-	TabHost tabHost;
 	ViewPager viewPager;
 	TabPager pager;
 
@@ -130,6 +131,7 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		toCamera = new Intent(this, CameraActivity.class);
 		route = null;
 
+		mainFragment = Fragment.instantiate(this, HomeFragment.class.getName());
 		userManagementFragment = Fragment.instantiate(this,
 				UserManagementFragment.class.getName());
 		galleryFragment = Fragment.instantiate(this,
@@ -137,6 +139,7 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		cameraFragment = Fragment.instantiate(this,
 				CameraFragment.class.getName());
 
+		fragments.add(mainFragment);
 		fragments.add(userManagementFragment);
 		fragments.add(galleryFragment);
 		fragments.add(cameraFragment);
@@ -207,62 +210,8 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		viewPager.setAdapter(pager);
 		viewPager.setOnPageChangeListener(pager);
 
-		li = LayoutInflater.from(this);
-
-		int[] dims = getDimensions();
-
-		tabHost = (TabHost) findViewById(android.R.id.tabhost);
-		tabHost.setup();
-
-		TabHost.TabSpec tab = tabHost.newTabSpec(
-				UserManagementFragment.class.getName()).setIndicator(
-				generateTab(li, R.layout.tabs_user_management));
-		li.inflate(R.layout.fragment_home_user_management,
-				tabHost.getTabContentView(), true);
-		tab.setContent(R.id.user_management_root_view);
-		tabHost.addTab(tab);
-
-		tab = tabHost.newTabSpec(GalleryFragment.class.getName())
-				.setIndicator(generateTab(li, R.layout.tabs_iwitness));
-		li.inflate(R.layout.fragment_home_gallery, tabHost.getTabContentView(),
-				true);
-		tab.setContent(R.id.gallery_root_view);
-		tabHost.addTab(tab);
-
-		tab = tabHost.newTabSpec(CameraFragment.class.getName()).setIndicator(
-				generateTab(li, R.layout.tabs_camera_chooser));
-		li.inflate(R.layout.fragment_home_camera_chooser,
-				tabHost.getTabContentView(), true);
-		tab.setContent(R.id.camera_chooser_root_view);
-		tabHost.addTab(tab);
-
-		tabHost.setOnTabChangedListener(pager);
-
-		for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
-			View tab_ = tabHost.getTabWidget().getChildAt(i);
-			if (i == 1) {
-				tab_.setLayoutParams(new LinearLayout.LayoutParams(
-						(int) (dims[0] * 0.5), LayoutParams.MATCH_PARENT));
-			} else {
-				tab_.setLayoutParams(new LinearLayout.LayoutParams(
-						(int) (dims[0] * 0.25), LayoutParams.MATCH_PARENT));
-			}
-		}
-
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setDisplayShowHomeEnabled(true);
-		actionBar.setDisplayHomeAsUpEnabled(false);
-		actionBar.setHomeButtonEnabled(true);
-		actionBar.setLogo(this.getResources().getDrawable(
-				R.drawable.ic_action_up));
-		actionBar.setDisplayUseLogoEnabled(false);
-
-		viewPager.setCurrentItem(1);
-	}
-
-	private static View generateTab(final LayoutInflater li, final int resource) {
-		return li.inflate(resource, null);
+		resetActionBar();
+		viewPager.setCurrentItem(INDEX_MAIN);
 	}
 
 	@Override
@@ -289,7 +238,9 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		return new int[] { display.getWidth(), display.getHeight() };
 	}
 
+	@Override
 	public void launchCamera() {
+		resetActionBar();
 		route = toCamera;
 
 		// waiter = new WaitPopup(this);
@@ -445,7 +396,7 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 			switch (requestCode) {
 			case Codes.Routes.CAMERA:
-				viewPager.setCurrentItem(1);
+				viewPager.setCurrentItem(INDEX_GALLERY);
 
 				informaCam.mediaManifest
 						.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
@@ -486,24 +437,10 @@ public class HomeActivity extends SherlockFragmentActivity implements
 	}
 
 	class TabPager extends FragmentStatePagerAdapter implements
-			TabHost.OnTabChangeListener, OnPageChangeListener {
+			OnPageChangeListener {
 
 		public TabPager(FragmentManager fm) {
 			super(fm);
-		}
-
-		@Override
-		public void onTabChanged(String tabId) {
-			Log.d(LOG, tabId);
-			int i = 0;
-			for (Fragment f : fragments) {
-				if (f.getClass().getName().equals(tabId)) {
-					viewPager.setCurrentItem(i);
-					break;
-				}
-
-				i++;
-			}
 		}
 
 		@Override
@@ -516,8 +453,8 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void onPageSelected(int page) {
-			tabHost.setCurrentTab(page);
-			if (page == 2) {
+			// tabHost.setCurrentTab(page);
+			if (page == 3) {
 				launchCamera();
 			} else {
 				// updateAdapter(0);
@@ -646,4 +583,31 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		}
 
 	};
+
+	@Override
+	public void launchGallery() {
+		viewPager.setCurrentItem(INDEX_GALLERY);
+	}
+
+	@Override
+	public void launchVideo() {
+		resetActionBar();
+	}
+
+	@Override
+	public void launchMain() {
+		viewPager.setCurrentItem(INDEX_MAIN);
+		resetActionBar();
+	}
+
+	private void resetActionBar() {
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(false);
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setLogo(this.getResources().getDrawable(
+				R.drawable.ic_action_up));
+		actionBar.setDisplayUseLogoEnabled(false);
+	}
 }
