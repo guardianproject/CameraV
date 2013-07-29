@@ -3,4 +3,8 @@
     <declare-styleable name="VerticalButton">
         <attr name="android:text" />
     </declare-styleable>
+    
+    <declare-styleable name="RoundedImageView">
+        <attr name="rounding_radius" format="integer" />
+    </declare-styleable>
 </resources>

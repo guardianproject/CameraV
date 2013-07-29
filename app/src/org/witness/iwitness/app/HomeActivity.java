@@ -20,7 +20,7 @@ import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.CameraFragment;
-import org.witness.iwitness.app.screens.GalleryFragment;
+import org.witness.iwitness.app.screens.GalleryFragmentNew;
 import org.witness.iwitness.app.screens.UserManagementFragment;
 import org.witness.iwitness.app.screens.menus.MediaActionMenu;
 import org.witness.iwitness.app.screens.popups.RenamePopup;
@@ -54,14 +54,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TabHost;
+import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 @SuppressLint("HandlerLeak")
-public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamStatusListener, InformaCamEventListener, ListAdapterListener {
+public class HomeActivity extends SherlockFragmentActivity implements
+		HomeActivityListener, InformaCamStatusListener,
+		InformaCamEventListener, ListAdapterListener {
 	Intent init, route;
 	private final static String LOG = Constants.App.Home.LOG;
 	private String lastLocale = null;
@@ -85,8 +88,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		@Override
 		public void handleMessage(Message msg) {
 			Bundle msgData = msg.getData();
-			if(msgData.containsKey(Models.INotification.CLASS)) {
-				switch(msgData.getInt(Models.INotification.CLASS)) {
+			if (msgData.containsKey(Models.INotification.CLASS)) {
+				switch (msgData.getInt(Models.INotification.CLASS)) {
 				case Models.INotification.Type.NEW_KEY:
 
 					break;
@@ -96,7 +99,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	};
 
 	MediaActionMenu mam;
-//	WaitPopup waiter;
+	// WaitPopup waiter;
 
 	Intent toEditor, toCamera;
 
@@ -104,37 +107,42 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		informaCam = (InformaCam)getApplication();
+		informaCam = (InformaCam) getApplication();
 		informaCam.setStatusListener(this);
 		informaCam.setEventListener(this);
 		informaCam.setListAdapterListener(this);
-		
+
 		setContentView(R.layout.activity_home);
 
 		try {
 			Iterator<String> i = savedInstanceState.keySet().iterator();
-			while(i.hasNext()) {
+			while (i.hasNext()) {
 				String outState = i.next();
-				if(outState.equals(Home.TAG) && savedInstanceState.getBoolean(Home.TAG)) {
+				if (outState.equals(Home.TAG)
+						&& savedInstanceState.getBoolean(Home.TAG)) {
 					initGallery = true;
 				}
 			}
-		} catch(NullPointerException e) {}
+		} catch (NullPointerException e) {
+		}
 
 		toEditor = new Intent(this, EditorActivity.class);
 		toCamera = new Intent(this, CameraActivity.class);
 		route = null;
 
-		userManagementFragment = Fragment.instantiate(this, UserManagementFragment.class.getName());
-		galleryFragment = Fragment.instantiate(this, GalleryFragment.class.getName());
-		cameraFragment = Fragment.instantiate(this, CameraFragment.class.getName());
+		userManagementFragment = Fragment.instantiate(this,
+				UserManagementFragment.class.getName());
+		galleryFragment = Fragment.instantiate(this,
+				GalleryFragmentNew.class.getName());
+		cameraFragment = Fragment.instantiate(this,
+				CameraFragment.class.getName());
 
 		fragments.add(userManagementFragment);
 		fragments.add(galleryFragment);
 		fragments.add(cameraFragment);
 
 		init = getIntent();
-		
+
 		initLayout();
 		checkForUpdates();
 	}
@@ -142,31 +150,33 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		if(getIntent().hasExtra(Constants.Codes.Extras.CHANGE_LOCALE)) {
+
+		if (getIntent().hasExtra(Constants.Codes.Extras.CHANGE_LOCALE)) {
 			getIntent().removeExtra(Constants.Codes.Extras.CHANGE_LOCALE);
 		}
-		
-		String currentLocale = PreferenceManager.getDefaultSharedPreferences(this).getString(Preferences.Keys.LANGUAGE, "0");
-		
-		if(lastLocale != null && !lastLocale.equals(currentLocale)) {
+
+		String currentLocale = PreferenceManager.getDefaultSharedPreferences(
+				this).getString(Preferences.Keys.LANGUAGE, "0");
+
+		if (lastLocale != null && !lastLocale.equals(currentLocale)) {
 			setNewLocale(currentLocale);
 			return;
 		}
-		
+
 		checkForCrashes();
 
-		informaCam = (InformaCam)getApplication();
+		informaCam = (InformaCam) getApplication();
 
-		if(init.getData() != null) {
+		if (init.getData() != null) {
 			final Uri ictdURI = init.getData();
 			Log.d(LOG, "INIT KEY: " + ictdURI);
 
 			h.post(new Runnable() {
 				@Override
 				public void run() {
-					IOrganization organization = informaCam.installICTD(ictdURI, h);
-					if(organization != null) {
+					IOrganization organization = informaCam.installICTD(
+							ictdURI, h);
+					if (organization != null) {
 						viewPager.setCurrentItem(0);
 					} else {
 						// TODO: handle error
@@ -175,15 +185,18 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			});
 		}
 	}
-	
+
 	private void setNewLocale(String locale_code) {
 		Configuration configuration = new Configuration();
-		configuration.locale = new Locale(informaCam.languageMap.getCode(Integer.parseInt(locale_code)));
-		
-		getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
-		
+		configuration.locale = new Locale(
+				informaCam.languageMap.getCode(Integer.parseInt(locale_code)));
+
+		getBaseContext().getResources().updateConfiguration(configuration,
+				getBaseContext().getResources().getDisplayMetrics());
+
 		getIntent().putExtra(Constants.Codes.Extras.CHANGE_LOCALE, true);
-		setResult(Activity.RESULT_OK, new Intent().putExtra(Constants.Codes.Extras.CHANGE_LOCALE, true));
+		setResult(Activity.RESULT_OK, new Intent().putExtra(
+				Constants.Codes.Extras.CHANGE_LOCALE, true));
 		finish();
 	}
 
@@ -201,31 +214,49 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		tabHost = (TabHost) findViewById(android.R.id.tabhost);
 		tabHost.setup();
 
-		TabHost.TabSpec tab = tabHost.newTabSpec(UserManagementFragment.class.getName()).setIndicator(generateTab(li, R.layout.tabs_user_management));
-		li.inflate(R.layout.fragment_home_user_management, tabHost.getTabContentView(), true);
+		TabHost.TabSpec tab = tabHost.newTabSpec(
+				UserManagementFragment.class.getName()).setIndicator(
+				generateTab(li, R.layout.tabs_user_management));
+		li.inflate(R.layout.fragment_home_user_management,
+				tabHost.getTabContentView(), true);
 		tab.setContent(R.id.user_management_root_view);
 		tabHost.addTab(tab);
 
-		tab = tabHost.newTabSpec(GalleryFragment.class.getName()).setIndicator(generateTab(li, R.layout.tabs_iwitness));
-		li.inflate(R.layout.fragment_home_gallery, tabHost.getTabContentView(), true);
+		tab = tabHost.newTabSpec(GalleryFragmentNew.class.getName())
+				.setIndicator(generateTab(li, R.layout.tabs_iwitness));
+		li.inflate(R.layout.fragment_home_gallery, tabHost.getTabContentView(),
+				true);
 		tab.setContent(R.id.gallery_root_view);
 		tabHost.addTab(tab);
 
-		tab = tabHost.newTabSpec(CameraFragment.class.getName()).setIndicator(generateTab(li, R.layout.tabs_camera_chooser));
-		li.inflate(R.layout.fragment_home_camera_chooser, tabHost.getTabContentView(), true);
+		tab = tabHost.newTabSpec(CameraFragment.class.getName()).setIndicator(
+				generateTab(li, R.layout.tabs_camera_chooser));
+		li.inflate(R.layout.fragment_home_camera_chooser,
+				tabHost.getTabContentView(), true);
 		tab.setContent(R.id.camera_chooser_root_view);
 		tabHost.addTab(tab);
 
 		tabHost.setOnTabChangedListener(pager);
 
-		for(int i=0; i<tabHost.getTabWidget().getChildCount(); i++) {
+		for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
 			View tab_ = tabHost.getTabWidget().getChildAt(i);
-			if(i == 1) {
-				tab_.setLayoutParams(new LinearLayout.LayoutParams((int) (dims[0] * 0.5), LayoutParams.MATCH_PARENT));
+			if (i == 1) {
+				tab_.setLayoutParams(new LinearLayout.LayoutParams(
+						(int) (dims[0] * 0.5), LayoutParams.MATCH_PARENT));
 			} else {
-				tab_.setLayoutParams(new LinearLayout.LayoutParams((int) (dims[0] * 0.25), LayoutParams.MATCH_PARENT));
+				tab_.setLayoutParams(new LinearLayout.LayoutParams(
+						(int) (dims[0] * 0.25), LayoutParams.MATCH_PARENT));
 			}
 		}
+
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(false);
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setLogo(this.getResources().getDrawable(
+				R.drawable.ic_action_up));
+		actionBar.setDisplayUseLogoEnabled(false);
 
 		viewPager.setCurrentItem(1);
 	}
@@ -255,13 +286,13 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public int[] getDimensions() {
 		Display display = getWindowManager().getDefaultDisplay();
-		return new int[] {display.getWidth(),display.getHeight()};
+		return new int[] { display.getWidth(), display.getHeight() };
 	}
 
 	public void launchCamera() {
 		route = toCamera;
 
-	//	waiter = new WaitPopup(this);
+		// waiter = new WaitPopup(this);
 		informaCam.startInforma();
 	}
 
@@ -270,9 +301,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		toEditor.putExtra(Codes.Extras.EDIT_MEDIA, media._id);
 
 		route = toEditor;
-	//	waiter = new WaitPopup(this);
+		// waiter = new WaitPopup(this);
 		informaCam.startInforma();
-		Log.d(LOG, "launching editor for " + media._id);		
+		Log.d(LOG, "launching editor for " + media._id);
 	}
 
 	@Override
@@ -285,9 +316,11 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				informaCam.notificationsManifest.getById(notification._id).delete();
+				informaCam.notificationsManifest.getById(notification._id)
+						.delete();
 
-				((ListAdapterListener) userManagementFragment).updateAdapter(Codes.Adapters.NOTIFICATIONS);
+				((ListAdapterListener) userManagementFragment)
+						.updateAdapter(Codes.Adapters.NOTIFICATIONS);
 			}
 		};
 		actions.add(action);
@@ -311,25 +344,28 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 					@Override
 					public void cancel() {
 						// TODO: send a message...
-						
+
 						super.cancel();
 					}
 				};
 			}
 		};
 		actions.add(action);
-		
+
 		action = new ContextMenuAction();
 		action.label = getResources().getString(R.string.resend_credentials);
 		action.ocl = new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
 				informaCam.resendCredentials(organization);
-				Toast
-					.makeText(HomeActivity.this, getResources().getString(R.string.you_have_resent_your_credentials_to_x, organization.organizationName), Toast.LENGTH_LONG)
-					.show();
+				Toast.makeText(
+						HomeActivity.this,
+						getResources().getString(
+								R.string.you_have_resent_your_credentials_to_x,
+								organization.organizationName),
+						Toast.LENGTH_LONG).show();
 			}
 		};
 		actions.add(action);
@@ -349,8 +385,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				if((informaCam.mediaManifest.getById(media._id)).delete()) {
-					((GalleryFragment) galleryFragment).updateAdapter(0);
+				if ((informaCam.mediaManifest.getById(media._id)).delete()) {
+					((GalleryFragmentNew) galleryFragment).updateAdapter(0);
 				}
 			}
 
@@ -364,7 +400,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				new RenamePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id));
+				new RenamePopup(HomeActivity.this,
+						informaCam.mediaManifest.getById(media._id));
 			}
 
 		};
@@ -377,7 +414,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			@Override
 			public void onClick(View v) {
 				mam.cancel();
-				new SharePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id), true);
+				new SharePopup(HomeActivity.this,
+						informaCam.mediaManifest.getById(media._id), true);
 			}
 
 		};
@@ -402,27 +440,34 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void onActivityResult(int requestCode, int responseCode, Intent data) {
-		if(responseCode == Activity.RESULT_OK) {
+		if (responseCode == Activity.RESULT_OK) {
 			informaCam.setStatusListener(this);
-			
-			switch(requestCode) {
+
+			switch (requestCode) {
 			case Codes.Routes.CAMERA:
 				viewPager.setCurrentItem(1);
-				
-				informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
+
+				informaCam.mediaManifest
+						.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
 				/*
-				 *  XXX: Other developers, take note:
-				 *  
-				 *   the returned media can be JSONified.  
-				 *   It represents the media has been captured, but that may or may not have been processed.
-				 *   
-				 *   InformaCam will send a message whenever a new media item has been processed.
-				 *   The message contains the Codes.Extras.Messages.DCIM.ADD code, which is handled by "onUpdate()"
-				 *   
+				 * XXX: Other developers, take note:
+				 * 
+				 * the returned media can be JSONified. It represents the media
+				 * has been captured, but that may or may not have been
+				 * processed.
+				 * 
+				 * InformaCam will send a message whenever a new media item has
+				 * been processed. The message contains the
+				 * Codes.Extras.Messages.DCIM.ADD code, which is handled by
+				 * "onUpdate()"
 				 */
-				 
-				Log.d(LOG, "new dcim:\n" + ((IDCIMSerializable) data.getSerializableExtra(Codes.Extras.RETURNED_MEDIA)).asJson().toString());				
-				
+
+				Log.d(LOG,
+						"new dcim:\n"
+								+ ((IDCIMSerializable) data
+										.getSerializableExtra(Codes.Extras.RETURNED_MEDIA))
+										.asJson().toString());
+
 				informaCam.stopInforma();
 				route = null;
 				break;
@@ -437,10 +482,11 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				logoutUser();
 				break;
 			}
-		}		
+		}
 	}
 
-	class TabPager extends FragmentStatePagerAdapter implements TabHost.OnTabChangeListener, OnPageChangeListener {
+	class TabPager extends FragmentStatePagerAdapter implements
+			TabHost.OnTabChangeListener, OnPageChangeListener {
 
 		public TabPager(FragmentManager fm) {
 			super(fm);
@@ -449,9 +495,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		@Override
 		public void onTabChanged(String tabId) {
 			Log.d(LOG, tabId);
-			int i=0;
-			for(Fragment f : fragments) {
-				if(f.getClass().getName().equals(tabId)) {
+			int i = 0;
+			for (Fragment f : fragments) {
+				if (f.getClass().getName().equals(tabId)) {
 					viewPager.setCurrentItem(i);
 					break;
 				}
@@ -461,26 +507,28 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		}
 
 		@Override
-		public void onPageScrollStateChanged(int state) {}
+		public void onPageScrollStateChanged(int state) {
+		}
 
 		@Override
-		public void onPageScrolled(int arg0, float arg1, int arg2) {}
+		public void onPageScrolled(int arg0, float arg1, int arg2) {
+		}
 
 		@Override
 		public void onPageSelected(int page) {
 			tabHost.setCurrentTab(page);
-			if(page == 2) {
+			if (page == 2) {
 				launchCamera();
 			} else {
-				//updateAdapter(0);
+				// updateAdapter(0);
 			}
+			supportInvalidateOptionsMenu();
 		}
 
 		@Override
 		public Fragment getItem(int which) {
 			return fragments.get(which);
 		}
-
 
 		@Override
 		public int getCount() {
@@ -490,10 +538,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	}
 
 	@Override
-	public void onInformaCamStart(Intent intent) {}
+	public void onInformaCamStart(Intent intent) {
+	}
 
 	@Override
-	public void onInformaCamStop(Intent intent) {}
+	public void onInformaCamStop(Intent intent) {
+	}
 
 	@Override
 	public void onInformaStop(Intent intent) {
@@ -502,11 +552,11 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void onInformaStart(Intent intent) {
-	//	waiter.cancel();
-		if(route != null) {
-			if(route.equals(toEditor)) {
+		// waiter.cancel();
+		if (route != null) {
+			if (route.equals(toEditor)) {
 				startActivityForResult(toEditor, Routes.EDITOR);
-			} else if(route.equals(toCamera)) {
+			} else if (route.equals(toCamera)) {
 				startActivityForResult(toCamera, Routes.CAMERA);
 			}
 		}
@@ -515,40 +565,37 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void waiter(boolean show) {
 		/*
-		if(show) {
-			waiter = new WaitPopup(this);
-		} else {
-			if(waiter != null) {
-				waiter.cancel();
-			}
-		}*/
+		 * if(show) { waiter = new WaitPopup(this); } else { if(waiter != null)
+		 * { waiter.cancel(); } }
+		 */
 	}
 
 	@Override
-	public void updateData(INotification notification, Message message) {}
+	public void updateData(INotification notification, Message message) {
+	}
 
 	@Override
-	public void updateData(IOrganization organization, Message message) {}
-	
-	private final static String HOCKEY_APP_ID = "819d2172183272c9d84cd3a4dbd9296b";
-	
-	 private void checkForCrashes() {
-	   CrashManager.register(this, HOCKEY_APP_ID);
-	 }
+	public void updateData(IOrganization organization, Message message) {
+	}
 
-	 private void checkForUpdates() {
-	   // XXX: Remove this for store builds!
-	   UpdateManager.register(this, HOCKEY_APP_ID);
-	 }
+	private final static String HOCKEY_APP_ID = "819d2172183272c9d84cd3a4dbd9296b";
+
+	private void checkForCrashes() {
+		CrashManager.register(this, HOCKEY_APP_ID);
+	}
+
+	private void checkForUpdates() {
+		// XXX: Remove this for store builds!
+		UpdateManager.register(this, HOCKEY_APP_ID);
+	}
 
 	@Override
 	public void updateAdapter(int which) {
-		if(informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED) {
-			Fragment f= fragments.get(viewPager.getCurrentItem());
+		if (informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED) {
+			Fragment f = fragments.get(viewPager.getCurrentItem());
 
-			if (f instanceof ListAdapterListener)
-			{
-				((ListAdapterListener)f).updateAdapter(which);
+			if (f instanceof ListAdapterListener) {
+				((ListAdapterListener) f).updateAdapter(which);
 			}
 		}
 	}
@@ -566,34 +613,37 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void onUpdate(final Message message) {
 		int code = message.getData().getInt(Codes.Extras.MESSAGE_CODE);
-		
-		switch(code) {
+
+		switch (code) {
 		case org.witness.informacam.utils.Constants.Codes.Messages.DCIM.ADD:
-			Log.d(LOG, message.getData().getString(Codes.Extras.CONSOLIDATE_MEDIA));
-			
+			Log.d(LOG,
+					message.getData().getString(Codes.Extras.CONSOLIDATE_MEDIA));
+
 			mHandlerUI.sendEmptyMessage(0);
 			break;
 		case org.witness.informacam.utils.Constants.Codes.Messages.Transport.GENERAL_FAILURE:
 			mHandlerUI.post(new Runnable() {
 				@Override
 				public void run() {
-					Toast.makeText(HomeActivity.this, message.getData().getString(Codes.Extras.GENERAL_FAILURE), Toast.LENGTH_LONG).show();
+					Toast.makeText(
+							HomeActivity.this,
+							message.getData().getString(
+									Codes.Extras.GENERAL_FAILURE),
+							Toast.LENGTH_LONG).show();
 				}
 			});
 		}
 	}
-	
-	private Handler mHandlerUI = new Handler ()
-	{
+
+	private final Handler mHandlerUI = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
-			
+
 			super.handleMessage(msg);
-			
+
 			updateAdapter(msg.what);
 		}
-		
-	};
 
+	};
 }

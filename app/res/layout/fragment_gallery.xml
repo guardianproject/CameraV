@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gallery_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/white" >
+
+
+        <RelativeLayout
+            android:id="@+id/media_display_no_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dip"
+            android:orientation="vertical"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip" >
+
+            <TextView
+                android:id="@+id/media_display_no_media_1"
+                style="@style/iwitness_h3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/your_gallery_is_hungry"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/media_display_no_media_1"
+                android:layout_marginTop="6dip"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/iwitness_h3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/swipe_left_for_cameras" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="6dip"
+                    android:paddingRight="6dip"
+                    android:src="@drawable/ic_context_slide_left" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="6dip"
+                    android:paddingRight="6dip"
+                    android:src="@drawable/ic_context_camera" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <GridView
+            android:id="@+id/media_display_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dip"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:horizontalSpacing="3dip"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="6dip"
+            android:visibility="visible" />
+
+</RelativeLayout>

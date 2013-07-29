@@ -76,7 +76,13 @@
     <string name="menu_done">Done</string>
     <string name="menu_save">Save</string>
     <string name="menu_view">View</string>
-    
+    <string name="menu_select">Select</string>
+    <string name="menu_panic">Panic</string>
+    <string name="menu_settings">Settings</string>
+   
+    <string name="home_gallery_selected">%1$d Selected</string>
+    <string name="home_gallery_delete">Delete</string>
+
     <string name="editor_tags_form">Form</string>
     <string name="editor_tags_add">Add Tags</string>
     <string name="editor_form_edit">Tag Info</string>

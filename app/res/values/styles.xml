@@ -126,5 +126,25 @@
 	<style name="EditorActionBarTitle" parent="@style/TextAppearance.Sherlock.Widget.ActionBar.Title">
     	<item name="android:textColor">@android:color/white</item>
 	</style>
+
+	<style name="HomeTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+		<item name="actionBarStyle">@style/EditorActionBar</item>
+        <item name="android:actionBarStyle">@style/EditorActionBar</item>
+    	<item name="actionModeBackground">@drawable/actionbar_actionmode_background</item>
+    	<item name="android:actionModeBackground">@drawable/actionbar_actionmode_background</item>
+    	<item name="actionModeCloseDrawable">@drawable/ic_action_select</item>
+    	<item name="android:actionModeCloseDrawable">@drawable/ic_action_select</item>
+		<item name="actionModeStyle">@style/HomeActionMode</item>
+        <item name="android:actionModeStyle">@style/HomeActionMode</item>
+    </style>
+       
+    <style name="HomeActionMode" parent="@style/Widget.Sherlock.ActionMode">
+    	<item name="titleTextStyle">@style/HomeActionModeTitle</item>
+    	<item name="android:titleTextStyle">@style/HomeActionModeTitle</item>
+    </style>
     
+	<style name="HomeActionModeTitle" parent="@style/TextAppearance.Sherlock.Widget.ActionMode.Title">
+    	<item name="android:textColor">@android:color/black</item>
+	</style>
+	
 </resources>
