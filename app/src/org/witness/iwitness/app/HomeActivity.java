@@ -20,7 +20,7 @@ import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.CameraFragment;
-import org.witness.iwitness.app.screens.GalleryFragmentNew;
+import org.witness.iwitness.app.screens.GalleryFragment;
 import org.witness.iwitness.app.screens.UserManagementFragment;
 import org.witness.iwitness.app.screens.menus.MediaActionMenu;
 import org.witness.iwitness.app.screens.popups.RenamePopup;
@@ -133,7 +133,7 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		userManagementFragment = Fragment.instantiate(this,
 				UserManagementFragment.class.getName());
 		galleryFragment = Fragment.instantiate(this,
-				GalleryFragmentNew.class.getName());
+				GalleryFragment.class.getName());
 		cameraFragment = Fragment.instantiate(this,
 				CameraFragment.class.getName());
 
@@ -222,7 +222,7 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		tab.setContent(R.id.user_management_root_view);
 		tabHost.addTab(tab);
 
-		tab = tabHost.newTabSpec(GalleryFragmentNew.class.getName())
+		tab = tabHost.newTabSpec(GalleryFragment.class.getName())
 				.setIndicator(generateTab(li, R.layout.tabs_iwitness));
 		li.inflate(R.layout.fragment_home_gallery, tabHost.getTabContentView(),
 				true);
@@ -386,7 +386,7 @@ public class HomeActivity extends SherlockFragmentActivity implements
 			public void onClick(View v) {
 				mam.cancel();
 				if ((informaCam.mediaManifest.getById(media._id)).delete()) {
-					((GalleryFragmentNew) galleryFragment).updateAdapter(0);
+					((GalleryFragment) galleryFragment).updateAdapter(0);
 				}
 			}
 
