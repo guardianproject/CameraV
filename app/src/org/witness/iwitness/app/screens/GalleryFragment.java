@@ -1,5 +1,6 @@
 package org.witness.iwitness.app.screens;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -88,8 +89,9 @@ public class GalleryFragment extends SherlockFragment implements
 
 	private void initData() {
 
-		informaCam.mediaManifest.sortBy(0);
-		listMedia = informaCam.mediaManifest.getMediaList();
+		listMedia = new ArrayList<IMedia>(
+				informaCam.mediaManifest
+						.sortBy(Models.IMediaManifest.Sort.DATE_DESC));
 
 		galleryGridAdapter = new GalleryGridAdapter(a, listMedia);
 		if (mediaDisplayGrid != null) {
@@ -214,8 +216,9 @@ public class GalleryFragment extends SherlockFragment implements
 	public void updateAdapter(int which) {
 		Log.d(LOG, "UPDATING OUR ADAPTERS");
 		if (a != null) {
-			listMedia = informaCam.mediaManifest
-					.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
+			listMedia = new ArrayList<IMedia>(
+					informaCam.mediaManifest
+							.sortBy(Models.IMediaManifest.Sort.DATE_DESC));
 			updateAdapters();
 		}
 	}

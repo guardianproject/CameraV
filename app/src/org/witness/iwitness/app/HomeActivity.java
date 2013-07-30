@@ -241,6 +241,9 @@ public class HomeActivity extends SherlockFragmentActivity implements
 	@Override
 	public void launchCamera() {
 		resetActionBar();
+		// toCamera.putExtra(
+		// org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
+		// org.witness.informacam.utils.Constants.App.Camera.Type.CAMERA);
 		route = toCamera;
 
 		// waiter = new WaitPopup(this);
@@ -378,8 +381,12 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		setResult(Activity.RESULT_CANCELED);
-		finish();
+		if (viewPager.getCurrentItem() != INDEX_MAIN) {
+			viewPager.setCurrentItem(INDEX_MAIN);
+		} else {
+			setResult(Activity.RESULT_CANCELED);
+			finish();
+		}
 	}
 
 	@Override
@@ -592,6 +599,13 @@ public class HomeActivity extends SherlockFragmentActivity implements
 	@Override
 	public void launchVideo() {
 		resetActionBar();
+		// toCamera.putExtra(
+		// org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
+		// org.witness.informacam.utils.Constants.App.Camera.Type.CAMCORDER);
+		route = toCamera;
+
+		// waiter = new WaitPopup(this);
+		informaCam.startInforma();
 	}
 
 	@Override

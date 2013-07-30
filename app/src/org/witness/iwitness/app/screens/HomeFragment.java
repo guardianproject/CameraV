@@ -1,18 +1,41 @@
 package org.witness.iwitness.app.screens;
 
+import info.guardianproject.odkparser.widgets.ODKSeekBar;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.models.forms.IForm;
+import org.witness.informacam.models.media.IMedia;
+import org.witness.informacam.models.media.IRegion;
+import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
+import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
+import org.witness.iwitness.app.PreferencesActivity;
+import org.witness.iwitness.app.WipeActivity;
+import org.witness.iwitness.app.screens.popups.AudioNotePopup;
+import org.witness.iwitness.utils.Constants.App.Editor.Forms;
 import org.witness.iwitness.utils.Constants.App.Home;
+import org.witness.iwitness.utils.Constants.Codes.Routes;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
+import org.witness.iwitness.utils.Constants.Preferences;
+import org.witness.iwitness.utils.adapters.HomePhotoAdapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -29,6 +52,9 @@ public class HomeFragment extends SherlockFragment implements
 
 	Handler h = new Handler();
 
+	HomePhotoAdapter mPhotoAdapter;
+	List<IMedia> listMedia = null;
+
 	private static final String LOG = Home.LOG;
 	private final InformaCam informaCam = InformaCam.getInstance();
 	private ActionMode mActionMode;
@@ -38,6 +64,14 @@ public class HomeFragment extends SherlockFragment implements
 	private View mBtnVideo;
 
 	private View mBtnGallery;
+
+	private ViewPager mPhotoPager;
+
+	private GestureDetector mTapGestureDetector;
+
+	private View mBtnAudioNote;
+
+	private View mBtnShare;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,29 +104,28 @@ public class HomeFragment extends SherlockFragment implements
 
 	private void initData() {
 
-		// informaCam.mediaManifest.sortBy(0);
-		// listMedia = informaCam.mediaManifest.getMediaList();
-		//
-		// galleryGridAdapter = new GalleryGridAdapter(a, listMedia);
-		// if (mediaDisplayGrid != null) {
-		// mediaDisplayGrid.setAdapter(galleryGridAdapter);
-		// mediaDisplayGrid.setOnItemLongClickListener(this);
-		// mediaDisplayGrid.setOnItemClickListener(this);
-		// }
-		//
-		// if (listMedia != null && listMedia.size() > 0) {
-		// if (noMedia != null)
-		// noMedia.setVisibility(View.GONE);
-		// } else {
-		//
-		// if (noMedia != null)
-		// noMedia.setVisibility(View.VISIBLE);
-		// }
-		//
-		// updateAdapters();
+		listMedia = new ArrayList<IMedia>(
+				informaCam.mediaManifest
+						.sortBy(Models.IMediaManifest.Sort.DATE_DESC));
+
+		mPhotoAdapter = new HomePhotoAdapter(a, listMedia);
+		mPhotoPager.setAdapter(mPhotoAdapter);
+
+		mTapGestureDetector = new GestureDetector(a,
+				new TapGestureListener(), h);
+		mPhotoPager.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				mTapGestureDetector.onTouchEvent(event);
+				return false;
+			}
+		});
 	}
 
 	private void initLayout(Bundle savedInstanceState) {
+
+		mPhotoPager = (ViewPager) rootView.findViewById(R.id.pagerPhotos);
+
 		initData();
 
 		mBtnPhoto = rootView.findViewById(R.id.btnPhoto);
@@ -101,6 +134,11 @@ public class HomeFragment extends SherlockFragment implements
 		mBtnVideo.setOnClickListener(this);
 		mBtnGallery = rootView.findViewById(R.id.btnGallery);
 		mBtnGallery.setOnClickListener(this);
+
+		mBtnAudioNote = rootView.findViewById(R.id.btnAudioNote);
+		mBtnAudioNote.setOnClickListener(this);
+		mBtnShare = rootView.findViewById(R.id.btnShare);
+		mBtnShare.setOnClickListener(this);
 	}
 
 	@Override
@@ -112,6 +150,21 @@ public class HomeFragment extends SherlockFragment implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.menu_settings: {
+			((HomeActivityListener) a).setLocale(PreferenceManager
+					.getDefaultSharedPreferences(a).getString(
+							Preferences.Keys.LANGUAGE, "0"));
+			Intent settingIntent = new Intent(a, PreferencesActivity.class);
+			a.startActivity(settingIntent);
+		}
+			return true;
+
+		case R.id.menu_panic: {
+			Intent wipeIntent = new Intent(a, WipeActivity.class);
+			a.startActivityForResult(wipeIntent, Routes.WIPE);
+		}
+			return true;
+
 		case R.id.menu_select: {
 			mActionMode = getSherlockActivity().startActionMode(
 					mActionModeSelect);
@@ -126,9 +179,6 @@ public class HomeFragment extends SherlockFragment implements
 		// Called when the action mode is created; startActionMode() was called
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			// Inflate a menu resource providing context menu items
-			// MenuInflater inflater = mode.getMenuInflater();
-			// inflater.inflate(R.menu.context_menu, menu);
 			menu.add(Menu.NONE, R.string.menu_share, 0, R.string.menu_share)
 					.setIcon(R.drawable.ic_gallery_share);
 			menu.add(Menu.NONE, R.string.home_gallery_delete, 0,
@@ -166,8 +216,34 @@ public class HomeFragment extends SherlockFragment implements
 		}
 	};
 
+	private void updateAdapters() {
+		if (listMedia != null) {
+			this.mPhotoAdapter.update(listMedia);
+
+			if (this.mPhotoPager != null)
+				mPhotoPager.invalidate();
+
+			// if (listMedia != null && listMedia.size() > 0) {
+			// if (noMedia != null)
+			// noMedia.setVisibility(View.GONE);
+			// } else {
+			//
+			// if (noMedia != null)
+			// noMedia.setVisibility(View.VISIBLE);
+			// }
+		}
+
+	}
+
 	@Override
 	public void updateAdapter(int which) {
+		Log.d(LOG, "UPDATING OUR ADAPTERS");
+		if (a != null) {
+			listMedia = new ArrayList<IMedia>(
+					informaCam.mediaManifest
+							.sortBy(Models.IMediaManifest.Sort.DATE_DESC));
+			updateAdapters();
+		}
 	}
 
 	@Override
@@ -178,6 +254,67 @@ public class HomeFragment extends SherlockFragment implements
 			((HomeActivityListener) a).launchVideo();
 		} else if (v == mBtnGallery) {
 			((HomeActivityListener) a).launchGallery();
+		} else if (v == mBtnAudioNote) {
+			recordNewAudio();
+		}
+	}
+
+	class TapGestureListener extends GestureDetector.SimpleOnGestureListener {
+		@Override
+		public boolean onSingleTapConfirmed(MotionEvent e) {
+			IMedia currentMedia = (IMedia) mPhotoAdapter
+					.getObjectFromIndex(mPhotoPager.getCurrentItem());
+			if (currentMedia != null)
+				((HomeActivityListener) a).launchEditor(currentMedia);
+			return true;
+		}
+	}
+
+	private void recordNewAudio() {
+
+		IMedia currentMedia = (IMedia) mPhotoAdapter
+				.getObjectFromIndex(mPhotoPager.getCurrentItem());
+		if (currentMedia == null)
+			return;
+
+		IForm audioForm = null;
+		ODKSeekBar audioFormAnswerHolder = new ODKSeekBar(a);
+
+		IRegion overviewRegion = currentMedia.getTopLevelRegion();
+		if (overviewRegion == null) {
+			overviewRegion = currentMedia.addRegion(a,
+					null);
+		}
+		// add an audio form!
+		for (IForm form : FormUtility.getAvailableForms()) {
+			if (form.namespace.equals(Forms.FreeAudio.TAG)) {
+				audioForm = new IForm(form, a);
+				audioForm.answerPath = new info.guardianproject.iocipher.File(
+						currentMedia.rootFolder,
+						"form_a" + System.currentTimeMillis())
+						.getAbsolutePath();
+
+				overviewRegion.addForm(audioForm);
+			}
+		}
+
+		// audioForm.associate(audioFormAnswerHolder, Forms.FreeAudio.PROMPT);
+		new AudioNoteFormPopup(a, audioForm);
+	}
+
+	private class AudioNoteFormPopup extends AudioNotePopup {
+		private final IForm mForm;
+
+		public AudioNoteFormPopup(Activity a, IForm f) {
+			super(a, f);
+			mForm = f;
+		}
+
+		@Override
+		public void cancel() {
+			mForm.answer(Forms.FreeAudio.PROMPT);
+			progress.shutDown();
+			super.cancel();
 		}
 	}
 }
