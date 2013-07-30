@@ -1,7 +1,6 @@
 package org.witness.iwitness.app.screens.forms;
 
 import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
-import info.guardianproject.odkparser.widgets.ODKSeekBar;
 
 import java.io.FileNotFoundException;
 
@@ -87,15 +86,6 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		});
 
 		llAudioFiles = (LinearLayout) rootView.findViewById(R.id.llAudioFiles);
-
-		rootView.findViewById(R.id.btnAddAudio).setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				recordNewAudio();
-			};
-		});
 
 		return rootView;
 	}
@@ -300,53 +290,6 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 			}
 		};
 
-	}
-
-	private void recordNewAudio()
-	{
-		IForm audioForm = null;
-		ODKSeekBar audioFormAnswerHolder = new ODKSeekBar(a);
-
-		IRegion overviewRegion = ((EditorActivityListener) a).media().getTopLevelRegion();
-		if (overviewRegion == null)
-		{
-			overviewRegion = ((EditorActivityListener) a).media().addRegion(a, null);
-		}
-		// add an audio form!
-		for (IForm form : ((EditorActivity) a).availableForms)
-		{
-			if (form.namespace.equals(Forms.FreeAudio.TAG))
-			{
-				audioForm = new IForm(form, a);
-				audioForm.answerPath = new info.guardianproject.iocipher.File(((EditorActivityListener) a).media().rootFolder, "form_a"
-						+ System.currentTimeMillis()).getAbsolutePath();
-
-				overviewRegion.addForm(audioForm);
-			}
-		}
-
-		// audioForm.associate(audioFormAnswerHolder, Forms.FreeAudio.PROMPT);
-		new AudioNoteFormPopup(a, audioForm);
-	}
-
-	private class AudioNoteFormPopup extends AudioNotePopup
-	{
-		private final IForm mForm;
-
-		public AudioNoteFormPopup(Activity a, IForm f)
-		{
-			super(a, f);
-			mForm = f;
-		}
-
-		@Override
-		public void cancel()
-		{
-			mForm.answer(Forms.FreeAudio.PROMPT);
-			progress.shutDown();
-			super.cancel();
-			updateAudioFiles();
-		}
 	}
 
 	@Override
