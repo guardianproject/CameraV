@@ -623,5 +623,6 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		actionBar.setLogo(this.getResources().getDrawable(
 				R.drawable.ic_action_up));
 		actionBar.setDisplayUseLogoEnabled(false);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 	}
 }

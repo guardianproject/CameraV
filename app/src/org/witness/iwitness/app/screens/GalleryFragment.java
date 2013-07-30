@@ -24,11 +24,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -36,7 +38,8 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 public class GalleryFragment extends SherlockFragment implements
-		OnItemClickListener, OnItemLongClickListener, ListAdapterListener {
+		OnItemClickListener, OnItemLongClickListener, ListAdapterListener,
+		OnNavigationListener {
 	View rootView;
 	GridView mediaDisplayGrid;
 	GalleryGridAdapter galleryGridAdapter;
@@ -52,6 +55,7 @@ public class GalleryFragment extends SherlockFragment implements
 	private static final String LOG = Home.LOG;
 	private final InformaCam informaCam = InformaCam.getInstance();
 	private ActionMode mActionMode;
+	private int mCurrentSorting;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -89,9 +93,9 @@ public class GalleryFragment extends SherlockFragment implements
 
 	private void initData() {
 
+		mCurrentSorting = Models.IMediaManifest.Sort.DATE_DESC;
 		listMedia = new ArrayList<IMedia>(
-				informaCam.mediaManifest
-						.sortBy(Models.IMediaManifest.Sort.DATE_DESC));
+				informaCam.mediaManifest.sortBy(mCurrentSorting));
 
 		galleryGridAdapter = new GalleryGridAdapter(a, listMedia);
 		if (mediaDisplayGrid != null) {
@@ -217,8 +221,7 @@ public class GalleryFragment extends SherlockFragment implements
 		Log.d(LOG, "UPDATING OUR ADAPTERS");
 		if (a != null) {
 			listMedia = new ArrayList<IMedia>(
-					informaCam.mediaManifest
-							.sortBy(Models.IMediaManifest.Sort.DATE_DESC));
+					informaCam.mediaManifest.sortBy(mCurrentSorting));
 			updateAdapters();
 		}
 	}
@@ -236,6 +239,14 @@ public class GalleryFragment extends SherlockFragment implements
 		actionBar.setLogo(this.getResources().getDrawable(
 				R.drawable.ic_action_up));
 		actionBar.setDisplayUseLogoEnabled(true);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		
+		ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(
+				actionBar.getThemedContext(),
+ R.array.sort_options,
+				R.layout.sherlock_spinner_item);
+		list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
+		actionBar.setListNavigationCallbacks(list, this);
 	}
 
 	@Override
@@ -336,4 +347,24 @@ public class GalleryFragment extends SherlockFragment implements
 			toggleMultiSelectMode(false);
 		}
 	};
+
+	@Override
+	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+		switch (itemPosition) {
+		case 0:
+			mCurrentSorting = Models.IMediaManifest.Sort.LOCATION;
+			break;
+		case 1:
+			mCurrentSorting = Models.IMediaManifest.Sort.DATE_DESC;
+			break;
+		case 2:
+			mCurrentSorting = Models.IMediaManifest.Sort.TYPE_PHOTO;
+			break;
+		case 3:
+			mCurrentSorting = Models.IMediaManifest.Sort.TYPE_VIDEO;
+			break;
+		}
+		updateAdapter(0);
+		return true;
+	}
 }
