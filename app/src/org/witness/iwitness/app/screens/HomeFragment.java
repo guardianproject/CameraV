@@ -16,6 +16,7 @@ import org.witness.iwitness.R;
 import org.witness.iwitness.app.PreferencesActivity;
 import org.witness.iwitness.app.WipeActivity;
 import org.witness.iwitness.app.screens.popups.AudioNotePopup;
+import org.witness.iwitness.app.screens.popups.SharePopup;
 import org.witness.iwitness.utils.Constants.App.Editor.Forms;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.Codes.Routes;
@@ -256,6 +257,11 @@ public class HomeFragment extends SherlockFragment implements
 			((HomeActivityListener) a).launchGallery();
 		} else if (v == mBtnAudioNote) {
 			recordNewAudio();
+		} else if (v == mBtnShare) {
+			IMedia currentMedia = (IMedia) mPhotoAdapter
+					.getObjectFromIndex(mPhotoPager.getCurrentItem());
+			if (currentMedia != null)
+				new SharePopup(a, currentMedia);
 		}
 	}
 
