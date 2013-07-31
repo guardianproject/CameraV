@@ -105,9 +105,10 @@ public class HomeFragment extends SherlockFragment implements
 
 	private void initData() {
 
-		listMedia = new ArrayList<IMedia>(
-				informaCam.mediaManifest
-						.sortBy(Models.IMediaManifest.Sort.DATE_DESC));
+		listMedia = informaCam.mediaManifest
+				.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
+		if (listMedia != null)
+			listMedia = new ArrayList<IMedia>(listMedia);
 
 		mPhotoAdapter = new HomePhotoAdapter(a, listMedia);
 		mPhotoPager.setAdapter(mPhotoAdapter);
@@ -240,9 +241,10 @@ public class HomeFragment extends SherlockFragment implements
 	public void updateAdapter(int which) {
 		Log.d(LOG, "UPDATING OUR ADAPTERS");
 		if (a != null) {
-			listMedia = new ArrayList<IMedia>(
-					informaCam.mediaManifest
-							.sortBy(Models.IMediaManifest.Sort.DATE_DESC));
+			listMedia = informaCam.mediaManifest
+					.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
+			if (listMedia != null)
+				listMedia = new ArrayList<IMedia>(listMedia);
 			updateAdapters();
 		}
 	}

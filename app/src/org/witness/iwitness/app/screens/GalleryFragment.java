@@ -94,8 +94,9 @@ public class GalleryFragment extends SherlockFragment implements
 	private void initData() {
 
 		mCurrentSorting = Models.IMediaManifest.Sort.DATE_DESC;
-		listMedia = new ArrayList<IMedia>(
-				informaCam.mediaManifest.sortBy(mCurrentSorting));
+		listMedia = informaCam.mediaManifest.sortBy(mCurrentSorting);
+		if (listMedia != null)
+			listMedia = new ArrayList<IMedia>(listMedia);
 
 		galleryGridAdapter = new GalleryGridAdapter(a, listMedia);
 		if (mediaDisplayGrid != null) {
@@ -220,8 +221,10 @@ public class GalleryFragment extends SherlockFragment implements
 	public void updateAdapter(int which) {
 		Log.d(LOG, "UPDATING OUR ADAPTERS");
 		if (a != null) {
-			listMedia = new ArrayList<IMedia>(
-					informaCam.mediaManifest.sortBy(mCurrentSorting));
+
+			listMedia = informaCam.mediaManifest.sortBy(mCurrentSorting);
+			if (listMedia != null)
+				listMedia = new ArrayList<IMedia>(listMedia);
 			updateAdapters();
 		}
 	}
