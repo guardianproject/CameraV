@@ -9,7 +9,9 @@ import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.models.j3m.IDCIMDescriptor;
 import org.witness.informacam.models.j3m.IDCIMDescriptor.IDCIMSerializable;
+import org.witness.informacam.models.j3m.IDCIMEntry;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
@@ -420,8 +422,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				 *   The message contains the Codes.Extras.Messages.DCIM.ADD code, which is handled by "onUpdate()"
 				 *   
 				 */
-				 
-				Log.d(LOG, "new dcim:\n" + ((IDCIMSerializable) data.getSerializableExtra(Codes.Extras.RETURNED_MEDIA)).asJson().toString());				
+				IDCIMSerializable returnedMedia = (IDCIMSerializable) data.getSerializableExtra(Codes.Extras.RETURNED_MEDIA);
+				Log.d(LOG, "new dcim:\n" + returnedMedia.asJson().toString());
+				
+				if(!returnedMedia.dcimList.isEmpty()) {
+					setPending(returnedMedia.dcimList.size(), 0);
+				}
 				
 				informaCam.stopInforma();
 				route = null;
@@ -552,6 +558,19 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			}
 		}
 	}
+	
+	@Override
+	public void setPending(int numPending, int numCompleted) {
+		if(informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED) {
+			Fragment f= fragments.get(viewPager.getCurrentItem());
+
+			if (f instanceof ListAdapterListener)
+			{
+				((ListAdapterListener)f).setPending(numPending, numCompleted);
+			}
+		}
+		
+	}
 
 	@Override
 	public void setLocale(String newLocale) {
@@ -569,9 +588,17 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		
 		switch(code) {
 		case org.witness.informacam.utils.Constants.Codes.Messages.DCIM.ADD:
-			Log.d(LOG, message.getData().getString(Codes.Extras.CONSOLIDATE_MEDIA));
+			final Bundle data = message.getData();
+			Log.d(LOG, "updating: " + data.getString(Codes.Extras.CONSOLIDATE_MEDIA));
 			
 			mHandlerUI.sendEmptyMessage(0);
+			mHandlerUI.post(new Runnable() {
+				@Override
+				public void run() {
+					setPending(data.getInt(Codes.Extras.NUM_PROCESSING), data.getInt(Codes.Extras.NUM_COMPLETED));
+				}
+			});
+			
 			break;
 		case org.witness.informacam.utils.Constants.Codes.Messages.Transport.GENERAL_FAILURE:
 			mHandlerUI.post(new Runnable() {
@@ -580,6 +607,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 					Toast.makeText(HomeActivity.this, message.getData().getString(Codes.Extras.GENERAL_FAILURE), Toast.LENGTH_LONG).show();
 				}
 			});
+			break;
 		}
 	}
 	
@@ -595,5 +623,4 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		}
 		
 	};
-
 }

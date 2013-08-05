@@ -254,4 +254,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			break;
 		}
 	}
+
+	@Override
+	public void setPending(int numPending, int numCompleted) {}
 }

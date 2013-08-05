@@ -33,8 +33,10 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class GalleryFragment extends Fragment implements OnItemSelectedListener, OnClickListener, OnItemClickListener, OnItemLongClickListener, ListAdapterListener {
 	View rootView;
@@ -47,8 +49,11 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 
 	ListView mediaDisplayList;
 	GalleryListAdapter galleryListAdapter;
-	RelativeLayout noMedia;
+	RelativeLayout noMedia, pendingMedia;
 	LinearLayout batchEditHolder;
+	
+	ProgressBar pendingProgressBar;
+	TextView pendingProgressReadout;
 
 	Activity a = null;
 
@@ -86,6 +91,9 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		mediaDisplayList = (ListView) rootView.findViewById(R.id.media_display_list);
 
 		noMedia = (RelativeLayout) rootView.findViewById(R.id.media_display_no_media);
+		pendingMedia = (RelativeLayout) rootView.findViewById(R.id.media_processing_holder);
+		pendingProgressBar = (ProgressBar) rootView.findViewById(R.id.media_pending_progress);
+		pendingProgressReadout = (TextView) rootView.findViewById(R.id.media_pending_readout);
 
 		batchEditHolder = (LinearLayout) rootView.findViewById(R.id.media_batch_edit_holder);
 
@@ -108,7 +116,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		Log.d(LOG, "GALLERY ON ACTIVITY CREATED CALLED");
-		
+
 		initLayout(savedInstanceState);	
 	}
 
@@ -116,7 +124,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 
 		informaCam.mediaManifest.sortBy(0);
 		listMedia = informaCam.mediaManifest.getMediaList();
-		
+
 		galleryGridAdapter = new GalleryGridAdapter(a, listMedia);
 		galleryListAdapter = new GalleryListAdapter(a, listMedia);
 
@@ -133,7 +141,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 			mediaDisplayList.setOnItemLongClickListener(this);
 			mediaDisplayList.setOnItemClickListener(this);
 		}
-		
+
 		if(listMedia != null && listMedia.size() > 0) {
 			if (noMedia != null)
 				noMedia.setVisibility(View.GONE);
@@ -143,7 +151,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 				noMedia.setVisibility(View.VISIBLE);
 		}
 
-		
+
 		updateAdapters();			
 	}
 
@@ -162,7 +170,7 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 			batchEditHolder.setVisibility(View.GONE);
 
 		}
-		
+
 		galleryGridAdapter.update(listMedia);
 		galleryListAdapter.update(listMedia);
 
@@ -309,14 +317,37 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 		}
 
 	}
-	
+
 	@Override
 	public void updateAdapter(int which) {
-		Log.d(LOG, "UPDATING OUR ADAPTERS");
 		if(a != null) {
 			listMedia = informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
 			updateAdapters();
 		}
+	}
+
+	@Override
+	public void setPending(int numPending, int numCompleted) {		
+		if(a == null) {
+			return;
+		}
+		
+		if(numPending > 0 && numPending > numCompleted) {
+			if(pendingMedia.getVisibility() == View.GONE) {
+				pendingMedia.setVisibility(View.VISIBLE);
+			}
+			
+			pendingProgressBar.setMax(numPending);
+			pendingProgressBar.setProgress(numCompleted);
+			
+			pendingProgressReadout.setText(a.getString(R.string.x_of_x_processed, numCompleted, numPending));
+			
+		} else {
+			if(pendingMedia.getVisibility() == View.VISIBLE) {
+				pendingMedia.setVisibility(View.GONE);
+			}
+		}
+
 	}
 
 }

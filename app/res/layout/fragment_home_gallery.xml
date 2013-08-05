@@ -25,8 +25,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.69" >
 
-                <Button style="@style/iWitness_button_a"
+                <Button
                     android:id="@+id/display_toggle_trigger"
+                    style="@style/iWitness_button_a"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/extras_button_a_selector"
@@ -84,6 +85,15 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/media_processing_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/options_holder"
+            android:visibility="gone" >
+            <include layout="@layout/media_processing" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/media_display_no_media"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,8 +101,7 @@
             android:layout_margin="6dip"
             android:orientation="vertical"
             android:paddingLeft="10dip"
-            android:paddingRight="10dip"
-            >
+            android:paddingRight="10dip" >
 
             <TextView
                 android:id="@+id/media_display_no_media_1"
@@ -137,48 +146,53 @@
             android:id="@+id/media_display_grid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/options_holder"
+            android:layout_below="@+id/media_processing_holder"
             android:layout_margin="3dip"
             android:gravity="center"
             android:horizontalSpacing="3dip"
             android:numColumns="3"
             android:stretchMode="columnWidth"
             android:verticalSpacing="6dip"
-            android:visibility="visible"
-             />
+            android:visibility="visible" />
+
         <ListView
             android:id="@+id/media_display_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/options_holder"
+            android:layout_below="@+id/media_processing_holder"
             android:layout_margin="6dip"
             android:gravity="center"
             android:visibility="gone" />
     </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/media_batch_edit_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
         android:padding="0dip"
-        android:weightSum="1"
-        android:visibility="gone" >
-        <Button style="@style/button_b"
+        android:visibility="gone"
+        android:weightSum="1" >
+
+        <Button
             android:id="@+id/media_batch_share"
-            android:text="@string/send"
+            style="@style/button_b"
             android:layout_width="0dip"
+            android:layout_height="wrap_content"
             android:layout_margin="0dip"
             android:layout_marginRight="1dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
-        <Button style="@style/button_b"
+            android:layout_weight="0.5"
+            android:text="@string/send" />
+
+        <Button
             android:id="@+id/media_batch_delete"
-            android:text="@string/delete"
+            style="@style/button_b"
             android:layout_width="0dip"
-            android:layout_marginLeft="1dip"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+            android:layout_marginLeft="1dip"
+            android:layout_weight="0.5"
+            android:text="@string/delete" />
     </LinearLayout>
 
 </RelativeLayout>

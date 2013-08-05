@@ -69,6 +69,8 @@ public class Constants {
 			public static final String LOCALE_PREF_KEY = org.witness.informacam.utils.Constants.Codes.Extras.LOCALE_PREF_KEY;
 			public static final String CONSOLIDATE_MEDIA = org.witness.informacam.utils.Constants.Codes.Extras.CONSOLIDATE_MEDIA;
 			public static final String GENERAL_FAILURE = org.witness.informacam.utils.Constants.Codes.Extras.GENERAL_FAILURE;
+			public static final String NUM_PROCESSING = org.witness.informacam.utils.Constants.Codes.Extras.NUM_PROCESSING;
+			public static final String NUM_COMPLETED = org.witness.informacam.utils.Constants.Codes.Extras.NUM_COMPLETED;
 		}
 	}
 
