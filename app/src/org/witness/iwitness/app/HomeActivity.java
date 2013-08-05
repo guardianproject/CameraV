@@ -9,9 +9,7 @@ import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.models.j3m.IDCIMDescriptor;
 import org.witness.informacam.models.j3m.IDCIMDescriptor.IDCIMSerializable;
-import org.witness.informacam.models.j3m.IDCIMEntry;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
