@@ -291,6 +291,19 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			}
 		};
 		actions.add(action);
+		
+		if(notification.canRetry) {
+			action = new ContextMenuAction();
+			action.label = getResources().getString(R.string.retry);
+			action.ocl = new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mam.cancel();
+					notification.retry();
+				}
+			};
+			actions.add(action);
+		}
 
 		mam = new MediaActionMenu(this, actions);
 		mam.Show();

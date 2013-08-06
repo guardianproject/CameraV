@@ -97,6 +97,8 @@ public class NotificationsListAdapter extends BaseAdapter {
 			int d = R.drawable.ic_notification_waiting;
 			if(notification.taskComplete) {
 				d = R.drawable.ic_notification_accepted;
+			} else if(notification.canRetry) {
+				d = R.drawable.ic_notification_failed;
 			}
 			
 			statusIcon.setImageDrawable(parent.getContext().getApplicationContext().getResources().getDrawable(d));

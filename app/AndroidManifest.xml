@@ -142,7 +142,7 @@
             android:name="org.witness.informacam.informa.InformaService"
             android:enabled="true"
             android:exported="false" />
-        <service android:name="org.witness.informacam.storage.intake.Intake"
+        <service android:name="org.witness.informacam.intake.Intake"
             android:enabled="true"
             android:exported="false" />
         <service

@@ -57,6 +57,7 @@
 	<string name="redo">Redo</string>
 	<string name="play">Play</string>
 	<string name="resend_credentials">Resend my credentials \u2026</string>
+	<string name="retry">Retry</string>
 	
 	<string name="preferences">Preferences</string>
     <string name="prefs_language_title">Language</string>
