@@ -97,7 +97,7 @@
             android:id="@+id/media_display_no_media"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/options_holder"
+            android:layout_below="@+id/media_processing_holder"
             android:layout_margin="6dip"
             android:orientation="vertical"
             android:paddingLeft="10dip"
