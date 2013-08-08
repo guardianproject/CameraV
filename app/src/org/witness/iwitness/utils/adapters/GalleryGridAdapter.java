@@ -17,7 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class GalleryGridAdapter extends BaseAdapter {
-	List<? super IMedia> media;
+	
+	private List<? super IMedia> media;
 	LayoutInflater li;
 	Activity a;
 

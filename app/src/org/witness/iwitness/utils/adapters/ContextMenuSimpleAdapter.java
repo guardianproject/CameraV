@@ -14,7 +14,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class ContextMenuSimpleAdapter extends BaseAdapter {
-	List<ContextMenuAction> options;
+	
+	private List<ContextMenuAction> options;
 	Activity a;
 	
 	public ContextMenuSimpleAdapter(List<ContextMenuAction> options, Activity a) {
