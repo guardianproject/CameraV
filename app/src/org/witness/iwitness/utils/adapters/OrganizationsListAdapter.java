@@ -13,7 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class OrganizationsListAdapter extends BaseAdapter {
-	List<IOrganization> organizations;
+	private List<IOrganization> organizations;
 	
 	public OrganizationsListAdapter(List<IOrganization> organizations) {
 		this.organizations = organizations;

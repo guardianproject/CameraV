@@ -13,7 +13,8 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 public class OrganizationsListSpinnerAdapter extends BaseAdapter implements SpinnerAdapter {
-	List<IOrganization> organizations;
+	
+	private List<IOrganization> organizations;
 	
 	public OrganizationsListSpinnerAdapter(List<IOrganization> organizations) {
 		this.organizations = organizations;

@@ -19,7 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class GalleryListAdapter extends BaseAdapter {
-	List<? super IMedia> media;
+	
+	private List<? super IMedia> media;
 	LayoutInflater li;
 	Activity a;
 	

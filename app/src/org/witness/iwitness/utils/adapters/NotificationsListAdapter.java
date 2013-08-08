@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class NotificationsListAdapter extends BaseAdapter {
-	List<INotification> notifications;
+	private List<INotification> notifications;
 	int currentSort = Models.INotificationManifest.Sort.DATE_DESC;
 	
 	private static final String LOG = App.LOG;
@@ -30,7 +30,7 @@ public class NotificationsListAdapter extends BaseAdapter {
 	}
 	
 	public void update(List<INotification> newNotifications) {
-		notifications = newNotifications;
+		notifications = newNotifications;		
 		notifyDataSetChanged();
 	}
 	
