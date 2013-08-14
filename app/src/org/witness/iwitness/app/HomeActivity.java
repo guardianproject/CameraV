@@ -165,7 +165,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			h.post(new Runnable() {
 				@Override
 				public void run() {
-					IOrganization organization = informaCam.installICTD(ictdURI, h);
+					IOrganization organization = informaCam.installICTD(ictdURI, h, HomeActivity.this);
 					if(organization != null) {
 						viewPager.setCurrentItem(0);
 					} else {

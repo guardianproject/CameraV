@@ -82,9 +82,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <action android:name="android.intent.action.VIEW" />
-
+				<action android:name="android.intent.action.SEND" />
+				<action android:name="android.intent.action.PICK" />
+				<action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.GET_CONTENT" />
+				
                 <data
-                    android:host="*"
                     android:mimeType="application/ictd"
                     android:scheme="content" />
             </intent-filter>
@@ -92,9 +95,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <action android:name="android.intent.action.VIEW" />
-
+                <action android:name="android.intent.action.SEND" />
+				<action android:name="android.intent.action.PICK" />
+				<action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.GET_CONTENT" />
+				
                 <data
-                    android:host="*"
                     android:mimeType="application/ictd"
                     android:scheme="file" />
             </intent-filter>
