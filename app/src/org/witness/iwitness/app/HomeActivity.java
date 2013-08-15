@@ -16,6 +16,7 @@ import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 import org.witness.iwitness.R;
@@ -169,10 +170,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 					if(organization != null) {
 						viewPager.setCurrentItem(0);
 					} else {
-						// TODO: handle error
+						Toast.makeText(HomeActivity.this, getString(org.witness.informacam.R.string.could_not_import_ictd), Toast.LENGTH_LONG).show();
 					}
 				}
 			});
+			
+			
 		}
 	}
 	
