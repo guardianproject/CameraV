@@ -9,14 +9,13 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.models.media.IVideoRegion;
-import org.witness.informacam.models.utils.IRegionDisplay;
+import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.storage.InformaCamMediaScanner;
 import org.witness.informacam.storage.InformaCamMediaScanner.OnMediaScannedListener;
 import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.iwitness.R;
-import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
@@ -209,11 +208,11 @@ OnRangeSeekBarChangeListener<Integer> {
 	
 	@Override
 	public void onSelected(IRegionDisplay regionDisplay) {		
-		IVideoRegion r = new IVideoRegion(regionDisplay.parent);
-		r.timestampInQuestion = mediaPlayer.getCurrentPosition();
 		
-		setCurrentRegion(r);
-		videoSeekBar.showEndpoints(r);
+		((IVideoRegion) regionDisplay.parent).timestampInQuestion = mediaPlayer.getCurrentPosition();
+		
+		setCurrentRegion(regionDisplay.parent);
+		videoSeekBar.showEndpoints((IVideoRegion) regionDisplay.parent);
 	}
 
 	@Override
