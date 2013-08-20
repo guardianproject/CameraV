@@ -5,6 +5,7 @@ import java.util.List;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.App;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.TimeUtility;
@@ -12,6 +13,7 @@ import org.witness.iwitness.R;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,14 +31,26 @@ public class NotificationsListAdapter extends BaseAdapter {
 		this.notifications = notifications;
 	}
 	
-	public void update(List<INotification> newNotifications) {
-		notifications = newNotifications;		
-		notifyDataSetChanged();
+	public void update(List<INotification> newNotifications, Handler h) {
+		notifications = newNotifications;
+		h.post(new Runnable() {
+			@Override
+			public void run() {
+				Logger.d(LOG, "NOTIFIY DATA SET CHANGED IN HANDLER");
+				notifyDataSetChanged();
+			}
+		});
+		
 	}
 	
-	public void update(INotification newNotification) {		
+	public void update(INotification newNotification, Handler h) {		
 		notifications.add(newNotification);
-		notifyDataSetChanged();
+		h.post(new Runnable() {
+			@Override
+			public void run() {
+				notifyDataSetChanged();
+			}
+		});
 	}
 	
 	@Override
