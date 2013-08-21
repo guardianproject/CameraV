@@ -147,4 +147,8 @@
     	<item name="android:textColor">@android:color/black</item>
 	</style>
 	
+	<style name="PopupInfoStyle">
+	    <item name="android:background">@drawable/popup_info_background</item>
+	    <item name="android:textColor">@android:color/white</item> 
+	</style>
 </resources>

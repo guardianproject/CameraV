@@ -38,6 +38,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
@@ -74,6 +77,8 @@ public class HomeFragment extends SherlockFragment implements
 
 	private View mBtnShare;
 
+	private boolean mHasShownSwipeHint = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -102,6 +107,7 @@ public class HomeFragment extends SherlockFragment implements
 
 		initLayout(savedInstanceState);
 	}
+
 
 	private void initData() {
 
@@ -141,6 +147,49 @@ public class HomeFragment extends SherlockFragment implements
 		mBtnAudioNote.setOnClickListener(this);
 		mBtnShare = rootView.findViewById(R.id.btnShare);
 		mBtnShare.setOnClickListener(this);
+
+		showSwipeHint();
+	}
+
+	private void showSwipeHint() {
+
+		synchronized (this)
+		{
+			if (mHasShownSwipeHint || mPhotoAdapter == null
+				|| mPhotoAdapter.getCount() == 0)
+				return;
+			mHasShownSwipeHint = true;
+		}
+
+		final View swipeInfo = rootView.findViewById(R.id.popupInfoSwipe);
+		final Animation animation = AnimationUtils.loadAnimation(a,
+				R.anim.info_fade_in_fade_out);
+		swipeInfo.setAnimation(animation);
+		animation.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				rootView.findViewById(R.id.popupInfoSwipe).setVisibility(
+						View.GONE);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+				rootView.findViewById(R.id.popupInfoSwipe).setVisibility(
+						View.VISIBLE);
+			}
+		});
+		rootView.postDelayed(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				animation.startNow();
+			}
+		}, 3000);
 	}
 
 	@Override
@@ -225,6 +274,7 @@ public class HomeFragment extends SherlockFragment implements
 			if (this.mPhotoPager != null)
 				mPhotoPager.invalidate();
 
+			showSwipeHint();
 			// if (listMedia != null && listMedia.size() > 0) {
 			// if (noMedia != null)
 			// noMedia.setVisibility(View.GONE);

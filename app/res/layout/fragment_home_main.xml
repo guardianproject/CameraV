@@ -11,6 +11,8 @@
         android:layout_alignParentBottom="true"
         layout="@layout/fragment_home_toolbar_bottom" />
 
+
+
     <LinearLayout
         android:id="@+id/llOperations"
         android:layout_width="match_parent"
@@ -82,5 +84,15 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
     />
+    
+    <include
+        android:id="@+id/popupInfoSwipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/llOperations"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        layout="@layout/popup_info_swipe"
+        android:visibility="gone" />
 
 </RelativeLayout>
