@@ -27,7 +27,9 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
@@ -43,7 +45,11 @@ public class GalleryFragment extends SherlockFragment implements
 	View rootView;
 	GridView mediaDisplayGrid;
 	GalleryGridAdapter galleryGridAdapter;
+
 	RelativeLayout noMedia;
+	RelativeLayout pendingMedia;
+	ProgressBar pendingProgressBar;
+	TextView pendingProgressReadout;
 
 	Activity a = null;
 
@@ -74,6 +80,10 @@ public class GalleryFragment extends SherlockFragment implements
 		noMedia = (RelativeLayout) rootView
 				.findViewById(R.id.media_display_no_media);
 
+		pendingMedia = (RelativeLayout) rootView.findViewById(R.id.media_processing_holder);
+		pendingProgressBar = (ProgressBar) rootView.findViewById(R.id.media_pending_progress);
+		pendingProgressReadout = (TextView) rootView.findViewById(R.id.media_pending_readout);
+
 		return rootView;
 	}
 
@@ -88,7 +98,7 @@ public class GalleryFragment extends SherlockFragment implements
 		super.onActivityCreated(savedInstanceState);
 		Log.d(LOG, "GALLERY ON ACTIVITY CREATED CALLED");
 
-		initLayout(savedInstanceState);
+		initLayout(savedInstanceState);	
 	}
 
 	private void initData() {
@@ -105,7 +115,7 @@ public class GalleryFragment extends SherlockFragment implements
 			mediaDisplayGrid.setOnItemClickListener(this);
 		}
 
-		if (listMedia != null && listMedia.size() > 0) {
+		if(listMedia != null && listMedia.size() > 0) {
 			if (noMedia != null)
 				noMedia.setVisibility(View.GONE);
 		} else {
@@ -114,7 +124,7 @@ public class GalleryFragment extends SherlockFragment implements
 				noMedia.setVisibility(View.VISIBLE);
 		}
 
-		updateAdapters();
+		updateAdapters();			
 	}
 
 	public void toggleMultiSelectMode(boolean mode) {
@@ -370,4 +380,29 @@ public class GalleryFragment extends SherlockFragment implements
 		updateAdapter(0);
 		return true;
 	}
+
+	@Override
+	public void setPending(int numPending, int numCompleted) {		
+		if(a == null) {
+			return;
+		}
+		
+		if(numPending > 0 && numPending > numCompleted) {
+			if(pendingMedia.getVisibility() == View.GONE) {
+				pendingMedia.setVisibility(View.VISIBLE);
+			}
+			
+			pendingProgressBar.setMax(numPending);
+			pendingProgressBar.setProgress(numCompleted);
+			
+			pendingProgressReadout.setText(a.getString(R.string.x_of_x_processed, numCompleted, numPending));
+			
+		} else {
+			if(pendingMedia.getVisibility() == View.VISIBLE) {
+				pendingMedia.setVisibility(View.GONE);
+			}
+		}
+
+	}
+
 }

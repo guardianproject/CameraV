@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.witness.iwitness"
     android:installLocation="preferExternal"
-    android:versionCode="11"
-    android:versionName="beta1-build11" >
+    android:versionCode="15"
+    android:versionName="0.1.15" >
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -82,9 +82,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <action android:name="android.intent.action.VIEW" />
-
+				<action android:name="android.intent.action.SEND" />
+				<action android:name="android.intent.action.PICK" />
+				<action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.GET_CONTENT" />
+				
                 <data
-                    android:host="*"
                     android:mimeType="application/ictd"
                     android:scheme="content" />
             </intent-filter>
@@ -92,9 +95,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <action android:name="android.intent.action.VIEW" />
-
+                <action android:name="android.intent.action.SEND" />
+				<action android:name="android.intent.action.PICK" />
+				<action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.GET_CONTENT" />
+				
                 <data
-                    android:host="*"
                     android:mimeType="application/ictd"
                     android:scheme="file" />
             </intent-filter>
@@ -142,6 +148,9 @@
 
         <service
             android:name="org.witness.informacam.informa.InformaService"
+            android:enabled="true"
+            android:exported="false" />
+        <service android:name="org.witness.informacam.intake.Intake"
             android:enabled="true"
             android:exported="false" />
         <service

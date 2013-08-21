@@ -34,4 +34,6 @@
     <color name="tag_unselected">#80231f20</color>
     <color name="tag_selected">#80c03d2c</color>
     
+    <color name="recorder_button_background">#E20F00</color>
+    <color name="recorder_button_text">#ffffff</color>
 </resources>

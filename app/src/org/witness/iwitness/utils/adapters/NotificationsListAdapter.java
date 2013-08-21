@@ -5,6 +5,7 @@ import java.util.List;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.App;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.TimeUtility;
@@ -12,6 +13,7 @@ import org.witness.iwitness.R;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class NotificationsListAdapter extends BaseAdapter {
-	List<INotification> notifications;
+	private List<INotification> notifications;
 	int currentSort = Models.INotificationManifest.Sort.DATE_DESC;
 	
 	private static final String LOG = App.LOG;
@@ -29,14 +31,26 @@ public class NotificationsListAdapter extends BaseAdapter {
 		this.notifications = notifications;
 	}
 	
-	public void update(List<INotification> newNotifications) {
+	public void update(List<INotification> newNotifications, Handler h) {
 		notifications = newNotifications;
-		notifyDataSetChanged();
+		h.post(new Runnable() {
+			@Override
+			public void run() {
+				Logger.d(LOG, "NOTIFIY DATA SET CHANGED IN HANDLER");
+				notifyDataSetChanged();
+			}
+		});
+		
 	}
 	
-	public void update(INotification newNotification) {		
+	public void update(INotification newNotification, Handler h) {		
 		notifications.add(newNotification);
-		notifyDataSetChanged();
+		h.post(new Runnable() {
+			@Override
+			public void run() {
+				notifyDataSetChanged();
+			}
+		});
 	}
 	
 	@Override
@@ -97,6 +111,8 @@ public class NotificationsListAdapter extends BaseAdapter {
 			int d = R.drawable.ic_notification_waiting;
 			if(notification.taskComplete) {
 				d = R.drawable.ic_notification_accepted;
+			} else if(notification.canRetry) {
+				d = R.drawable.ic_notification_failed;
 			}
 			
 			statusIcon.setImageDrawable(parent.getContext().getApplicationContext().getResources().getDrawable(d));

@@ -151,4 +151,9 @@
 	    <item name="android:background">@drawable/popup_info_background</item>
 	    <item name="android:textColor">@android:color/white</item> 
 	</style>
+	
+	<style name="RecordButtonStyle">
+	    <item name="android:background">@drawable/record_button_background</item>
+	    <item name="android:textColor">@android:color/white</item> 
+	</style>
 </resources>

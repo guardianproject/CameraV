@@ -45,6 +45,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 	public void onResume() {
 		super.onResume();
 		password.requestFocus();
+		
+				//TEMP TEMP TEMP MVP
+				password.setText("mF5eag2zFURn");
 	}
 
 	@Override

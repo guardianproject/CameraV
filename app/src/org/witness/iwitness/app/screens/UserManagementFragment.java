@@ -1,5 +1,6 @@
 package org.witness.iwitness.app.screens;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
@@ -7,6 +8,7 @@ import org.witness.informacam.models.credentials.IUser;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
+import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.PreferencesActivity;
 import org.witness.iwitness.app.WipeActivity;
@@ -247,7 +249,8 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			h.post(new Runnable() {
 				@Override
 				public void run() {
-					listNotificationsAdapter.update(listNotifications);
+					listNotifications = informaCam.notificationsManifest.sortBy(Models.INotificationManifest.Sort.DATE_DESC);
+					listNotificationsAdapter.update(listNotifications == null ? new ArrayList<INotification>() : listNotifications, h);
 					notificationsHolder.invalidate();
 				}
 			});			
@@ -257,6 +260,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			h.post(new Runnable() {
 				@Override
 				public void run() {
+					listOrganizations = informaCam.installedOrganizations.organizations;
 					listOrganizationsAdapter.update(listOrganizations);
 					organizationsHolder.invalidate();
 				}
@@ -279,4 +283,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			break;
 		}
 	}
+
+	@Override
+	public void setPending(int numPending, int numCompleted) {}
 }

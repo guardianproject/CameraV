@@ -1,5 +1,7 @@
 package org.witness.iwitness.app;
 
+import info.guardianproject.odkparser.widgets.ODKSeekBar.OnMediaRecorderStopListener;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -59,9 +61,9 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 @SuppressLint("HandlerLeak")
-public class HomeActivity extends SherlockFragmentActivity implements
-		HomeActivityListener, InformaCamStatusListener,
-		InformaCamEventListener, ListAdapterListener {
+public class HomeActivity extends SherlockFragmentActivity implements HomeActivityListener, InformaCamStatusListener, InformaCamEventListener,
+		ListAdapterListener, OnMediaRecorderStopListener
+{
 	Intent init, route;
 
 	private final static String LOG = Constants.App.Home.LOG;
@@ -72,8 +74,7 @@ public class HomeActivity extends SherlockFragmentActivity implements
 	private String lastLocale = null;
 
 	List<Fragment> fragments = new Vector<Fragment>();
-	Fragment mainFragment, userManagementFragment, galleryFragment,
-			cameraFragment;
+	Fragment mainFragment, userManagementFragment, galleryFragment, cameraFragment;
 
 	boolean initGallery = false;
 
@@ -84,13 +85,17 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 	InformaCam informaCam;
 
-	static Handler h = new Handler() {
+	static Handler h = new Handler()
+	{
 
 		@Override
-		public void handleMessage(Message msg) {
+		public void handleMessage(Message msg)
+		{
 			Bundle msgData = msg.getData();
-			if (msgData.containsKey(Models.INotification.CLASS)) {
-				switch (msgData.getInt(Models.INotification.CLASS)) {
+			if (msgData.containsKey(Models.INotification.CLASS))
+			{
+				switch (msgData.getInt(Models.INotification.CLASS))
+				{
 				case Models.INotification.Type.NEW_KEY:
 
 					break;
@@ -105,7 +110,8 @@ public class HomeActivity extends SherlockFragmentActivity implements
 	Intent toEditor, toCamera;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 
 		informaCam = (InformaCam) getApplication();
@@ -115,16 +121,20 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 		setContentView(R.layout.activity_home);
 
-		try {
+		try
+		{
 			Iterator<String> i = savedInstanceState.keySet().iterator();
-			while (i.hasNext()) {
+			while (i.hasNext())
+			{
 				String outState = i.next();
-				if (outState.equals(Home.TAG)
-						&& savedInstanceState.getBoolean(Home.TAG)) {
+				if (outState.equals(Home.TAG) && savedInstanceState.getBoolean(Home.TAG))
+				{
 					initGallery = true;
 				}
 			}
-		} catch (NullPointerException e) {
+		}
+		catch (NullPointerException e)
+		{
 		}
 
 		toEditor = new Intent(this, EditorActivity.class);
@@ -132,12 +142,9 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		route = null;
 
 		mainFragment = Fragment.instantiate(this, HomeFragment.class.getName());
-		userManagementFragment = Fragment.instantiate(this,
-				UserManagementFragment.class.getName());
-		galleryFragment = Fragment.instantiate(this,
-				GalleryFragment.class.getName());
-		cameraFragment = Fragment.instantiate(this,
-				CameraFragment.class.getName());
+		userManagementFragment = Fragment.instantiate(this, UserManagementFragment.class.getName());
+		galleryFragment = Fragment.instantiate(this, GalleryFragment.class.getName());
+		cameraFragment = Fragment.instantiate(this, CameraFragment.class.getName());
 
 		fragments.add(mainFragment);
 		fragments.add(userManagementFragment);
@@ -148,20 +155,23 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 		initLayout();
 		checkForUpdates();
+		launchMain();
 	}
 
 	@Override
-	public void onResume() {
+	public void onResume()
+	{
 		super.onResume();
 
-		if (getIntent().hasExtra(Constants.Codes.Extras.CHANGE_LOCALE)) {
+		if (getIntent().hasExtra(Constants.Codes.Extras.CHANGE_LOCALE))
+		{
 			getIntent().removeExtra(Constants.Codes.Extras.CHANGE_LOCALE);
 		}
 
-		String currentLocale = PreferenceManager.getDefaultSharedPreferences(
-				this).getString(Preferences.Keys.LANGUAGE, "0");
+		String currentLocale = PreferenceManager.getDefaultSharedPreferences(this).getString(Preferences.Keys.LANGUAGE, "0");
 
-		if (lastLocale != null && !lastLocale.equals(currentLocale)) {
+		if (lastLocale != null && !lastLocale.equals(currentLocale))
+		{
 			setNewLocale(currentLocale);
 			return;
 		}
@@ -170,76 +180,85 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 		informaCam = (InformaCam) getApplication();
 
-		if (init.getData() != null) {
+		if (init.getData() != null)
+		{
 			final Uri ictdURI = init.getData();
 			Log.d(LOG, "INIT KEY: " + ictdURI);
 
-			h.post(new Runnable() {
+			h.post(new Runnable()
+			{
 				@Override
-				public void run() {
-					IOrganization organization = informaCam.installICTD(
-							ictdURI, h);
-					if (organization != null) {
+				public void run()
+				{
+					IOrganization organization = informaCam.installICTD(ictdURI, h, HomeActivity.this);
+					if (organization != null)
+					{
 						viewPager.setCurrentItem(0);
-					} else {
-						// TODO: handle error
+					}
+					else
+					{
+						Toast.makeText(HomeActivity.this, getString(org.witness.informacam.R.string.could_not_import_ictd), Toast.LENGTH_LONG).show();
 					}
 				}
 			});
+
 		}
 	}
 
-	private void setNewLocale(String locale_code) {
+	private void setNewLocale(String locale_code)
+	{
 		Configuration configuration = new Configuration();
-		configuration.locale = new Locale(
-				informaCam.languageMap.getCode(Integer.parseInt(locale_code)));
+		configuration.locale = new Locale(informaCam.languageMap.getCode(Integer.parseInt(locale_code)));
 
-		getBaseContext().getResources().updateConfiguration(configuration,
-				getBaseContext().getResources().getDisplayMetrics());
+		getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
 
 		getIntent().putExtra(Constants.Codes.Extras.CHANGE_LOCALE, true);
-		setResult(Activity.RESULT_OK, new Intent().putExtra(
-				Constants.Codes.Extras.CHANGE_LOCALE, true));
+		setResult(Activity.RESULT_OK, new Intent().putExtra(Constants.Codes.Extras.CHANGE_LOCALE, true));
 		finish();
 	}
 
-	private void initLayout() {
+	private void initLayout()
+	{
 		pager = new TabPager(getSupportFragmentManager());
 
 		viewPager = (ViewPager) findViewById(R.id.view_pager_root);
 		viewPager.setAdapter(pager);
 		viewPager.setOnPageChangeListener(pager);
 
-		resetActionBar();
-		viewPager.setCurrentItem(INDEX_MAIN);
+		launchMain();
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	public void onSaveInstanceState(Bundle outState)
+	{
 		outState.putBoolean(Home.TAG, true);
 
 		super.onSaveInstanceState(outState);
 	}
 
 	@Override
-	public void onPause() {
+	public void onPause()
+	{
 		super.onPause();
 	}
 
 	@Override
-	public void onDestroy() {
+	public void onDestroy()
+	{
 		super.onDestroy();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public int[] getDimensions() {
+	public int[] getDimensions()
+	{
 		Display display = getWindowManager().getDefaultDisplay();
 		return new int[] { display.getWidth(), display.getHeight() };
 	}
 
 	@Override
-	public void launchCamera() {
+	public void launchCamera()
+	{
 		resetActionBar();
 		// toCamera.putExtra(
 		// org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
@@ -247,56 +266,85 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		route = toCamera;
 
 		// waiter = new WaitPopup(this);
-		informaCam.startInforma();
+		if (informaCam.informaService != null)
+			routeUs();
+		else
+			informaCam.startInforma();
 	}
 
 	@Override
-	public void launchEditor(IMedia media) {
+	public void launchEditor(IMedia media)
+	{
 		toEditor.putExtra(Codes.Extras.EDIT_MEDIA, media._id);
 
 		route = toEditor;
 		// waiter = new WaitPopup(this);
-		informaCam.startInforma();
+		if (informaCam.informaService != null)
+			routeUs();
+		else
+			informaCam.startInforma();
 		Log.d(LOG, "launching editor for " + media._id);
 	}
 
 	@Override
-	public void getContextualMenuFor(final INotification notification) {
+	public void getContextualMenuFor(final INotification notification)
+	{
 		List<ContextMenuAction> actions = new Vector<ContextMenuAction>();
 
 		ContextMenuAction action = new ContextMenuAction();
 		action.label = getResources().getString(R.string.delete);
-		action.ocl = new OnClickListener() {
+		action.ocl = new OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mam.cancel();
-				informaCam.notificationsManifest.getById(notification._id)
-						.delete();
+				informaCam.notificationsManifest.getById(notification._id).delete();
 
-				((ListAdapterListener) userManagementFragment)
-						.updateAdapter(Codes.Adapters.NOTIFICATIONS);
+				((ListAdapterListener) userManagementFragment).updateAdapter(Codes.Adapters.NOTIFICATIONS);
 			}
 		};
 		actions.add(action);
+
+		if (notification.canRetry)
+		{
+			action = new ContextMenuAction();
+			action.label = getResources().getString(R.string.retry);
+			action.ocl = new OnClickListener()
+			{
+				@Override
+				public void onClick(View v)
+				{
+					mam.cancel();
+					notification.retry();
+				}
+			};
+			actions.add(action);
+		}
 
 		mam = new MediaActionMenu(this, actions);
 		mam.Show();
 	}
 
 	@Override
-	public void getContextualMenuFor(final IOrganization organization) {
+	public void getContextualMenuFor(final IOrganization organization)
+	{
 		List<ContextMenuAction> actions = new Vector<ContextMenuAction>();
 
 		ContextMenuAction action = new ContextMenuAction();
 		action.label = getResources().getString(R.string.send_message);
-		action.ocl = new OnClickListener() {
+		action.ocl = new OnClickListener()
+		{
 
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mam.cancel();
-				new TextareaPopup(HomeActivity.this, organization) {
+				new TextareaPopup(HomeActivity.this, organization)
+				{
 					@Override
-					public void cancel() {
+					public void cancel()
+					{
 						// TODO: send a message...
 
 						super.cancel();
@@ -308,17 +356,15 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 		action = new ContextMenuAction();
 		action.label = getResources().getString(R.string.resend_credentials);
-		action.ocl = new OnClickListener() {
+		action.ocl = new OnClickListener()
+		{
 
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mam.cancel();
 				informaCam.resendCredentials(organization);
-				Toast.makeText(
-						HomeActivity.this,
-						getResources().getString(
-								R.string.you_have_resent_your_credentials_to_x,
-								organization.organizationName),
+				Toast.makeText(HomeActivity.this, getResources().getString(R.string.you_have_resent_your_credentials_to_x, organization.organizationName),
 						Toast.LENGTH_LONG).show();
 			}
 		};
@@ -329,17 +375,21 @@ public class HomeActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void getContextualMenuFor(final IMedia media) {
+	public void getContextualMenuFor(final IMedia media)
+	{
 		List<ContextMenuAction> actions = new Vector<ContextMenuAction>();
 
 		ContextMenuAction action = new ContextMenuAction();
 		action.label = getResources().getString(R.string.delete);
-		action.ocl = new OnClickListener() {
+		action.ocl = new OnClickListener()
+		{
 
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mam.cancel();
-				if ((informaCam.mediaManifest.getById(media._id)).delete()) {
+				if ((informaCam.mediaManifest.getById(media._id)).delete())
+				{
 					((GalleryFragment) galleryFragment).updateAdapter(0);
 				}
 			}
@@ -349,13 +399,14 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 		action = new ContextMenuAction();
 		action.label = getResources().getString(R.string.rename);
-		action.ocl = new OnClickListener() {
+		action.ocl = new OnClickListener()
+		{
 
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mam.cancel();
-				new RenamePopup(HomeActivity.this,
-						informaCam.mediaManifest.getById(media._id));
+				new RenamePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id));
 			}
 
 		};
@@ -363,13 +414,14 @@ public class HomeActivity extends SherlockFragmentActivity implements
 
 		action = new ContextMenuAction();
 		action.label = getResources().getString(R.string.send);
-		action.ocl = new OnClickListener() {
+		action.ocl = new OnClickListener()
+		{
 
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				mam.cancel();
-				new SharePopup(HomeActivity.this,
-						informaCam.mediaManifest.getById(media._id), true);
+				new SharePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id), true);
 			}
 
 		};
@@ -380,33 +432,40 @@ public class HomeActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void onBackPressed() {
-		if (viewPager.getCurrentItem() != INDEX_MAIN) {
+	public void onBackPressed()
+	{
+		if (viewPager.getCurrentItem() != INDEX_MAIN)
+		{
 			viewPager.setCurrentItem(INDEX_MAIN);
-		} else {
+		}
+		else
+		{
 			setResult(Activity.RESULT_CANCELED);
 			finish();
 		}
 	}
 
 	@Override
-	public void logoutUser() {
+	public void logoutUser()
+	{
 		getIntent().putExtra(Codes.Extras.LOGOUT_USER, true);
 		setResult(Activity.RESULT_CANCELED);
 		finish();
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int responseCode, Intent data) {
-		if (responseCode == Activity.RESULT_OK) {
+	public void onActivityResult(int requestCode, int responseCode, Intent data)
+	{
+		if (responseCode == Activity.RESULT_OK)
+		{
 			informaCam.setStatusListener(this);
 
-			switch (requestCode) {
+			switch (requestCode)
+			{
 			case Codes.Routes.CAMERA:
 				viewPager.setCurrentItem(INDEX_GALLERY);
 
-				informaCam.mediaManifest
-						.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
+				informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
 				/*
 				 * XXX: Other developers, take note:
 				 * 
@@ -419,12 +478,13 @@ public class HomeActivity extends SherlockFragmentActivity implements
 				 * Codes.Extras.Messages.DCIM.ADD code, which is handled by
 				 * "onUpdate()"
 				 */
+				IDCIMSerializable returnedMedia = (IDCIMSerializable) data.getSerializableExtra(Codes.Extras.RETURNED_MEDIA);
+				Log.d(LOG, "new dcim:\n" + returnedMedia.asJson().toString());
 
-				Log.d(LOG,
-						"new dcim:\n"
-								+ ((IDCIMSerializable) data
-										.getSerializableExtra(Codes.Extras.RETURNED_MEDIA))
-										.asJson().toString());
+				if (!returnedMedia.dcimList.isEmpty())
+				{
+					setPending(returnedMedia.dcimList.size(), 0);
+				}
 
 				informaCam.stopInforma();
 				route = null;
@@ -443,71 +503,94 @@ public class HomeActivity extends SherlockFragmentActivity implements
 		}
 	}
 
-	class TabPager extends FragmentStatePagerAdapter implements
-			OnPageChangeListener {
+	class TabPager extends FragmentStatePagerAdapter implements OnPageChangeListener
+	{
 
-		public TabPager(FragmentManager fm) {
+		public TabPager(FragmentManager fm)
+		{
 			super(fm);
 		}
 
 		@Override
-		public void onPageScrollStateChanged(int state) {
+		public void onPageScrollStateChanged(int state)
+		{
 		}
 
 		@Override
-		public void onPageScrolled(int arg0, float arg1, int arg2) {
+		public void onPageScrolled(int arg0, float arg1, int arg2)
+		{
 		}
 
 		@Override
-		public void onPageSelected(int page) {
+		public void onPageSelected(int page)
+		{
 			// tabHost.setCurrentTab(page);
-			if (page == 3) {
+			if (page == 3)
+			{
 				launchCamera();
-			} else {
+			}
+			else
+			{
 				// updateAdapter(0);
 			}
 			supportInvalidateOptionsMenu();
 		}
 
 		@Override
-		public Fragment getItem(int which) {
+		public Fragment getItem(int which)
+		{
 			return fragments.get(which);
 		}
 
 		@Override
-		public int getCount() {
+		public int getCount()
+		{
 			return fragments.size();
 		}
 
 	}
 
 	@Override
-	public void onInformaCamStart(Intent intent) {
+	public void onInformaCamStart(Intent intent)
+	{
 	}
 
 	@Override
-	public void onInformaCamStop(Intent intent) {
+	public void onInformaCamStop(Intent intent)
+	{
 	}
 
 	@Override
-	public void onInformaStop(Intent intent) {
+	public void onInformaStop(Intent intent)
+	{
 		route = null;
 	}
 
 	@Override
-	public void onInformaStart(Intent intent) {
+	public void onInformaStart(Intent intent)
+	{
 		// waiter.cancel();
-		if (route != null) {
-			if (route.equals(toEditor)) {
+		routeUs();
+	}
+
+	private void routeUs()
+	{
+		if (route != null)
+		{
+			if (route.equals(toEditor))
+			{
 				startActivityForResult(toEditor, Routes.EDITOR);
-			} else if (route.equals(toCamera)) {
+			}
+			else if (route.equals(toCamera))
+			{
 				startActivityForResult(toCamera, Routes.CAMERA);
 			}
 		}
 	}
 
 	@Override
-	public void waiter(boolean show) {
+	public void waiter(boolean show)
+	{
 		/*
 		 * if(show) { waiter = new WaitPopup(this); } else { if(waiter != null)
 		 * { waiter.cancel(); } }
@@ -515,74 +598,110 @@ public class HomeActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void updateData(INotification notification, Message message) {
+	public void updateData(INotification notification, Message message)
+	{
 	}
 
 	@Override
-	public void updateData(IOrganization organization, Message message) {
+	public void updateData(IOrganization organization, Message message)
+	{
 	}
 
 	private final static String HOCKEY_APP_ID = "819d2172183272c9d84cd3a4dbd9296b";
 
-	private void checkForCrashes() {
+	private void checkForCrashes()
+	{
 		CrashManager.register(this, HOCKEY_APP_ID);
 	}
 
-	private void checkForUpdates() {
+	private void checkForUpdates()
+	{
 		// XXX: Remove this for store builds!
 		UpdateManager.register(this, HOCKEY_APP_ID);
 	}
 
 	@Override
-	public void updateAdapter(int which) {
-		if (informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED) {
+	public void updateAdapter(int which)
+	{
+		if (informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED)
+		{
 			Fragment f = fragments.get(viewPager.getCurrentItem());
 
-			if (f instanceof ListAdapterListener) {
+			if (f instanceof ListAdapterListener)
+			{
 				((ListAdapterListener) f).updateAdapter(which);
 			}
 		}
 	}
 
 	@Override
-	public void setLocale(String newLocale) {
+	public void setPending(int numPending, int numCompleted)
+	{
+		if (informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED)
+		{
+			Fragment f = fragments.get(viewPager.getCurrentItem());
+
+			if (f instanceof ListAdapterListener)
+			{
+				((ListAdapterListener) f).setPending(numPending, numCompleted);
+			}
+		}
+
+	}
+
+	@Override
+	public void setLocale(String newLocale)
+	{
 		lastLocale = newLocale;
 	}
 
 	@Override
-	public String getLocale() {
+	public String getLocale()
+	{
 		return lastLocale;
 	}
 
 	@Override
-	public void onUpdate(final Message message) {
+	public void onUpdate(final Message message)
+	{
 		int code = message.getData().getInt(Codes.Extras.MESSAGE_CODE);
 
-		switch (code) {
+		switch (code)
+		{
 		case org.witness.informacam.utils.Constants.Codes.Messages.DCIM.ADD:
-			Log.d(LOG,
-					message.getData().getString(Codes.Extras.CONSOLIDATE_MEDIA));
+			final Bundle data = message.getData();
+			Log.d(LOG, "updating: " + data.getString(Codes.Extras.CONSOLIDATE_MEDIA));
 
 			mHandlerUI.sendEmptyMessage(0);
-			break;
-		case org.witness.informacam.utils.Constants.Codes.Messages.Transport.GENERAL_FAILURE:
-			mHandlerUI.post(new Runnable() {
+			mHandlerUI.post(new Runnable()
+			{
 				@Override
-				public void run() {
-					Toast.makeText(
-							HomeActivity.this,
-							message.getData().getString(
-									Codes.Extras.GENERAL_FAILURE),
-							Toast.LENGTH_LONG).show();
+				public void run()
+				{
+					setPending(data.getInt(Codes.Extras.NUM_PROCESSING), data.getInt(Codes.Extras.NUM_COMPLETED));
 				}
 			});
+
+			break;
+		case org.witness.informacam.utils.Constants.Codes.Messages.Transport.GENERAL_FAILURE:
+			mHandlerUI.post(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					Toast.makeText(HomeActivity.this, message.getData().getString(Codes.Extras.GENERAL_FAILURE), Toast.LENGTH_LONG).show();
+				}
+			});
+			break;
 		}
 	}
 
-	private final Handler mHandlerUI = new Handler() {
+	private final Handler mHandlerUI = new Handler()
+	{
 
 		@Override
-		public void handleMessage(Message msg) {
+		public void handleMessage(Message msg)
+		{
 
 			super.handleMessage(msg);
 
@@ -592,12 +711,15 @@ public class HomeActivity extends SherlockFragmentActivity implements
 	};
 
 	@Override
-	public void launchGallery() {
+	public void launchGallery()
+	{
+		informaCam.stopInforma();
 		viewPager.setCurrentItem(INDEX_GALLERY);
 	}
 
 	@Override
-	public void launchVideo() {
+	public void launchVideo()
+	{
 		resetActionBar();
 		// toCamera.putExtra(
 		// org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
@@ -609,20 +731,27 @@ public class HomeActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void launchMain() {
+	public void launchMain()
+	{
 		viewPager.setCurrentItem(INDEX_MAIN);
 		resetActionBar();
+		informaCam.startInforma();
 	}
 
-	private void resetActionBar() {
+	private void resetActionBar()
+	{
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(false);
 		actionBar.setHomeButtonEnabled(true);
-		actionBar.setLogo(this.getResources().getDrawable(
-				R.drawable.ic_action_up));
+		actionBar.setLogo(this.getResources().getDrawable(R.drawable.ic_action_up));
 		actionBar.setDisplayUseLogoEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+	}
+
+	@Override
+	public void onMediaRecorderStop()
+	{
 	}
 }
