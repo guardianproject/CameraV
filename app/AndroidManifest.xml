@@ -131,9 +131,10 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name" />
         <activity
-            android:name="org.witness.informacam.ui.WizardActivity"
+            android:name="org.witness.iwitness.app.WizardActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
             android:label="@string/app_name"
+            android:theme="@style/WizardTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="org.witness.informacam.ui.SurfaceGrabberActivity"
