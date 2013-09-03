@@ -1,5 +1,7 @@
 package org.witness.iwitness.app;
 
+import info.guardianproject.onionkit.ui.OrbotHelper;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -81,20 +83,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	InformaCam informaCam;
 
-	static Handler h = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			Bundle msgData = msg.getData();
-			if(msgData.containsKey(Models.INotification.CLASS)) {
-				switch(msgData.getInt(Models.INotification.CLASS)) {
-				case Models.INotification.Type.NEW_KEY:
-
-					break;
-				}
-			}
-		}
-	};
+	
 
 	MediaActionMenu mam;
 //	WaitPopup waiter;
@@ -163,10 +152,10 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			final Uri ictdURI = init.getData();
 			Log.d(LOG, "INIT KEY: " + ictdURI);
 
-			h.post(new Runnable() {
+			mHandlerUI.post(new Runnable() {
 				@Override
 				public void run() {
-					IOrganization organization = informaCam.installICTD(ictdURI, h, HomeActivity.this);
+					IOrganization organization = informaCam.installICTD(ictdURI, mHandlerUI, HomeActivity.this);
 					if(organization != null) {
 						viewPager.setCurrentItem(0);
 					} else {
@@ -622,6 +611,25 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				}
 			});
 			break;
+		case org.witness.informacam.utils.Constants.Codes.Messages.Transport.ORBOT_UNINSTALLED:
+			mHandlerUI.post(new Runnable() {
+				@Override
+				public void run() {
+					OrbotHelper oh = new OrbotHelper(HomeActivity.this);
+					oh.promptToInstall(HomeActivity.this);
+				}
+			});
+			break;
+		case org.witness.informacam.utils.Constants.Codes.Messages.Transport.ORBOT_NOT_RUNNING:
+			mHandlerUI.post(new Runnable() {
+				@Override
+				public void run() {
+					OrbotHelper oh = new OrbotHelper(HomeActivity.this);
+					oh.requestOrbotStart(HomeActivity.this);
+				}
+			});
+			break;
+			
 		}
 	}
 	
