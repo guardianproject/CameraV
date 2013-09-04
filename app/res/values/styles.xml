@@ -36,7 +36,7 @@
     
     <style name="iwitness_h1">
         <item name="android:textColor">@drawable/white</item>
-        <item name="android:textSize">28sp</item>
+        <item name="android:textSize">24sp</item>
     </style>
     
     <style name="iwitness_h2">
@@ -46,7 +46,7 @@
     
     <style name="iwitness_h3">
         <item name="android:textColor">@drawable/black</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
     
     <style name="iwitness_p">
@@ -156,4 +156,10 @@
 	    <item name="android:background">@drawable/record_button_background</item>
 	    <item name="android:textColor">@android:color/white</item> 
 	</style>
+	
+	<style name="BlueRoundedButton">
+        <item name="android:background">@drawable/blue_rounded_button_selector</item>
+        <item name="android:textColor">@android:color/white</item>
+	    <item name="android:textSize">15sp</item>
+    </style>
 </resources>

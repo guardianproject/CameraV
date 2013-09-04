@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <attr format="string" name="font"/>
+    
     <declare-styleable name="VerticalButton">
         <attr name="android:text" />
     </declare-styleable>
@@ -7,4 +10,18 @@
     <declare-styleable name="RoundedImageView">
         <attr name="rounding_radius" format="integer" />
     </declare-styleable>
+    
+    <declare-styleable name="DropdownSpinner">
+        <attr name="dropdown_background" format="reference" />
+        <attr name="android:divider" />
+    </declare-styleable>
+    
+    <declare-styleable name="CustomFontTextView">
+        <attr name="font"/>
+    </declare-styleable>
+    
+    <declare-styleable name="CustomFontEditText">
+        <attr name="font"/>
+    </declare-styleable>
+    
 </resources>

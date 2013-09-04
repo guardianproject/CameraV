@@ -8,6 +8,14 @@ import android.net.Uri;
 import android.os.Message;
 
 public class Constants {	
+	
+	public interface WizardActivityListener {
+		public void onLanguageSelected(String language);
+		public void onLanguageConfirmed();
+		public void onUsernameCreated(String username, String email, String password);
+		public void onTakePhotoClicked();
+	}
+	
 	public interface EditorActivityListener {
 		public IMedia media();
 		public void onMediaScanned(Uri uri);
@@ -75,6 +83,7 @@ public class Constants {
 			public static final String GENERAL_FAILURE = org.witness.informacam.utils.Constants.Codes.Extras.GENERAL_FAILURE;
 			public static final String NUM_PROCESSING = org.witness.informacam.utils.Constants.Codes.Extras.NUM_PROCESSING;
 			public static final String NUM_COMPLETED = org.witness.informacam.utils.Constants.Codes.Extras.NUM_COMPLETED;
+			public static final String GENERATING_KEY = "generating_key";
 		}
 	}
 

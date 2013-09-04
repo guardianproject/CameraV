@@ -133,6 +133,7 @@
         <activity
             android:name="org.witness.iwitness.app.WizardActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/app_name"
             android:theme="@style/WizardTheme"
             android:screenOrientation="portrait" />
@@ -140,7 +141,7 @@
             android:name="org.witness.informacam.ui.SurfaceGrabberActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="portrait" />
         <activity
             android:name="org.witness.informacam.ui.CameraActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

@@ -74,7 +74,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	private String lastLocale = null;
 
 	List<Fragment> fragments = new Vector<Fragment>();
-	Fragment mainFragment, userManagementFragment, galleryFragment, cameraFragment;
+	HomeFragment mainFragment;
+	Fragment userManagementFragment, galleryFragment, cameraFragment;
 
 	boolean initGallery = false;
 
@@ -141,7 +142,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		toCamera = new Intent(this, CameraActivity.class);
 		route = null;
 
-		mainFragment = Fragment.instantiate(this, HomeFragment.class.getName());
+		mainFragment = (HomeFragment) Fragment.instantiate(this, HomeFragment.class.getName());
 		userManagementFragment = Fragment.instantiate(this, UserManagementFragment.class.getName());
 		galleryFragment = Fragment.instantiate(this, GalleryFragment.class.getName());
 		cameraFragment = Fragment.instantiate(this, CameraFragment.class.getName());
@@ -167,6 +168,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		{
 			getIntent().removeExtra(Constants.Codes.Extras.CHANGE_LOCALE);
 		}
+		mainFragment.setIsGeneratingKey(getIntent().getBooleanExtra(Constants.Codes.Extras.GENERATING_KEY, false));
 
 		String currentLocale = PreferenceManager.getDefaultSharedPreferences(this).getString(Preferences.Keys.LANGUAGE, "0");
 
@@ -692,6 +694,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 					Toast.makeText(HomeActivity.this, message.getData().getString(Codes.Extras.GENERAL_FAILURE), Toast.LENGTH_LONG).show();
 				}
 			});
+			break;
+		case org.witness.informacam.utils.Constants.Codes.Messages.UI.REPLACE:
+			mainFragment.setIsGeneratingKey(false);
 			break;
 		}
 	}

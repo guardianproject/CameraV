@@ -80,7 +80,24 @@
     <string name="menu_select">Select</string>
     <string name="menu_panic">Panic</string>
     <string name="menu_settings">Settings</string>
-   
+
+    <string name="wizard_welcome">Welcome!</string>
+    <string name="wizard_choose_language">Choose a language:</string>
+    <string name="wizard_get_started">Get started</string>
+    <string name="wizard_step_1_of_2">Step 1 of 2:</string>
+    <string name="wizard_create_db">Set up your secure database.</string>
+    <string name="wizard_password_dont_match">Passwords do not match =(</string>
+    <string name="wizard_password_wrong_format">Your password should be more than 10 characters.</string>
+    
+    <string name="wizard_ok_next">Okay, next</string>
+    <string name="wizard_step_2_of_2">Step 2 of 2:</string>
+    <string name="wizard_take_photo_title">Take a boring photo to generate your device key.</string>
+    <string name="wizard_key_information">Your key will allow you to be verified by IBA, so that you can share seamlessly and securely.</string>
+    <string name="wizard_take_photo">Take Photo</string>
+    <string name="wizard_take_photo_take">Take</string>
+    <string name="wizard_key_is_being_made">Your key is being made.</string>
+    <string name="wizard_key_made">Your key has been made.</string>
+    
     <string name="home_audio_note">AUDIO NOTE</string>
     <string name="home_share">SHARE</string>
     <string name="home_gallery_selected">%1$d Selected</string>

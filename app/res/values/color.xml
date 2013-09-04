@@ -22,6 +22,7 @@
 
     <color name="blue_light">#ff4AAEE2</color>
     <color name="blue_light_semi">#804AAEE2</color>
+    <color name="blue_dark">#FF1D1F21</color>
     
     <color name="actionbar_background">#ff231F20</color>
     <color name="actionbar_bottom_edge">#ff4AAEE2</color>
@@ -36,4 +37,8 @@
     
     <color name="recorder_button_background">#E20F00</color>
     <color name="recorder_button_text">#ffffff</color>
+    
+    <color name="wizard_blue">#FF00AEEF</color>
+    <color name="wizard_blue_semi">#FF0A77AA</color>
+    <color name="wizard_grey">#FFA7A9AC</color>
 </resources>

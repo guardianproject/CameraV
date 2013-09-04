@@ -83,6 +83,7 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 	private View mBtnShare;
 
 	private boolean mHasShownSwipeHint = false;
+	private boolean mIsGeneratingKey = false;
 
 	private AudioNoteRecorder mRecorder;
 
@@ -151,6 +152,7 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 		mBtnPhoto.setOnClickListener(this);
 		mBtnVideo = rootView.findViewById(R.id.btnVideo);
 		mBtnVideo.setOnClickListener(this);
+		setIsGeneratingKey(mIsGeneratingKey);
 		mBtnGallery = rootView.findViewById(R.id.btnGallery);
 		mBtnGallery.setOnClickListener(this);
 
@@ -447,6 +449,25 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 			int seconds = ((milliseconds / 1000) % 60);
 			int minutes = ((milliseconds / 1000) / 60);
 			mTvRecordingTime.setText(String.format("%02d:%02d", minutes, seconds));
+		}
+	}
+	
+	public void setIsGeneratingKey(boolean generatingKey)
+	{
+		mIsGeneratingKey = generatingKey;
+		if (rootView != null)
+		{
+			rootView.post(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					if (mBtnPhoto != null)
+						mBtnPhoto.setEnabled(!mIsGeneratingKey);
+					if (mBtnVideo != null)
+						mBtnVideo.setEnabled(!mIsGeneratingKey);
+				}
+			});
 		}
 	}
 }
