@@ -1,6 +1,7 @@
 package org.witness.iwitness.app;
 
 import info.guardianproject.odkparser.widgets.ODKSeekBar.OnMediaRecorderStopListener;
+import info.guardianproject.onionkit.ui.OrbotHelper;
 
 import java.util.Iterator;
 import java.util.List;
@@ -86,25 +87,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	InformaCam informaCam;
 
-	static Handler h = new Handler()
-	{
-
-		@Override
-		public void handleMessage(Message msg)
-		{
-			Bundle msgData = msg.getData();
-			if (msgData.containsKey(Models.INotification.CLASS))
-			{
-				switch (msgData.getInt(Models.INotification.CLASS))
-				{
-				case Models.INotification.Type.NEW_KEY:
-
-					break;
-				}
-			}
-		}
-	};
-
 	MediaActionMenu mam;
 	// WaitPopup waiter;
 
@@ -187,14 +169,11 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			final Uri ictdURI = init.getData();
 			Log.d(LOG, "INIT KEY: " + ictdURI);
 
-			h.post(new Runnable()
-			{
+			mHandlerUI.post(new Runnable() {
 				@Override
-				public void run()
-				{
-					IOrganization organization = informaCam.installICTD(ictdURI, h, HomeActivity.this);
-					if (organization != null)
-					{
+				public void run() {
+					IOrganization organization = informaCam.installICTD(ictdURI, mHandlerUI, HomeActivity.this);
+					if(organization != null) {
 						viewPager.setCurrentItem(0);
 					}
 					else
@@ -262,9 +241,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void launchCamera()
 	{
 		resetActionBar();
-		// toCamera.putExtra(
-		// org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
-		// org.witness.informacam.utils.Constants.App.Camera.Type.CAMERA);
+		toCamera.putExtra(
+				 org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
+				 org.witness.informacam.utils.Constants.App.Camera.Type.CAMERA);
 		route = toCamera;
 
 		// waiter = new WaitPopup(this);
@@ -695,9 +674,30 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				}
 			});
 			break;
+
 		case org.witness.informacam.utils.Constants.Codes.Messages.UI.REPLACE:
 			mainFragment.setIsGeneratingKey(false);
 			break;
+
+		case org.witness.informacam.utils.Constants.Codes.Messages.Transport.ORBOT_UNINSTALLED:
+			mHandlerUI.post(new Runnable() {
+				@Override
+				public void run() {
+					OrbotHelper oh = new OrbotHelper(HomeActivity.this);
+					oh.promptToInstall(HomeActivity.this);
+				}
+			});
+			break;
+		case org.witness.informacam.utils.Constants.Codes.Messages.Transport.ORBOT_NOT_RUNNING:
+			mHandlerUI.post(new Runnable() {
+				@Override
+				public void run() {
+					OrbotHelper oh = new OrbotHelper(HomeActivity.this);
+					oh.requestOrbotStart(HomeActivity.this);
+				}
+			});
+			break;
+
 		}
 	}
 
@@ -726,9 +726,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void launchVideo()
 	{
 		resetActionBar();
-		// toCamera.putExtra(
-		// org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
-		// org.witness.informacam.utils.Constants.App.Camera.Type.CAMCORDER);
+		toCamera.putExtra(
+				org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
+				org.witness.informacam.utils.Constants.App.Camera.Type.CAMCORDER);
 		route = toCamera;
 
 		// waiter = new WaitPopup(this);

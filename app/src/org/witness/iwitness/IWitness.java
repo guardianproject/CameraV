@@ -14,13 +14,13 @@ import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.transport.ITransportStub;
 import org.witness.informacam.models.utils.ILanguageMap;
 import org.witness.informacam.storage.FormUtility;
+import org.witness.informacam.transport.TransportUtility;
 import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.informacam.utils.Constants.Models.IUser;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
-import org.witness.informacam.utils.TransportUtility;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.HomeActivity;
 import org.witness.iwitness.app.LoginActivity;
@@ -294,7 +294,6 @@ public class IWitness extends Activity implements InformaCamStatusListener
 						public void run()
 						{
 							// save everything
-							
 							InformaCam informaCam = (InformaCam)getApplication();
 							
 							informaCam.user.hasCompletedWizard = true;
@@ -317,7 +316,7 @@ public class IWitness extends Activity implements InformaCamStatusListener
 									if(organization != null && !informaCam.user.isInOfflineMode) {
 										INotification notification = new INotification(getResources().getString(R.string.key_sent), getResources().getString(R.string.you_have_sent_your_credentials_to_x, organization.organizationName), Models.INotification.Type.NEW_KEY);
 										notification.taskComplete = false;
-										informaCam.addNotification(notification);
+										informaCam.addNotification(notification, null);
 										
 										ITransportStub transportStub = new ITransportStub(organization, notification);
 										transportStub.setAsset(IUser.PUBLIC_CREDENTIALS, IUser.PUBLIC_CREDENTIALS, MimeType.ZIP);
