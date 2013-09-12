@@ -9,9 +9,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.models.media.IVideoRegion;
-import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.storage.InformaCamMediaScanner;
 import org.witness.informacam.storage.InformaCamMediaScanner.OnMediaScannedListener;
+import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.Logger;
@@ -20,6 +20,7 @@ import org.witness.iwitness.app.screens.FullScreenViewFragment;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
 import android.app.Activity;
+import android.graphics.RectF;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
@@ -146,7 +147,7 @@ OnRangeSeekBarChangeListener<Integer> {
 
 		LayoutParams vv_lp = videoView.getLayoutParams();
 		vv_lp.width = dims[0];
-		vv_lp.height = (int) (((float) media_.dcimEntry.exif.height) / ((float) media_.dcimEntry.exif.width) * (float) dims[0]);
+		vv_lp.height = (int) (((float) media_.dcimEntry.exif.height) / ((float) media_.dcimEntry.exif.width) * dims[0]);
 
 		videoView.setLayoutParams(vv_lp);
 		videoView.setOnTouchListener(this);
@@ -377,5 +378,11 @@ OnRangeSeekBarChangeListener<Integer> {
 		Log.d(LOG, "position on screen : " + locationInWindow[0] + ", " + locationInWindow[1]);
 		
 		return ArrayUtils.toPrimitive(specs.toArray(new Integer[specs.size()]));
+	}
+	
+	@Override
+	public RectF getImageBounds()
+	{
+		return new RectF(0,0,videoView.getWidth(),videoView.getHeight());
 	}
 }

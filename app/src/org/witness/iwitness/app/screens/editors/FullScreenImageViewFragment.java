@@ -7,9 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IImage;
-import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
-import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
@@ -17,6 +15,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.util.Log;
 import android.widget.ImageView;
@@ -135,7 +134,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 
 		// This doesn't completely center the image but it get's closer
 		//int fudge = 42;
-		matrix.postTranslate((float)((float) dims[0] -(float) bitmap.getWidth() * (float) matrixScale)/2f,(float)((float) dims[1] - (float) bitmap.getHeight() * matrixScale)/2f);
+		matrix.postTranslate((dims[0] -bitmap.getWidth() * matrixScale)/2f,(dims[1] - bitmap.getHeight() * matrixScale)/2f);
 
 		mediaHolder_.setImageMatrix(matrix);
 		
@@ -164,5 +163,20 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		Log.d(LOG, "position on screen : " + locationInWindow[0] + ", " + locationInWindow[1]);
 		
 		return ArrayUtils.toPrimitive(specs.toArray(new Integer[specs.size()]));
+	}
+	
+	@Override
+	public RectF getImageBounds()
+	{
+		RectF rectImage = null;
+		if (bitmap != null)
+			rectImage = new RectF(0,0,bitmap.getWidth(),bitmap.getHeight());
+		if (rectImage != null)
+		{
+			Matrix inverse = new Matrix();
+			if (this.mediaHolder_.getImageMatrix().invert(inverse))
+				mediaHolder_.getImageMatrix().mapRect(rectImage);
+		}
+		return rectImage;
 	}
 }

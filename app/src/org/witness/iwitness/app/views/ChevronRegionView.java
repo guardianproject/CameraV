@@ -14,6 +14,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.RelativeLayout.LayoutParams;
 
 public class ChevronRegionView extends IRegionDisplay
@@ -26,6 +28,8 @@ public class ChevronRegionView extends IRegionDisplay
 	public ChevronRegionView(Context context, IRegion region, IRegionDisplayListener listener)
 	{
 		super(context, region, listener);
+		this.setAdjustViewBounds(false);
+		this.setScaleType(ScaleType.CENTER);
 		update();
 	}
 
@@ -37,6 +41,16 @@ public class ChevronRegionView extends IRegionDisplay
 	}
 
 	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+	{
+		//super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		if (this.bounds != null)
+			this.setMeasuredDimension(bounds.displayWidth, bounds.displayHeight);
+		else
+			super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+	}
+
+	@Override
 	public void update()
 	{
 		super.update();
@@ -45,6 +59,9 @@ public class ChevronRegionView extends IRegionDisplay
 		lp.topMargin = bounds.displayTop;
 		setLayoutParams(lp);
 
+		Log.d("Chevron", "new size:" + this.getWidth() + "," + this.getHeight());
+
+		
 		updatePath();
 	}
 
@@ -100,5 +117,10 @@ public class ChevronRegionView extends IRegionDisplay
 		canvas.drawPath(mPath, mPaint);
 		canvas.restoreToCount(sc);
 		canvas.clipPath(mPath);
+	}
+
+	@Override
+	public void setImageDrawable(Drawable drawable)
+	{
 	}
 }

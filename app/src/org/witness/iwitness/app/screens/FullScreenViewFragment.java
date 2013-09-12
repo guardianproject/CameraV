@@ -20,6 +20,7 @@ import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
 import android.app.Activity;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -276,6 +277,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 					IRegionBounds bounds = ((IRegionDisplay) v).bounds;
 					bounds.displayLeft = (int) (mStartDragTagX + (x - mStartDragX));
 					bounds.displayTop = (int) (mStartDragTagY + (y - mStartDragY));
+					constrainBoundsToImage(bounds);
 					((IRegionDisplay) v).update();
 					return true;
 				}
@@ -309,7 +311,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 
 						IRegion region = ((EditorActivityListener) a).media().addRegion(getActivity(), (int) event.getY() - (DEFAULT_REGION_HEIGHT / 2),
 								(int) event.getX() - (DEFAULT_REGION_WIDTH / 2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT, this);
-
+						constrainBoundsToImage(region.bounds);
 						setCurrentRegion(region, true);
 					}
 					else if (((EditorActivityListener) a).media().dcimEntry.mediaType.equals(MimeType.VIDEO))
@@ -318,6 +320,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 						IRegion region = ((EditorActivityListener) a).media().addRegion(getActivity(), (int) event.getY() - (DEFAULT_REGION_HEIGHT / 2),
 								(int) event.getX() - (DEFAULT_REGION_WIDTH / 2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT,
 								((FullScreenVideoViewFragment) this).getCurrentPosition(), ((FullScreenVideoViewFragment) this).getDuration(), this);
+						constrainBoundsToImage(region.bounds);
 						setCurrentRegion(region, true);
 					}
 
@@ -483,6 +486,23 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public void constrainBoundsToImage(IRegionBounds bounds)
+	{
+		RectF imageBounds = getImageBounds();
+		if (imageBounds != null)
+		{
+			bounds.displayLeft = (int) Math.max(bounds.displayLeft, imageBounds.left - bounds.displayWidth / 2);
+			bounds.displayTop = (int) Math.max(bounds.displayTop, imageBounds.top - bounds.displayHeight / 2);
+			bounds.displayLeft = (int) Math.min(bounds.displayLeft, imageBounds.right - bounds.displayWidth / 2);
+			bounds.displayTop = (int) Math.min(bounds.displayTop, imageBounds.bottom - bounds.displayHeight / 2);	
+		}
+	}
+	
+	public RectF getImageBounds()
+	{
+		return null;
 	}
 
 }
