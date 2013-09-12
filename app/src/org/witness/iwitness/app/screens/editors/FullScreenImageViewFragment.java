@@ -7,9 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IImage;
-import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
-import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
@@ -32,6 +30,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 
 	// Image Matrix
 	Matrix matrix = new Matrix();
+	float[] matrixTranslate;
 
 	// Saved Matrix for not allowing a current operation (over max zoom)
 	Matrix savedMatrix = new Matrix();
@@ -135,7 +134,12 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 
 		// This doesn't completely center the image but it get's closer
 		//int fudge = 42;
-		matrix.postTranslate((float)((float) dims[0] -(float) bitmap.getWidth() * (float) matrixScale)/2f,(float)((float) dims[1] - (float) bitmap.getHeight() * matrixScale)/2f);
+		matrixTranslate = new float[] {
+				(float)((float) dims[0] -(float) bitmap.getWidth() * (float) matrixScale)/2f,
+				(float)((float) dims[1] - (float) bitmap.getHeight() * matrixScale)/2f
+		};
+		matrix.postTranslate(matrixTranslate[0], matrixTranslate[1]);
+		Log.d(LOG, String.format("MATRIX TRANSLATE FOR IMAGE: %f , %f", matrixTranslate[0], matrixTranslate[1]));
 
 		mediaHolder_.setImageMatrix(matrix);
 		
@@ -148,11 +152,17 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		
 		List<Integer> specs = new ArrayList<Integer>(Arrays.asList(ArrayUtils.toObject(super.getSpecs())));
 		
+		for(float i : matrixTranslate) {
+			specs.add((int) i/2);
+		}
+		
+		/*
 		int[] locationInWindow = new int[2];
 		mediaHolder_.getLocationInWindow(locationInWindow);
 		for(int i : locationInWindow) {
 			specs.add(i);
 		}
+		*/
 		
 		specs.add(mediaHolder_.getWidth());
 		specs.add(mediaHolder_.getHeight());
@@ -160,8 +170,6 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		// these might not be needed
 		specs.add(media_.width);
 		specs.add(media_.height);
-		
-		Log.d(LOG, "position on screen : " + locationInWindow[0] + ", " + locationInWindow[1]);
 		
 		return ArrayUtils.toPrimitive(specs.toArray(new Integer[specs.size()]));
 	}

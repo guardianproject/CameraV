@@ -51,7 +51,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -150,7 +149,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 		if(init.getData() != null) {
 			final Uri ictdURI = init.getData();
-			Log.d(LOG, "INIT KEY: " + ictdURI);
 
 			mHandlerUI.post(new Runnable() {
 				@Override
@@ -251,6 +249,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	}
 
 	public void launchCamera() {
+		
 		route = toCamera;
 
 	//	waiter = new WaitPopup(this);
@@ -264,7 +263,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		route = toEditor;
 	//	waiter = new WaitPopup(this);
 		informaCam.startInforma();
-		Log.d(LOG, "launching editor for " + media._id);		
 	}
 
 	@Override
@@ -407,9 +405,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void onActivityResult(int requestCode, int responseCode, Intent data) {
+		informaCam.setStatusListener(this);
+		
 		if(responseCode == Activity.RESULT_OK) {
-			informaCam.setStatusListener(this);
-			
 			switch(requestCode) {
 			case Codes.Routes.CAMERA:
 				viewPager.setCurrentItem(1);
@@ -426,7 +424,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				 *   
 				 */
 				IDCIMSerializable returnedMedia = (IDCIMSerializable) data.getSerializableExtra(Codes.Extras.RETURNED_MEDIA);
-				Log.d(LOG, "new dcim:\n" + returnedMedia.asJson().toString());
+				Logger.d(LOG, "new dcim:\n" + returnedMedia.asJson().toString());
 				
 				if(!returnedMedia.dcimList.isEmpty()) {
 					setPending(returnedMedia.dcimList.size(), 0);
@@ -446,7 +444,17 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				logoutUser();
 				break;
 			}
-		}		
+		} else {
+			switch(requestCode) {
+			case Codes.Routes.CAMERA:
+				informaCam.stopInforma();
+				
+				viewPager.setCurrentItem(1);
+				break;
+			}
+			
+			
+		}
 	}
 
 	class TabPager extends FragmentStatePagerAdapter implements TabHost.OnTabChangeListener, OnPageChangeListener {
@@ -457,7 +465,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 		@Override
 		public void onTabChanged(String tabId) {
-			Log.d(LOG, tabId);
 			int i=0;
 			for(Fragment f : fragments) {
 				if(f.getClass().getName().equals(tabId)) {
@@ -592,7 +599,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		switch(code) {
 		case org.witness.informacam.utils.Constants.Codes.Messages.DCIM.ADD:
 			final Bundle data = message.getData();
-			Log.d(LOG, "updating: " + data.getString(Codes.Extras.CONSOLIDATE_MEDIA));
 			
 			mHandlerUI.sendEmptyMessage(0);
 			mHandlerUI.post(new Runnable() {

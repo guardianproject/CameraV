@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.utils.ILanguageMap;
-import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.ui.WizardActivity;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.HomeActivity;
@@ -56,6 +56,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	public void onResume() {
 		super.onResume();		
 		informaCam = (InformaCam)getApplication();
+		Log.d(LOG, "AND HELLO onResume()!!");
 		
 		try {
 			if(route != null) {
@@ -84,7 +85,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 			}
 			
 		} catch(NullPointerException e) {
-			Log.e(LOG, "informacam has not started again yet");
+			Logger.e(LOG, e);
 		}
 	}
 	
@@ -115,9 +116,35 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 		if(resultCode == Activity.RESULT_CANCELED) {
 			Log.d(LOG, "finishing with request code " + requestCode);
 			
+			if(informaCam.isOutsideTheLoop(init.getAction())) {
+				Logger.d(LOG, "coming back from VMM call WITH NOOOOO MEDIA, and i shoudl finish.");
+				setResult(resultCode, getIntent());
+				finish();
+				return;
+			}
+			
+			// XXX: DOES THIS BREAK LOGOUT?
+			setResult(resultCode, data);
 			finish();
+			
 		} else if(resultCode == Activity.RESULT_OK) {
 			Log.d(LOG, "returning with request code " + requestCode);
+			
+			if(informaCam.isOutsideTheLoop(init.getAction())) {
+				Logger.d(LOG, "coming back from VMM call with SOME media, and i shoudl finish.");
+				
+				// TODO:
+				/*
+				 * immediately 
+				 * 1) chooser
+				 * 2) encrypt (all? selected?) to org
+				 * 3) start up a transport for each returned media
+				 */
+				
+				
+				finish();
+				return;
+			}
 			
 			route = new Intent(this, HomeActivity.class);
 			routeCode = Home.ROUTE_CODE;
@@ -161,6 +188,9 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 			routeCode = Camera.ROUTE_CODE;
 		} else if(Intent.ACTION_VIEW.equals(init.getAction())) {
 			route.setData(init.getData());
+		} else if("info.guardianproject.action.VERIFIED_MOBILE_MEDIA".equals(init.getAction())) {
+			route = new Intent(this, CameraActivity.class);
+			routeCode = Camera.ROUTE_CODE;
 		}
 		
 		route.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

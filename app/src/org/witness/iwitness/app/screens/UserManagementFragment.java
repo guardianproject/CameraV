@@ -167,7 +167,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	}
 
 	private void initNotifications() {
-		listNotifications = informaCam.notificationsManifest.listNotifications();
+		listNotifications = informaCam.notificationsManifest.sortBy(Models.INotificationManifest.Sort.COMPLETED);
 		
 		notificationsHolder.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -220,7 +220,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	public void updateAdapter(int which) {
 		switch(which) {
 		case Codes.Adapters.NOTIFICATIONS:
-			h.post(new Runnable() {
+			a.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					listNotifications = informaCam.notificationsManifest.sortBy(Models.INotificationManifest.Sort.DATE_DESC);
@@ -231,7 +231,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			
 			break;
 		case Codes.Adapters.ORGANIZATIONS:
-			h.post(new Runnable() {
+			a.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					listOrganizations = informaCam.installedOrganizations.organizations;

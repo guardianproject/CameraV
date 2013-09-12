@@ -296,25 +296,31 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	}
 
 	private void updateAdapters() {
-		if(listMedia != null) {
-			this.galleryGridAdapter.update(listMedia);
+		a.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
 
-			if (this.mediaDisplayGrid != null)
-				mediaDisplayGrid.invalidate();
+				if(listMedia != null) {
+					galleryGridAdapter.update(listMedia);
 
-			if (this.mediaDisplayList != null)
-				mediaDisplayList.invalidate();
+					if (mediaDisplayGrid != null)
+						mediaDisplayGrid.invalidate();
+
+					if (mediaDisplayList != null)
+						mediaDisplayList.invalidate();
 
 
-			if(listMedia != null && listMedia.size() > 0) {
-				if (noMedia != null)
-					noMedia.setVisibility(View.GONE);
-			} else {
+					if(listMedia != null && listMedia.size() > 0) {
+						if (noMedia != null)
+							noMedia.setVisibility(View.GONE);
+					} else {
 
-				if (noMedia != null)
-					noMedia.setVisibility(View.VISIBLE);
+						if (noMedia != null)
+							noMedia.setVisibility(View.VISIBLE);
+					}
+				}
 			}
-		}
+		});
 
 	}
 
@@ -327,27 +333,31 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	}
 
 	@Override
-	public void setPending(int numPending, int numCompleted) {		
+	public void setPending(final int numPending, final int numCompleted) {		
 		if(a == null) {
 			return;
 		}
 		
-		if(numPending > 0 && numPending > numCompleted) {
-			if(pendingMedia.getVisibility() == View.GONE) {
-				pendingMedia.setVisibility(View.VISIBLE);
+		a.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if(numPending > 0 && numPending > numCompleted) {
+					if(pendingMedia.getVisibility() == View.GONE) {
+						pendingMedia.setVisibility(View.VISIBLE);
+					}
+					
+					pendingProgressBar.setMax(numPending);
+					pendingProgressBar.setProgress(numCompleted);
+					
+					pendingProgressReadout.setText(a.getString(R.string.x_of_x_processed, numCompleted, numPending));
+					
+				} else {
+					if(pendingMedia.getVisibility() == View.VISIBLE) {
+						pendingMedia.setVisibility(View.GONE);
+					}
+				}
 			}
-			
-			pendingProgressBar.setMax(numPending);
-			pendingProgressBar.setProgress(numCompleted);
-			
-			pendingProgressReadout.setText(a.getString(R.string.x_of_x_processed, numCompleted, numPending));
-			
-		} else {
-			if(pendingMedia.getVisibility() == View.VISIBLE) {
-				pendingMedia.setVisibility(View.GONE);
-			}
-		}
-
+		});
 	}
 
 }
