@@ -241,16 +241,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void launchCamera()
 	{
 		resetActionBar();
-		toCamera.putExtra(
-				 org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
-				 org.witness.informacam.utils.Constants.App.Camera.Type.CAMERA);
+		toCamera.removeExtra(org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE);
+		//toCamera.putExtra(
+		//		 org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
+		//		 org.witness.informacam.utils.Constants.App.Camera.Type.CAMERA);
 		route = toCamera;
-
-		// waiter = new WaitPopup(this);
-		if (informaCam.informaService != null)
-			routeUs();
-		else
-			informaCam.startInforma();
+		routeUs();
 	}
 
 	@Override
@@ -259,11 +255,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		toEditor.putExtra(Codes.Extras.EDIT_MEDIA, media._id);
 
 		route = toEditor;
-		// waiter = new WaitPopup(this);
-		if (informaCam.informaService != null)
-			routeUs();
-		else
-			informaCam.startInforma();
+		routeUs();
 		Log.d(LOG, "launching editor for " + media._id);
 	}
 
@@ -551,10 +543,18 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void onInformaStart(Intent intent)
 	{
 		// waiter.cancel();
-		routeUs();
+		doRouteUs();
 	}
 
 	private void routeUs()
+	{
+		if (informaCam.informaService != null)
+			doRouteUs();
+		else
+			informaCam.startInforma();
+	}
+	
+	private void doRouteUs()
 	{
 		if (route != null)
 		{
@@ -730,9 +730,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
 				org.witness.informacam.utils.Constants.App.Camera.Type.CAMCORDER);
 		route = toCamera;
-
-		// waiter = new WaitPopup(this);
-		informaCam.startInforma();
+		routeUs();
 	}
 
 	@Override
@@ -740,7 +738,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	{
 		viewPager.setCurrentItem(INDEX_MAIN);
 		resetActionBar();
-		informaCam.startInforma();
+		routeUs();
 	}
 
 	private void resetActionBar()
