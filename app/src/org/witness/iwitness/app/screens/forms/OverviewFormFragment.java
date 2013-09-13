@@ -349,6 +349,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 				if (mHandler == null)
 					mHandler = new Handler();
 				mHandler.postDelayed(mHidePlayerRunnable, 12000);
+				sbAudio.setProgress(progress.getProgress());
 			}
 		}
 

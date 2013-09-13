@@ -56,7 +56,10 @@ public class AudioNoteInfoView extends LinearLayout implements OnCompletionListe
 			mSeekBar = new ODKSeekBar(getContext());
 			mSeekBar.init(new java.io.File(Storage.EXTERNAL_DIR, "tmprecord_" + System.currentTimeMillis() + ".3gp"), this);
 			mForm.associate(mSeekBar, Forms.FreeAudio.PROMPT);
-			tvLabel.setText("" + mSeekBar.getMax());
+
+			int seconds = (mSeekBar.getMax() % 60);
+			int minutes = (mSeekBar.getMax() / 60);
+			tvLabel.setText(String.format("%02d:%02d", minutes, seconds));
 		}
 	}
 
