@@ -191,4 +191,10 @@ public class AudioNoteHelper implements OnCompletionListener, OnMediaRecorderSto
 	{
 
 	}
+	
+	public void setCurrentPosition(int msec)
+	{
+		progress.setProgress(msec / 1000);
+		progress.onProgressChanged(progress, progress.getProgress(), true); // Make sure callback is called as if from user!
+	}
 }

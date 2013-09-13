@@ -3,15 +3,18 @@ package org.witness.iwitness.app.views;
 import info.guardianproject.odkparser.widgets.ODKSeekBar;
 
 import org.witness.informacam.models.forms.IForm;
+import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App.Editor.Forms;
 
 import android.content.Context;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class AudioNoteInfoView extends LinearLayout
+public class AudioNoteInfoView extends LinearLayout implements OnCompletionListener
 {
 	private IForm mForm;
 	private TextView tvLabel;
@@ -51,8 +54,14 @@ public class AudioNoteInfoView extends LinearLayout
 		if (mForm != null && tvLabel != null)
 		{
 			mSeekBar = new ODKSeekBar(getContext());
+			mSeekBar.init(new java.io.File(Storage.EXTERNAL_DIR, "tmprecord_" + System.currentTimeMillis() + ".3gp"), this);
 			mForm.associate(mSeekBar, Forms.FreeAudio.PROMPT);
 			tvLabel.setText("" + mSeekBar.getMax());
 		}
+	}
+
+	@Override
+	public void onCompletion(MediaPlayer mp)
+	{
 	}
 }

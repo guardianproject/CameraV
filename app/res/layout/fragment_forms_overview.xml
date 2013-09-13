@@ -28,18 +28,29 @@
             android:layout_weight="0.5"
             android:gravity="right|center_vertical"
             android:text="Shared 3 days ago with IBA" />
-
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/llAudioFiles"
+    <RelativeLayout
+        android:id="@+id/rlAudio"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@drawable/audio_note_list_background"
-        android:orientation="horizontal"
-        android:scrollbars="horizontal" >
+        android:layout_height="94dp" >
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llAudioFiles"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/audio_note_list_background"
+            android:orientation="horizontal"
+            android:scrollbars="horizontal" >
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/sbAudio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/media_notes"
@@ -50,7 +61,5 @@
         android:gravity="top|left"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
-
 
 </LinearLayout>

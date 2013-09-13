@@ -3,6 +3,7 @@ package org.witness.iwitness.app.screens;
 import info.guardianproject.odkparser.Constants.RecorderState;
 import info.guardianproject.odkparser.widgets.ODKSeekBar;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.PreferencesActivity;
@@ -437,7 +439,16 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 				if (mIsRecording)
 				{
 					mIsRecording = false;
-					new AudioNoteSavedPopup(a, this);
+					form.answer(Forms.FreeAudio.PROMPT);
+					try
+					{
+						form.save(new info.guardianproject.iocipher.FileOutputStream(form.answerPath));
+						new AudioNoteSavedPopup(a, this);
+					}
+					catch (FileNotFoundException e)
+					{
+						Logger.e(LOG, e);
+					}
 				}
 			}
 		}

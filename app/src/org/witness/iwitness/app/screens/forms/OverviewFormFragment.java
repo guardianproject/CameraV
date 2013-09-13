@@ -1,5 +1,6 @@
 package org.witness.iwitness.app.screens.forms;
 
+import info.guardianproject.odkparser.Constants.RecorderState;
 import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
 import java.io.FileNotFoundException;
@@ -13,14 +14,15 @@ import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
-import org.witness.iwitness.app.screens.popups.AudioNotePopup;
 import org.witness.iwitness.app.screens.popups.TextareaPopup;
 import org.witness.iwitness.app.views.AudioNoteInfoView;
+import org.witness.iwitness.utils.AudioNoteHelper;
 import org.witness.iwitness.utils.Constants.App.Editor.Forms;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,6 +33,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class OverviewFormFragment extends Fragment implements ODKFormListener, OnClickListener
@@ -43,6 +47,8 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 	IForm form = null;
 	private IForm textForm;
 	LinearLayout llAudioFiles;
+	private SeekBar sbAudio;
+	private AudioNotePlayer mAudioPlayer;
 
 	private final static String LOG = App.LOG;
 
@@ -86,7 +92,8 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		});
 
 		llAudioFiles = (LinearLayout) rootView.findViewById(R.id.llAudioFiles);
-
+		sbAudio = (SeekBar) rootView.findViewById(R.id.sbAudio);
+		sbAudio.setVisibility(View.GONE);
 		return rootView;
 	}
 
@@ -298,7 +305,87 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		if (v instanceof AudioNoteInfoView)
 		{
 			AudioNoteInfoView view = (AudioNoteInfoView) v;
-			new AudioNotePopup(a, view.getForm());
+			
+			if (mAudioPlayer != null && mAudioPlayer.form == view.getForm())
+			{
+				mAudioPlayer.toggle();
+			}
+			else
+			{
+				if (mAudioPlayer != null)
+					mAudioPlayer.done();
+				mAudioPlayer = new AudioNotePlayer(a, view.getForm());
+				mAudioPlayer.toggle();
+			}
+			//new AudioNotePopup(a, view.getForm());
+		}
+	}
+	
+	private class AudioNotePlayer extends AudioNoteHelper implements OnSeekBarChangeListener
+	{
+		private Handler mHandler;
+		
+		public AudioNotePlayer(Activity a, IForm f)
+		{
+			super(a, f);
+			sbAudio.setProgress(0);
+			sbAudio.setOnSeekBarChangeListener(this);
+			this.progress.setOnSeekBarChangeListener(this);
+		}
+
+		@Override
+		protected void onStateChanged()
+		{
+			super.onStateChanged();
+			if (this.getState() == RecorderState.IS_PLAYING)
+			{
+				if (mHandler != null)
+					mHandler.removeCallbacks(mHidePlayerRunnable);
+				sbAudio.setMax(this.progress.getMax());
+				sbAudio.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				if (mHandler == null)
+					mHandler = new Handler();
+				mHandler.postDelayed(mHidePlayerRunnable, 12000);
+			}
+		}
+
+		private final Runnable mHidePlayerRunnable = new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				closePlayer();
+			}
+		};
+		
+		private void closePlayer()
+		{
+			sbAudio.setVisibility(View.GONE);
+			sbAudio.setOnSeekBarChangeListener(null);
+			mAudioPlayer = null;
+		}
+
+		@Override
+		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+		{
+			sbAudio.setProgress(progress);
+		}
+
+		@Override
+		public void onStartTrackingTouch(SeekBar seekBar)
+		{
+		}
+
+		@Override
+		public void onStopTrackingTouch(SeekBar seekBar)
+		{
+			if (seekBar == sbAudio)
+			{
+				this.setCurrentPosition(seekBar.getProgress() * 1000);
+			}
 		}
 	}
 }
