@@ -7,8 +7,10 @@ import org.witness.iwitness.utils.Constants;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -18,6 +20,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private final static String LOG = Constants.App.Login.LOG;
 	private String packageName;
 
+	View rootView;
 	EditText password;
 	Button commit;
 	ProgressBar waiter;
@@ -32,6 +35,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		packageName = this.getPackageName();
 
 		setContentView(R.layout.activity_login);
+		rootView = findViewById(R.id.llRoot);
 
 		password = (EditText) findViewById(R.id.login_password);
 
@@ -44,7 +48,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		password.requestFocus();
+		//password.requestFocus();
 		
 				//TEMP TEMP TEMP MVP
 				//password.setText("mF5eag2zFURn");
@@ -102,4 +106,25 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 
 	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event)
+	{
+		boolean handled = super.onTouchEvent(event);
+		if (!handled && event.getAction() == MotionEvent.ACTION_UP)
+		{
+			rootView.requestFocus();
+			hideSoftKeyboard(this);
+		}
+		return handled;
+	}
+
+
+	public static void hideSoftKeyboard(Activity activity)
+	{
+		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+	}
+	
+	
 }

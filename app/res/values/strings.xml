@@ -59,6 +59,9 @@
 	<string name="resend_credentials">Resend my credentials \u2026</string>
 	<string name="retry">Retry</string>
 	
+	<string name="login_open">Open</string>
+	<string name="login_passphrase">Passphrase</string>
+	
 	<string name="preferences">Preferences</string>
     <string name="prefs_language_title">Language</string>
     <string name="pref_languages_default">System Default</string>

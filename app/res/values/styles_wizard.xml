@@ -13,7 +13,8 @@
     <item name="android:background">@android:color/white</item>
     <item name="android:textColor">#6D6E71</item>
     <item name="android:padding">4dip</item>
-    <item name="android:layout_marginBottom">10dip</item>
+    <item name="android:layout_marginTop">5dip</item>
+    <item name="android:layout_marginBottom">5dip</item>
     <item name="font">Roboto-Italic</item>
     <item name="android:textSize">15sp</item>
 </style>
