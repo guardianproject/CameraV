@@ -105,6 +105,7 @@
     <string name="home_share">SHARE</string>
     <string name="home_gallery_selected">%1$d Selected</string>
     <string name="home_gallery_delete">Delete</string>
+    <string name="home_gallery_empty">Your gallery is empty.</string>
 	<string name="home_swipe_for_more">Swipe for more</string>
 
     <string name="editor_tags_form">Form</string>

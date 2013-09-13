@@ -75,6 +75,7 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 	private View mBtnGallery;
 
 	private ViewPager mPhotoPager;
+	private View mNoMedia;
 
 	private GestureDetector mTapGestureDetector;
 
@@ -130,6 +131,8 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 
 		mPhotoAdapter = new HomePhotoAdapter(a, listMedia);
 		mPhotoPager.setAdapter(mPhotoAdapter);
+		if (mNoMedia != null)
+			mNoMedia.setVisibility(mPhotoAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
 
 		mTapGestureDetector = new GestureDetector(a, new TapGestureListener(), h);
 		mPhotoPager.setOnTouchListener(new OnTouchListener()
@@ -147,7 +150,8 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 	{
 
 		mPhotoPager = (ViewPager) rootView.findViewById(R.id.pagerPhotos);
-
+		mNoMedia = rootView.findViewById(R.id.media_display_no_media);
+		
 		initData();
 
 		mBtnPhoto = rootView.findViewById(R.id.btnPhoto);
@@ -304,14 +308,9 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 				mPhotoPager.invalidate();
 
 			showSwipeHint();
-			// if (listMedia != null && listMedia.size() > 0) {
-			// if (noMedia != null)
-			// noMedia.setVisibility(View.GONE);
-			// } else {
-			//
-			// if (noMedia != null)
-			// noMedia.setVisibility(View.VISIBLE);
-			// }
+			
+			if (this.mNoMedia != null)
+				mNoMedia.setVisibility(mPhotoAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
 		}
 
 	}

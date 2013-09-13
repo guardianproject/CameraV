@@ -102,6 +102,30 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
+    <RelativeLayout
+        android:id="@+id/media_display_no_media"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/llOperations"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="6dip"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip" >
+
+        <TextView
+            android:id="@+id/media_display_no_media_1"
+            style="@style/iwitness_h3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/home_gallery_empty"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
     <include
         android:id="@+id/popupInfoSwipe"
         android:layout_width="match_parent"
