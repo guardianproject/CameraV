@@ -11,6 +11,7 @@ import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.iwitness.R;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -27,13 +28,14 @@ public class NotificationsListAdapter extends BaseAdapter {
 	
 	private static final String LOG = App.LOG;
 	
+	
 	public NotificationsListAdapter(List<INotification> notifications) {
 		this.notifications = notifications;
 	}
 	
-	public void update(List<INotification> newNotifications, Handler h) {
+	public void update(List<INotification> newNotifications, Activity a) {
 		notifications = newNotifications;
-		h.post(new Runnable() {
+		a.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				Logger.d(LOG, "NOTIFIY DATA SET CHANGED IN HANDLER");
@@ -43,9 +45,9 @@ public class NotificationsListAdapter extends BaseAdapter {
 		
 	}
 	
-	public void update(INotification newNotification, Handler h) {		
+	public void update(INotification newNotification, Activity a) {		
 		notifications.add(newNotification);
-		h.post(new Runnable() {
+		a.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				notifyDataSetChanged();

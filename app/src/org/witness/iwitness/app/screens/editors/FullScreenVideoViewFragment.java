@@ -185,7 +185,7 @@ OnRangeSeekBarChangeListener<Integer> {
 				
 				try
 				{
-					if(InformaCam.getInstance().ioService.saveBlob(InformaCam.getInstance().ioService.getBytes(media_.dcimEntry.fileName, Type.IOCIPHER), videoFile, true)) {
+					if(InformaCam.getInstance().ioService.saveBlob(InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileName, Type.IOCIPHER), videoFile, true)) {
 					
 						OnMediaScannedListener listener = null;
 
