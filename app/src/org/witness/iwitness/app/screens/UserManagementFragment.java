@@ -223,7 +223,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			a.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					listNotifications = informaCam.notificationsManifest.sortBy(Models.INotificationManifest.Sort.DATE_DESC);
+					listNotifications = informaCam.notificationsManifest.sortBy(Models.INotificationManifest.Sort.COMPLETED);
 					listNotificationsAdapter.update(listNotifications == null ? new ArrayList<INotification>() : listNotifications, h);
 					notificationsHolder.invalidate();
 				}
