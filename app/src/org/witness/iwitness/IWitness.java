@@ -130,21 +130,20 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 		} else if(resultCode == Activity.RESULT_OK) {
 			Log.d(LOG, "returning with request code " + requestCode);
 			
+			/*
 			if(informaCam.isOutsideTheLoop(init.getAction())) {
 				Logger.d(LOG, "coming back from VMM call with SOME media, and i shoudl finish.");
 				
 				// TODO:
-				/*
-				 * immediately 
-				 * 1) chooser
-				 * 2) encrypt (all? selected?) to org
-				 * 3) start up a transport for each returned media
-				 */
-				
+				 immediately 
+				 1) chooser
+				 2) encrypt (all? selected?) to org
+				 3) start up a transport for each returned media
 				
 				finish();
 				return;
 			}
+			*/
 			
 			route = new Intent(this, HomeActivity.class);
 			routeCode = Home.ROUTE_CODE;
@@ -179,6 +178,10 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	}
 	
 	private void routeByIntent() {
+		if(route == null) {
+			return;
+		}
+		
 		Log.d(LOG, "intent is: " + init.getAction());
 
 		if(Intent.ACTION_MAIN.equals(init.getAction())) {
