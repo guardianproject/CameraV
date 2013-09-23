@@ -1,5 +1,7 @@
 package org.witness.iwitness.utils.adapters;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
@@ -14,7 +16,7 @@ import org.witness.iwitness.R;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,18 +25,35 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class NotificationsListAdapter extends BaseAdapter {
-	private List<INotification> notifications;
-	int currentSort = Models.INotificationManifest.Sort.DATE_DESC;
-	
+	private List<INotification> notifications;	
 	private static final String LOG = App.LOG;
 	
 	
 	public NotificationsListAdapter(List<INotification> notifications) {
 		this.notifications = notifications;
+		Collections.sort(this.notifications, new Comparator<INotification>() {
+
+			@Override
+			public int compare(INotification n1, INotification n2) {
+				return n1.timestamp > n2.timestamp ? -1 : (n1==n2 ? 0 : 1);
+			}
+			
+		});
+		
+		Log.d(LOG, "NUM NOTIFICATIONS: " + this.notifications.size());
 	}
 	
 	public void update(List<INotification> newNotifications, Activity a) {
 		notifications = newNotifications;
+		Collections.sort(notifications, new Comparator<INotification>() {
+
+			@Override
+			public int compare(INotification n1, INotification n2) {
+				return n1.timestamp > n2.timestamp ? -1 : (n1==n2 ? 0 : 1);
+			}
+			
+		});
+		
 		a.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -47,6 +66,15 @@ public class NotificationsListAdapter extends BaseAdapter {
 	
 	public void update(INotification newNotification, Activity a) {		
 		notifications.add(newNotification);
+		Collections.sort(notifications, new Comparator<INotification>() {
+
+			@Override
+			public int compare(INotification n1, INotification n2) {
+				return n1.timestamp > n2.timestamp ? -1 : (n1==n2 ? 0 : 1);
+			}
+			
+		});
+		
 		a.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {

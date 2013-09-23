@@ -1,6 +1,8 @@
 package org.witness.iwitness.app.screens;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
@@ -172,7 +174,6 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 
 	private void initNotifications() {
 		listNotifications = informaCam.notificationsManifest.sortBy(Models.INotificationManifest.Sort.COMPLETED);
-		
 		notificationsHolder.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
