@@ -33,6 +33,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -108,12 +109,14 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 
 	private void initLayout(Bundle savedInstanceState) {
 		View v = null;
-
+		
 		tabHost.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		tabHost.setup();
-
+		
 		TabHost.TabSpec tab = tabHost.newTabSpec(Tabs.CameraChooser.TAG).setIndicator(generateTab(li, R.layout.user_management_fragment_tab, getResources().getString(R.string.notifications)));
-		v = li.inflate(R.layout.fragment_user_management_notifications, tabHost.getTabContentView(), true);
+		
+		v = li.inflate(R.layout.fragment_user_management_notifications, tabHost.getTabContentView(), true);		
+		v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (dims[1] * 0.65)));
 		tab.setContent(R.id.notification_list_root);
 		tabHost.addTab(tab);
 
@@ -122,6 +125,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 
 		tab = tabHost.newTabSpec(Tabs.CameraChooser.TAG).setIndicator(generateTab(li, R.layout.user_management_fragment_tab, getResources().getString(R.string.organizations)));
 		v = li.inflate(R.layout.fragment_user_management_organizations, tabHost.getTabContentView(), true);
+		v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (dims[1] * 0.65)));
 		tab.setContent(R.id.organization_list_root);
 		tabHost.addTab(tab);
 

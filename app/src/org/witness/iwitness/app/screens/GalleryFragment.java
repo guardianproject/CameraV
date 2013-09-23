@@ -115,8 +115,6 @@ public class GalleryFragment extends Fragment implements OnItemSelectedListener,
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Log.d(LOG, "GALLERY ON ACTIVITY CREATED CALLED");
-
 		initLayout(savedInstanceState);	
 	}
 
