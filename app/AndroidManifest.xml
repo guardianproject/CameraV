@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.witness.iwitness"
     android:installLocation="preferExternal"
-    android:versionCode="15"
-    android:versionName="0.1.15" >
+    android:versionCode="17"
+    android:versionName="0.1.17" >
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -75,6 +75,11 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.media.action.IMAGE_CAPTURE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="info.guardianproject.action.VERIFIED_MOBILE_MEDIA" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

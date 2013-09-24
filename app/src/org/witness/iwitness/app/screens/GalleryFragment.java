@@ -96,8 +96,6 @@ public class GalleryFragment extends SherlockFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Log.d(LOG, "GALLERY ON ACTIVITY CREATED CALLED");
-
 		initLayout(savedInstanceState);	
 	}
 
@@ -209,22 +207,28 @@ public class GalleryFragment extends SherlockFragment implements
 	}
 
 	private void updateAdapters() {
-		if (listMedia != null) {
+
+		if (listMedia != null)
 			this.galleryGridAdapter.update(listMedia);
 
-			if (this.mediaDisplayGrid != null)
-				mediaDisplayGrid.invalidate();
-
-			if (listMedia != null && listMedia.size() > 0) {
+		if (listMedia != null && listMedia.size() > 0)
+		{
+			if (noMedia != null)
+				noMedia.setVisibility(View.GONE);
+		}
+		else
+		{
+			if(listMedia != null && listMedia.size() > 0)
+			{
 				if (noMedia != null)
 					noMedia.setVisibility(View.GONE);
-			} else {
-
+			}
+			else
+			{
 				if (noMedia != null)
 					noMedia.setVisibility(View.VISIBLE);
 			}
 		}
-
 	}
 
 	@Override
@@ -382,27 +386,32 @@ public class GalleryFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void setPending(int numPending, int numCompleted) {		
+	public void setPending(final int numPending, final int numCompleted) {		
+
 		if(a == null) {
 			return;
 		}
 		
-		if(numPending > 0 && numPending > numCompleted) {
-			if(pendingMedia.getVisibility() == View.GONE) {
-				pendingMedia.setVisibility(View.VISIBLE);
+		a.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if(numPending > 0 && numPending > numCompleted) {
+					if(pendingMedia.getVisibility() == View.GONE) {
+						pendingMedia.setVisibility(View.VISIBLE);
+					}
+					
+					pendingProgressBar.setMax(numPending);
+					pendingProgressBar.setProgress(numCompleted);
+					
+					pendingProgressReadout.setText(a.getString(R.string.x_of_x_processed, numCompleted, numPending));
+					
+				} else {
+					if(pendingMedia.getVisibility() == View.VISIBLE) {
+						pendingMedia.setVisibility(View.GONE);
+					}
+				}
 			}
-			
-			pendingProgressBar.setMax(numPending);
-			pendingProgressBar.setProgress(numCompleted);
-			
-			pendingProgressReadout.setText(a.getString(R.string.x_of_x_processed, numCompleted, numPending));
-			
-		} else {
-			if(pendingMedia.getVisibility() == View.VISIBLE) {
-				pendingMedia.setVisibility(View.GONE);
-			}
-		}
-
+		});
 	}
 
 }

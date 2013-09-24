@@ -1,5 +1,8 @@
 package org.witness.iwitness.app.screens.editors;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,6 +11,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IImage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
@@ -31,6 +35,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 
 	// Image Matrix
 	Matrix matrix = new Matrix();
+	float[] matrixTranslate;
 
 	// Saved Matrix for not allowing a current operation (over max zoom)
 	Matrix savedMatrix = new Matrix();
@@ -67,17 +72,23 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		bfo.inJustDecodeBounds = true;
 		bfo.inPreferredConfig = Bitmap.Config.RGB_565;
 
-		byte[] bytes = null;
+		BufferedInputStream bytes = null;
+		InputStream is = null;
+		info.guardianproject.iocipher.File bitmapBytes = null;
+		
 		if(media_.bitmap != null) {
-			bytes = InformaCam.getInstance().ioService.getBytes(media_.bitmap, Type.IOCIPHER);
+			is = InformaCam.getInstance().ioService.getStream(media_.bitmap, Type.IOCIPHER);
+			bytes = new BufferedInputStream(is);
 		} else {
-			info.guardianproject.iocipher.File bitmapBytes = new info.guardianproject.iocipher.File(media_.rootFolder, media_.dcimEntry.name);
-			bytes = InformaCam.getInstance().ioService.getBytes(bitmapBytes.getAbsolutePath(), Type.IOCIPHER);
+			bitmapBytes = new info.guardianproject.iocipher.File(media_.rootFolder, media_.dcimEntry.name);
+			is = InformaCam.getInstance().ioService.getStream(bitmapBytes.getAbsolutePath(), Type.IOCIPHER);
+			bytes = new BufferedInputStream(is);
 			media_.bitmap = bitmapBytes.getAbsolutePath();
 			Log.d(LOG, "we didn't have this bitmap before for some reason...");
 		}
-		bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bfo);
-
+		
+		bitmap = BitmapFactory.decodeStream(bytes, null, bfo);
+		
 		// Ratios between the display and the image
 		double widthRatio =  Math.floor(bfo.outWidth / dims[0]);
 		double heightRatio = Math.floor(bfo.outHeight / dims[1]);
@@ -96,8 +107,24 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		bfo.inSampleSize = inSampleSize;
 		bfo.inJustDecodeBounds = false;
 
-		bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, bfo);
-		bytes = null;
+		try {
+			is.close();
+			bytes.close();
+			
+			if(bitmapBytes == null) {
+				is = InformaCam.getInstance().ioService.getStream(media_.bitmap, Type.IOCIPHER);
+			} else {
+				is = InformaCam.getInstance().ioService.getStream(bitmapBytes.getAbsolutePath(), Type.IOCIPHER);
+			}
+			
+			bytes = new BufferedInputStream(is);
+			bitmap = BitmapFactory.decodeStream(bytes, null, bfo);
+			
+			is.close();
+			bytes.close();
+		} catch (IOException e) {
+			Logger.e(LOG, e);
+		}
 
 		if (media_.dcimEntry.exif.orientation == ExifInterface.ORIENTATION_ROTATE_90) {
 			Log.d(LOG, "Rotating Bitmap 90");
@@ -134,7 +161,12 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 
 		// This doesn't completely center the image but it get's closer
 		//int fudge = 42;
-		matrix.postTranslate((dims[0] -bitmap.getWidth() * matrixScale)/2f,(dims[1] - bitmap.getHeight() * matrixScale)/2f);
+		matrixTranslate = new float[] {
+				(dims[0] -bitmap.getWidth() * matrixScale)/2f,
+				(dims[1] - bitmap.getHeight() * matrixScale)/2f
+		};
+		matrix.postTranslate(matrixTranslate[0], matrixTranslate[1]);
+		Log.d(LOG, String.format("MATRIX TRANSLATE FOR IMAGE: %f , %f", matrixTranslate[0], matrixTranslate[1]));
 
 		mediaHolder_.setImageMatrix(matrix);
 		
@@ -147,11 +179,17 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		
 		List<Integer> specs = new ArrayList<Integer>(Arrays.asList(ArrayUtils.toObject(super.getSpecs())));
 		
+		for(float i : matrixTranslate) {
+			specs.add((int) i/2);
+		}
+		
+		/*
 		int[] locationInWindow = new int[2];
 		mediaHolder_.getLocationInWindow(locationInWindow);
 		for(int i : locationInWindow) {
 			specs.add(i);
 		}
+		*/
 		
 		specs.add(mediaHolder_.getWidth());
 		specs.add(mediaHolder_.getHeight());
@@ -159,8 +197,6 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		// these might not be needed
 		specs.add(media_.width);
 		specs.add(media_.height);
-		
-		Log.d(LOG, "position on screen : " + locationInWindow[0] + ", " + locationInWindow[1]);
 		
 		return ArrayUtils.toPrimitive(specs.toArray(new Integer[specs.size()]));
 	}

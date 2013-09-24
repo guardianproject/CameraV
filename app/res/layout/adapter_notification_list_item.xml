@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/notification_view_root"
     android:layout_width="match_parent"
-    android:layout_height="120dip"
+    android:layout_height="wrap_content"
+    android:paddingBottom="6dip"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -26,7 +27,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dip"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="1" >
 
@@ -39,13 +40,13 @@
 
         <RelativeLayout
             android:layout_width="0dip"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="0.2" >
 
             <ImageView
                 android:id="@+id/notification_icon"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="50dip"
                 android:scaleType="fitXY" />
 
             <ImageView

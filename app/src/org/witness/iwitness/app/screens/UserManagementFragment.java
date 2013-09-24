@@ -36,6 +36,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -113,13 +114,14 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	private void initLayout(Bundle savedInstanceState)
 	{
 		View v = null;
-
+		
 		tabHost.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		tabHost.setup();
-
-		TabHost.TabSpec tab = tabHost.newTabSpec(Tabs.CameraChooser.TAG).setIndicator(
-				generateTab(li, R.layout.user_management_fragment_tab, getResources().getString(R.string.notifications)));
-		v = li.inflate(R.layout.fragment_user_management_notifications, tabHost.getTabContentView(), true);
+		
+		TabHost.TabSpec tab = tabHost.newTabSpec(Tabs.CameraChooser.TAG).setIndicator(generateTab(li, R.layout.user_management_fragment_tab, getResources().getString(R.string.notifications)));
+		
+		v = li.inflate(R.layout.fragment_user_management_notifications, tabHost.getTabContentView(), true);		
+		v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (dims[1] * 0.65)));
 		tab.setContent(R.id.notification_list_root);
 		tabHost.addTab(tab);
 
@@ -129,6 +131,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		tab = tabHost.newTabSpec(Tabs.CameraChooser.TAG).setIndicator(
 				generateTab(li, R.layout.user_management_fragment_tab, getResources().getString(R.string.organizations)));
 		v = li.inflate(R.layout.fragment_user_management_organizations, tabHost.getTabContentView(), true);
+		v.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (dims[1] * 0.65)));
 		tab.setContent(R.id.organization_list_root);
 		tabHost.addTab(tab);
 
@@ -180,12 +183,10 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		organizationsHolder.setAdapter(listOrganizationsAdapter);
 	}
 
-	private void initNotifications()
-	{
-		listNotifications = informaCam.notificationsManifest.listNotifications();
+	private void initNotifications() {
+		listNotifications = informaCam.notificationsManifest.sortBy(Models.INotificationManifest.Sort.COMPLETED);
+		notificationsHolder.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-		notificationsHolder.setOnItemLongClickListener(new OnItemLongClickListener()
-		{
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int viewId, long l)
@@ -246,18 +247,18 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		switch (which)
 		{
 		case Codes.Adapters.NOTIFICATIONS:
-			h.post(new Runnable() {
+			a.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					listNotifications = informaCam.notificationsManifest.sortBy(Models.INotificationManifest.Sort.DATE_DESC);
-					listNotificationsAdapter.update(listNotifications == null ? new ArrayList<INotification>() : listNotifications, h);
+					listNotifications = informaCam.notificationsManifest.sortBy(Models.INotificationManifest.Sort.COMPLETED);
+					listNotificationsAdapter.update(listNotifications == null ? new ArrayList<INotification>() : listNotifications, a);
 					notificationsHolder.invalidate();
 				}
 			});			
 			
 			break;
 		case Codes.Adapters.ORGANIZATIONS:
-			h.post(new Runnable() {
+			a.runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
 					listOrganizations = informaCam.installedOrganizations.organizations;

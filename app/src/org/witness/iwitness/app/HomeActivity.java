@@ -19,6 +19,7 @@ import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 import org.witness.iwitness.R;
@@ -52,7 +53,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -167,7 +167,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		if (init.getData() != null)
 		{
 			final Uri ictdURI = init.getData();
-			Log.d(LOG, "INIT KEY: " + ictdURI);
 
 			mHandlerUI.post(new Runnable() {
 				@Override
@@ -238,8 +237,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	}
 
 	@Override
-	public void launchCamera()
-	{
+	public void launchCamera() {
 		resetActionBar();
 		toCamera.removeExtra(org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE);
 		//toCamera.putExtra(
@@ -256,7 +254,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 		route = toEditor;
 		routeUs();
-		Log.d(LOG, "launching editor for " + media._id);
 	}
 
 	@Override
@@ -427,14 +424,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int responseCode, Intent data)
-	{
-		if (responseCode == Activity.RESULT_OK)
-		{
-			informaCam.setStatusListener(this);
+	public void onActivityResult(int requestCode, int responseCode, Intent data) {
+		informaCam.setStatusListener(this);
+		
+		if(responseCode == Activity.RESULT_OK) {
+			switch(requestCode) {
 
-			switch (requestCode)
-			{
 			case Codes.Routes.CAMERA:
 				viewPager.setCurrentItem(INDEX_GALLERY);
 
@@ -452,10 +447,9 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				 * "onUpdate()"
 				 */
 				IDCIMSerializable returnedMedia = (IDCIMSerializable) data.getSerializableExtra(Codes.Extras.RETURNED_MEDIA);
-				Log.d(LOG, "new dcim:\n" + returnedMedia.asJson().toString());
-
-				if (!returnedMedia.dcimList.isEmpty())
-				{
+				Logger.d(LOG, "new dcim:\n" + returnedMedia.asJson().toString());
+				
+				if(!returnedMedia.dcimList.isEmpty()) {
 					setPending(returnedMedia.dcimList.size(), 0);
 				}
 
@@ -501,10 +495,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			if (page == 3)
 			{
 				launchCamera();
-			}
-			else
-			{
-				// updateAdapter(0);
+			} else {
+				//updateAdapter(0);
 			}
 			supportInvalidateOptionsMenu();
 		}
@@ -651,8 +643,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		{
 		case org.witness.informacam.utils.Constants.Codes.Messages.DCIM.ADD:
 			final Bundle data = message.getData();
-			Log.d(LOG, "updating: " + data.getString(Codes.Extras.CONSOLIDATE_MEDIA));
 
+			
 			mHandlerUI.sendEmptyMessage(0);
 			mHandlerUI.post(new Runnable()
 			{

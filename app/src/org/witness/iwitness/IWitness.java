@@ -17,6 +17,7 @@ import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.transport.TransportUtility;
 import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.informacam.utils.Constants.Models.IUser;
@@ -75,15 +76,13 @@ public class IWitness extends Activity implements InformaCamStatusListener
 	}
 
 	@Override
-	public void onResume()
-	{
-		super.onResume();
-		informaCam = (InformaCam) getApplication();
-
-		try
-		{
-			if (route != null)
-			{
+	public void onResume() {
+		super.onResume();		
+		informaCam = (InformaCam)getApplication();
+		Log.d(LOG, "AND HELLO onResume()!!");
+		
+		try {
+			if(route != null) {
 				routeByIntent();
 			}
 			else
@@ -113,11 +112,9 @@ public class IWitness extends Activity implements InformaCamStatusListener
 					Log.d(LOG, "no, not logged in");
 				}
 			}
-
-		}
-		catch (NullPointerException e)
-		{
-			Log.e(LOG, "informacam has not started again yet");
+	
+		} catch(NullPointerException e) {
+			Logger.e(LOG, e);
 		}
 	}
 
@@ -153,13 +150,36 @@ public class IWitness extends Activity implements InformaCamStatusListener
 		if (resultCode == Activity.RESULT_CANCELED)
 		{
 			Log.d(LOG, "finishing with request code " + requestCode);
-
+			
+			if(informaCam.isOutsideTheLoop(init.getAction())) {
+				Logger.d(LOG, "coming back from VMM call WITH NOOOOO MEDIA, and i shoudl finish.");
+				setResult(resultCode, getIntent());
+				finish();
+				return;
+			}
+			
+			// XXX: DOES THIS BREAK LOGOUT?
+			setResult(resultCode, data);
 			finish();
-		}
-		else if (resultCode == Activity.RESULT_OK)
-		{
+			
+		} else if(resultCode == Activity.RESULT_OK) {
 			Log.d(LOG, "returning with request code " + requestCode);
-
+			
+			/*
+			if(informaCam.isOutsideTheLoop(init.getAction())) {
+				Logger.d(LOG, "coming back from VMM call with SOME media, and i shoudl finish.");
+				
+				// TODO:
+				 immediately 
+				 1) chooser
+				 2) encrypt (all? selected?) to org
+				 3) start up a transport for each returned media
+				
+				finish();
+				return;
+			}
+			*/
+			
 			route = new Intent(this, HomeActivity.class);
 			routeCode = Home.ROUTE_CODE;
 
@@ -202,9 +222,12 @@ public class IWitness extends Activity implements InformaCamStatusListener
 
 		}
 	}
-
-	private void routeByIntent()
-	{
+	
+	private void routeByIntent() {
+		if(route == null) {
+			return;
+		}
+		
 		Log.d(LOG, "intent is: " + init.getAction());
 
 		if (Intent.ACTION_MAIN.equals(init.getAction()))
@@ -219,6 +242,9 @@ public class IWitness extends Activity implements InformaCamStatusListener
 		else if (Intent.ACTION_VIEW.equals(init.getAction()))
 		{
 			route.setData(init.getData());
+		} else if("info.guardianproject.action.VERIFIED_MOBILE_MEDIA".equals(init.getAction())) {
+			route = new Intent(this, CameraActivity.class);
+			routeCode = Camera.ROUTE_CODE;
 		}
 
 		route.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
