@@ -63,7 +63,13 @@
 	<string name="login_passphrase">Passphrase</string>
 	
 	<string name="preferences">Preferences</string>
-    <string name="prefs_language_title">Language</string>
+	<string name="prefs_lock_screen">Lock screen</string>
+	<string name="prefs_lock_screen_on">On</string>
+	<string name="prefs_lock_screen_off">Off</string>
+	<string name="prefs_panic">Panic Action</string>
+	<string name="prefs_panic_wipe_app">Wipe entire app</string>
+	<string name="prefs_panic_wipe_content">Wipe my content</string>
+	<string name="prefs_language_title">Language</string>
     <string name="pref_languages_default">System Default</string>
     <string name="pref_languages_en_us">English (US)</string>
     <string name="pref_languages_fr">French</string>

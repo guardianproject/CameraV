@@ -93,8 +93,10 @@ public class Constants {
 
 	public class Preferences {
 		public class Keys {
+			public final static String LOCK_SCREEN_MODE = "lockScreenMode";
 			public final static String ORIGINAL_IMAGE_HANDLING = "originalImageHandling";
 			public static final String LANGUAGE = "iw_language";
+			public final static String PANIC_ACTION = "panicAction";
 		}
 
 		public class OriginalImageHandling {
