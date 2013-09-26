@@ -283,10 +283,12 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 	private class AudioNotePlayer extends AudioNoteHelper implements OnSeekBarChangeListener
 	{
 		private Handler mHandler;
+		private boolean mHasBeenShown;
 		
 		public AudioNotePlayer(Activity a, IForm f)
 		{
 			super(a, f);
+			mHasBeenShown = false;
 			sbAudio.setProgress(0);
 			sbAudio.setOnSeekBarChangeListener(this);
 			this.progress.setOnSeekBarChangeListener(this);
@@ -301,7 +303,11 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 				if (mHandler != null)
 					mHandler.removeCallbacks(mHidePlayerRunnable);
 				sbAudio.setMax(this.progress.getMax());
-				sbAudio.setVisibility(View.VISIBLE);
+				if (!mHasBeenShown)
+				{
+					UIHelpers.fadeIn(sbAudio, 500);
+					mHasBeenShown = true;
+				}
 			}
 			else
 			{
@@ -323,7 +329,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		
 		private void closePlayer()
 		{
-			sbAudio.setVisibility(View.GONE);
+			UIHelpers.fadeOut(sbAudio, 500);
 			sbAudio.setOnSeekBarChangeListener(null);
 			mAudioPlayer = null;
 		}
