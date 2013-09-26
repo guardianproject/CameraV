@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -86,14 +85,18 @@ public class RoundedImageView extends ImageView {
 				mRadius, mRadius, xferPaint);
 		xferPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
 
-		// Path path = new Path();
-		// RectF rect = new RectF(0, 0, targetWidth, targetHeight);
-		// path.addRoundRect(rect, mRadius, mRadius, Path.Direction.CW);
-		// canvas.clipPath(path);
-		//
-		canvas.drawBitmap(mBitmap,
-				new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight()),
-				new Rect(0, 0, targetWidth, targetHeight), null);
+		// Create a private image view to do scaling stuff. Saves us a lot of tricky calculations
+		// to achieve "CenterCrop" scale type... =)
+		ImageView ivCopy = new ImageView(this.getContext());
+		ivCopy.setScaleType(ScaleType.CENTER_CROP);		
+		ivCopy.setImageBitmap(mBitmap);
+		ivCopy.measure(MeasureSpec.makeMeasureSpec(targetWidth, MeasureSpec.EXACTLY),
+						MeasureSpec.makeMeasureSpec(targetHeight, MeasureSpec.EXACTLY));
+		ivCopy.layout(0, 0, targetWidth, targetHeight);
+		
+		canvas.save();
+		ivCopy.draw(canvas);
+		canvas.restore();
 		canvas.drawBitmap(rounder, 0, 0, xferPaint);
 
 	    super.setImageBitmap(targetBitmap);
@@ -111,7 +114,9 @@ public class RoundedImageView extends ImageView {
 		if (d instanceof BitmapDrawable) {
 			mBitmap = ((BitmapDrawable) d).getBitmap();
 			createRoundedBitmap();
-		} else {
+		}
+		else
+		{
 			super.setImageResource(resId);
 		}
 	}
