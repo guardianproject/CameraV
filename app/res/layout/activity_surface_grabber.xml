@@ -19,4 +19,17 @@
         android:layout_marginRight="30dp"
         android:text="@string/wizard_take_photo_take" />
 
+    <TextView
+        android:id="@+id/surface_grabber_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dip"
+        android:background="@drawable/progress_unaccepted"
+        android:padding="10dip"
+        android:text="@string/zero"
+        android:textColor="@android:color/white"
+        android:textSize="30sp" />
+
 </RelativeLayout>

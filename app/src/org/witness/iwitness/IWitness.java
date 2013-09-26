@@ -89,10 +89,10 @@ public class IWitness extends Activity implements InformaCamStatusListener
 			{
 				Log.d(LOG, "route is null now, please wait");
 				Log.d(LOG, "hasCredentialManager? " + String.valueOf(informaCam.hasCredentialManager()));
-				Log.d(LOG, "credentialManagerStatus? " + informaCam.getCredentialManagerStatus());
 
 				if (informaCam.hasCredentialManager())
 				{
+					Log.d(LOG, "credentialManagerStatus? " + informaCam.getCredentialManagerStatus());
 					switch (informaCam.getCredentialManagerStatus())
 					{
 					case org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED:

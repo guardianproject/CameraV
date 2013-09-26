@@ -202,7 +202,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 		listNotificationsAdapter = new NotificationsListAdapter(listNotifications);
 		notificationsHolder.setAdapter(listNotificationsAdapter);
 
-		if (listNotifications.size() > 0)
+		if (listNotifications != null && listNotifications.size() > 0)
 		{
 			notificationsNoNotifications.setVisibility(View.GONE);
 			return;
