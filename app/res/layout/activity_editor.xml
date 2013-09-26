@@ -3,52 +3,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:id="@+id/root_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <FrameLayout
-            android:id="@+id/media_holder"
+        <org.witness.iwitness.app.views.TwoViewSlideLayout
+            android:id="@+id/root_main"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="0dip"
-            android:layout_weight="0.5"
-            android:padding="0dip" />
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-        <RelativeLayout
-            android:id="@+id/rlBottom"
+            <FrameLayout
+                android:id="@+id/media_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="0dip" />
+
+            <RelativeLayout
+                android:id="@+id/rlBottomPart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                                <include
+            android:id="@+id/toolbar_bottom"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5" >
-
-            <include
-                android:id="@+id/toolbar_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                layout="@layout/fragment_editor_toolbar_bottom" />
-
-            <ScrollView
-                android:id="@+id/ScrollView1"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_above="@id/toolbar_bottom"
-                android:layout_alignParentTop="true"
-                android:layout_alignWithParentIfMissing="true"
-                android:fillViewport="true" >
-
-                <FrameLayout
-                    android:id="@+id/details_form_holder"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            layout="@layout/fragment_editor_toolbar_bottom" />
+                                
+                <ScrollView
+                    android:id="@+id/svDetails"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/toolbar_bottom"
+                     >
 
-                </FrameLayout>
-            </ScrollView>
+                    <FrameLayout
+                        android:id="@+id/details_form_holder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+                    </FrameLayout>
+                </ScrollView>
+                
 
-        </RelativeLayout>
-    </LinearLayout>
+                        
+            </RelativeLayout>
+        </org.witness.iwitness.app.views.TwoViewSlideLayout>
+
 
     <FrameLayout
         android:id="@+id/root_form"

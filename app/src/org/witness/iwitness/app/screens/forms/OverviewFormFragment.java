@@ -14,18 +14,16 @@ import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
-import org.witness.iwitness.app.screens.popups.TextareaPopup;
 import org.witness.iwitness.app.views.AudioNoteInfoView;
 import org.witness.iwitness.utils.AudioNoteHelper;
 import org.witness.iwitness.utils.Constants.App.Editor.Forms;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
+import org.witness.iwitness.utils.UIHelpers;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,26 +68,9 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 
 		notes = (TextView) rootView.findViewById(R.id.media_notes);
 		notes.setText("");
-		notesAnswerHolder = new EditText(container.getContext());
-		notesAnswerHolder.addTextChangedListener(new TextWatcher()
-		{
-			@Override
-			public void afterTextChanged(Editable s)
-			{
-				notes.setText(s);
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after)
-			{
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count)
-			{
-			}
-
-		});
+		notesAnswerHolder = (EditText) rootView.findViewById(R.id.media_notes_edit); // new EditText(container.getContext());
+		notesAnswerHolder.setVisibility(View.GONE);
+		notesAnswerHolder.setText("");
 
 		llAudioFiles = (LinearLayout) rootView.findViewById(R.id.llAudioFiles);
 		sbAudio = (SeekBar) rootView.findViewById(R.id.sbAudio);
@@ -192,7 +173,8 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		}
 
 		textForm.associate(notesAnswerHolder, Forms.FreeText.PROMPT);
-
+		notes.setText(notesAnswerHolder.getText());
+		
 		updateAudioFiles();
 	}
 
@@ -222,6 +204,11 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 			llAudioFiles.setVisibility(View.GONE);
 	}
 
+	public View getAudioFilesView()
+	{
+		return llAudioFiles;
+	}
+	
 	@Override
 	public boolean saveForm()
 	{
@@ -246,57 +233,29 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		return InformaCam.getInstance().mediaManifest.save();
 	}
 
-	// private IForm getTopLevelTextNotes(boolean createIfNotPresent)
-	// {
-	// IRegion region = media.getTopLevelRegion();
-	// if (region == null && createIfNotPresent)
-	// {
-	// region = media.addRegion(this, null);
-	// }
-	//
-	// if (region != null)
-	// {
-	// for (IForm form : media.getForms(this))
-	// {
-	// if (form.namespace.equals(Forms.FreeText.TAG))
-	// {
-	// return form;
-	// }
-	// }
-	// }
-	// return null;
-	// }
-
-	public void editNotes()
+	public void stopEditNotes(boolean save)
 	{
-		new TextareaPopup(a, ((EditorActivityListener) a).media(), true)
+		notes.setVisibility(View.VISIBLE);
+		notesAnswerHolder.setVisibility(View.GONE);
+		if (save)
 		{
-			@Override
-			public void Show()
-			{
-				prompt.setText(notesAnswerHolder.getText());
-				prompt.setSelection(prompt.getText().length());
-				// if (textForm != null &&
-				// textForm.getQuestionDefByTitleId(Forms.FreeText.PROMPT).initialValue
-				// != null)
-				// {
-				// prompt.setText(textForm.getQuestionDefByTitleId(Forms.FreeText.PROMPT).initialValue);
-				// }
-				super.Show();
-			}
-
-			@Override
-			protected void onSave()
-			{
-				if (textForm != null)
-				{
-					notesAnswerHolder.setText(prompt.getText());
-					textForm.answer(Forms.FreeText.PROMPT);
-				}
-				super.onSave();
-			}
-		};
-
+			textForm.answer(Forms.FreeText.PROMPT);
+			notes.setText(notesAnswerHolder.getText());
+		}
+		else
+		{
+			notesAnswerHolder.setText(notes.getText());
+		}
+		UIHelpers.hideSoftKeyboard(a, rootView);
+	}
+	
+	public void startEditNotes()
+	{
+		notes.setVisibility(View.GONE);
+		notesAnswerHolder.setVisibility(View.VISIBLE);
+		notesAnswerHolder.requestFocus();
+		notesAnswerHolder.setSelection(notesAnswerHolder.getText().length());
+		UIHelpers.showSoftKeyboard(a, notesAnswerHolder);
 	}
 
 	@Override

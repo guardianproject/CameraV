@@ -22,13 +22,16 @@ import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.iwitness.app.screens.forms.OverviewFormFragment;
 import org.witness.iwitness.app.screens.forms.TagFormFragment;
 import org.witness.iwitness.app.screens.popups.SharePopup;
+import org.witness.iwitness.app.views.TwoViewSlideLayout;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.Constants.Codes;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
+import org.witness.iwitness.utils.UIHelpers;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -51,7 +54,8 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 {
 	Intent init;
 
-	View rootMain, rootForm;
+	TwoViewSlideLayout rootMain;
+	View rootForm;
 	Fragment fullscreenView, formView;
 	OverviewFormFragment detailsView;
 	public FragmentManager fm;
@@ -73,7 +77,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 
 	public enum ActivityActionMode
 	{
-		Normal, Edit, AddTags, EditForm
+		Normal, Edit, AddTags, EditText, EditForm
 	}
 
 	private ActivityActionMode mActionMode = ActivityActionMode.Normal;
@@ -91,8 +95,8 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		{
 
 			setContentView(R.layout.activity_editor);
-
-			rootMain = findViewById(R.id.root_main);
+			
+			rootMain = (TwoViewSlideLayout) findViewById(R.id.root_main);
 			rootForm = findViewById(R.id.root_form);
 			toolbarBottom = findViewById(R.id.toolbar_bottom);
 			toolbarBottom.setVisibility(View.GONE);
@@ -200,7 +204,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		ft.replace(R.id.root_form, formView);
 		ft.addToBackStack(null);
 		ft.commit();
-
+		
 		updateUIBasedOnActionMode();
 	}
 
@@ -228,6 +232,8 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		super.onCreateOptionsMenu(menu);
 		if (mActionMode == ActivityActionMode.Edit)
 			getSupportMenuInflater().inflate(R.menu.activity_edit_edit, menu);
+		else if (mActionMode == ActivityActionMode.EditText)
+			getSupportMenuInflater().inflate(R.menu.activity_edit_edit_text, menu);
 		else
 			getSupportMenuInflater().inflate(R.menu.activity_edit_normal, menu);
 		return true;
@@ -240,7 +246,12 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		{
 		case android.R.id.home:
 		{
-			if (mActionMode == ActivityActionMode.Edit)
+			if (mActionMode == ActivityActionMode.EditText)
+			{
+				detailsView.stopEditNotes(true);
+				setActionMode(ActivityActionMode.Normal);
+			}
+			else if (mActionMode == ActivityActionMode.Edit)
 				setActionMode(ActivityActionMode.Normal);
 			else
 				saveStateAndFinish();
@@ -261,6 +272,18 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			setActionMode(ActivityActionMode.Normal);
 			return true;
 		}
+		case R.id.menu_edittext_cancel:
+		{
+			detailsView.stopEditNotes(false);
+			setActionMode(ActivityActionMode.Edit);
+			return true;
+		}
+		case R.id.menu_edittext_save:
+		{
+			detailsView.stopEditNotes(true);
+			setActionMode(ActivityActionMode.Edit);
+			return true;
+		}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -274,6 +297,11 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			this.setActionMode(ActivityActionMode.Edit);
 		else if (mActionMode == ActivityActionMode.Edit)
 			this.setActionMode(ActivityActionMode.Normal);
+		else if (mActionMode == ActivityActionMode.EditText)
+		{
+			detailsView.stopEditNotes(true);
+			this.setActionMode(ActivityActionMode.Normal);
+		}
 		else
 			saveStateAndFinish();
 	}
@@ -418,9 +446,11 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			return false;
 		else if (mActionMode == ActivityActionMode.Normal && mode != ActivityActionMode.Edit)
 			return false; // Invalid state
-		else if (mActionMode == ActivityActionMode.AddTags && mode == ActivityActionMode.EditForm)
+		else if (mActionMode == ActivityActionMode.AddTags && (mode == ActivityActionMode.EditForm || mode == ActivityActionMode.EditText))
 			return false;
-		else if (mActionMode == ActivityActionMode.EditForm && mode == ActivityActionMode.AddTags)
+		else if (mActionMode == ActivityActionMode.EditForm && (mode == ActivityActionMode.AddTags || mode == ActivityActionMode.EditText))
+			return false;
+		else if (mActionMode == ActivityActionMode.EditText && (mode == ActivityActionMode.AddTags || mode == ActivityActionMode.EditForm))
 			return false;
 
 		mActionMode = mode;
@@ -428,6 +458,10 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		{
 			((FullScreenViewFragment) fullscreenView).setCurrentMode(FullScreenViewFragment.Mode.AddTags);
 			startActionMode(this.mActionModeEditTags);
+		}
+		else if (mActionMode == ActivityActionMode.EditText)
+		{
+			supportInvalidateOptionsMenu();
 		}
 		else if (mActionMode == ActivityActionMode.EditForm)
 		{
@@ -466,7 +500,22 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			showToolbar(true);
 			getSupportActionBar().setTitle(R.string.editor_tags_add);
 			break;
+		case EditText:
+			rootForm.setVisibility(View.GONE);
+			rootMain.setVisibility(View.VISIBLE);
+			enableToolbar(false);
+			showToolbar(false);
+			getSupportActionBar().setTitle(R.string.menu_edit);
+
+			rootMain.collapse();
+			Rect rectAudioFiles = UIHelpers.getRectRelativeToView(rootMain, detailsView.getAudioFilesView());
+			//this.svRootMain.smoothScrollTo(0, rectAudioFiles.top);
+			detailsView.startEditNotes();
+			break;
 		case Edit:
+			rootMain.expand();
+			//this.svRootMain.smoothScrollTo(0, 0);
+			detailsView.stopEditNotes(false);
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
 			enableToolbar(true);
@@ -490,8 +539,8 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			@Override
 			public void onClick(View v)
 			{
-				if (toolbarBottomShown)
-					detailsView.editNotes();
+				if (toolbarBottomShown && mActionMode == ActivityActionMode.Edit)
+					setActionMode(ActivityActionMode.EditText);
 			}
 		});
 

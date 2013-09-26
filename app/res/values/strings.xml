@@ -112,7 +112,8 @@
     <string name="editor_tags_add">Add Tags</string>
     <string name="editor_form_edit">Tag Info</string>
     <string name="editor_write_text">Write Text</string>
-    
+	<string name="editor_save_text">SAVE TEXT</string>
+	    
     <string name="audio_saved_saved">Recording saved.</string>
     <string name="audio_saved_info">Audio notes are for your reference only, and will not be shared with IBA.</string>
     <string name="audio_saved_ok">OKAY, THANKS!</string>
