@@ -14,6 +14,7 @@ import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
+import org.witness.iwitness.app.screens.popups.PopupClickListener;
 import org.witness.iwitness.app.views.AudioNoteInfoView;
 import org.witness.iwitness.utils.AudioNoteHelper;
 import org.witness.iwitness.utils.Constants.App.Editor.Forms;
@@ -21,6 +22,7 @@ import org.witness.iwitness.utils.Constants.EditorActivityListener;
 import org.witness.iwitness.utils.UIHelpers;
 
 import android.app.Activity;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -28,14 +30,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class OverviewFormFragment extends Fragment implements ODKFormListener, OnClickListener
+public class OverviewFormFragment extends Fragment implements ODKFormListener, OnClickListener, OnLongClickListener
 {
 	View rootView;
 	Activity a;
@@ -194,6 +198,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 				{
 					AudioNoteInfoView view = (AudioNoteInfoView) inflater.inflate(R.layout.audio_note_info_view, llAudioFiles, false);
 					view.setOnClickListener(this);
+					view.setOnLongClickListener(this);
 					view.setForm(form);
 					llAudioFiles.addView(view);
 				}
@@ -282,8 +287,18 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 				mAudioPlayer = new AudioNotePlayer(a, view.getForm());
 				mAudioPlayer.toggle();
 			}
-			//new AudioNotePopup(a, view.getForm());
 		}
+	}
+
+	@Override
+	public boolean onLongClick(View v)
+	{
+		if (v instanceof AudioNoteInfoView)
+		{
+			showAudioNoteContextMenu((AudioNoteInfoView) v);
+			return true;
+		}
+		return false;
 	}
 	
 	private class AudioNotePlayer extends AudioNoteHelper implements OnSeekBarChangeListener
@@ -358,6 +373,54 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 			{
 				this.setCurrentPosition(seekBar.getProgress() * 1000);
 			}
+		}
+	}
+
+	private void showAudioNoteContextMenu(final AudioNoteInfoView view)
+	{
+		try
+		{
+			LayoutInflater inflater = LayoutInflater.from(getActivity());
+
+			View content = inflater.inflate(R.layout.popup_audionote_context_menu, (ViewGroup) rootView, false);
+			content.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+			PopupWindow mMenuPopup = new PopupWindow(content, content.getMeasuredWidth(), content.getMeasuredHeight(), true);
+
+			// Delete
+			//
+			View btnDelete = content.findViewById(R.id.btnDeleteAudioNote);
+			btnDelete.setOnClickListener(new PopupClickListener(mMenuPopup)
+			{
+				@Override
+				protected void onSelected()
+				{
+					// Delete!
+					IRegion overviewRegion = ((EditorActivityListener) a).media().getTopLevelRegion();
+					if (overviewRegion != null)
+					{
+						IForm viewForm = view.getForm();
+						for (IForm form : overviewRegion.associatedForms)
+						{
+							if (form.answerPath.equals(viewForm.answerPath))
+							{
+								overviewRegion.associatedForms.remove(form);
+								break;
+							}
+						}
+						updateAudioFiles();
+					}
+				}
+			});
+
+			mMenuPopup.setOutsideTouchable(true);
+			mMenuPopup.setBackgroundDrawable(new BitmapDrawable());
+			mMenuPopup.showAsDropDown(view, view.getWidth(), -view.getHeight());
+
+			mMenuPopup.getContentView().setOnClickListener(new PopupClickListener(mMenuPopup));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 }

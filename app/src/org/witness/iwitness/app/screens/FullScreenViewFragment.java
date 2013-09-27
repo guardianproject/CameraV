@@ -15,6 +15,7 @@ import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
+import org.witness.iwitness.app.screens.popups.PopupClickListener;
 import org.witness.iwitness.app.views.ChevronRegionView;
 import org.witness.iwitness.utils.Constants.App;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
@@ -389,31 +390,6 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 			// clear current selection
 			currentRegion = null;
 			updateRegionDisplay();
-		}
-	}
-
-	private class PopupClickListener implements View.OnClickListener
-	{
-		private final PopupWindow mParent;
-
-		public PopupClickListener(PopupWindow parent)
-		{
-			mParent = parent;
-		}
-
-		@Override
-		public void onClick(View v)
-		{
-			onSelected();
-			mParent.dismiss();
-		}
-
-		/**
-		 * Override this to handle item selection. After this call the popup
-		 * window will automatically be closed.
-		 */
-		protected void onSelected()
-		{
 		}
 	}
 

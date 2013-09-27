@@ -47,6 +47,7 @@
 	<string name="send_message">Send message\u2026</string>
 	<string name="notes">Notes</string>
 	<string name="delete_tag">Delete Tag</string>
+	<string name="delete_audio_note">Delete Audio Note</string>
 	<string name="unverified">Unverified</string>
 	<string name="verified">Verified</string>
 	<string name="pull_down_to_wipe">Pull down to wipe your contents</string>
