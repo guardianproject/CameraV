@@ -47,6 +47,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 	LinearLayout llAudioFiles;
 	private SeekBar sbAudio;
 	private AudioNotePlayer mAudioPlayer;
+	private View rlAudio;
 
 	private final static String LOG = App.LOG;
 
@@ -72,6 +73,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		notesAnswerHolder.setVisibility(View.GONE);
 		notesAnswerHolder.setText("");
 
+		rlAudio = rootView.findViewById(R.id.rlAudio);
 		llAudioFiles = (LinearLayout) rootView.findViewById(R.id.llAudioFiles);
 		sbAudio = (SeekBar) rootView.findViewById(R.id.sbAudio);
 		sbAudio.setVisibility(View.GONE);
@@ -199,9 +201,13 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		}
 
 		if (llAudioFiles.getChildCount() > 0)
-			llAudioFiles.setVisibility(View.VISIBLE);
+		{
+			rlAudio.setVisibility(View.VISIBLE);
+		}
 		else
-			llAudioFiles.setVisibility(View.GONE);
+		{
+			rlAudio.setVisibility(View.GONE);
+		}
 	}
 
 	public View getAudioFilesView()

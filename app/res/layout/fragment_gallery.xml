@@ -41,7 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/media_processing_holder"
             android:layout_margin="3dip"
-            android:background="@android:color/white"
             android:gravity="center"
             android:horizontalSpacing="3dip"
             android:numColumns="3"
