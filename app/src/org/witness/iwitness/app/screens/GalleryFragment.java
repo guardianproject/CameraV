@@ -27,9 +27,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.GridView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
@@ -47,9 +45,6 @@ public class GalleryFragment extends SherlockFragment implements
 	GalleryGridAdapter galleryGridAdapter;
 
 	RelativeLayout noMedia;
-	RelativeLayout pendingMedia;
-	ProgressBar pendingProgressBar;
-	TextView pendingProgressReadout;
 
 	Activity a = null;
 
@@ -79,10 +74,6 @@ public class GalleryFragment extends SherlockFragment implements
 				.findViewById(R.id.media_display_grid);
 		noMedia = (RelativeLayout) rootView
 				.findViewById(R.id.media_display_no_media);
-
-		pendingMedia = (RelativeLayout) rootView.findViewById(R.id.media_processing_holder);
-		pendingProgressBar = (ProgressBar) rootView.findViewById(R.id.media_pending_progress);
-		pendingProgressReadout = (TextView) rootView.findViewById(R.id.media_pending_readout);
 
 		return rootView;
 	}
@@ -163,24 +154,26 @@ public class GalleryFragment extends SherlockFragment implements
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public void onItemClick(AdapterView<?> adapterView, View view, int viewId,
-			long l) {
+	public void onItemClick(AdapterView<?> adapterView, View view, int position,
+			long id) {
+		
+		if (position < mNumLoading)
+			return; // Ignore clicks on incomplete items
+		position -= mNumLoading;
+		
 		if (!isInMultiSelectMode) {
 			((HomeActivityListener) a).launchEditor(informaCam.mediaManifest
-					.getMediaItem((int) l));
+					.getMediaItem(position));
 		} else {
 			try {
-				IMedia m = listMedia.get((int) l);
+				IMedia m = listMedia.get(position);
 
 				if (!m.has(Models.IMedia.TempKeys.IS_SELECTED)) {
 					m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
 				}
 
-				int selectedColor = R.drawable.blue;
 				if (m.getBoolean(Models.IMedia.TempKeys.IS_SELECTED)) {
-					selectedColor = R.drawable.white;
 					m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
 					batch.remove(m);
 				} else {
@@ -364,6 +357,7 @@ public class GalleryFragment extends SherlockFragment implements
 			toggleMultiSelectMode(false);
 		}
 	};
+	private int mNumLoading;
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
@@ -387,29 +381,21 @@ public class GalleryFragment extends SherlockFragment implements
 
 	@Override
 	public void setPending(final int numPending, final int numCompleted) {		
-
+		
 		if(a == null) {
 			return;
 		}
 		
+		mNumLoading = numPending - numCompleted;
+		
 		a.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if(numPending > 0 && numPending > numCompleted) {
-					if(pendingMedia.getVisibility() == View.GONE) {
-						pendingMedia.setVisibility(View.VISIBLE);
-					}
-					
-					pendingProgressBar.setMax(numPending);
-					pendingProgressBar.setProgress(numCompleted);
-					
-					pendingProgressReadout.setText(a.getString(R.string.x_of_x_processed, numCompleted, numPending));
-					
-				} else {
-					if(pendingMedia.getVisibility() == View.VISIBLE) {
-						pendingMedia.setVisibility(View.GONE);
-					}
-				}
+				
+				if (galleryGridAdapter != null)
+				{
+					galleryGridAdapter.setNumLoading(numPending - numCompleted);
+				}	
 			}
 		});
 	}

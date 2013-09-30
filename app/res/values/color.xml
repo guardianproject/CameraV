@@ -18,6 +18,7 @@
     <color name="grey_medium_light">#FFCECDCD</color>
     <color name="grey_light">#FFD1D3D4</color>
     <color name="grey_light_light">#FFEFEFEF</color>
+    <color name="grey_gallery_placeholder">#FFCCCCCC</color>
     <color name="blue_washed">#FF2B3549</color>
 
     <color name="blue_light">#ff4AAEE2</color>

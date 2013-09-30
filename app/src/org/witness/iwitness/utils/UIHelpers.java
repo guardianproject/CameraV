@@ -1,7 +1,10 @@
 package org.witness.iwitness.utils;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Rect;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -10,6 +13,12 @@ import android.view.inputmethod.InputMethodManager;
 
 public class UIHelpers
 {
+	public static int dpToPx(int dp, Context ctx)
+	{
+		Resources r = ctx.getResources();
+		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+	}
+	
 	public static void showSoftKeyboard(Activity activity, View view)
 	{
 		InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);

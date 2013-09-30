@@ -1,6 +1,7 @@
 package org.witness.iwitness.app.views;
 
 import org.witness.iwitness.R;
+import org.witness.iwitness.utils.UIHelpers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -40,11 +41,11 @@ public class RoundedImageView extends ImageView {
 	@SuppressLint("NewApi")
 	private void init(AttributeSet attrs)
  {
-		mRadius = 25;
+		mRadius = UIHelpers.dpToPx(12, getContext());
 		if (attrs != null)
 		{
 			TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.RoundedImageView);
-			mRadius = a.getInt(R.styleable.RoundedImageView_rounding_radius, 25);
+			mRadius = (int) a.getDimension(R.styleable.RoundedImageView_rounding_radius, UIHelpers.dpToPx(12, getContext()));
 			a.recycle();
 		}
 	}
