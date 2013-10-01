@@ -13,6 +13,7 @@ import org.witness.informacam.utils.Constants.Codes;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App;
+import org.witness.iwitness.utils.UIHelpers;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -208,16 +209,16 @@ public class SharePopup {
 			TextView tv = (TextView) v.findViewById(android.R.id.text1);
 
 			Object handler = getItem(position);
+			int iconSize = UIHelpers.dpToPx(32, getContext());
 			if (handler instanceof IOrganization) {
 
 				IOrganization org = (IOrganization) handler;
 				tv.setText(org.organizationName);
 				Drawable icon = a.getResources().getDrawable(
 						R.drawable.ic_share_iba);
-				// icon.setBounds(0, 0, 32, 32);
-				tv.setCompoundDrawablesWithIntrinsicBounds(icon, null, null,
-						null);
-
+				icon.setBounds(0, 0, iconSize, iconSize);
+				tv.setCompoundDrawables(icon, null, null, null);
+				tv.setCompoundDrawablePadding(UIHelpers.dpToPx(10, getContext()));
 			} else if (handler instanceof HandlerIntent) {
 				HandlerIntent handlerIntent = (HandlerIntent) handler;
 				ResolveInfo info = handlerIntent.resolveInfo;
@@ -225,11 +226,11 @@ public class SharePopup {
 				tv.setText(info.loadLabel(pm));
 
 				Drawable icon = info.loadIcon(pm);
-				// icon.setBounds(0, 0, 32, 32);
+				icon.setBounds(0, 0, iconSize, iconSize);
 
 				// Put the image on the TextView
-				tv.setCompoundDrawablesWithIntrinsicBounds(icon, null, null,
-						null);
+				tv.setCompoundDrawables(icon, null, null, null);
+				tv.setCompoundDrawablePadding(UIHelpers.dpToPx(10, getContext()));
 			}
 
 			// Add margin between image and text (support various screen
