@@ -109,7 +109,7 @@ public class GalleryFragment extends SherlockFragment implements
 			mediaDisplayGrid.setOnItemClickListener(this);
 		}
 
-		if(listMedia != null && listMedia.size() > 0) {
+		if((listMedia != null && listMedia.size() > 0) || this.mNumLoading > 0) {
 			if (noMedia != null)
 				noMedia.setVisibility(View.GONE);
 		} else {
@@ -209,23 +209,15 @@ public class GalleryFragment extends SherlockFragment implements
 		if (listMedia != null)
 			this.galleryGridAdapter.update(listMedia);
 
-		if (listMedia != null && listMedia.size() > 0)
+		if ((listMedia != null && listMedia.size() > 0) || this.mNumLoading > 0)
 		{
 			if (noMedia != null)
 				noMedia.setVisibility(View.GONE);
 		}
 		else
 		{
-			if(listMedia != null && listMedia.size() > 0)
-			{
-				if (noMedia != null)
-					noMedia.setVisibility(View.GONE);
-			}
-			else
-			{
-				if (noMedia != null)
-					noMedia.setVisibility(View.VISIBLE);
-			}
+			if (noMedia != null)
+				noMedia.setVisibility(View.VISIBLE);
 		}
 	}
 
