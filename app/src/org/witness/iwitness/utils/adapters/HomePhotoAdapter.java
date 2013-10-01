@@ -3,6 +3,7 @@ package org.witness.iwitness.utils.adapters;
 import java.util.List;
 
 import org.witness.informacam.models.media.IMedia;
+import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.views.RoundedImageView;
@@ -71,8 +72,10 @@ public class HomePhotoAdapter extends PagerAdapter {
 	public Object instantiateItem(ViewGroup container, int position) {
 
 		IMedia m = (IMedia) media.get(position);
-		RoundedImageView view = (RoundedImageView) li.inflate(
-				R.layout.adapter_home_photo, container, false);
+		
+		View root = li.inflate(R.layout.adapter_home_photo, container, false);
+		
+		RoundedImageView view = (RoundedImageView) root.findViewById(R.id.ivPhoto);
 		try {
 			Bitmap bitmap = m.getThumbnail();
 			view.setImageBitmap(bitmap);
@@ -81,9 +84,15 @@ public class HomePhotoAdapter extends PagerAdapter {
 					R.drawable.ic_action_video));
 		}
 
-		view.setTag(m);
-		container.addView(view);
-		return view;
+		View videoSymbol = root.findViewById(R.id.ivVideoSymbol);
+		if (m instanceof IVideo)
+			videoSymbol.setVisibility(View.VISIBLE);
+		else
+			videoSymbol.setVisibility(View.GONE);
+		
+		root.setTag(m);
+		container.addView(root);
+		return root;
 	}
 
 	@Override

@@ -93,6 +93,11 @@ public class GalleryFragment extends SherlockFragment implements
 	private void initData() {
 
 		mCurrentSorting = Models.IMediaManifest.Sort.DATE_DESC;
+		updateData();
+	}
+	
+	private void updateData()
+	{
 		listMedia = informaCam.mediaManifest.sortBy(mCurrentSorting);
 		if (listMedia != null)
 			listMedia = new ArrayList<IMedia>(listMedia);
@@ -327,9 +332,9 @@ public class GalleryFragment extends SherlockFragment implements
 
 							@Override
 							public void run() {
-								// TODO: delete
 								mMode.finish();
 								((HomeActivityListener) a).waiter(false);
+								updateData();
 							}
 
 							public Runnable init(ActionMode mode) {
