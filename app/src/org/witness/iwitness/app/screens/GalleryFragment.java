@@ -90,6 +90,13 @@ public class GalleryFragment extends SherlockFragment implements
 		initLayout(savedInstanceState);	
 	}
 
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		updateAdapters();
+	}
+
 	private void initData() {
 
 		mCurrentSorting = Models.IMediaManifest.Sort.DATE_DESC;
@@ -152,10 +159,14 @@ public class GalleryFragment extends SherlockFragment implements
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view,
-			int viewId, long l) {
+			int position, long id) {
+		
+		if (position < mNumLoading)
+			return false; // Ignore clicks on incomplete items
+		position -= mNumLoading;
+		
 		((HomeActivityListener) a)
-				.getContextualMenuFor(informaCam.mediaManifest
-						.getMediaItem((int) l));
+				.getContextualMenuFor(listMedia.get(position), view);
 		return true;
 	}
 
@@ -168,8 +179,7 @@ public class GalleryFragment extends SherlockFragment implements
 		position -= mNumLoading;
 		
 		if (!isInMultiSelectMode) {
-			((HomeActivityListener) a).launchEditor(informaCam.mediaManifest
-					.getMediaItem(position));
+			((HomeActivityListener) a).launchEditor(listMedia.get(position));
 		} else {
 			try {
 				IMedia m = listMedia.get(position);

@@ -28,7 +28,7 @@ import org.witness.iwitness.app.screens.GalleryFragment;
 import org.witness.iwitness.app.screens.HomeFragment;
 import org.witness.iwitness.app.screens.UserManagementFragment;
 import org.witness.iwitness.app.screens.menus.MediaActionMenu;
-import org.witness.iwitness.app.screens.popups.RenamePopup;
+import org.witness.iwitness.app.screens.popups.PopupClickListener;
 import org.witness.iwitness.app.screens.popups.SharePopup;
 import org.witness.iwitness.app.screens.popups.TextareaPopup;
 import org.witness.iwitness.utils.Constants;
@@ -43,6 +43,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -54,8 +55,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -345,60 +349,59 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	}
 
 	@Override
-	public void getContextualMenuFor(final IMedia media)
+	public void getContextualMenuFor(final IMedia media, View anchorView)
 	{
-		List<ContextMenuAction> actions = new Vector<ContextMenuAction>();
-
-		ContextMenuAction action = new ContextMenuAction();
-		action.label = getResources().getString(R.string.delete);
-		action.ocl = new OnClickListener()
+		try
 		{
+			if (anchorView == null)
+				return; // Need an anchor view
+			
+			LayoutInflater inflater = LayoutInflater.from(this);
 
-			@Override
-			public void onClick(View v)
+			ViewGroup anchorRoot = null;
+			anchorRoot = (ViewGroup) anchorView.getRootView();
+			
+			View content = inflater.inflate(R.layout.popup_media_context_menu, anchorRoot, false);
+			content.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+			PopupWindow mMenuPopup = new PopupWindow(content, content.getMeasuredWidth(), content.getMeasuredHeight(), true);
+
+			// Delete
+			//
+			View btnDelete = content.findViewById(R.id.btnDeleteMedia);
+			btnDelete.setOnClickListener(new PopupClickListener(mMenuPopup)
 			{
-				mam.cancel();
-				if ((informaCam.mediaManifest.getById(media._id)).delete())
+				@Override
+				protected void onSelected()
 				{
-					((GalleryFragment) galleryFragment).updateAdapter(0);
+					if ((informaCam.mediaManifest.getById(media._id)).delete())
+					{
+						((GalleryFragment) galleryFragment).updateAdapter(0);
+					}
 				}
-			}
+			});
 
-		};
-		actions.add(action);
-
-		action = new ContextMenuAction();
-		action.label = getResources().getString(R.string.rename);
-		action.ocl = new OnClickListener()
-		{
-
-			@Override
-			public void onClick(View v)
+			// Share
+			//
+			View btnShare = content.findViewById(R.id.btnShareMedia);
+			btnShare.setOnClickListener(new PopupClickListener(mMenuPopup)
 			{
-				mam.cancel();
-				new RenamePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id));
-			}
-
-		};
-		actions.add(action);
-
-		action = new ContextMenuAction();
-		action.label = getResources().getString(R.string.send);
-		action.ocl = new OnClickListener()
+				@Override
+				protected void onSelected()
+				{
+					new SharePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id), true);
+				}
+			});	
+			
+			mMenuPopup.setOutsideTouchable(true);
+			mMenuPopup.setBackgroundDrawable(new BitmapDrawable());
+			mMenuPopup.showAsDropDown(anchorView, anchorView.getWidth(), -anchorView.getHeight());
+				
+			mMenuPopup.getContentView().setOnClickListener(new PopupClickListener(mMenuPopup));
+		}
+		catch (Exception e)
 		{
-
-			@Override
-			public void onClick(View v)
-			{
-				mam.cancel();
-				new SharePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id), true);
-			}
-
-		};
-		actions.add(action);
-
-		mam = new MediaActionMenu(this, actions);
-		mam.Show();
+			e.printStackTrace();
+		}
 	}
 
 	@Override

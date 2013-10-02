@@ -6,6 +6,7 @@ import org.witness.informacam.models.organizations.IOrganization;
 
 import android.net.Uri;
 import android.os.Message;
+import android.view.View;
 
 public class Constants {	
 	
@@ -27,7 +28,7 @@ public class Constants {
 		public void launchEditor(IMedia media);
 		public void logoutUser();
 		public void getContextualMenuFor(IOrganization organization);
-		public void getContextualMenuFor(IMedia media);
+		public void getContextualMenuFor(IMedia media, View anchorView);
 		public void getContextualMenuFor(INotification notification);
 		public void waiter(boolean show);
 		public void updateData(INotification notification, Message message);
