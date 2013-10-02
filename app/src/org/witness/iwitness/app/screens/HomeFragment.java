@@ -29,7 +29,9 @@ import org.witness.iwitness.utils.Constants.Preferences;
 import org.witness.iwitness.utils.adapters.HomePhotoAdapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -180,39 +182,46 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 
 		synchronized (this)
 		{
-			if (mHasShownSwipeHint || mPhotoAdapter == null || mPhotoAdapter.getCount() == 0)
+			if (mHasShownSwipeHint || mPhotoAdapter == null || mPhotoAdapter.getCount() < 2)
 				return;
+			
+			SharedPreferences sp = a.getSharedPreferences(a.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+			int nTimesShown = sp.getInt(Preferences.Keys.HINT_SWIPE_SHOWN, 0);
+			if (nTimesShown >= 3)
+				return;
+			nTimesShown++;
+			sp.edit().putInt(Preferences.Keys.HINT_SWIPE_SHOWN, nTimesShown).commit();
 			mHasShownSwipeHint = true;
 		}
 
-		final View swipeInfo = rootView.findViewById(R.id.popupInfoSwipe);
-		final Animation animation = AnimationUtils.loadAnimation(a, R.anim.info_fade_in_fade_out);
-		swipeInfo.setAnimation(animation);
-		animation.setAnimationListener(new AnimationListener()
-		{
-			@Override
-			public void onAnimationEnd(Animation animation)
-			{
-				rootView.findViewById(R.id.popupInfoSwipe).setVisibility(View.GONE);
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation)
-			{
-			}
-
-			@Override
-			public void onAnimationStart(Animation animation)
-			{
-				rootView.findViewById(R.id.popupInfoSwipe).setVisibility(View.VISIBLE);
-			}
-		});
 		rootView.postDelayed(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				animation.startNow();
+				final View swipeInfo = rootView.findViewById(R.id.popupInfoSwipe);
+				final Animation animation = AnimationUtils.loadAnimation(a, R.anim.info_fade_in_fade_out);
+				animation.setAnimationListener(new AnimationListener()
+				{
+					@Override
+					public void onAnimationEnd(Animation animation)
+					{
+						rootView.findViewById(R.id.popupInfoSwipe).setVisibility(View.GONE);
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation animation)
+					{
+					}
+
+					@Override
+					public void onAnimationStart(Animation animation)
+					{
+						rootView.findViewById(R.id.popupInfoSwipe).setVisibility(View.VISIBLE);
+					}
+				});
+				swipeInfo.setVisibility(View.INVISIBLE);
+				swipeInfo.startAnimation(animation);
 			}
 		}, 3000);
 	}

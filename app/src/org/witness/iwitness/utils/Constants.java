@@ -97,6 +97,7 @@ public class Constants {
 			public final static String ORIGINAL_IMAGE_HANDLING = "originalImageHandling";
 			public static final String LANGUAGE = "iw_language";
 			public final static String PANIC_ACTION = "panicAction";
+			public final static String HINT_SWIPE_SHOWN = "hintSwipeShown";
 		}
 
 		public class OriginalImageHandling {
