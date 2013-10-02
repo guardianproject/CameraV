@@ -26,6 +26,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +53,8 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 	private SeekBar sbAudio;
 	private AudioNotePlayer mAudioPlayer;
 	private View rlAudio;
-
+	private boolean mIsEditable;
+	
 	private final static String LOG = App.LOG;
 
 	@Override
@@ -99,6 +101,11 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		initLayout();
 	}
 
+	public void setIsEditable(boolean isEditable)
+	{
+		mIsEditable = isEditable;
+	}
+	
 	@Override
 	public void onDetach()
 	{
@@ -250,8 +257,17 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		notesAnswerHolder.setVisibility(View.GONE);
 		if (save)
 		{
-			textForm.answer(Forms.FreeText.PROMPT);
-			notes.setText(notesAnswerHolder.getText());
+			if (TextUtils.isEmpty(notesAnswerHolder.getText()))
+			{
+				deleteForm(textForm);
+				textForm = null;
+				this.initForms();
+			}
+			else
+			{
+				textForm.answer(Forms.FreeText.PROMPT);
+				notes.setText(notesAnswerHolder.getText());
+			}
 		}
 		else
 		{
@@ -293,7 +309,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 	@Override
 	public boolean onLongClick(View v)
 	{
-		if (v instanceof AudioNoteInfoView)
+		if (v instanceof AudioNoteInfoView && mIsEditable)
 		{
 			showAudioNoteContextMenu((AudioNoteInfoView) v);
 			return true;
@@ -395,20 +411,8 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 				protected void onSelected()
 				{
 					// Delete!
-					IRegion overviewRegion = ((EditorActivityListener) a).media().getTopLevelRegion();
-					if (overviewRegion != null)
-					{
-						IForm viewForm = view.getForm();
-						for (IForm form : overviewRegion.associatedForms)
-						{
-							if (form.answerPath.equals(viewForm.answerPath))
-							{
-								overviewRegion.associatedForms.remove(form);
-								break;
-							}
-						}
-						updateAudioFiles();
-					}
+					deleteForm(view.getForm());
+					updateAudioFiles();
 				}
 			});
 
@@ -421,6 +425,23 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		catch (Exception e)
 		{
 			e.printStackTrace();
+		}
+	}
+	
+	private void deleteForm(IForm formToDelete)
+	{
+		// Delete!
+		IRegion overviewRegion = ((EditorActivityListener) a).media().getTopLevelRegion();
+		if (overviewRegion != null)
+		{
+			for (IForm form : overviewRegion.associatedForms)
+			{
+				if (form.answerPath.equals(formToDelete.answerPath))
+				{
+					overviewRegion.associatedForms.remove(form);
+					break;
+				}
+			}
 		}
 	}
 }

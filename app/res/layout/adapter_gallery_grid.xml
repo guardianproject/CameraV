@@ -33,4 +33,33 @@
         android:gravity="center"
         android:longClickable="false" />
 
+    <LinearLayout
+        android:id="@+id/llSymbols"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#80ffffff"
+        android:orientation="horizontal"
+        android:padding="5dp" >
+
+        <ImageView
+            android:id="@+id/ivAudioNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_context_audio_note" />
+
+        <ImageView
+            android:id="@+id/ivNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_context_message" />
+
+        <ImageView
+            android:id="@+id/ivTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit_tag" />
+
+    </LinearLayout>
+
 </org.witness.iwitness.app.views.SquareFrameLayout>

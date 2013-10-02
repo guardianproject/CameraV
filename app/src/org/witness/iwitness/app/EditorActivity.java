@@ -210,6 +210,12 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 
 	private void saveStateAndFinish()
 	{
+		setResult(Activity.RESULT_OK);
+		finish();
+	}
+
+	private void saveState()
+	{
 		new Thread(new Runnable()
 		{
 			@Override
@@ -220,12 +226,9 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 					media.save();
 				}
 			}
-		}).start();
-
-		setResult(Activity.RESULT_OK);
-		finish();
+		}).start();		
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -269,6 +272,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		}
 		case R.id.menu_done:
 		{
+			saveState();
 			setActionMode(ActivityActionMode.Normal);
 			return true;
 		}
@@ -471,11 +475,13 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		{
 			((FullScreenViewFragment) fullscreenView).setCurrentMode(FullScreenViewFragment.Mode.Edit);
 			supportInvalidateOptionsMenu();
+			detailsView.setIsEditable(true);
 		}
 		else if (mActionMode == ActivityActionMode.Normal)
 		{
 			((FullScreenViewFragment) fullscreenView).setCurrentMode(FullScreenViewFragment.Mode.Normal);
 			supportInvalidateOptionsMenu();
+			detailsView.setIsEditable(false);
 		}
 
 		updateUIBasedOnActionMode();
