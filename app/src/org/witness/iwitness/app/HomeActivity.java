@@ -488,7 +488,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			if(page == 2) {
 				launchCamera();
 			} else {
-				updateAdapter(0);
+				//updateAdapter(0);
 			}
 		}
 

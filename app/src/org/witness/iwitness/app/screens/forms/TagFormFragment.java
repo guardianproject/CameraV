@@ -113,9 +113,21 @@ public class TagFormFragment extends Fragment implements ODKFormListener {
 			public void run() {
 				try {
 					form.answerAll();
+					
+					IForm form_ = null;
+					try {
+						form_ = region.associatedForms.get(0);
+					} catch(IndexOutOfBoundsException e) {
+						Logger.e(LOG, e);
+						return;
+					}
+					
+					if(form_ == null) {
+						return;
+					}
 
 					try {
-						info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(region.associatedForms.get(0).answerPath);
+						info.guardianproject.iocipher.FileOutputStream fos = new info.guardianproject.iocipher.FileOutputStream(form_.answerPath);
 
 						if(form.save(fos) != null) {
 							((EditorActivityListener) a).media().save();
