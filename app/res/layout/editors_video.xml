@@ -52,6 +52,7 @@
             <LinearLayout
                 android:id="@+id/video_seek_bar_endpoint_holder"
                 android:layout_width="match_parent"
+                android:orientation="horizontal"
                 android:layout_height="match_parent"
                 android:background="#00000000" />
         </RelativeLayout>

@@ -45,7 +45,7 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 		setContentView(R.layout.activity_main);
 		
 		informaCam = (InformaCam)getApplication();
-		informaCam.setStatusListener(this);
+		
 		
 		if(getIntent().hasExtra(Codes.Extras.CHANGE_LOCALE) && getIntent().getBooleanExtra(Codes.Extras.CHANGE_LOCALE, false)) {
 			onInformaCamStart(getIntent());
@@ -54,8 +54,11 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	
 	@Override
 	public void onResume() {
-		super.onResume();		
+		super.onResume();
+		
 		informaCam = (InformaCam)getApplication();
+		informaCam.setStatusListener(this);
+		
 		Log.d(LOG, "AND HELLO onResume()!!");
 		
 		try {
@@ -64,9 +67,10 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 			} else {
 				Log.d(LOG, "route is null now, please wait");
 				Log.d(LOG, "hasCredentialManager? " + String.valueOf(informaCam.hasCredentialManager()));
-				Log.d(LOG, "credentialManagerStatus? " + informaCam.getCredentialManagerStatus());
 				
 				if(informaCam.hasCredentialManager()) {
+					Log.d(LOG, "NOW ASKING FOR CM STATUS...");
+					
 					switch(informaCam.getCredentialManagerStatus()) {
 					case org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED:
 						route = new Intent(this, HomeActivity.class);
@@ -113,6 +117,8 @@ public class IWitness extends Activity implements InformaCamStatusListener {
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		informaCam.setStatusListener(this);
+		
 		if(resultCode == Activity.RESULT_CANCELED) {
 			Log.d(LOG, "finishing with request code " + requestCode);
 			

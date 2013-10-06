@@ -93,10 +93,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		informaCam = (InformaCam)getApplication();
-		informaCam.setStatusListener(this);
-		informaCam.setEventListener(this);
-		informaCam.setListAdapterListener(this);
+		informaCam = (InformaCam)getApplication();		
 		
 		setContentView(R.layout.activity_home);
 
@@ -131,6 +128,10 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		informaCam.setStatusListener(this);
+		informaCam.setEventListener(this);
+		informaCam.setListAdapterListener(this);
 		
 		if(getIntent().hasExtra(Constants.Codes.Extras.CHANGE_LOCALE)) {
 			getIntent().removeExtra(Constants.Codes.Extras.CHANGE_LOCALE);
@@ -406,6 +407,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void onActivityResult(int requestCode, int responseCode, Intent data) {
 		informaCam.setStatusListener(this);
+		informaCam.setEventListener(this);
+		informaCam.setListAdapterListener(this);
 		
 		if(responseCode == Activity.RESULT_OK) {
 			switch(requestCode) {
