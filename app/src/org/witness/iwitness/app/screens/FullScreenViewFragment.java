@@ -181,7 +181,11 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		for(int v=0; v<mediaHolder.getChildCount(); v++) {
 			View v_ = mediaHolder.getChildAt(v);
 			if(v_ instanceof IRegionDisplay) {
-				((IRegionDisplay) v_).indexOnScreen = v;
+				for(IRegion r : ((EditorActivityListener) a).media().associatedRegions) {
+					if(r.getRegionDisplay().equals(v_)) {
+						r.getRegionDisplay().indexOnScreen = v;
+					}
+				}
 			}
 		}
 		
