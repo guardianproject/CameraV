@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.models.media.IRegion;
+import org.witness.informacam.models.media.IRegionBounds;
 import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.models.media.IVideoRegion;
 import org.witness.informacam.ui.editors.IRegionDisplay;
@@ -108,6 +110,7 @@ OnRangeSeekBarChangeListener<Integer> {
 			mediaPlayer.seekTo(currentCue);
 			mediaPlayer.pause();
 			
+			
 			h.post(new Runnable() {
 				@Override
 				public void run() {
@@ -123,6 +126,14 @@ OnRangeSeekBarChangeListener<Integer> {
 				}
 			});
 			
+			h.post(new Runnable() {
+				@Override
+				public void run() {
+					updateRegionView(mediaPlayer.getCurrentPosition());
+					h.postDelayed(this, 1000L);
+				}
+			});
+			
 		} catch (IllegalArgumentException e) {
 			Log.e(LOG, "setDataSource error: " + e.getMessage());
 			e.printStackTrace();
@@ -134,6 +145,37 @@ OnRangeSeekBarChangeListener<Integer> {
 			e.printStackTrace();
 
 		}
+	}
+	
+	private void updateRegionView(final long timestamp) {
+		a.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if(mediaPlayer.isPlaying()) {
+					for(IRegion r : ((EditorActivityListener) a).media().associatedRegions) {
+						if(r.bounds.displayWidth != 0 && r.bounds.displayHeight != 0) {
+							try {
+								IRegionDisplay rd = (IRegionDisplay) mediaHolder.getChildAt(r.getRegionDisplay().indexOnScreen);
+								Log.d(LOG, "OK HAVE RegionDisplay");
+								
+								if(timestamp >= r.bounds.startTime && timestamp <= r.bounds.endTime) {
+									rd.setVisibility(View.VISIBLE);
+									
+									// TODO: update region display with new bounds from trail
+									IRegionBounds rb = ((IVideoRegion) r).getBoundsAtTime(mediaPlayer.getCurrentPosition());
+									Log.d(LOG, rb.asJson().toString());
+								} else {
+									rd.setVisibility(View.GONE);
+								}
+								
+							} catch(NullPointerException e) {
+								Logger.e(LOG, e);
+							}
+						}
+					}
+				}
+			}
+		});
 	}
 	
 	@Override
@@ -246,7 +288,7 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void onSeekComplete(MediaPlayer mp) {
 		Log.v(LOG, "onSeekComplete called (and at position " + mediaPlayer.getCurrentPosition() + ")");
-
+		updateRegionView(mediaPlayer.getCurrentPosition());
 	}
 
 	@Override

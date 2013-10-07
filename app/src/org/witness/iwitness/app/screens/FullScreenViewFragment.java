@@ -189,8 +189,16 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 			for(IRegion r : ((EditorActivityListener) a).media().associatedRegions) {
 				if(r.bounds.displayWidth != 0 && r.bounds.displayHeight != 0) {
 					r.init(getActivity(), r.bounds, false, this);
-					r.getRegionDisplay().setOnTouchListener(this);
-					mediaHolder.addView(r.getRegionDisplay());
+					IRegionDisplay regionDisplay = r.getRegionDisplay();
+					regionDisplay.setOnTouchListener(this);					
+					regionDisplay.indexOnScreen = mediaHolder.getChildCount();
+					mediaHolder.addView(regionDisplay, mediaHolder.getChildCount());
+					
+					/*
+					if(((EditorActivityListener) a).media().dcimEntry.mediaType.equals(MimeType.VIDEO)) {
+						regionDisplay.setVisibility(View.GONE);
+					}
+					*/
 				}
 			}
 
