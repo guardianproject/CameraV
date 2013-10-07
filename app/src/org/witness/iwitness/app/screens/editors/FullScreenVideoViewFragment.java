@@ -76,7 +76,7 @@ OnRangeSeekBarChangeListener<Integer> {
 		this.a = a;
 
 		media_ = new IVideo(((EditorActivityListener) a).media());
-		waitPopup = new WaitPopup(a);
+		waitPopup = new WaitPopup(a, R.layout.popup_video_wait);
 		waitPopup.Show();
 	}
 	
@@ -216,7 +216,7 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void onSelected(IRegionDisplay regionDisplay) {		
 		
-		((IVideoRegion) regionDisplay.parent).timestampInQuestion = mediaPlayer.getCurrentPosition();
+		((IVideoRegion) regionDisplay.parent).setTimestampInQuestion(mediaPlayer.getCurrentPosition());
 		
 		setCurrentRegion(regionDisplay.parent);
 		videoSeekBar.showEndpoints((IVideoRegion) regionDisplay.parent);
