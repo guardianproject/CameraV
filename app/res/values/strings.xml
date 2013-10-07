@@ -58,7 +58,8 @@
 	<string name="play">Play</string>
 	<string name="resend_credentials">Resend my credentials \u2026</string>
 	<string name="retry">Retry</string>
-	
+
+	<string name="please_wait_video_loading">Please wait, video loading...</string>	
 	<string name="preferences">Preferences</string>
     <string name="prefs_language_title">Language</string>
     <string name="pref_languages_default">System Default</string>
