@@ -177,6 +177,14 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	protected void deleteTag() {
 		((EditorActivityListener) a).media().removeRegion(currentRegion);
 		mediaHolder.removeView(currentRegion.getRegionDisplay());
+		
+		for(int v=0; v<mediaHolder.getChildCount(); v++) {
+			View v_ = mediaHolder.getChildAt(v);
+			if(v_ instanceof IRegionDisplay) {
+				((IRegionDisplay) v_).indexOnScreen = v;
+			}
+		}
+		
 		currentRegion = null;
 	}
 
@@ -322,7 +330,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		scrollRoot.setOnTouchListener(noScroll);
 
 		if(isNew) {
-			mediaHolder.addView(currentRegion.getRegionDisplay());
+			mediaHolder.addView(currentRegion.getRegionDisplay(), mediaHolder.getChildCount());
 		}
 
 		updateRegionDisplay();
