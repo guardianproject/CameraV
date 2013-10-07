@@ -82,8 +82,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	InformaCam informaCam;
 
-	
-
 	MediaActionMenu mam;
 //	WaitPopup waiter;
 

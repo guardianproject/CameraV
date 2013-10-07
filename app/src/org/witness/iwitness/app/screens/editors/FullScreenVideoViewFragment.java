@@ -133,13 +133,14 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void onDetach() {
 		super.onDetach();
+		videoFile.delete();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void initLayout() {
 		super.initLayout();
-
+		
 		h.post(new Runnable() {
 			@Override
 			public void run() {
