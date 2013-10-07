@@ -17,6 +17,7 @@ import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
+import org.witness.iwitness.app.screens.popups.WaitPopup;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
 import android.app.Activity;
@@ -63,6 +64,8 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	Uri videoUri;
 	java.io.File videoFile;
+	
+	WaitPopup waitPopup;
 
 	long duration = 0L;
 	int currentCue = 1;
@@ -73,6 +76,8 @@ OnRangeSeekBarChangeListener<Integer> {
 		this.a = a;
 
 		media_ = new IVideo(((EditorActivityListener) a).media());
+		waitPopup = new WaitPopup(a);
+		waitPopup.Show();
 	}
 	
 	private void initVideo() {
@@ -114,6 +119,7 @@ OnRangeSeekBarChangeListener<Integer> {
 					
 					playPauseToggle.setClickable(true);
 					Logger.d(LOG, "video is now available.");
+					waitPopup.cancel();
 				}
 			});
 			

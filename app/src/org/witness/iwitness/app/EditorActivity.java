@@ -53,14 +53,12 @@ public class EditorActivity extends SherlockFragmentActivity implements OnClickL
 	ActionBar actionBar;
 	ImageButton abNavigationBack, abShareMedia;
 
-
 	private final static String LOG = Constants.App.Editor.LOG;
 
 	private InformaCam informaCam;
 	public IMedia media;
 	private String mediaId;
 	public List<IForm> availableForms;
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
