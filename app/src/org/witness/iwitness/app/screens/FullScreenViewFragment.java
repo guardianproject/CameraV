@@ -206,11 +206,10 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 					regionDisplay.indexOnScreen = mediaHolder.getChildCount();
 					mediaHolder.addView(regionDisplay, mediaHolder.getChildCount());
 					
-					/*
+					
 					if(((EditorActivityListener) a).media().dcimEntry.mediaType.equals(MimeType.VIDEO)) {
 						regionDisplay.setVisibility(View.GONE);
 					}
-					*/
 				}
 			}
 

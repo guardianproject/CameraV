@@ -1,14 +1,13 @@
 package org.witness.iwitness.app.screens;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.credentials.IUser;
+import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
@@ -27,6 +26,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -43,7 +43,7 @@ import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-public class UserManagementFragment extends Fragment implements OnClickListener, ListAdapterListener {
+public class UserManagementFragment extends Fragment implements OnClickListener, ListAdapterListener, InformaCamEventListener {
 	View rootView;
 	TabHost tabHost = null;
 
@@ -140,9 +140,7 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 
 	private void initData() {
 		alias.setText(user.alias);
-
-		int connectivityLabel = informaCam.isConnectedToTor() ? R.string.connected_to_tor : R.string.not_connected_to_tor;
-		connectivity.setText(getResources().getString(connectivityLabel));
+		initConnectivity();
 
 		h.post(new Runnable() {
 			@Override
@@ -152,6 +150,11 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 			}
 		});
 
+	}
+	
+	private void initConnectivity() {
+		int connectivityLabel = informaCam.isConnectedToTor() ? R.string.connected_to_tor : R.string.not_connected_to_tor;
+		connectivity.setText(getResources().getString(connectivityLabel));
 	}
 	
 	private void initOrganizations() {
@@ -261,4 +264,9 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public void setPending(int numPending, int numCompleted) {}
+
+	@Override
+	public void onUpdate(Message message) {
+		initConnectivity();
+	}
 }

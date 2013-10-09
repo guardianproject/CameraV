@@ -51,6 +51,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -488,8 +489,10 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			tabHost.setCurrentTab(page);
 			if(page == 2) {
 				launchCamera();
-			} else {
-				//updateAdapter(0);
+			} else if(page == 0) {
+				if(fragments.get(page) instanceof InformaCamEventListener) {
+					((InformaCamEventListener) fragments.get(page)).onUpdate(new Message());
+				}
 			}
 		}
 
@@ -550,7 +553,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	private final static String HOCKEY_APP_ID = "819d2172183272c9d84cd3a4dbd9296b";
 	
 	 private void checkForCrashes() {
-	   CrashManager.register(this, HOCKEY_APP_ID);
+		 // XXX: Remove this for store builds!
+		 CrashManager.register(this, HOCKEY_APP_ID);
 	 }
 
 	 private void checkForUpdates() {
@@ -560,24 +564,23 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	@Override
 	public void updateAdapter(int which) {
+		Log.d(LOG, "update adapter invoked... (which = " + which + ")");
 		if(informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED) {
-			Fragment f= fragments.get(viewPager.getCurrentItem());
+			
+			for(Fragment f : fragments) {
 
-			if (f instanceof ListAdapterListener)
-			{
-				((ListAdapterListener)f).updateAdapter(which);
+				if (f instanceof ListAdapterListener) {
+					((ListAdapterListener)f).updateAdapter(which);
+				}
 			}
 		}
 	}
 	
 	@Override
 	public void setPending(int numPending, int numCompleted) {
-		if(informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED) {
-			Fragment f= fragments.get(viewPager.getCurrentItem());
-
-			if (f instanceof ListAdapterListener)
-			{
-				((ListAdapterListener)f).setPending(numPending, numCompleted);
+		if(informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED) {			
+			if (fragments.get(1) instanceof ListAdapterListener) {
+				((ListAdapterListener)fragments.get(1)).setPending(numPending, numCompleted);
 			}
 		}
 		
