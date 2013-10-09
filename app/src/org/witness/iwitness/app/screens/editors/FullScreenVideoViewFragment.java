@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
+import org.witness.informacam.models.media.IRegion;
+import org.witness.informacam.models.media.IRegionBounds;
 import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.models.media.IVideoRegion;
 import org.witness.informacam.storage.InformaCamMediaScanner;
@@ -17,6 +19,7 @@ import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
+import org.witness.iwitness.app.screens.popups.WaitPopup;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;
 
 import android.app.Activity;
@@ -64,6 +67,8 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	Uri videoUri;
 	java.io.File videoFile;
+	
+	WaitPopup waitPopup;
 
 	long duration = 0L;
 	int currentCue = 1;
@@ -74,6 +79,8 @@ OnRangeSeekBarChangeListener<Integer> {
 		this.a = a;
 
 		media_ = new IVideo(((EditorActivityListener) a).media());
+		waitPopup = new WaitPopup(a, R.layout.popup_video_wait);
+		waitPopup.Show();
 	}
 	
 	private void initVideo() {
@@ -104,6 +111,7 @@ OnRangeSeekBarChangeListener<Integer> {
 			mediaPlayer.seekTo(currentCue);
 			mediaPlayer.pause();
 			
+			
 			h.post(new Runnable() {
 				@Override
 				public void run() {
@@ -115,6 +123,15 @@ OnRangeSeekBarChangeListener<Integer> {
 					
 					playPauseToggle.setClickable(true);
 					Logger.d(LOG, "video is now available.");
+					waitPopup.cancel();
+				}
+			});
+			
+			h.post(new Runnable() {
+				@Override
+				public void run() {
+					updateRegionView(mediaPlayer.getCurrentPosition());
+					h.postDelayed(this, 1000L);
 				}
 			});
 			
@@ -131,16 +148,48 @@ OnRangeSeekBarChangeListener<Integer> {
 		}
 	}
 	
+	private void updateRegionView(final long timestamp) {
+		a.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if(mediaPlayer.isPlaying()) {
+					for(IRegion r : ((EditorActivityListener) a).media().associatedRegions) {
+						if(r.bounds.displayWidth != 0 && r.bounds.displayHeight != 0) {
+							try {
+								IRegionDisplay rd = (IRegionDisplay) mediaHolder.getChildAt(r.getRegionDisplay().indexOnScreen);
+								Log.d(LOG, "OK HAVE RegionDisplay");
+								
+								if(timestamp >= r.bounds.startTime && timestamp <= r.bounds.endTime) {
+									rd.setVisibility(View.VISIBLE);
+									
+									// TODO: update region display with new bounds from trail
+									IRegionBounds rb = ((IVideoRegion) r).getBoundsAtTime(mediaPlayer.getCurrentPosition());
+									Log.d(LOG, rb.asJson().toString());
+								} else {
+									rd.setVisibility(View.GONE);
+								}
+								
+							} catch(NullPointerException e) {
+								Logger.e(LOG, e);
+							}
+						}
+					}
+				}
+			}
+		});
+	}
+	
 	@Override
 	public void onDetach() {
 		super.onDetach();
+		videoFile.delete();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void initLayout() {
 		super.initLayout();
-	
+
 		View mediaHolder_ = LayoutInflater.from(getActivity()).inflate(R.layout.editors_video, null);
 
 		videoView = (VideoView) mediaHolder_.findViewById(R.id.video_view);
@@ -203,7 +252,7 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void onSelected(IRegionDisplay regionDisplay) {		
 		
-		((IVideoRegion) regionDisplay.parent).timestampInQuestion = mediaPlayer.getCurrentPosition();
+		((IVideoRegion) regionDisplay.parent).setTimestampInQuestion(mediaPlayer.getCurrentPosition());
 		
 		setCurrentRegion(regionDisplay.parent);
 		videoSeekBar.showEndpoints((IVideoRegion) regionDisplay.parent);
@@ -233,7 +282,7 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void onSeekComplete(MediaPlayer mp) {
 		Log.v(LOG, "onSeekComplete called (and at position " + mediaPlayer.getCurrentPosition() + ")");
-
+		updateRegionView(mediaPlayer.getCurrentPosition());
 	}
 
 	@Override

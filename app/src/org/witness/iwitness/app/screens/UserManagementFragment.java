@@ -146,9 +146,8 @@ public class UserManagementFragment extends Fragment implements OnClickListener,
 	{
 		alias.setText(user.alias);
 
-		// int connectivityLabel = informaCam.uploaderService.isConnectedToTor()
-		// ? R.string.connected_to_tor : R.string.not_connected_to_tor;
-		// connectivity.setText(getResources().getString(connectivityLabel));
+		int connectivityLabel = informaCam.isConnectedToTor() ? R.string.connected_to_tor : R.string.not_connected_to_tor;
+		connectivity.setText(getResources().getString(connectivityLabel));
 
 		h.post(new Runnable()
 		{

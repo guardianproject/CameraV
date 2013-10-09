@@ -6,7 +6,6 @@
     </string-array>
     
     <string-array name="sort_options">
-        <item>@string/menu_location</item>
         <item>@string/menu_date</item>
         <item>@string/photo</item>
         <item>@string/video</item>

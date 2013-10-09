@@ -118,6 +118,18 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	{
 		((EditorActivityListener) a).media().removeRegion(currentRegion);
 		mediaHolder.removeView(getTagViewByRegion(currentRegion));
+		
+		for(int v=0; v<mediaHolder.getChildCount(); v++) {
+			View v_ = mediaHolder.getChildAt(v);
+			if(v_ instanceof IRegionDisplay) {
+				for(IRegion r : ((EditorActivityListener) a).media().associatedRegions) {
+					if(r.getRegionDisplay().equals(v_)) {
+						r.getRegionDisplay().indexOnScreen = v;
+					}
+				}
+			}
+		}
+		
 		currentRegion = null;
 	}
 
@@ -148,19 +160,18 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 				if (r.bounds.displayWidth != 0 && r.bounds.displayHeight != 0)
 				{
 					r.init(getActivity(), r.bounds, false, this);
-					r.getRegionDisplay().setOnTouchListener(this);
-					r.getRegionDisplay().setOnLongClickListener(this);
-					r.getRegionDisplay().setSoundEffectsEnabled(false);
+					IRegionDisplay regionDisplay = r.getRegionDisplay();
+					regionDisplay.setOnTouchListener(this);					
+					regionDisplay.setOnLongClickListener(this);					
+					regionDisplay.setSoundEffectsEnabled(false);
+					regionDisplay.indexOnScreen = mediaHolder.getChildCount();
+
 					View newView = new ChevronRegionView(getActivity(), r, this);
 					newView.setOnTouchListener(this);
 					newView.setOnLongClickListener(this);
 					newView.setSoundEffectsEnabled(false);
 					mediaHolder.addView(newView);
 					// mediaHolder.addView(r.getRegionDisplay());
-				}
-				else
-				{
-					Log.d(LOG, "skipping this one, it is top-level");
 				}
 			}
 
@@ -205,8 +216,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		currentRegion = region;
 		currentRegion.getRegionDisplay().setOnTouchListener(this);
 
-		if (isNew)
-		{
+		if (isNew) {
 			View newView = new ChevronRegionView(getActivity(), currentRegion, this);
 			newView.setOnLongClickListener(this);
 			newView.setSoundEffectsEnabled(false);
