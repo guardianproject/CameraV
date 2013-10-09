@@ -370,15 +370,12 @@ public class GalleryFragment extends SherlockFragment implements
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 		switch (itemPosition) {
 		case 0:
-			mCurrentSorting = Models.IMediaManifest.Sort.LOCATION;
-			break;
-		case 1:
 			mCurrentSorting = Models.IMediaManifest.Sort.DATE_DESC;
 			break;
-		case 2:
+		case 1:
 			mCurrentSorting = Models.IMediaManifest.Sort.TYPE_PHOTO;
 			break;
-		case 3:
+		case 2:
 			mCurrentSorting = Models.IMediaManifest.Sort.TYPE_VIDEO;
 			break;
 		}
