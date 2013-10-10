@@ -16,14 +16,24 @@
 <metadata>
 	<sfw  xmlns="&ns_sfw;">
 		<slices></slices>
-		<sliceSourceBounds  x="9.045" y="9.5" width="30" height="30" bottomLeftOrigin="true"></sliceSourceBounds>
+		<sliceSourceBounds  height="42.9" width="16383" y="285.05" x="-7796" bottomLeftOrigin="true"></sliceSourceBounds>
+		<optimizationSettings>
+			<targetSettings  targetSettingsID="0" fileFormat="GIFFormat">
+				
+					<GIFFormat  transparency="true" numColors="256" rolloverMasterPalette="false" reductionAlgorithm="selective" noMatteColor="false" matteColor="#FFFFFF" autoReduce="false" lossy="0" interlaced="false" ditherPercent="100" includeCaption="false" webShiftPercent="0" ditherAlgorithm="diffusion">
+					<colorTable  isExact="false"></colorTable>
+					<lockedColors></lockedColors>
+					<colorShiftEntries></colorShiftEntries>
+				</GIFFormat>
+			</targetSettings>
+		</optimizationSettings>
 	</sfw>
 </metadata>
-<path fill="#00AEEF" d="M24.545,38.062c-7.753,0-14.062-6.309-14.062-14.062S16.792,9.938,24.545,9.938
-	c7.754,0,14.062,6.308,14.062,14.062S32.299,38.062,24.545,38.062z"/>
-<path fill="#FFFFFF" d="M24.545,10.875c7.237,0,13.125,5.888,13.125,13.125c0,7.236-5.888,13.125-13.125,13.125
-	c-7.236,0-13.125-5.889-13.125-13.125C11.42,16.763,17.309,10.875,24.545,10.875 M24.545,9c-8.285,0-15,6.716-15,15s6.715,15,15,15
-	c8.285,0,15-6.716,15-15S32.83,9,24.545,9L24.545,9z"/>
-<polygon id="check-mark-icon_1_" fill="#FFFFFF" points="31.135,16.446 21.938,25.645 17.954,21.659 15,24.614 21.938,31.555 
-	34.092,19.399 "/>
+<path fill="#00AEEF" d="M24,44.109C12.913,44.109,3.891,35.087,3.891,24C3.891,12.914,12.913,3.892,24,3.892
+	c11.088,0,20.109,9.021,20.109,20.108S35.088,44.109,24,44.109z"/>
+<path fill="#FFFFFF" d="M24,5.231c10.349,0,18.769,8.42,18.769,18.769c0,10.348-8.42,18.769-18.769,18.769S5.231,34.348,5.231,24
+	C5.231,13.651,13.651,5.231,24,5.231 M24,2.55C12.152,2.55,2.55,12.154,2.55,24c0,11.847,9.603,21.45,21.45,21.45
+	S45.45,35.847,45.45,24C45.45,12.154,35.848,2.55,24,2.55L24,2.55z"/>
+<polygon id="check-mark-icon_1_" fill="#FFFFFF" points="33.423,13.197 20.271,26.353 14.574,20.652 10.351,24.879 20.271,34.804 
+	37.652,17.42 "/>
 </svg>
