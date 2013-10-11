@@ -11,16 +11,15 @@
 	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
 ]>
 <svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px" height="60px"
-	 viewBox="0 0 60 60" enable-background="new 0 0 60 60" xml:space="preserve">
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="48px" height="48px"
+	 viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve">
 <metadata>
 	<sfw  xmlns="&ns_sfw;">
 		<slices></slices>
-		<sliceSourceBounds  height="49.237" width="59.772" y="282.406" x="365.728" bottomLeftOrigin="true"></sliceSourceBounds>
+		<sliceSourceBounds  height="35.767" width="31.927" y="287.608" x="379.537" bottomLeftOrigin="true"></sliceSourceBounds>
 	</sfw>
 </metadata>
-<path id="picture-multi-2-icon" fill="#2E3849" d="M46.979,21.111L42.025,4.857L0.228,17.597l9.616,31.55l6.46-1.796v6.743H60
-	V21.111H46.979z M12.666,43.852L5.523,20.417l33.679-10.266l3.342,10.959H16.305v21.804L12.666,43.852z M55.758,49.853h-35.21
-	V25.354h35.21V49.853z M25.584,31.938c0-1.787,1.451-3.238,3.238-3.238c1.789,0,3.237,1.45,3.237,3.238s-1.448,3.238-3.237,3.238
-	C27.035,35.176,25.584,33.727,25.584,31.938z M42.008,32.042l-5.366,7.626l-2.918-3.007l-8.23,9.353l25.729-0.001L42.008,32.042z"/>
+<path fill="#231F20" d="M8.037,8.012c0-0.488,0.399-0.887,0.887-0.887h30.153c0.487,0,0.887,0.399,0.887,0.887v23.763
+	c0,0.488-0.352,1.075-0.782,1.304l-14.4,9.64c-0.431,0.23-1.136,0.23-1.568,0l-14.39-9.641c-0.431-0.229-0.784-0.813-0.784-1.304
+	L8.037,8.012z"/>
 </svg>

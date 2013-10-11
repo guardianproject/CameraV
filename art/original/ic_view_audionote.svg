@@ -16,13 +16,24 @@
 <metadata>
 	<sfw  xmlns="&ns_sfw;">
 		<slices></slices>
-		<sliceSourceBounds  x="6.639" y="2.806" width="35.723" height="43.693" bottomLeftOrigin="true"></sliceSourceBounds>
+		<sliceSourceBounds  height="48.063" width="39.293" y="282.621" x="375.854" bottomLeftOrigin="true"></sliceSourceBounds>
+		<optimizationSettings>
+			<targetSettings  targetSettingsID="0" fileFormat="GIFFormat">
+				
+					<GIFFormat  transparency="true" numColors="256" rolloverMasterPalette="false" reductionAlgorithm="selective" noMatteColor="false" matteColor="#FFFFFF" autoReduce="false" lossy="0" interlaced="false" ditherPercent="100" includeCaption="false" webShiftPercent="0" ditherAlgorithm="diffusion">
+					<colorTable  isExact="false"></colorTable>
+					<lockedColors></lockedColors>
+					<colorShiftEntries></colorShiftEntries>
+				</GIFFormat>
+			</targetSettings>
+		</optimizationSettings>
 	</sfw>
 </metadata>
-<polygon fill="#020D26" points="40.833,12.9 40.833,43.666 9.168,43.666 9.168,4.03 32.126,4.03 32.126,12.9 42.862,12.9 
-	32.134,2.014 32.134,2.001 7.14,2.001 7.14,45.695 42.862,45.695 42.862,12.9 "/>
-<path id="microphone-3-icon_1_" fill="#020D26" d="M21.398,24.974v-6.464c0-1.989,1.612-3.603,3.603-3.603
-	c1.992,0,3.604,1.613,3.604,3.603v6.464c0,1.989-1.611,3.603-3.604,3.603C23.011,28.576,21.398,26.963,21.398,24.974z
-	 M30.194,23.119v1.854c0,2.861-2.33,5.191-5.193,5.191c-2.862,0-5.191-2.33-5.191-5.191v-1.854h-2.12v1.854
-	c0,3.627,2.652,6.645,6.119,7.215v2.42h-3.047v2.119h8.478v-2.119h-3.047v-2.42c3.469-0.57,6.12-3.588,6.12-7.215v-1.854H30.194z"/>
+<polygon fill="#231F20" points="41.416,11.805 41.416,45.648 6.584,45.648 6.584,2.048 31.838,2.048 31.838,11.805 43.646,11.805 
+	31.847,-0.169 31.847,-0.184 4.354,-0.184 4.354,47.879 43.646,47.879 43.646,11.805 "/>
+<path id="microphone-3-icon_1_" fill="#231F20" d="M20.037,25.088v-7.112c0-2.188,1.772-3.963,3.963-3.963
+	c2.191,0,3.965,1.773,3.965,3.963v7.112c0,2.186-1.772,3.963-3.965,3.963C21.812,29.049,20.037,27.273,20.037,25.088z
+	 M29.712,23.046v2.038c0,3.148-2.563,5.711-5.712,5.711c-3.147,0-5.71-2.562-5.71-5.711v-2.038h-2.332v2.038
+	c0,3.99,2.917,7.311,6.731,7.938v2.662h-3.352v2.33h9.325v-2.33h-3.352v-2.662c3.816-0.627,6.731-3.947,6.731-7.938v-2.038H29.712z"
+	/>
 </svg>
