@@ -32,8 +32,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -489,6 +487,7 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 	public void setIsGeneratingKey(boolean generatingKey)
 	{
 		mIsGeneratingKey = generatingKey;
+		mIsGeneratingKey = true;
 		if (rootView != null)
 		{
 			rootView.post(new Runnable()
@@ -500,17 +499,17 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 					{
 						mBtnPhoto.setEnabled(!mIsGeneratingKey);
 						if (mIsGeneratingKey)
-							mBtnPhotoIcon.setColorFilter(Color.GRAY, Mode.SRC_ATOP);
+							mBtnPhotoIcon.setImageResource(R.drawable.ic_home_photo_gray);
 						else
-							mBtnPhotoIcon.setColorFilter(null);
+							mBtnPhotoIcon.setImageResource(R.drawable.ic_home_photo);
 					}
 					if (mBtnVideo != null)
 					{
 						mBtnVideo.setEnabled(!mIsGeneratingKey);
 						if (mIsGeneratingKey)
-							mBtnVideoIcon.setColorFilter(Color.GRAY, Mode.SRC_ATOP);
+							mBtnVideoIcon.setImageResource(R.drawable.ic_home_video_gray);
 						else
-							mBtnVideoIcon.setColorFilter(null);
+							mBtnVideoIcon.setImageResource(R.drawable.ic_home_video);
 					}
 				}
 			});
