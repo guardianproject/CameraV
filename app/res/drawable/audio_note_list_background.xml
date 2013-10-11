@@ -26,4 +26,18 @@
         android:angle="270"/>
 		</shape>
 	</item>
+	
+    <item
+        android:top="70dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:bottom="0dp"
+        >
+        <shape android:shape="rectangle">
+		        	<gradient
+        android:startColor="@color/grey_light_light"
+        android:endColor="@color/grey_medium_light"
+        android:angle="270"/>
+		</shape>
+	</item>
  </layer-list>

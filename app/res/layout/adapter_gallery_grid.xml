@@ -46,19 +46,19 @@
             android:id="@+id/ivAudioNote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_context_audio_note" />
+            android:src="@drawable/ic_gallery_audionote" />
 
         <ImageView
             android:id="@+id/ivNote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_context_message" />
+            android:src="@drawable/ic_gallery_note" />
 
         <ImageView
             android:id="@+id/ivTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_edit_tag" />
+            android:src="@drawable/ic_gallery_tag" />
 
     </LinearLayout>
 

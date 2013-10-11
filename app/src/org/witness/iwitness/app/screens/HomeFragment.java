@@ -487,7 +487,6 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 	public void setIsGeneratingKey(boolean generatingKey)
 	{
 		mIsGeneratingKey = generatingKey;
-		mIsGeneratingKey = true;
 		if (rootView != null)
 		{
 			rootView.post(new Runnable()

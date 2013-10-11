@@ -371,7 +371,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 					UIHelpers.fadeIn(sbAudio, 500);
 					mHasBeenShown = true;
 				}
-				mView.getIconView().setImageResource(R.drawable.ic_videop_pause);
+				mView.getIconView().setImageResource(R.drawable.ic_view_audionote_pause);
 			}
 			else
 			{
@@ -379,7 +379,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 					mHandler = new Handler();
 				mHandler.postDelayed(mHidePlayerRunnable, 12000);
 				sbAudio.setProgress(progress.getProgress());
-				mView.getIconView().setImageResource(R.drawable.ic_videop_play);
+				mView.getIconView().setImageResource(R.drawable.ic_view_audionote_play);
 			}
 		}
 
@@ -397,7 +397,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 			UIHelpers.fadeOut(sbAudio, 500);
 			sbAudio.setOnSeekBarChangeListener(null);
 			mAudioPlayer = null;
-			mView.getIconView().setImageResource(R.drawable.ic_context_audio_note);
+			mView.getIconView().setImageResource(R.drawable.ic_view_audionote);
 		}
 
 		@Override
