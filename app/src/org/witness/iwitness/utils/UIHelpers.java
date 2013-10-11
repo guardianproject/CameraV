@@ -1,5 +1,7 @@
 package org.witness.iwitness.utils;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -135,5 +137,47 @@ public class UIHelpers
 		});
 		view.clearAnimation();
 		view.startAnimation(alpha);
+	}
+	
+	public static String dateDiffDisplayString(Date date, Context context, int idStringNever, int idStringRecently, int idStringMinutes, int idStringMinute,
+			int idStringHours, int idStringHour, int idStringDays, int idStringDay)
+	{
+		if (date == null)
+			return "";
+
+		Date todayDate = new Date();
+		double ti = todayDate.getTime() - date.getTime();
+		if (ti < 0)
+			ti = -ti;
+		ti = ti / 1000; // Convert to seconds
+		if (ti < 1)
+		{
+			return context.getString(idStringNever);
+		}
+		else if (ti < 60)
+		{
+			return context.getString(idStringRecently);
+		}
+		else if (ti < 3600 && (int) Math.round(ti / 60) < 60)
+		{
+			int diff = (int) Math.round(ti / 60);
+			if (diff == 1)
+				return context.getString(idStringMinute, diff);
+			return context.getString(idStringMinutes, diff);
+		}
+		else if (ti < 86400 && (int) Math.round(ti / 60 / 60) < 24)
+		{
+			int diff = (int) Math.round(ti / 60 / 60);
+			if (diff == 1)
+				return context.getString(idStringHour, diff);
+			return context.getString(idStringHours, diff);
+		}
+		else
+		{
+			int diff = (int) Math.round(ti / 60 / 60 / 24);
+			if (diff == 1)
+				return context.getString(idStringDay, diff);
+			return context.getString(idStringDays, diff);
+		}
 	}
 }

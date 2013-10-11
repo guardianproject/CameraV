@@ -99,6 +99,8 @@ public class Constants {
 			public static final String LANGUAGE = "iw_language";
 			public final static String PANIC_ACTION = "panicAction";
 			public final static String HINT_SWIPE_SHOWN = "hintSwipeShown";
+			public final static String HINT_AUDIO_NOTE_SAVED_SHOWN = "hintAudioNoteSavedShown";
+			public final static String HINT_PROCESSING_IMAGES_SHOWN = "hintProcessingImagesShown";
 		}
 
 		public class OriginalImageHandling {

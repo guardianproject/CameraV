@@ -32,6 +32,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -47,6 +49,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -71,8 +74,9 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 	private ActionMode mActionMode;
 
 	private View mBtnPhoto;
-
+	private ImageView mBtnPhotoIcon;
 	private View mBtnVideo;
+	private ImageView mBtnVideoIcon;
 
 	private View mBtnGallery;
 
@@ -158,8 +162,10 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 
 		mBtnPhoto = rootView.findViewById(R.id.btnPhoto);
 		mBtnPhoto.setOnClickListener(this);
+		mBtnPhotoIcon = (ImageView) mBtnPhoto.findViewById(R.id.ivPhoto);
 		mBtnVideo = rootView.findViewById(R.id.btnVideo);
 		mBtnVideo.setOnClickListener(this);
+		mBtnVideoIcon = (ImageView) mBtnVideo.findViewById(R.id.ivVideo);
 		setIsGeneratingKey(mIsGeneratingKey);
 		mBtnGallery = rootView.findViewById(R.id.btnGallery);
 		mBtnGallery.setOnClickListener(this);
@@ -427,6 +433,7 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 		public AudioNoteRecorder(Activity a, IForm f)
 		{
 			super(a, f);
+			onUpdateClock(0);
 		}
 
 		@Override
@@ -451,7 +458,15 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 					try
 					{
 						form.save(new info.guardianproject.iocipher.FileOutputStream(form.answerPath));
-						new AudioNoteSavedPopup(a, this);
+
+						SharedPreferences sp = a.getSharedPreferences(a.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+						int nTimesShown = sp.getInt(Preferences.Keys.HINT_AUDIO_NOTE_SAVED_SHOWN, 0);
+						if (nTimesShown < 2)
+						{
+							nTimesShown++;
+							sp.edit().putInt(Preferences.Keys.HINT_AUDIO_NOTE_SAVED_SHOWN, nTimesShown).commit();
+							new AudioNoteSavedPopup(a, this);
+						}
 					}
 					catch (FileNotFoundException e)
 					{
@@ -482,9 +497,21 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 				public void run()
 				{
 					if (mBtnPhoto != null)
+					{
 						mBtnPhoto.setEnabled(!mIsGeneratingKey);
+						if (mIsGeneratingKey)
+							mBtnPhotoIcon.setColorFilter(Color.GRAY, Mode.SRC_ATOP);
+						else
+							mBtnPhotoIcon.setColorFilter(null);
+					}
 					if (mBtnVideo != null)
+					{
 						mBtnVideo.setEnabled(!mIsGeneratingKey);
+						if (mIsGeneratingKey)
+							mBtnVideoIcon.setColorFilter(Color.GRAY, Mode.SRC_ATOP);
+						else
+							mBtnVideoIcon.setColorFilter(null);
+					}
 				}
 			});
 		}

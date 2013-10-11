@@ -255,7 +255,10 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 				setActionMode(ActivityActionMode.Normal);
 			}
 			else if (mActionMode == ActivityActionMode.Edit)
+			{
+				saveState();
 				setActionMode(ActivityActionMode.Normal);
+			}
 			else
 				saveStateAndFinish();
 			return true;
@@ -593,6 +596,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					toolbarBottom.setVisibility(View.GONE);
+					toolbarBottom.clearAnimation();
 				}
 
 				@Override
@@ -603,6 +607,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 				public void onAnimationStart(Animation animation) {
 				}			
 			});
+			toolbarBottom.clearAnimation();
 			toolbarBottom.startAnimation(anim);
 		}
 	}

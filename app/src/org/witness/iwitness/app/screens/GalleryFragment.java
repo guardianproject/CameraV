@@ -12,9 +12,12 @@ import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
+import org.witness.iwitness.utils.Constants.Preferences;
 import org.witness.iwitness.utils.adapters.GalleryGridAdapter;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -28,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
@@ -57,6 +61,7 @@ public class GalleryFragment extends SherlockFragment implements
 	private final InformaCam informaCam = InformaCam.getInstance();
 	private ActionMode mActionMode;
 	private int mCurrentSorting;
+	private MenuItem mMenuItemBatchOperations;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -223,11 +228,15 @@ public class GalleryFragment extends SherlockFragment implements
 		{
 			if (noMedia != null)
 				noMedia.setVisibility(View.GONE);
+			if (mMenuItemBatchOperations != null)
+				mMenuItemBatchOperations.setVisible(true);
 		}
 		else
 		{
 			if (noMedia != null)
 				noMedia.setVisibility(View.VISIBLE);
+			if (mMenuItemBatchOperations != null)
+				mMenuItemBatchOperations.setVisible(false);
 		}
 	}
 
@@ -248,8 +257,11 @@ public class GalleryFragment extends SherlockFragment implements
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.activity_home_gallery, menu);
 
+		mMenuItemBatchOperations = menu.findItem(R.id.menu_select);
+		
 		ActionBar actionBar = getSherlockActivity().getSupportActionBar();
-		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setTitle(R.string.home_gallery_title);
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(false);
 		actionBar.setHomeButtonEnabled(true);
@@ -400,6 +412,18 @@ public class GalleryFragment extends SherlockFragment implements
 				{
 					galleryGridAdapter.setNumLoading(numPending - numCompleted);
 				}	
+				
+				if (numPending > 0 && numCompleted == 0)
+				{
+					SharedPreferences sp = a.getSharedPreferences(a.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+					int nTimesShown = sp.getInt(Preferences.Keys.HINT_PROCESSING_IMAGES_SHOWN, 0);
+					if (nTimesShown < 3)
+					{
+						nTimesShown++;
+						sp.edit().putInt(Preferences.Keys.HINT_PROCESSING_IMAGES_SHOWN, nTimesShown).commit();
+						Toast.makeText(a, getString(R.string.safely_storing_your_picture), Toast.LENGTH_LONG).show();
+					}
+				}
 			}
 		});
 	}

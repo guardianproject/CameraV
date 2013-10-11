@@ -63,7 +63,7 @@
                     style="@style/WizardEdittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email"
+                    android:hint="@string/wizard_email_optional"
                     android:inputType="textEmailAddress"
                     android:maxLength="200"
                     android:maxLines="1" />

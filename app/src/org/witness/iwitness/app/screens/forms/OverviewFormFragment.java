@@ -4,13 +4,17 @@ import info.guardianproject.odkparser.Constants.RecorderState;
 import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
 import java.io.FileNotFoundException;
+import java.util.Date;
+import java.util.List;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
+import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.utils.Constants.Logger;
+import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.TimeUtility;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.EditorActivity;
@@ -141,15 +145,35 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		// alias.setText(((EditorActivityListener) a).media().alias);
 		// }
 
-		if (media.dcimEntry.exif.location != null && media.dcimEntry.exif.location != new float[] { 0.0f, 0.0f })
-		{
-			location.setText(a.getString(R.string.x_location, media.dcimEntry.exif.location[0], media.dcimEntry.exif.location[1]));
-		}
-		else
-		{
-			location.setText(a.getString(R.string.location_unknown));
-		}
+//		if (media.dcimEntry.exif.location != null && media.dcimEntry.exif.location != new float[] { 0.0f, 0.0f })
+//		{
+//			location.setText(a.getString(R.string.x_location, media.dcimEntry.exif.location[0], media.dcimEntry.exif.location[1]));
+//		}
+//		else
+//		{
+//			location.setText(a.getString(R.string.location_unknown));
+//		}
 
+		location.setText(a.getString(R.string.shared_never));
+		List<INotification> listNotifications = InformaCam.getInstance().notificationsManifest.sortBy(Models.INotificationManifest.Sort.DATE_DESC);
+		for (INotification n : listNotifications)
+		{
+			if (media._id.equals(n.mediaId))
+			{
+				if ((n.type == Models.INotification.Type.SHARED_MEDIA || n.type == Models.INotification.Type.EXPORTED_MEDIA) &&
+					n.taskComplete)
+				{
+					Date date = new Date(n.timestamp);
+					location.setText(UIHelpers.dateDiffDisplayString(date, a, 
+							R.string.shared_never, R.string.shared_recently,
+							R.string.shared_minutes, R.string.shared_minute,
+							R.string.shared_hours, R.string.shared_hour,
+							R.string.shared_days, R.string.shared_day));
+					break;
+				}
+			}
+		}
+		
 	}
 
 	private void initForms()
@@ -300,7 +324,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 			{
 				if (mAudioPlayer != null)
 					mAudioPlayer.done();
-				mAudioPlayer = new AudioNotePlayer(a, view.getForm());
+				mAudioPlayer = new AudioNotePlayer(a, view);
 				mAudioPlayer.toggle();
 			}
 		}
@@ -321,10 +345,12 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 	{
 		private Handler mHandler;
 		private boolean mHasBeenShown;
+		private final AudioNoteInfoView mView;
 		
-		public AudioNotePlayer(Activity a, IForm f)
+		public AudioNotePlayer(Activity a, AudioNoteInfoView view)
 		{
-			super(a, f);
+			super(a, view.getForm());
+			mView = view;
 			mHasBeenShown = false;
 			sbAudio.setProgress(0);
 			sbAudio.setOnSeekBarChangeListener(this);
@@ -345,6 +371,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 					UIHelpers.fadeIn(sbAudio, 500);
 					mHasBeenShown = true;
 				}
+				mView.getIconView().setImageResource(R.drawable.ic_videop_pause);
 			}
 			else
 			{
@@ -352,6 +379,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 					mHandler = new Handler();
 				mHandler.postDelayed(mHidePlayerRunnable, 12000);
 				sbAudio.setProgress(progress.getProgress());
+				mView.getIconView().setImageResource(R.drawable.ic_videop_play);
 			}
 		}
 
@@ -369,12 +397,14 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 			UIHelpers.fadeOut(sbAudio, 500);
 			sbAudio.setOnSeekBarChangeListener(null);
 			mAudioPlayer = null;
+			mView.getIconView().setImageResource(R.drawable.ic_context_audio_note);
 		}
 
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
 		{
 			sbAudio.setProgress(progress);
+			mView.setTime(progress);
 		}
 
 		@Override

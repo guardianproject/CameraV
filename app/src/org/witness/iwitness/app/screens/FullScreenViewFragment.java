@@ -119,16 +119,16 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		((EditorActivityListener) a).media().removeRegion(currentRegion);
 		mediaHolder.removeView(getTagViewByRegion(currentRegion));
 		
-		for(int v=0; v<mediaHolder.getChildCount(); v++) {
-			View v_ = mediaHolder.getChildAt(v);
-			if(v_ instanceof IRegionDisplay) {
-				for(IRegion r : ((EditorActivityListener) a).media().associatedRegions) {
-					if(r.getRegionDisplay().equals(v_)) {
-						r.getRegionDisplay().indexOnScreen = v;
-					}
-				}
-			}
-		}
+//		for(int v=0; v<mediaHolder.getChildCount(); v++) {
+//			View v_ = mediaHolder.getChildAt(v);
+//			if(v_ instanceof IRegionDisplay) {
+//				for(IRegion r : ((EditorActivityListener) a).media().associatedRegions) {
+//					if(r.getRegionDisplay().equals(v_)) {
+//						r.getRegionDisplay().indexOnScreen = v;
+//					}
+//				}
+//			}
+//		}
 		
 		currentRegion = null;
 	}
@@ -164,7 +164,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 					regionDisplay.setOnTouchListener(this);					
 					regionDisplay.setOnLongClickListener(this);					
 					regionDisplay.setSoundEffectsEnabled(false);
-					regionDisplay.indexOnScreen = mediaHolder.getChildCount();
+					//regionDisplay.indexOnScreen = mediaHolder.getChildCount();
 
 					View newView = new ChevronRegionView(getActivity(), r, this);
 					newView.setOnTouchListener(this);

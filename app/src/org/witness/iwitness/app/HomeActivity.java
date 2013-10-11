@@ -154,7 +154,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		if(getIntent().hasExtra(Constants.Codes.Extras.CHANGE_LOCALE)) {
 			getIntent().removeExtra(Constants.Codes.Extras.CHANGE_LOCALE);
 		}
-		mainFragment.setIsGeneratingKey(getIntent().getBooleanExtra(Constants.Codes.Extras.GENERATING_KEY, false));
+		if (getIntent().hasExtra(Constants.Codes.Extras.GENERATING_KEY)) {
+			mainFragment.setIsGeneratingKey(getIntent().getBooleanExtra(Constants.Codes.Extras.GENERATING_KEY, false));
+			getIntent().removeExtra(Constants.Codes.Extras.GENERATING_KEY);
+		} else {
+			mainFragment.setIsGeneratingKey(false);
+		}
 
 		String currentLocale = PreferenceManager.getDefaultSharedPreferences(this).getString(Preferences.Keys.LANGUAGE, "0");
 
@@ -742,6 +747,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	{
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setTitle(R.string.app_name);
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(false);
 		actionBar.setHomeButtonEnabled(true);

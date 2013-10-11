@@ -81,7 +81,7 @@ public class DropdownSpinner extends RelativeLayout implements OnItemClickListen
 	public void setAdapter(ListAdapter adapter)
 	{
 		mAdapter = adapter;
-		setCurrentSelection(0);
+		setCurrentSelection(0, false);
 	}
 
 	private void showPopup()
@@ -131,7 +131,7 @@ public class DropdownSpinner extends RelativeLayout implements OnItemClickListen
 		return mCurrentSelection;
 	}
 
-	public void setCurrentSelection(int position)
+	public void setCurrentSelection(int position, boolean sendNotification)
 	{
 		mCurrentSelection = position;
 		if (mCurrentView != null)
@@ -142,6 +142,8 @@ public class DropdownSpinner extends RelativeLayout implements OnItemClickListen
 			mCurrentView = null;
 		if (mCurrentView != null)
 			this.addView(mCurrentView);
+		if (sendNotification && mOnSelectionChangedListener != null)
+			mOnSelectionChangedListener.onSelectionChanged(position);
 	}
 
 	@Override
@@ -152,8 +154,6 @@ public class DropdownSpinner extends RelativeLayout implements OnItemClickListen
 			mPopup.dismiss();
 			mPopup = null;
 		}
-		setCurrentSelection(position);
-		if (mOnSelectionChangedListener != null)
-			mOnSelectionChangedListener.onSelectionChanged(position);
+		setCurrentSelection(position, true);
 	}
 }

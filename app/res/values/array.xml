@@ -6,9 +6,9 @@
     </string-array>
     
     <string-array name="sort_options">
-        <item>@string/menu_date</item>
-        <item>@string/photo</item>
-        <item>@string/video</item>
+        <item>@string/sort_date</item>
+        <item>@string/sort_photos</item>
+        <item>@string/sort_videos</item>
     </string-array>
     
     <string-array name="originalImageOptions">
@@ -16,8 +16,8 @@
         <item>1</item>
     </string-array>
     <string-array name="originalImageOptions_">
-        <item>@string/trashed</item>
-        <item>@string/saved</item>
+        <item>@string/prefs_images_deleted</item>
+        <item>@string/prefs_images_saved</item>
     </string-array>
     
     <string-array name="languages">
@@ -30,10 +30,8 @@
         <item>6</item>
         <item>7</item>
         <item>8</item>
-        <item>9</item>
     </string-array>
     <string-array name="languages_">
-        <item>@string/pref_languages_default</item>
         <item>@string/pref_languages_en_us</item>
         <item>@string/pref_languages_fr</item>
         <item>@string/pref_languages_es</item>
@@ -45,7 +43,6 @@
         <item>@string/pref_languages_tr_TR</item>
     </string-array>
     <string-array name="locales">
-        <item>default</item>
         <item>en</item>
         <item>fr</item>
         <item>es</item>

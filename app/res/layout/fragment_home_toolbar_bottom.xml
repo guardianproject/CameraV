@@ -18,7 +18,7 @@
         android:padding="5dp" >
 
         <ImageView
-            android:id="@+id/ImageView01"
+            android:id="@+id/ivPhoto"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_home_photo" />
@@ -41,7 +41,7 @@
         android:padding="5dp" >
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/ivVideo"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_home_video" />

@@ -11,6 +11,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -48,7 +49,7 @@ public class AudioNoteInfoView extends LinearLayout implements OnCompletionListe
 		mForm = form;
 		init();
 	}
-
+	
 	private void init()
 	{
 		if (mForm != null && tvLabel != null)
@@ -56,15 +57,29 @@ public class AudioNoteInfoView extends LinearLayout implements OnCompletionListe
 			mSeekBar = new ODKSeekBar(getContext());
 			mSeekBar.init(new java.io.File(Storage.EXTERNAL_DIR, "tmprecord_" + System.currentTimeMillis() + ".3gp"), this);
 			mForm.associate(mSeekBar, Forms.FreeAudio.PROMPT);
-
-			int seconds = (mSeekBar.getMax() % 60);
-			int minutes = (mSeekBar.getMax() / 60);
-			tvLabel.setText(String.format("%02d:%02d", minutes, seconds));
+			setTime(mSeekBar.getMax());
 		}
 	}
 
 	@Override
 	public void onCompletion(MediaPlayer mp)
 	{
+	}
+	
+	public ImageView getIconView()
+	{
+		return (ImageView) findViewById(R.id.ivIcon);
+	}
+	
+	public void setTime(int totalSeconds)
+	{
+		if (totalSeconds < 0)
+		{
+			// reset
+			totalSeconds = mSeekBar.getMax();
+		}
+		int seconds = (totalSeconds % 60);
+		int minutes = (totalSeconds / 60);
+		tvLabel.setText(String.format("%02d:%02d", minutes, seconds));
 	}
 }

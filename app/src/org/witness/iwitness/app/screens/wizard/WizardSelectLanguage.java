@@ -1,5 +1,7 @@
 package org.witness.iwitness.app.screens.wizard;
 
+import java.util.Locale;
+
 import org.witness.informacam.utils.Constants.Codes;
 import org.witness.iwitness.R;
 import org.witness.iwitness.app.views.DropdownSpinner;
@@ -59,21 +61,43 @@ public class WizardSelectLanguage extends Fragment implements OnClickListener, O
 		mDropdownLanguage.setOnSelectionChangedListener(this);
 
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(rootView.getContext());
-		String currentLanguage = sp.getString(Codes.Extras.LOCALE_PREF_KEY, null);
-		for (int i = 0; i < mCodes.length; i++)
+
+		
+		// What is currently set?
+		//
+		Locale locale = a.getBaseContext().getResources().getConfiguration().locale;
+		String currentLanguage = locale.getLanguage();
+
+		// What is prefered language?
+		//
+		String preferedLanguage = sp.getString(Codes.Extras.LOCALE_PREF_KEY, null);
+		if (preferedLanguage == null)
 		{
-			if (mCodes[i].equals(currentLanguage))
-			{
-				mDropdownLanguage.setCurrentSelection(i);
-				break;
-			}
+			preferedLanguage = currentLanguage;
 		}
+
+		boolean different = !currentLanguage.equals(preferedLanguage);
+		if (!selectLanguageByLanguageCode(currentLanguage, different))
+			selectLanguageByLanguageCode("en", true);
 
 		commit = (Button) rootView.findViewById(R.id.wizard_commit);
 		commit.setOnClickListener(this);
 		return rootView;
 	}
 
+	private boolean selectLanguageByLanguageCode(String code, boolean sendNotification)
+	{
+		for (int i = 0; i < mCodes.length; i++)
+		{
+			if (mCodes[i].equals(code))
+			{
+				mDropdownLanguage.setCurrentSelection(i, sendNotification);
+				return true;
+			}
+		}		
+		return false;
+	}
+	
 	@Override
 	public void onAttach(Activity a)
 	{

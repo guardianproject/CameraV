@@ -51,6 +51,7 @@ public class SharePopup {
 	InformaCam informaCam;
 
 	ListView mLvItems;
+	ListView mLvItemsOrg;
 	ProgressBar inProgressBar;
 	LinearLayout inProgressRoot;
 
@@ -80,6 +81,7 @@ public class SharePopup {
 		informaCam = InformaCam.getInstance();
 
 		mLvItems = (ListView) alert.findViewById(R.id.lvItems);
+		mLvItemsOrg = (ListView) alert.findViewById(R.id.lvItemsOrg);
 		inProgressRoot = (LinearLayout) alert
 				.findViewById(R.id.share_in_progress_root);
 		inProgressBar = (ProgressBar) alert
@@ -145,15 +147,21 @@ public class SharePopup {
 			}
 		}
 
+		ListAdapter adapter = new HandlerIntentListAdapter(a,
+				shareDestinations.toArray(new Object[shareDestinations.size()]));
+		mLvItemsOrg.setAdapter(adapter);
+		
 		// Add other handlers
+		shareDestinations.clear();
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("*/*");
 		getHandlersForIntent(intent, shareDestinations);
 
-		ListAdapter adapter = new HandlerIntentListAdapter(a,
+		adapter = new HandlerIntentListAdapter(a,
 				shareDestinations.toArray(new Object[shareDestinations.size()]));
 		mLvItems.setAdapter(adapter);
-		mLvItems.setOnItemClickListener(new OnItemClickListener() {
+				
+		OnItemClickListener listener = new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
@@ -172,7 +180,10 @@ public class SharePopup {
 					export();
 				}
 			}
-		});
+		};
+		
+		mLvItems.setOnItemClickListener(listener);
+		mLvItemsOrg.setOnItemClickListener(listener);
 	}
 	
 	private void export() {

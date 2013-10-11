@@ -22,6 +22,6 @@
         android:layout_height="wrap_content"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
-        android:text="@string/send" />
+        android:text="@string/share" />
     
 </LinearLayout>

@@ -7,11 +7,35 @@
         android:padding="20dp" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/tvTitleShareOrg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:text="@string/share_secure"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ListView
+            android:id="@+id/lvItemsOrg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvTitleShareOrg"
+            android:layout_marginTop="10dp" >
+        </ListView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_alignLeft="@+id/tvTitleShareOrg"
+            android:layout_below="@+id/tvTitleShareOrg"
+            android:background="@android:color/black" />
+
+        <TextView
+            android:id="@+id/tvTitleShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/lvItemsOrg"
             android:text="@string/share"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -19,22 +43,22 @@
             android:id="@+id/lvItems"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView1"
+            android:layout_below="@+id/tvTitleShare"
             android:layout_marginTop="10dp" >
         </ListView>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="4dp"
-            android:layout_alignLeft="@+id/textView1"
-            android:layout_below="@+id/textView1"
-            android:background="@android:color/black" />
+            android:layout_alignLeft="@+id/tvTitleShare"
+            android:layout_below="@+id/tvTitleShare"
+            android:background="@android:color/black" />        
         
         <include
             android:id="@+id/share_in_progress_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView1"
+            android:layout_below="@+id/tvTitleShareOrg"
             android:layout_marginTop="10dp"
             layout="@layout/popup_share_in_progress"
             android:visibility="gone" />
