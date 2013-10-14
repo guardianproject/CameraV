@@ -1,15 +1,14 @@
-
-iWitness
-========
+InformaApp
+=========
 
 An InformaCam app to generate verifiable media.
 
 Building
 --------
 
-git clone https://github.com/guardianproject/iWitness
+git clone https://github.com/guardianproject/InformaApp
 
-cd iWitness/
+cd InformaApp/
 
 git submodules update --init --recursive
 
@@ -24,7 +23,7 @@ ant clean debug
 =======
 # InformaCam
 
-This is information for building the primary submodule for iWitness, the InformaCam Core Library, located at external/InformCam
+This is information for building the primary submodule for InformaApp, the InformaCam Core Library, located at external/InformCam
 
 ## Setting up Development Environment
 
