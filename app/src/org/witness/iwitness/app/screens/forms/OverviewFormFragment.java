@@ -333,7 +333,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 	@Override
 	public boolean onLongClick(View v)
 	{
-		if (v instanceof AudioNoteInfoView && mIsEditable)
+		if (v instanceof AudioNoteInfoView)
 		{
 			showAudioNoteContextMenu((AudioNoteInfoView) v);
 			return true;
@@ -469,6 +469,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 				if (form.answerPath.equals(formToDelete.answerPath))
 				{
 					overviewRegion.associatedForms.remove(form);
+					((EditorActivityListener) a).media().save();
 					break;
 				}
 			}
