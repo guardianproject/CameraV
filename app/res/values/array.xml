@@ -5,10 +5,12 @@
         <item>@string/menu_list</item>
     </string-array>
     
-    <string-array name="sort_options">
-        <item>@string/sort_date</item>
-        <item>@string/sort_photos</item>
-        <item>@string/sort_videos</item>
+    <string-array name="filter_options">
+        <item>@string/filter_all</item>
+        <item>@string/filter_photos</item>
+        <item>@string/filter_videos</item>
+        <item>@string/filter_tagged</item>
+        <item>@string/filter_shared</item>
     </string-array>
     
     <string-array name="originalImageOptions">

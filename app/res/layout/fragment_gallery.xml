@@ -24,10 +24,43 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/media_encoding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#EFEFEF"
+        android:orientation="horizontal"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="@string/your_media_is_being_encoded" />
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#414042" />
+        
+        <ImageView
+            android:id="@+id/ivClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_gallery_close" />
+
+    </LinearLayout>
+
     <GridView
         android:id="@+id/media_display_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/media_encoding"
         android:layout_margin="3dip"
         android:gravity="center"
         android:horizontalSpacing="3dip"

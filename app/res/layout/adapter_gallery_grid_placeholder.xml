@@ -8,22 +8,11 @@
     android:focusableInTouchMode="false"
     android:padding="3dip" >
 
-    <FrameLayout
+    <ImageView
         android:id="@+id/flPlaceholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gallery_placeholder_background" >
-
-        <ProgressBar
-            android:id="@+id/pgLoading"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:indeterminate="true" />
-
-    </FrameLayout>
+        android:src="@drawable/encryption_animation"
+        />
 
 </org.witness.iwitness.app.views.SquareFrameLayout>

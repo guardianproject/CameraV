@@ -1,34 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.witness.iwitness.app.views.SquareFrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.witness.iwitness.app.views.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res/org.witness.iwitness"
     android:id="@+id/gallery_thumb_holder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="false"
     android:focusable="false"
-    android:focusableInTouchMode="false"
-    android:padding="3dip" >
+    android:focusableInTouchMode="false" >
 
     <org.witness.iwitness.app.views.RoundedImageView
         android:id="@+id/gallery_thumb"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="3dp"
         android:clickable="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher"
-        app:rounding_radius="6dp"
-         />
+        app:rounding_radius="6dp" />
 
     <CheckBox
         android:id="@+id/chkSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
         android:button="@drawable/checkbox_gallery"
         android:clickable="false"
         android:duplicateParentState="true"
@@ -42,6 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:layout_margin="3dp"
         android:background="#80ffffff"
         android:orientation="horizontal"
         android:padding="5dp" >
@@ -66,4 +65,11 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/new_media_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="2dp"
+        android:background="@drawable/extras_is_new_background" />
+    
 </org.witness.iwitness.app.views.SquareFrameLayout>

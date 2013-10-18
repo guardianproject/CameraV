@@ -147,6 +147,14 @@
     	<item name="android:textColor">@android:color/black</item>
 	</style>
 	
+	<style name="GallerySpinnerStyle" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
+    	<item name="android:background">@null</item>
+    	<item name="android:textColor">@android:color/white</item>
+	</style>
+
+	<style name="GalleryFilterButtonStyle" parent="@style/Widget.Sherlock.ActionButton">	    
+	</style>
+	
 	<style name="PopupInfoStyle">
 	    <item name="android:background">@drawable/popup_info_background</item>
 	    <item name="android:textColor">@android:color/white</item> 
