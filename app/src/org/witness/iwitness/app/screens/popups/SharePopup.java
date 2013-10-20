@@ -59,7 +59,7 @@ public class SharePopup {
 
 	HandlerIntent sendTo = null;
 	IOrganization encryptTo = null;
-	
+
 	Activity a;
 	Handler h;
 	private final Dialog alert;
@@ -88,7 +88,7 @@ public class SharePopup {
 				.findViewById(R.id.share_in_progress_bar);
 		li = LayoutInflater.from(a);
 		initLayout();
-		
+
 		h = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -96,7 +96,7 @@ public class SharePopup {
 				if(b.containsKey(Models.IMedia.VERSION)) {
 					inProgressBar.setProgress(100);
 					alert.cancel();
-					
+
 					if (sendTo != null
 							&& b.getString(Models.IMedia.VERSION) != null) {
 
@@ -140,17 +140,17 @@ public class SharePopup {
 		// Add organizations
 		ArrayList<Object> shareDestinations = new ArrayList<Object>();
 		if(installedOrganizations.organizations != null && installedOrganizations.organizations.size() > 0) {
-			if(installedOrganizations.organizations != null && installedOrganizations.organizations.size() > 0) {
-				for(IOrganization org : installedOrganizations.organizations) {
-					shareDestinations.add(org);
-				}
+			organizations = installedOrganizations.organizations;
+			
+			for(IOrganization org : organizations) {
+				shareDestinations.add(org);
 			}
 		}
 
 		ListAdapter adapter = new HandlerIntentListAdapter(a,
 				shareDestinations.toArray(new Object[shareDestinations.size()]));
 		mLvItemsOrg.setAdapter(adapter);
-		
+
 		// Add other handlers
 		shareDestinations.clear();
 		Intent intent = new Intent(Intent.ACTION_SEND);
@@ -160,12 +160,12 @@ public class SharePopup {
 		adapter = new HandlerIntentListAdapter(a,
 				shareDestinations.toArray(new Object[shareDestinations.size()]));
 		mLvItems.setAdapter(adapter);
-				
+
 		OnItemClickListener listener = new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-
+				
 				Object handler = parent.getAdapter().getItem(position);
 				if (handler instanceof IOrganization) {
 					encryptTo = organizations.get(position);
@@ -173,7 +173,7 @@ public class SharePopup {
 					Log.d(LOG, "now exporting to " + encryptTo.organizationName);
 					export();
 				}
- else if (handler instanceof HandlerIntent) {
+				else if (handler instanceof HandlerIntent) {
 					encryptTo = null;
 					sendTo = (HandlerIntent) handler;
 					Log.d(LOG, "now sending to " + sendTo.toString());
@@ -181,11 +181,11 @@ public class SharePopup {
 				}
 			}
 		};
-		
+
 		mLvItems.setOnItemClickListener(listener);
 		mLvItemsOrg.setOnItemClickListener(listener);
 	}
-	
+
 	private void export() {
 		mLvItems.setVisibility(View.GONE);
 		inProgressRoot.setVisibility(View.VISIBLE);
@@ -254,7 +254,7 @@ public class SharePopup {
 	};
 
 	private void getHandlersForIntent(Intent intent,
- ArrayList<Object> rgIntents) {
+			ArrayList<Object> rgIntents) {
 		PackageManager pm = a.getPackageManager();
 		List<ResolveInfo> resInfos = pm.queryIntentActivities(intent,
 				PackageManager.MATCH_DEFAULT_ONLY);
