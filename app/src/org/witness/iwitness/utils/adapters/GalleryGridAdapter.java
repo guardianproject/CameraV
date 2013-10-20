@@ -1,7 +1,6 @@
 package org.witness.iwitness.utils.adapters;
 
 import info.guardianproject.odkparser.utils.QD;
-
 import java.util.List;
 
 import org.witness.informacam.models.forms.IForm;
@@ -12,13 +11,13 @@ import org.witness.iwitness.utils.Constants.App.Editor.Forms;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 public class GalleryGridAdapter extends BaseAdapter {
 	
@@ -81,17 +80,17 @@ public class GalleryGridAdapter extends BaseAdapter {
 		return position;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		
 		View view = null;
 		
 		if (position < mNumLoading)
-		{
+		{	
 			view = li.inflate(R.layout.adapter_gallery_grid_placeholder, parent, false);
-			
-			ProgressBar pgLoading = (ProgressBar) view.findViewById(R.id.pgLoading);
+			ImageView encryptionView = (ImageView) view.findViewById(R.id.flPlaceholder); 
+			AnimationDrawable encryptionAnimation = (AnimationDrawable) encryptionView.getDrawable(); 
+			encryptionAnimation.start();
 		}
 		else
 		{
@@ -104,11 +103,7 @@ public class GalleryGridAdapter extends BaseAdapter {
 
 			ImageView iv = (ImageView) view.findViewById(R.id.gallery_thumb);
 
-			View iv_holder = view.findViewById(R.id.gallery_thumb_holder);
-			if (m.isNew) {
-				iv_holder.setBackgroundDrawable(a.getResources().getDrawable(
-					R.drawable.extras_is_new_background));
-			}
+			view.findViewById(R.id.new_media_overlay).setVisibility(m.isNew ? View.VISIBLE : View.GONE);
 
 			try {
 				Bitmap bitmap = m.getThumbnail();

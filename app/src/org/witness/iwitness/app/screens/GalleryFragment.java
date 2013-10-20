@@ -1,18 +1,22 @@
 package org.witness.iwitness.app.screens;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
 import org.json.JSONException;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IMedia;
+import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.iwitness.R;
+import org.witness.iwitness.utils.UIHelpers;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;
 import org.witness.iwitness.utils.Constants.Preferences;
+import org.witness.iwitness.utils.adapters.GalleryFilterAdapter;
 import org.witness.iwitness.utils.adapters.GalleryGridAdapter;
 
 import android.app.Activity;
@@ -27,10 +31,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -43,7 +51,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class GalleryFragment extends SherlockFragment implements
 		OnItemClickListener, OnItemLongClickListener, ListAdapterListener,
-		OnNavigationListener {
+		OnItemSelectedListener {
 	View rootView;
 	GridView mediaDisplayGrid;
 	GalleryGridAdapter galleryGridAdapter;
@@ -60,8 +68,9 @@ public class GalleryFragment extends SherlockFragment implements
 	private static final String LOG = Home.LOG;
 	private final InformaCam informaCam = InformaCam.getInstance();
 	private ActionMode mActionMode;
-	private int mCurrentSorting;
+	private int mCurrentFiltering;
 	private MenuItem mMenuItemBatchOperations;
+	private View mEncodingMedia;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +89,15 @@ public class GalleryFragment extends SherlockFragment implements
 		noMedia = (RelativeLayout) rootView
 				.findViewById(R.id.media_display_no_media);
 
+		mEncodingMedia = rootView.findViewById(R.id.media_encoding);
+		mEncodingMedia.setVisibility(View.GONE);
+		mEncodingMedia.findViewById(R.id.ivClose).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mEncodingMedia.setVisibility(View.GONE);
+			}
+		});
 		return rootView;
 	}
 
@@ -104,16 +122,62 @@ public class GalleryFragment extends SherlockFragment implements
 
 	private void initData() {
 
-		mCurrentSorting = Models.IMediaManifest.Sort.DATE_DESC;
+		mCurrentFiltering = 0; //All items
 		updateData();
+	}
+	
+	private void getMediaList()
+	{
+		int sorting = Models.IMediaManifest.Sort.DATE_DESC;
+		if (mCurrentFiltering == 1) // Photos
+			sorting = Models.IMediaManifest.Sort.TYPE_PHOTO;
+		else if (mCurrentFiltering == 2)
+			sorting = Models.IMediaManifest.Sort.TYPE_VIDEO;
+		
+		listMedia = informaCam.mediaManifest.sortBy(sorting);
+		if (listMedia != null)
+			listMedia = new ArrayList<IMedia>(listMedia);
+		
+		if (mCurrentFiltering == 3) // Tagged items
+		{
+			for (int i = listMedia.size() - 1; i >= 0; i--)
+			{
+				IMedia m = listMedia.get(i);
+				boolean hasTags = (m.getInnerLevelRegions().size() > 0);
+				if (!hasTags)
+					listMedia.remove(i);
+			}
+		}
+		else if (mCurrentFiltering == 4) // Shared items
+		{
+			List<INotification> listNotifications = InformaCam.getInstance().notificationsManifest.sortBy(Models.INotificationManifest.Sort.DATE_DESC);
+
+			for (int i = listMedia.size() - 1; i >= 0; i--)
+			{
+				boolean hasBeenShared = false;
+				
+				IMedia m = listMedia.get(i);
+				for (INotification n : listNotifications)
+				{
+					if (m._id.equals(n.mediaId))
+					{
+						if (n.type == Models.INotification.Type.SHARED_MEDIA &&
+							n.taskComplete)
+						{
+							hasBeenShared = true;
+							break;
+						}
+					}
+				}
+				if (!hasBeenShared)
+					listMedia.remove(i);
+			}			
+		}
 	}
 	
 	private void updateData()
 	{
-		listMedia = informaCam.mediaManifest.sortBy(mCurrentSorting);
-		if (listMedia != null)
-			listMedia = new ArrayList<IMedia>(listMedia);
-
+		getMediaList();
 		galleryGridAdapter = new GalleryGridAdapter(a, listMedia);
 		if (mediaDisplayGrid != null) {
 			mediaDisplayGrid.setAdapter(galleryGridAdapter);
@@ -244,10 +308,7 @@ public class GalleryFragment extends SherlockFragment implements
 	public void updateAdapter(int which) {
 		Log.d(LOG, "UPDATING OUR ADAPTERS");
 		if (a != null) {
-
-			listMedia = informaCam.mediaManifest.sortBy(mCurrentSorting);
-			if (listMedia != null)
-				listMedia = new ArrayList<IMedia>(listMedia);
+			getMediaList();
 			updateAdapters();
 		}
 	}
@@ -257,6 +318,12 @@ public class GalleryFragment extends SherlockFragment implements
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.activity_home_gallery, menu);
 
+		MenuItem menuFilter = menu.findItem(R.id.menu_filter);
+		Spinner spinner = (Spinner) menuFilter.getActionView();
+		GalleryFilterAdapter spinnerAdapter = new GalleryFilterAdapter(spinner.getContext(), this.getResources().getTextArray(R.array.filter_options));
+		spinner.setAdapter(spinnerAdapter);
+		spinner.setOnItemSelectedListener(this);
+		
 		mMenuItemBatchOperations = menu.findItem(R.id.menu_select);
 		
 		ActionBar actionBar = getSherlockActivity().getSupportActionBar();
@@ -268,14 +335,7 @@ public class GalleryFragment extends SherlockFragment implements
 		actionBar.setLogo(this.getResources().getDrawable(
 				R.drawable.ic_action_up));
 		actionBar.setDisplayUseLogoEnabled(true);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		
-		ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(
-				actionBar.getThemedContext(),
- R.array.sort_options,
-				R.layout.sherlock_spinner_item);
-		list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
-		actionBar.setListNavigationCallbacks(list, this);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 	}
 
 	@Override
@@ -378,22 +438,6 @@ public class GalleryFragment extends SherlockFragment implements
 	};
 	private int mNumLoading;
 
-	@Override
-	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		switch (itemPosition) {
-		case 0:
-			mCurrentSorting = Models.IMediaManifest.Sort.DATE_DESC;
-			break;
-		case 1:
-			mCurrentSorting = Models.IMediaManifest.Sort.TYPE_PHOTO;
-			break;
-		case 2:
-			mCurrentSorting = Models.IMediaManifest.Sort.TYPE_VIDEO;
-			break;
-		}
-		updateAdapter(0);
-		return true;
-	}
 
 	@Override
 	public void setPending(final int numPending, final int numCompleted) {		
@@ -421,11 +465,28 @@ public class GalleryFragment extends SherlockFragment implements
 					{
 						nTimesShown++;
 						sp.edit().putInt(Preferences.Keys.HINT_PROCESSING_IMAGES_SHOWN, nTimesShown).commit();
-						Toast.makeText(a, getString(R.string.safely_storing_your_picture), Toast.LENGTH_LONG).show();
+						mEncodingMedia.setVisibility(View.VISIBLE);
 					}
 				}
+				else if (mNumLoading == 0)
+				{
+					mEncodingMedia.setVisibility(View.GONE);
+				}
+				
 			}
 		});
 	}
 
+	@Override
+	public void onItemSelected(AdapterView<?> adapterView, View view, int itemPosition,
+			long itemId) {
+		mCurrentFiltering = itemPosition;
+		updateAdapter(0);
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+	}
+	
+	
 }
