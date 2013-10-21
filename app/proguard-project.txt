@@ -18,23 +18,3 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
-# Needed to keep generic types and @Key annotations accessed via reflection
-
--keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault
-
--keepclassmembers class * {
-  @com.google.api.client.util.Key <fields>;
-}
-
-# Needed by google-http-client-android when linking against an older platform version
-
--dontwarn com.google.api.client.extensions.android.**
-
-# Needed by google-api-client-android when linking against an older platform version
-
--dontwarn com.google.api.client.googleapis.extensions.android.**
-
--keep class * extends java.util.ListResourceBundle {
-    protected Object[][] getContents();
-}
