@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.spongycastle.openpgp.PGPException;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.crypto.KeyUtility;
 import org.witness.informacam.models.notifications.INotification;
@@ -328,9 +329,11 @@ public class IWitness extends Activity implements InformaCamStatusListener
 							
 							informaCam.saveState(informaCam.user);
 							informaCam.saveState(informaCam.languageMap);
-							informaCam.initData();
 							
 							try {
+								
+								informaCam.initData();
+								
 								for(String s : informaCam.getAssets().list("includedOrganizations")) {
 									
 									InputStream ictdIS = informaCam.ioService.getStream("includedOrganizations/" + s, Type.APPLICATION_ASSET);
@@ -350,12 +353,14 @@ public class IWitness extends Activity implements InformaCamStatusListener
 									}
 								}
 							} catch(IOException e) {
-								Log.e(LOG, e.toString());
-								e.printStackTrace();
+								Log.e(LOG, e.toString(),e);
 							} catch (JSONException e) {
-								Log.e(LOG, e.toString());
-								e.printStackTrace();
+								Log.e(LOG, e.toString(),e);
+							} catch (PGPException e) {
+								Log.e(LOG, e.toString(),e);
+								throw new RuntimeException("could not init pgp data",e);
 							}
+							
 							
 							try {
 								for(String s : informaCam.getAssets().list("includedForms")) {
