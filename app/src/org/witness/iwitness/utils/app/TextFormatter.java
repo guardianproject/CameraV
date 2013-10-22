@@ -40,7 +40,7 @@ public class TextFormatter {
 
 	public static class BoldBrick extends CharacterStyle {
 		public static final String token = "$$$";
-		static final int color = R.drawable.eyewitness_blue;
+		static final int color = R.drawable.app_primary;
 
 		@Override
 		public void updateDrawState(TextPaint tp) {
