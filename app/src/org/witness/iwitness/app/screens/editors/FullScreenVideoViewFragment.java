@@ -17,7 +17,7 @@ import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.Logger;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
 import org.witness.iwitness.app.screens.popups.WaitPopup;
 import org.witness.iwitness.utils.Constants.EditorActivityListener;

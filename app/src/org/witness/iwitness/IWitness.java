@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.spongycastle.openpgp.PGPException;
+import org.witness.informa.app.R;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.crypto.KeyUtility;
 import org.witness.informacam.models.notifications.INotification;

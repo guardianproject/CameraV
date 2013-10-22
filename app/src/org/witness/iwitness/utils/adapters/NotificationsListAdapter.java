@@ -11,7 +11,7 @@ import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.TimeUtility;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

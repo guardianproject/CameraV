@@ -6,7 +6,7 @@ import org.json.JSONException;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.utils.Constants.Models;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

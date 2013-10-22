@@ -16,7 +16,7 @@ import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.TimeUtility;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.popups.PopupClickListener;
 import org.witness.iwitness.app.views.AudioNoteInfoView;

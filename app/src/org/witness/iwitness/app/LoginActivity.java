@@ -1,7 +1,7 @@
 package org.witness.iwitness.app;
 
 import org.witness.informacam.InformaCam;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.utils.Constants;
 import org.witness.iwitness.utils.UIHelpers;
 

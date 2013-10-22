@@ -15,7 +15,7 @@ import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.app.PreferencesActivity;
 import org.witness.iwitness.app.WipeActivity;
 import org.witness.iwitness.app.screens.popups.AudioNoteSavedPopup;

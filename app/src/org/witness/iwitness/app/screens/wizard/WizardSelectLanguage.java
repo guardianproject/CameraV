@@ -3,7 +3,7 @@ package org.witness.iwitness.app.screens.wizard;
 import java.util.Locale;
 
 import org.witness.informacam.utils.Constants.Codes;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.app.views.DropdownSpinner;
 import org.witness.iwitness.app.views.DropdownSpinner.OnSelectionChangedListener;
 import org.witness.iwitness.utils.Constants.WizardActivityListener;

@@ -15,7 +15,7 @@ import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.utils.Constants.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.app.screens.FullScreenViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenImageViewFragment;
 import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;

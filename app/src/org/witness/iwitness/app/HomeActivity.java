@@ -22,7 +22,7 @@ import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.app.screens.CameraFragment;
 import org.witness.iwitness.app.screens.GalleryFragment;
 import org.witness.iwitness.app.screens.HomeFragment;

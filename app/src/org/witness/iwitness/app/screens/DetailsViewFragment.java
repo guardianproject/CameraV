@@ -5,7 +5,7 @@ import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.models.media.IMedia;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.forms.OverviewFormFragment;
 import org.witness.iwitness.utils.Constants.Codes;

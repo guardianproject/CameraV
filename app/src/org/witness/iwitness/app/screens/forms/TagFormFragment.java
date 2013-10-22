@@ -10,7 +10,7 @@ import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.Logger;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.utils.Constants.App.Editor;
 import org.witness.iwitness.utils.Constants.App.Editor.Forms;

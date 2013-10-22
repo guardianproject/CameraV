@@ -9,7 +9,7 @@ import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Models;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.app.PreferencesActivity;
 import org.witness.iwitness.app.WipeActivity;
 import org.witness.iwitness.utils.Constants.App;

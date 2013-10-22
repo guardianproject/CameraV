@@ -2,7 +2,7 @@ package com.efor18.rangeseekbar;
 
 import java.math.BigDecimal;
 
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -1,7 +1,7 @@
 package org.witness.iwitness.app.screens.editors;
 
 import org.witness.informacam.models.media.IVideoRegion;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.utils.Constants.App;
 
 import com.efor18.rangeseekbar.RangeSeekBar;

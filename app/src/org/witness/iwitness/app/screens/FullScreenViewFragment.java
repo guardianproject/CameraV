@@ -12,7 +12,7 @@ import org.witness.informacam.models.media.IRegionBounds;
 import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.utils.Constants.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.app.EditorActivity;
 import org.witness.iwitness.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.iwitness.app.screens.popups.PopupClickListener;

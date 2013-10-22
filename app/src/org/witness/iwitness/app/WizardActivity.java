@@ -8,7 +8,7 @@ import org.witness.informacam.crypto.KeyUtility;
 import org.witness.informacam.ui.SurfaceGrabberActivity;
 import org.witness.informacam.utils.Constants.Codes;
 import org.witness.informacam.utils.Constants.Models.IUser;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.app.screens.wizard.WizardCreateDB;
 import org.witness.iwitness.app.screens.wizard.WizardSelectLanguage;
 import org.witness.iwitness.app.screens.wizard.WizardTakePhoto;

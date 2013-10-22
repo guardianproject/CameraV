@@ -1,7 +1,7 @@
 package org.witness.iwitness.app.screens.wizard;
 
 import org.witness.informacam.utils.Constants.WizardListener;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.utils.Constants.Preferences;
 
 import android.app.Activity;

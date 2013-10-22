@@ -11,7 +11,7 @@ import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Models;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.utils.UIHelpers;
 import org.witness.iwitness.utils.Constants.App.Home;
 import org.witness.iwitness.utils.Constants.HomeActivityListener;

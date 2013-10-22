@@ -1,6 +1,6 @@
 package org.witness.iwitness.app.views;
 
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.utils.UIHelpers;
 
 import android.annotation.SuppressLint;

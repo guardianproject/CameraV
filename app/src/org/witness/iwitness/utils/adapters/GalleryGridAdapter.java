@@ -6,7 +6,7 @@ import java.util.List;
 import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.utils.Constants.App;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.utils.Constants.App.Editor.Forms;
 
 import android.app.Activity;

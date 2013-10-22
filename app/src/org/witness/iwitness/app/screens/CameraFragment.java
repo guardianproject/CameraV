@@ -1,6 +1,6 @@
 package org.witness.iwitness.app.screens;
 
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 
 import android.app.Activity;
 import android.os.Bundle;

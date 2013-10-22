@@ -1,6 +1,6 @@
 package org.witness.iwitness.app.views;
 
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 
 import android.content.Context;
 import android.content.res.TypedArray;

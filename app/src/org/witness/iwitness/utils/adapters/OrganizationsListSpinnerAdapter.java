@@ -3,7 +3,7 @@ package org.witness.iwitness.utils.adapters;
 import java.util.List;
 
 import org.witness.informacam.models.organizations.IOrganization;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -3,7 +3,7 @@ package org.witness.iwitness.app.views;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.utils.Constants.IRegionDisplayListener;
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 
 import android.content.Context;
 import android.graphics.Canvas;

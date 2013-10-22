@@ -2,7 +2,7 @@ package org.witness.iwitness.app.screens.menus;
 
 import java.util.List;
 
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.utils.actions.ContextMenuAction;
 import org.witness.iwitness.utils.adapters.ContextMenuSimpleAdapter;
 

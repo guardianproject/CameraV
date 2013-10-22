@@ -1,6 +1,6 @@
 package org.witness.iwitness.app;
 
-import org.witness.iwitness.R;
+import org.witness.informa.app.R;
 import org.witness.iwitness.utils.Constants.Preferences;
 
 import android.content.SharedPreferences;
