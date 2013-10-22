@@ -225,10 +225,13 @@ public class SharePopup {
 
 				IOrganization org = (IOrganization) handler;
 				tv.setText(org.organizationName);
-				Drawable icon = a.getResources().getDrawable(
-						R.drawable.ic_share_iba);
-				icon.setBounds(0, 0, iconSize, iconSize);
-				tv.setCompoundDrawables(icon, null, null, null);
+				
+				//todo load the org's icon from bundle or remote site
+				//Drawable icon = a.getResources().getDrawable(
+				//		R.drawable.ic_share_iba);
+				//icon.setBounds(0, 0, iconSize, iconSize);
+				//tv.setCompoundDrawables(icon, null, null, null);
+				
 				tv.setCompoundDrawablePadding(UIHelpers.dpToPx(10, getContext()));
 			} else if (handler instanceof HandlerIntent) {
 				HandlerIntent handlerIntent = (HandlerIntent) handler;
