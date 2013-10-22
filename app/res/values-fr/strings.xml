@@ -1,6 +1,5 @@
 <resources>
 
-    <string name="app_name">eyeWitness</string>
     <string name="photo">Photo</string>
     <string name="video">Vidéo</string>
     <string name="menu_all_media">Tous les fichiers</string>

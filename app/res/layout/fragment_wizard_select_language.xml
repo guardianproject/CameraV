@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:src="@drawable/ic_setup_logo" />
+        android:src="@drawable/ic_launcher" />
 
     <org.witness.iwitness.app.views.CustomFontTextView
         android:id="@+id/textView1"

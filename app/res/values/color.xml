@@ -6,9 +6,10 @@
     <drawable name="grey">#ffd0d2d3</drawable>
     <drawable name="peuter">#ff6d6d6d</drawable>
     <drawable name="trans_grey_1">#80ffffff</drawable>
-    <drawable name="trans_black">#80000000</drawable>
+    <drawable name="trans_black">#88000000</drawable>
     <drawable name="blue">#ff09bdff</drawable>
-    <drawable name="eyewitness_blue">#ff4db1e4</drawable>
+    
+    <drawable name="app_primary">#f78f20</drawable>
     <drawable name="eyewitness_dark_grey">#ff231f20</drawable>
     
     <color name="grey_dark">#ff404040</color>
@@ -41,7 +42,8 @@
     <color name="recorder_button_background">#E20F00</color>
     <color name="recorder_button_text">#ffffff</color>
     
-    <color name="wizard_blue">#FF00AEEF</color>
-    <color name="wizard_blue_semi">#FF0A77AA</color>
+    <!-- these are not "blue" anymore, they are the default informa colors -->
+    <color name="wizard_blue">#FFf78f20</color>
+    <color name="wizard_blue_semi">#FF885927</color>
     <color name="wizard_grey">#FFA7A9AC</color>
 </resources>

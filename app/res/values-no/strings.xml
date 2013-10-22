@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="app_name">eyeWitness</string>
   <string name="photo">Foto</string>
   <string name="video">Video</string>
   <string name="menu_all_media">All media</string>

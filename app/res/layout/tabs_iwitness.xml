@@ -11,7 +11,7 @@
         android:layout_centerInParent="true"
         android:paddingBottom="6dip"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_iwitness" />
+        android:src="@drawable/ic_launcher" />
 
     <View
         android:id="@+id/tab_selector"

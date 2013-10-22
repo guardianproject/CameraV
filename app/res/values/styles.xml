@@ -18,7 +18,7 @@
     </style>
     
     <style name="iwitness_tab_holder">
-        <item name="android:background">@drawable/eyewitness_blue</item>
+        <item name="android:background">@drawable/app_primary</item>
     </style>
     
     <style name="iwitness_sub_tab_holder">

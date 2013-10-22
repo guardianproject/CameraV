@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:gravity="right|center_vertical"
-            android:text="Shared 3 days ago with IBA" />
+            android:text="Shared 3 days ago" />
     </LinearLayout>
 
     <RelativeLayout
