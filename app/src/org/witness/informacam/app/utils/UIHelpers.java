@@ -2,7 +2,7 @@ package org.witness.informacam.app.utils;
 
 import java.util.Date;
 
-import org.witness.informa.app.R;
+import org.witness.informacam.app.R;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
