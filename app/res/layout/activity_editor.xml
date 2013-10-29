@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-        <org.witness.iwitness.app.views.TwoViewSlideLayout
+        <org.witness.informacam.app.views.TwoViewSlideLayout
             android:id="@+id/root_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -44,7 +44,7 @@
 
                         
             </RelativeLayout>
-        </org.witness.iwitness.app.views.TwoViewSlideLayout>
+        </org.witness.informacam.app.views.TwoViewSlideLayout>
 
 
     <FrameLayout

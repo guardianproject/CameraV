@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/org.witness.informa.app"
+    xmlns:app="http://schemas.android.com/apk/res/org.witness.informacam.app"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue_dark"
@@ -15,7 +15,7 @@
         android:layout_marginTop="20dp"
         android:src="@drawable/ic_launcher" />
 
-    <org.witness.iwitness.app.views.CustomFontTextView
+    <org.witness.informacam.app.views.CustomFontTextView
         android:id="@+id/textView1"
         style="@style/WizardH1"
         android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
         android:text="@string/wizard_welcome"
         android:textColor="@android:color/white" />
 
-    <org.witness.iwitness.app.views.CustomFontTextView
+    <org.witness.informacam.app.views.CustomFontTextView
         android:id="@+id/textView2"
         style="@style/WizardH3"
         android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
 
 
 
-    <org.witness.iwitness.app.views.DropdownSpinner
+    <org.witness.informacam.app.views.DropdownSpinner
         android:id="@+id/languagePopup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
             android:layout_marginRight="10dp"
             android:src="@drawable/ic_setup_dropdown" />
 
-    </org.witness.iwitness.app.views.DropdownSpinner>
+    </org.witness.informacam.app.views.DropdownSpinner>
 
     <Button
         android:id="@+id/wizard_commit"

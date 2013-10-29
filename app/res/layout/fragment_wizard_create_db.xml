@@ -48,7 +48,7 @@
                 android:orientation="vertical"
                 android:padding="10dp" >
 
-                <org.witness.iwitness.app.views.CustomFontEditText
+                <org.witness.informacam.app.views.CustomFontEditText
                     android:id="@+id/user_name"
                     style="@style/WizardEdittext"
                     android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                     android:maxLength="50"
                     android:maxLines="1" />
 
-                <org.witness.iwitness.app.views.CustomFontEditText
+                <org.witness.informacam.app.views.CustomFontEditText
                     android:id="@+id/user_email"
                     style="@style/WizardEdittext"
                     android:layout_width="match_parent"
@@ -68,7 +68,7 @@
                     android:maxLength="200"
                     android:maxLines="1" />
 
-                <org.witness.iwitness.app.views.CustomFontEditText
+                <org.witness.informacam.app.views.CustomFontEditText
                     android:id="@+id/user_password"
                     style="@style/WizardEdittext"
                     android:layout_width="match_parent"
@@ -77,7 +77,7 @@
                     android:inputType="textPassword"
                     android:maxLength="50" />
 
-                <org.witness.iwitness.app.views.CustomFontEditText
+                <org.witness.informacam.app.views.CustomFontEditText
                     android:id="@+id/user_password_again"
                     style="@style/WizardEdittext"
                     android:layout_width="match_parent"

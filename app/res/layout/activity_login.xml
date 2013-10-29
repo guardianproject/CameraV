@@ -30,7 +30,7 @@
         android:orientation="vertical"
         android:padding="10dp" >
 
-        <org.witness.iwitness.app.views.CustomFontEditText
+        <org.witness.informacam.app.views.CustomFontEditText
             android:id="@+id/login_password"
             style="@style/WizardEdittext"
             android:layout_width="match_parent"

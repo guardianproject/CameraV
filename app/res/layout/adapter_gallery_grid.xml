@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.witness.iwitness.app.views.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/org.witness.informa.app"
+<org.witness.informacam.app.views.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/org.witness.informacam.app"
     android:id="@+id/gallery_thumb_holder"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +8,7 @@
     android:focusable="false"
     android:focusableInTouchMode="false" >
 
-    <org.witness.iwitness.app.views.RoundedImageView
+    <org.witness.informacam.app.views.RoundedImageView
         android:id="@+id/gallery_thumb"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -72,4 +72,4 @@
         android:layout_margin="2dp"
         android:background="@drawable/extras_is_new_background" />
     
-</org.witness.iwitness.app.views.SquareFrameLayout>
+</org.witness.informacam.app.views.SquareFrameLayout>
