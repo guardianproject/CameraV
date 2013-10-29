@@ -1,10 +1,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/org.witness.informa.app"
+    xmlns:app="http://schemas.android.com/apk/res/org.witness.informacam.app"
     android:id="@+id/flPhotoRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <org.witness.iwitness.app.views.RoundedImageView
+    <org.witness.informacam.app.views.RoundedImageView
         android:id="@+id/ivPhoto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

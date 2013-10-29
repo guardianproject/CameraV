@@ -39,7 +39,7 @@
             android:gravity="center"
             android:padding="4dip" >
 
-            <org.witness.iwitness.app.screens.editors.VideoSeekBar
+            <org.witness.informacam.app.screens.editors.VideoSeekBar
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/video_seek_bar"
