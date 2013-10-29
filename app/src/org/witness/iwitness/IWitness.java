@@ -47,6 +47,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Process;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -168,7 +169,7 @@ public class IWitness extends Activity implements InformaCamStatusListener
 			{
 				Logger.d(LOG, "Logout the user and close.");
 				informaCam.setStatusListener(null);
-				informaCam.shutdown();
+				informaCam.stopInforma();
 				route = null;
 				setResult(resultCode, getIntent());
 				finish();
@@ -421,6 +422,10 @@ public class IWitness extends Activity implements InformaCamStatusListener
 		{
 			deleteApp();
 		}
+		else
+		{
+			Process.killProcess(Process.myPid());
+		}
 	}
 	
 	private void deleteApp()
@@ -433,31 +438,41 @@ public class IWitness extends Activity implements InformaCamStatusListener
 
 	private void dataWipe() {
 		Log.v(LOG, "Delete data");
-		//TODO
-//        File cache = getCacheDir();
-//        File appDir = new File(cache.getParent());
-//        if (appDir.exists()) {
-//            String[] children = appDir.list();
-//            for (String s : children) {
-//                if (!s.equals("lib")) {
-//                    deleteDir(new File(appDir, s));
-//                }
-//            }
-//        }
-    }
-
-    public boolean deleteDir(File dir) {
-        if (dir != null && dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
-                if (!success) {
-                    return false;
+        File cache = getCacheDir();
+        File appDir = new File(cache.getParent());
+        if (appDir.exists()) {
+            String[] children = appDir.list();
+            for (String s : children) {
+                if (!s.equals("lib")) {
+                    deleteDir(new File(appDir, s));
                 }
             }
         }
+        
+		// Delete all possible locations
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+		{
+			appDir = getApplicationContext().getExternalFilesDir(null);
+			if (appDir.exists())
+				deleteDir(appDir);
+		}
+    }
 
-        return dir.delete();
+    public void deleteDir(File dir) {
+        if (dir != null && dir.exists() && dir.isDirectory()) {
+            File[] children = dir.listFiles();
+            for (File f : children) {
+            	if (f.isDirectory())
+            		deleteDir(f);
+            	else
+            	{
+            		f.delete();
+                	Log.v(LOG, "Deleted file " + f.getAbsolutePath());
+            	}
+            }
+            dir.delete();
+        	Log.v(LOG, "Deleted dir " + dir.getAbsolutePath());
+        }
     }
 
 }
