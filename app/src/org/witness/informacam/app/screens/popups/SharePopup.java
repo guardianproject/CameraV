@@ -64,12 +64,14 @@ public class SharePopup {
 	Handler h;
 	private final Dialog alert;
 
+	private boolean shareJ3MOnly = false;
+	
 	public SharePopup(Activity a, final Object context) {
-		this(a, context, false);
+		this(a, context, false, false);
 	}
 
 	@SuppressLint("HandlerLeak")
-	public SharePopup(final Activity a, final Object context, boolean startsInforma) {
+	public SharePopup(final Activity a, final Object context, boolean startsInforma, boolean shareJ3MOnly) {
 		this.a = a;
 
 		alert = new Dialog(a);
@@ -77,7 +79,8 @@ public class SharePopup {
 		alert.setContentView(R.layout.popup_share);
 
 		this.context = context;
-
+		this.shareJ3MOnly = shareJ3MOnly;
+		
 		informaCam = InformaCam.getInstance();
 
 		mLvItems = (ListView) alert.findViewById(R.id.lvItems);
@@ -192,7 +195,11 @@ public class SharePopup {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				((IMedia) context).export(a, h, encryptTo, sendTo != null);
+				
+				if (shareJ3MOnly)
+					((IMedia) context).exportJ3M(a, h, encryptTo, sendTo != null);
+				else
+					((IMedia) context).export(a, h, encryptTo, sendTo != null);
 			}
 		}).start();
 	}
