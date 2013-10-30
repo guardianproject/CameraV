@@ -405,7 +405,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				@Override
 				protected void onSelected()
 				{
-					new SharePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id), true);
+					new SharePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id), true, false);
 				}
 			});	
 			

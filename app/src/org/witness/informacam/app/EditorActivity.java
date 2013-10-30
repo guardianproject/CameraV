@@ -146,7 +146,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 
 		mediaId = getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA);
 		media = informaCam.mediaManifest.getById(mediaId);
-		if (media == null)
+		if (media == null || media.dcimEntry == null)
 		{
 			setResult(Activity.RESULT_CANCELED);
 			finish();
@@ -265,6 +265,11 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		case R.id.menu_share:
 		{
 			new SharePopup(this, media);
+			return true;
+		}
+		case R.id.menu_share_meta:
+		{
+			new SharePopup(this, media, false, true);
 			return true;
 		}
 		case R.id.menu_edit:
