@@ -539,4 +539,9 @@ OnRangeSeekBarChangeListener<Integer> {
 	{
 		return new RectF(0,0,videoView.getWidth(),videoView.getHeight());
 	}
+
+	@Override
+	public int getAudioSessionId() {
+		return 1;
+	}
 }
