@@ -225,6 +225,8 @@ OnRangeSeekBarChangeListener<Integer> {
 
 		mediaHolder.addView(mediaHolder_);
 		
+		surfaceHolder = videoView.getHolder();
+		
 		new VideoLoader().execute("");
 	}
 	
