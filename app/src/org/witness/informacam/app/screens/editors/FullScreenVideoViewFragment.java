@@ -39,6 +39,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -62,7 +63,8 @@ OnRangeSeekBarChangeListener<Integer> {
 	//MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 	VideoView videoView;
 	SurfaceHolder surfaceHolder;
-
+	View mediaHolder_;
+	
 	MediaPlayer mediaPlayer;
 	MediaController mediaController;
 
@@ -72,8 +74,6 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	Uri videoUri;
 	//java.io.File videoFile;
-	
-	WaitPopup waitPopup;
 
 	long duration = 0L;
 	int currentCue = 1;
@@ -81,6 +81,8 @@ OnRangeSeekBarChangeListener<Integer> {
 	Thread mServerThread;
 
 	ServerSocket mVideoServerSocket;
+	private final static int LOCALHOST_PORT = 8888;
+	private final static String LOCALHOST_VIDEO_PATH = "http://localhost:" + LOCALHOST_PORT + "/video";
 	
 	@Override
 	public void onAttach(Activity a) {
@@ -88,8 +90,6 @@ OnRangeSeekBarChangeListener<Integer> {
 		this.a = a;
 
 		media_ = new IVideo(((EditorActivityListener) a).media());
-		waitPopup = new WaitPopup(a, R.layout.popup_video_wait);
-		waitPopup.Show();
 	}
 	
 	private void initVideo() {
@@ -131,8 +131,7 @@ OnRangeSeekBarChangeListener<Integer> {
 					initRegions();
 					
 					playPauseToggle.setClickable(true);
-					Logger.d(LOG, "video is now available.");
-					waitPopup.cancel();
+					
 				}
 			});
 			
@@ -209,11 +208,12 @@ OnRangeSeekBarChangeListener<Integer> {
 	protected void initLayout() {
 		super.initLayout();
 		
-		videoUri = Uri.parse("http://localhost:8888/video");
+
+		videoUri = Uri.parse(LOCALHOST_VIDEO_PATH);
+
+		mediaHolder_ = LayoutInflater.from(getActivity()).inflate(R.layout.editors_video, null);
+
 		
-
-		View mediaHolder_ = LayoutInflater.from(getActivity()).inflate(R.layout.editors_video, null);
-
 		videoView = (VideoView) mediaHolder_.findViewById(R.id.video_view);
 
 		LayoutParams vv_lp = videoView.getLayoutParams();
@@ -222,8 +222,34 @@ OnRangeSeekBarChangeListener<Integer> {
 
 		videoView.setLayoutParams(vv_lp);
 		videoView.setOnTouchListener(this);
+
+		mediaHolder.addView(mediaHolder_);
 		
-		surfaceHolder = videoView.getHolder();
+		new VideoLoader().execute("");
+	}
+	
+	 private class VideoLoader extends AsyncTask<String, Void, String> {
+
+	        @Override
+	        protected String doInBackground(String... params) {
+	        	initVideoLayout ();
+	            return "Executed";
+	        }
+
+	        @Override
+	        protected void onPostExecute(String result) {
+	        	
+	        }
+
+	        @Override
+	        protected void onPreExecute() {}
+
+	        @Override
+	        protected void onProgressUpdate(Void... values) {}
+	 };
+	 
+	private void initVideoLayout ()
+	{
 		
 		Log.d(LOG, "video view dims: " + videoView.getWidth() + " x " + videoView.getHeight());
 		Log.d(LOG, "surface holder dims: " + surfaceHolder.getSurfaceFrame().width() + " x " + surfaceHolder.getSurfaceFrame().height());
@@ -239,8 +265,6 @@ OnRangeSeekBarChangeListener<Integer> {
 		playPauseToggle.setOnClickListener(this);
 		playPauseToggle.setClickable(false);
 
-		mediaHolder.addView(mediaHolder_);
-		
 		
 		mServerThread = new Thread(new Runnable() {
 			
@@ -256,7 +280,17 @@ OnRangeSeekBarChangeListener<Integer> {
 					
 					String mType = media_.dcimEntry.mediaType;
 					
-					mVideoServerSocket = new ServerSocket (8888);
+					if (mVideoServerSocket != null)
+					{
+						try {
+							mVideoServerSocket.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					
+					mVideoServerSocket = new ServerSocket (LOCALHOST_PORT);
 					
 					
 					boolean keepRunning = true;
