@@ -143,7 +143,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		init = getIntent();
 
 		initLayout();
-		checkForUpdates();
 		launchMain();
 	}
 
@@ -173,8 +172,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			setNewLocale(currentLocale);
 			return;
 		}
-
-		checkForCrashes();
 
 		informaCam = (InformaCam) getApplication();
 
@@ -600,19 +597,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void updateData(IOrganization organization, Message message)
 	{
-	}
-
-	private final static String HOCKEY_APP_ID = "819d2172183272c9d84cd3a4dbd9296b";
-
-	private void checkForCrashes()
-	{
-		CrashManager.register(this, HOCKEY_APP_ID);
-	}
-
-	private void checkForUpdates()
-	{
-		// XXX: Remove this for store builds!
-		UpdateManager.register(this, HOCKEY_APP_ID);
 	}
 
 	@Override

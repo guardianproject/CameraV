@@ -58,6 +58,9 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 	private Handler mHandler;
 	
 	private final static String LOG = "InformaApp";
+
+	public final static String HOCKEY_APP_ID = "dafbc649fcf585d7867866d5375b6495";
+
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
