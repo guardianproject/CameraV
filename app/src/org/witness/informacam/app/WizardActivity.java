@@ -3,6 +3,7 @@ package org.witness.informacam.app;
 import java.util.Locale;
 
 import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
 
 import org.json.JSONException;
 import org.witness.informacam.InformaCam;
@@ -51,14 +52,20 @@ public class WizardActivity extends SherlockFragmentActivity implements WizardAc
 		ft.commit();
 		
 		checkForCrashes();
+		checkForUpdates();
 	}
 	
 
-	private final static String HOCKEY_APP_ID = "819d2172183272c9d84cd3a4dbd9296b";
 
 	private void checkForCrashes()
 	{
-		CrashManager.register(this, HOCKEY_APP_ID);
+		CrashManager.register(this, InformaActivity.HOCKEY_APP_ID);
+	}
+
+	private void checkForUpdates()
+	{
+		// XXX: Remove this for store builds!
+		UpdateManager.register(this, InformaActivity.HOCKEY_APP_ID);
 	}
 
 	@Override

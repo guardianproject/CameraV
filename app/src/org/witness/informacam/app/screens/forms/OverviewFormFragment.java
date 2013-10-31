@@ -148,16 +148,16 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 	}
 
 	private void initForms()
-	{
-		Logger.d(LOG, ((EditorActivityListener) a).media().asJson().toString());
-
-		IRegion overviewRegion = ((EditorActivityListener) a).media().getTopLevelRegion();
+	{		
+		IMedia media = ((EditorActivityListener) a).media();
+		
+		IRegion overviewRegion = media.getTopLevelRegion();
 		if (overviewRegion == null)
 		{
-			overviewRegion = ((EditorActivityListener) a).media().addRegion(a, null);
+			overviewRegion = media.addRegion(a, null);
 		}
 
-		for (IForm form : ((EditorActivityListener) a).media().getForms(a))
+		for (IForm form : media.getForms(a))
 		{
 			if (form.namespace.equals(Forms.FreeText.TAG))
 			{
@@ -172,7 +172,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 				if (form.namespace.equals(Forms.FreeText.TAG))
 				{
 					textForm = new IForm(form, a);
-					textForm.answerPath = new info.guardianproject.iocipher.File(((EditorActivityListener) a).media().rootFolder, "form_t"
+					textForm.answerPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_t"
 							+ System.currentTimeMillis()).getAbsolutePath();
 
 					overviewRegion.addForm(textForm);
@@ -181,7 +181,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		}
 
 		textForm.associate(notesAnswerHolder, Forms.FreeText.PROMPT);
-		notes.setText(notesAnswerHolder.getText());
+		notes.setText(notesAnswerHolder.getText());		
 		
 		updateAudioFiles();
 	}
