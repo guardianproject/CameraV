@@ -154,15 +154,14 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 
 		if (media.dcimEntry.mediaType.equals(MimeType.IMAGE))
 		{
-			IImage image = new IImage(media);
-			media = image;
+			media = new IImage(media);
 		}
 		else if (media.dcimEntry.mediaType.equals(MimeType.VIDEO))
 		{
-			IVideo video = new IVideo(media);
-			media = video;
+			media = new IVideo(media);
 		}
-		informaCam.informaService.associateMedia(media);
+		
+		//informaCam.informaService.associateMedia(media);
 
 		availableForms = FormUtility.getAvailableForms();
 	}
@@ -452,6 +451,20 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 
 	private boolean setActionMode(ActivityActionMode mode)
 	{
+		
+		if (mode == ActivityActionMode.Normal)
+		{
+			//if we are just in normal viewing mode, don't do any cache updating
+			informaCam.informaService.unassociateMedia();
+
+		}
+		else
+		{
+			//if we are in edit mode, then do cache updates
+			informaCam.informaService.associateMedia(media);
+
+		}
+		
 		// Already in action mode
 		if (mActionMode == mode)
 			return false;
