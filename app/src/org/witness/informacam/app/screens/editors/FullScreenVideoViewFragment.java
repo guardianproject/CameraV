@@ -1,10 +1,15 @@
 package org.witness.informacam.app.screens.editors;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.R;
@@ -34,6 +39,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -54,10 +60,11 @@ OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaContro
 OnRangeSeekBarChangeListener<Integer> {
 	IVideo media_;
 
-	MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+	//MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 	VideoView videoView;
 	SurfaceHolder surfaceHolder;
-
+	View mediaHolder_;
+	
 	MediaPlayer mediaPlayer;
 	MediaController mediaController;
 
@@ -66,25 +73,27 @@ OnRangeSeekBarChangeListener<Integer> {
 	ImageButton playPauseToggle;
 
 	Uri videoUri;
-	java.io.File videoFile;
-	
-	WaitPopup waitPopup;
+	//java.io.File videoFile;
 
 	long duration = 0L;
 	int currentCue = 1;
+	
+	Thread mServerThread;
 
+	ServerSocket mVideoServerSocket;
+	private final static int LOCALHOST_PORT = 8888;
+	private final static String LOCALHOST_VIDEO_PATH = "http://localhost:" + LOCALHOST_PORT + "/video";
+	
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
 		this.a = a;
 
 		media_ = new IVideo(((EditorActivityListener) a).media());
-		waitPopup = new WaitPopup(a, R.layout.popup_video_wait);
-		waitPopup.Show();
 	}
 	
 	private void initVideo() {
-		retriever.setDataSource(videoFile.getAbsolutePath());
+		//retriever.setDataSource(videoFile.getAbsolutePath());
 
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setOnCompletionListener(this);
@@ -122,8 +131,7 @@ OnRangeSeekBarChangeListener<Integer> {
 					initRegions();
 					
 					playPauseToggle.setClickable(true);
-					Logger.d(LOG, "video is now available.");
-					waitPopup.cancel();
+					
 				}
 			});
 			
@@ -182,16 +190,30 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		videoFile.delete();
+		//videoFile.delete();
+		
+		if (mVideoServerSocket != null)
+		{
+			try {
+				mVideoServerSocket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void initLayout() {
 		super.initLayout();
+		
 
-		View mediaHolder_ = LayoutInflater.from(getActivity()).inflate(R.layout.editors_video, null);
+		videoUri = Uri.parse(LOCALHOST_VIDEO_PATH);
 
+		mediaHolder_ = LayoutInflater.from(getActivity()).inflate(R.layout.editors_video, null);
+
+		
 		videoView = (VideoView) mediaHolder_.findViewById(R.id.video_view);
 
 		LayoutParams vv_lp = videoView.getLayoutParams();
@@ -200,8 +222,37 @@ OnRangeSeekBarChangeListener<Integer> {
 
 		videoView.setLayoutParams(vv_lp);
 		videoView.setOnTouchListener(this);
+
+		mediaHolder.addView(mediaHolder_);
 		
 		surfaceHolder = videoView.getHolder();
+		
+		new VideoLoader().execute("");
+	}
+	
+	 private class VideoLoader extends AsyncTask<String, Void, String> {
+
+	        @Override
+	        protected String doInBackground(String... params) {
+	        	initVideoLayout ();
+	            return "Executed";
+	        }
+
+	        @Override
+	        protected void onPostExecute(String result) {
+	        	
+	        }
+
+	        @Override
+	        protected void onPreExecute() {}
+
+	        @Override
+	        protected void onProgressUpdate(Void... values) {}
+	 };
+	 
+	private void initVideoLayout ()
+	{
+		
 		Log.d(LOG, "video view dims: " + videoView.getWidth() + " x " + videoView.getHeight());
 		Log.d(LOG, "surface holder dims: " + surfaceHolder.getSurfaceFrame().width() + " x " + surfaceHolder.getSurfaceFrame().height());
 		surfaceHolder.addCallback(this);
@@ -216,37 +267,86 @@ OnRangeSeekBarChangeListener<Integer> {
 		playPauseToggle.setOnClickListener(this);
 		playPauseToggle.setClickable(false);
 
-		mediaHolder.addView(mediaHolder_);
-
-		new Thread(new Runnable() {
-			@SuppressWarnings("unused")
-			@Override
+		
+		mServerThread = new Thread(new Runnable() {
+			
 			public void run() {
 				
 				// copy from iocipher to local :(
-				videoFile = new java.io.File(Storage.EXTERNAL_DIR, media_.dcimEntry.name);
+				//videoFile = new java.io.File(Storage.EXTERNAL_DIR, media_.dcimEntry.name);
 				
 				try
 				{
-					if(InformaCam.getInstance().ioService.saveBlob(InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileName, Type.IOCIPHER), videoFile, true)) {
+					
+					InputStream is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileName, Type.IOCIPHER);
+					
+					String mType = media_.dcimEntry.mediaType;
+					
+					if (mVideoServerSocket != null)
+					{
+						try {
+							mVideoServerSocket.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					
+					mVideoServerSocket = new ServerSocket (LOCALHOST_PORT);
+					
+					
+					boolean keepRunning = true;
+					
+					while (keepRunning)
+					{
+						try
+						{
+							Socket socket = mVideoServerSocket.accept();
+							
+							OutputStream os = socket.getOutputStream();
+							
+							IOUtils.write("HTTP/1.1 200\r\n",os);
+							IOUtils.write("Content-Type: " + mType + "\r\n",os);
+							IOUtils.write("Content-Length: " + media_.dcimEntry.size + "\r\n\r\n",os);
+							
+							byte[] buffer = new byte[2048];
+							int n = -1;
+							while ((n = is.read(buffer))!=-1)
+							{
+								os.write(buffer);
+							}
+							
+							os.close();
+						}
+						catch (IOException ioe)
+						{
+							mVideoServerSocket.close();
+						}
+					
+					}
+					/*
+					if(InformaCam.getInstance().ioService.saveBlob(is, videoFile, true)) {
 					
 						OnMediaScannedListener listener = null;
 
 						InformaCamMediaScanner icms = new InformaCamMediaScanner(getActivity(), videoFile, listener) {
 							@Override
 							public void onScanCompleted(String path, Uri uri) {
-								videoUri = uri;
-								initVideo();
+								
 							}
 						};
-					}
+					}*/
 				}
 				catch (IOException ioe)
 				{
 					Log.e(LOG,"error copying from iocipher to local",ioe);
 				}
 			}
-		}).start();
+		});
+		
+		mServerThread.start();
+		
+		
 	}
 	
 	@Override
@@ -266,6 +366,13 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.v(LOG, "surfaceCreated Called");
+		
+		surfaceHolder = holder;
+		
+		if (mediaPlayer == null)
+			initVideo();
+		
+		
 	}
 
 	@Override
@@ -433,5 +540,10 @@ OnRangeSeekBarChangeListener<Integer> {
 	public RectF getImageBounds()
 	{
 		return new RectF(0,0,videoView.getWidth(),videoView.getHeight());
+	}
+
+	@Override
+	public int getAudioSessionId() {
+		return 1;
 	}
 }

@@ -146,7 +146,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 
 		mediaId = getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA);
 		media = informaCam.mediaManifest.getById(mediaId);
-		if (media == null)
+		if (media == null || media.dcimEntry == null)
 		{
 			setResult(Activity.RESULT_CANCELED);
 			finish();
@@ -154,15 +154,14 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 
 		if (media.dcimEntry.mediaType.equals(MimeType.IMAGE))
 		{
-			IImage image = new IImage(media);
-			media = image;
+			media = new IImage(media);
 		}
 		else if (media.dcimEntry.mediaType.equals(MimeType.VIDEO))
 		{
-			IVideo video = new IVideo(media);
-			media = video;
+			media = new IVideo(media);
 		}
-		informaCam.informaService.associateMedia(media);
+		
+		//informaCam.informaService.associateMedia(media);
 
 		availableForms = FormUtility.getAvailableForms();
 	}
@@ -265,6 +264,11 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		case R.id.menu_share:
 		{
 			new SharePopup(this, media);
+			return true;
+		}
+		case R.id.menu_share_meta:
+		{
+			new SharePopup(this, media, false, true);
 			return true;
 		}
 		case R.id.menu_edit:
@@ -447,6 +451,20 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 
 	private boolean setActionMode(ActivityActionMode mode)
 	{
+		
+		if (mode == ActivityActionMode.Normal)
+		{
+			//if we are just in normal viewing mode, don't do any cache updating
+			informaCam.informaService.unassociateMedia();
+
+		}
+		else
+		{
+			//if we are in edit mode, then do cache updates
+			informaCam.informaService.associateMedia(media);
+
+		}
+		
 		// Already in action mode
 		if (mActionMode == mode)
 			return false;

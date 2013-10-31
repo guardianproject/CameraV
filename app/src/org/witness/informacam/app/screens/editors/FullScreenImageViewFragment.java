@@ -21,6 +21,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.media.ExifInterface;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -67,7 +68,34 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		mediaHolder_ = new ImageView(getActivity());
 		mediaHolder_.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		mediaHolder.addView(mediaHolder_);
+		
+		new BitmapLoader().execute("");
 
+	}
+	
+	 private class BitmapLoader extends AsyncTask<String, Void, String> {
+
+	        @Override
+	        protected String doInBackground(String... params) {
+	        	loadBitmap ();
+	            return "Executed";
+	        }
+
+	        @Override
+	        protected void onPostExecute(String result) {
+	        	setBitmap();
+	        }
+
+	        @Override
+	        protected void onPreExecute() {}
+
+	        @Override
+	        protected void onProgressUpdate(Void... values) {}
+	 };
+	
+	
+	 private void loadBitmap ()
+	 {
 		BitmapFactory.Options bfo = new BitmapFactory.Options();
 		bfo.inJustDecodeBounds = true;
 		bfo.inPreferredConfig = Bitmap.Config.RGB_565;
@@ -139,7 +167,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		}
 
 		originalBitmap = bitmap;
-		setBitmap();
+		
 	}
 
 	private void setBitmap() {

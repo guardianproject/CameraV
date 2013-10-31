@@ -72,9 +72,13 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	private final static String LOG = Constants.App.Home.LOG;
 
+	private static final int USE_USER_MANAGEMENT_FRAGMENT = 0;
+	
 	private static final int INDEX_MAIN = 0;
-	private static final int INDEX_GALLERY = 2;
-
+	private static final int INDEX_USER_MANAGEMENT = 1;
+	private static final int INDEX_GALLERY = 1 + USE_USER_MANAGEMENT_FRAGMENT;
+	private static final int INDEX_CAMERA = 2 + USE_USER_MANAGEMENT_FRAGMENT;
+	
 	private String lastLocale = null;
 
 	List<Fragment> fragments = new Vector<Fragment>();
@@ -126,19 +130,20 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		route = null;
 
 		mainFragment = (HomeFragment) Fragment.instantiate(this, HomeFragment.class.getName());
-		userManagementFragment = Fragment.instantiate(this, UserManagementFragment.class.getName());
+		if (USE_USER_MANAGEMENT_FRAGMENT == 1)
+			userManagementFragment = Fragment.instantiate(this, UserManagementFragment.class.getName());
 		galleryFragment = (GalleryFragment) Fragment.instantiate(this, GalleryFragment.class.getName());
 		cameraFragment = Fragment.instantiate(this, CameraFragment.class.getName());
 
 		fragments.add(mainFragment);
-		fragments.add(userManagementFragment);
+		if (USE_USER_MANAGEMENT_FRAGMENT == 1)
+			fragments.add(userManagementFragment);
 		fragments.add(galleryFragment);
 		fragments.add(cameraFragment);
 
 		init = getIntent();
 
 		initLayout();
-		checkForUpdates();
 		launchMain();
 	}
 
@@ -169,8 +174,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			return;
 		}
 
-		checkForCrashes();
-
 		informaCam = (InformaCam) getApplication();
 
 		if (init.getData() != null)
@@ -182,7 +185,10 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				public void run() {
 					IOrganization organization = informaCam.installICTD(ictdURI, mHandlerUI, HomeActivity.this);
 					if(organization != null) {
-						viewPager.setCurrentItem(0);
+						if (USE_USER_MANAGEMENT_FRAGMENT == 1)
+							viewPager.setCurrentItem(INDEX_USER_MANAGEMENT);
+						else
+							viewPager.setCurrentItem(INDEX_MAIN);
 					}
 					else
 					{
@@ -283,7 +289,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				mam.cancel();
 				informaCam.notificationsManifest.getById(notification._id).delete();
 
-				((ListAdapterListener) userManagementFragment).updateAdapter(Codes.Adapters.NOTIFICATIONS);
+				if (userManagementFragment != null)
+					((ListAdapterListener) userManagementFragment).updateAdapter(Codes.Adapters.NOTIFICATIONS);
 			}
 		};
 		actions.add(action);
@@ -396,7 +403,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				@Override
 				protected void onSelected()
 				{
-					new SharePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id), true);
+					new SharePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id), true, false);
 				}
 			});	
 			
@@ -510,7 +517,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		public void onPageSelected(int page)
 		{
 			// tabHost.setCurrentTab(page);
-			if (page == 3)
+			if (page == INDEX_CAMERA)
 			{
 				launchCamera();
 			} else {
@@ -596,19 +603,6 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	@Override
 	public void updateData(IOrganization organization, Message message)
 	{
-	}
-
-	private final static String HOCKEY_APP_ID = "819d2172183272c9d84cd3a4dbd9296b";
-
-	private void checkForCrashes()
-	{
-		CrashManager.register(this, HOCKEY_APP_ID);
-	}
-
-	private void checkForUpdates()
-	{
-		// XXX: Remove this for store builds!
-		UpdateManager.register(this, HOCKEY_APP_ID);
 	}
 
 	@Override

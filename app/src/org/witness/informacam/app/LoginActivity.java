@@ -1,6 +1,7 @@
 package org.witness.informacam.app;
 
 import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.utils.Constants;
@@ -46,7 +47,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		waiter = (ProgressBar) findViewById(R.id.login_waiter);
 		
-		this.checkForCrashes();
+		checkForCrashes();
+		checkForUpdates();
 	}
 
 	private void toggleStatus(boolean showButton) {
@@ -105,11 +107,16 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 	
 
-	private final static String HOCKEY_APP_ID = "819d2172183272c9d84cd3a4dbd9296b";
-
 	private void checkForCrashes()
 	{
-		CrashManager.register(this, HOCKEY_APP_ID);
+		CrashManager.register(this, InformaActivity.HOCKEY_APP_ID);
 	}
+
+	private void checkForUpdates()
+	{
+		// XXX: Remove this for store builds!
+		UpdateManager.register(this, InformaActivity.HOCKEY_APP_ID);
+	}
+
 	
 }
