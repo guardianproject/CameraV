@@ -242,26 +242,33 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 	{
 		switch (item.getItemId())
 		{
-		case R.id.menu_settings:
-		{
-			((HomeActivityListener) a).setLocale(PreferenceManager.getDefaultSharedPreferences(a).getString(Preferences.Keys.LANGUAGE, "0"));
-			Intent settingIntent = new Intent(a, PreferencesActivity.class);
-			a.startActivity(settingIntent);
-		}
-			return true;
-
-		case R.id.menu_panic:
-		{
-			Intent wipeIntent = new Intent(a, WipeActivity.class);
-			a.startActivityForResult(wipeIntent, Routes.WIPE);
-		}
-			return true;
-
-		case R.id.menu_select:
-		{
-			mActionMode = getSherlockActivity().startActionMode(mActionModeSelect);
-			return true;
-		}
+			case R.id.menu_settings:
+			{
+				((HomeActivityListener) a).setLocale(PreferenceManager.getDefaultSharedPreferences(a).getString(Preferences.Keys.LANGUAGE, "0"));
+				Intent settingIntent = new Intent(a, PreferencesActivity.class);
+				a.startActivity(settingIntent);
+			}
+				return true;
+	
+			case R.id.menu_panic:
+			{
+				Intent wipeIntent = new Intent(a, WipeActivity.class);
+				a.startActivityForResult(wipeIntent, Routes.WIPE);
+			}
+				return true;
+	
+			case R.id.menu_select:
+			{
+				mActionMode = getSherlockActivity().startActionMode(mActionModeSelect);
+				return true;
+			}
+				
+			case R.id.menu_lock:
+				
+				informaCam.attemptLogout();
+				getActivity().finish();
+				
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

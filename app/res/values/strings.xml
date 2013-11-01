@@ -96,6 +96,7 @@
     <string name="menu_select">Select</string>
     <string name="menu_panic">Panic</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_lock">Lock App</string>
 
     <string name="wizard_welcome">Welcome!</string>
     <string name="wizard_choose_language">Choose a language:</string>
