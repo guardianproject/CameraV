@@ -83,7 +83,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	List<Fragment> fragments = new Vector<Fragment>();
 	HomeFragment mainFragment;
-	Fragment userManagementFragment, galleryFragment, cameraFragment;
+	GalleryFragment galleryFragment;
+	Fragment userManagementFragment, cameraFragment;
 
 	boolean initGallery = false;
 
@@ -131,7 +132,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		mainFragment = (HomeFragment) Fragment.instantiate(this, HomeFragment.class.getName());
 		if (USE_USER_MANAGEMENT_FRAGMENT == 1)
 			userManagementFragment = Fragment.instantiate(this, UserManagementFragment.class.getName());
-		galleryFragment = Fragment.instantiate(this, GalleryFragment.class.getName());
+		galleryFragment = (GalleryFragment) Fragment.instantiate(this, GalleryFragment.class.getName());
 		cameraFragment = Fragment.instantiate(this, CameraFragment.class.getName());
 
 		fragments.add(mainFragment);
@@ -500,6 +501,11 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		@Override
 		public void onPageScrollStateChanged(int state)
 		{
+			if (state == ViewPager.SCROLL_STATE_IDLE && viewPager.getCurrentItem() == INDEX_GALLERY)
+			{
+				// Landed in the gallery. Make sure data is initialized/loaded now!
+				galleryFragment.initData();
+			}
 		}
 
 		@Override

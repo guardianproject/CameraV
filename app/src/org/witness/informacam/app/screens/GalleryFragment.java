@@ -32,6 +32,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
@@ -64,6 +65,8 @@ public class GalleryFragment extends SherlockFragment implements
 	private int mCurrentFiltering;
 	private MenuItem mMenuItemBatchOperations;
 	private View mEncodingMedia;
+	private boolean isDataInitialized;
+	private ProgressBar progressWait;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,7 +84,11 @@ public class GalleryFragment extends SherlockFragment implements
 				.findViewById(R.id.media_display_grid);
 		noMedia = (RelativeLayout) rootView
 				.findViewById(R.id.media_display_no_media);
-
+		noMedia.setVisibility(View.GONE);
+		
+		progressWait = (ProgressBar) rootView.findViewById(R.id.progressWait);
+		progressWait.setVisibility(View.VISIBLE);
+		
 		mEncodingMedia = rootView.findViewById(R.id.media_encoding);
 		mEncodingMedia.setVisibility(View.GONE);
 		mEncodingMedia.findViewById(R.id.ivClose).setOnClickListener(new View.OnClickListener() {
@@ -113,8 +120,7 @@ public class GalleryFragment extends SherlockFragment implements
 		updateAdapters();
 	}
 
-	private void initData() {
-
+	public void initData() {
 		mCurrentFiltering = 0; //All items
 		updateData();
 	}
@@ -168,10 +174,11 @@ public class GalleryFragment extends SherlockFragment implements
 		}
 	}
 	
-	private void updateData()
+	private void onMediaListAvailable()
 	{
-		getMediaList();
+		progressWait.setVisibility(View.GONE);
 		galleryGridAdapter = new GalleryGridAdapter(a, listMedia);
+		galleryGridAdapter.setInSelectionMode(isInMultiSelectMode);
 		if (mediaDisplayGrid != null) {
 			mediaDisplayGrid.setAdapter(galleryGridAdapter);
 			mediaDisplayGrid.setOnItemLongClickListener(this);
@@ -186,13 +193,32 @@ public class GalleryFragment extends SherlockFragment implements
 			if (noMedia != null)
 				noMedia.setVisibility(View.VISIBLE);
 		}
-
-		updateAdapters();			
+		updateAdapters();		
+	}
+	
+	private void updateData()
+	{
+		Thread getMediaListThread = new Thread(new Runnable()
+		{
+			@Override
+			public void run() {
+				getMediaList();
+				a.runOnUiThread(new Runnable()
+				{
+					@Override
+					public void run() {
+						onMediaListAvailable();
+					}
+				});
+			}
+		});
+		getMediaListThread.start();
 	}
 
 	public void toggleMultiSelectMode(boolean mode) {
 		isInMultiSelectMode = mode;
-		galleryGridAdapter.setInSelectionMode(isInMultiSelectMode);
+		if (galleryGridAdapter != null)
+			galleryGridAdapter.setInSelectionMode(isInMultiSelectMode);
 		toggleMultiSelectMode();
 	}
 
@@ -207,15 +233,15 @@ public class GalleryFragment extends SherlockFragment implements
 			// batchEditHolder.setVisibility(View.GONE);
 
 		}
-
-		galleryGridAdapter.update(listMedia);
+		
+		if (galleryGridAdapter != null)
+			galleryGridAdapter.update(listMedia);
 		// galleryListAdapter.update(listMedia);
 
 	}
 
 	private void initLayout(Bundle savedInstanceState) {
 		mediaDisplayGrid.removeAllViewsInLayout();
-		initData();
 		toggleMultiSelectMode(false);
 	}
 
@@ -278,7 +304,7 @@ public class GalleryFragment extends SherlockFragment implements
 
 	private void updateAdapters() {
 
-		if (listMedia != null)
+		if (listMedia != null && galleryGridAdapter != null)
 			this.galleryGridAdapter.update(listMedia);
 
 		if ((listMedia != null && listMedia.size() > 0) || this.mNumLoading > 0)
