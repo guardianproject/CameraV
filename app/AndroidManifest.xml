@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.ibanet.informacam"
     android:installLocation="preferExternal"
-    android:versionCode="29"
-    android:versionName="0.1.29a" >
+    android:versionCode="30"
+    android:versionName="0.1.30" >
 
     <uses-sdk
         android:minSdkVersion="10"
