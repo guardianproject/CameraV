@@ -2,7 +2,7 @@ package org.witness.informacam.app.screens.menus;
 
 import java.util.List;
 
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 import org.witness.informacam.app.utils.actions.ContextMenuAction;
 import org.witness.informacam.app.utils.adapters.ContextMenuSimpleAdapter;
 

@@ -6,8 +6,8 @@ import java.io.FileNotFoundException;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.EditorActivity;
-import org.witness.informacam.app.R;
 import org.witness.informacam.app.utils.Constants;
+import org.ibanet.informacam.R;
 import org.witness.informacam.app.utils.Constants.App.Editor;
 import org.witness.informacam.app.utils.Constants.App.Editor.Forms;
 import org.witness.informacam.app.utils.Constants.EditorActivityListener;

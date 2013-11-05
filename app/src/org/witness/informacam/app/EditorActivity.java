@@ -6,6 +6,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import org.ibanet.informacam.R;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.FullScreenViewFragment;
 import org.witness.informacam.app.screens.editors.FullScreenImageViewFragment;

@@ -11,6 +11,7 @@ import java.util.Vector;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
+import org.ibanet.informacam.R;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.CameraFragment;
 import org.witness.informacam.app.screens.GalleryFragment;

@@ -9,9 +9,9 @@ import org.witness.informacam.app.utils.Constants.Codes.Extras;
 import org.witness.informacam.app.utils.Constants.WizardActivityListener;
 import org.witness.informacam.app.views.DropdownSpinner;
 import org.witness.informacam.app.views.DropdownSpinner.OnSelectionChangedListener;
-import org.witness.informacam.app.R;
 import org.witness.informacam.models.utils.ILanguage;
 import org.witness.informacam.models.utils.ILanguageMap;
+import org.ibanet.informacam.R;
 
 import android.app.Activity;
 import android.content.Context;

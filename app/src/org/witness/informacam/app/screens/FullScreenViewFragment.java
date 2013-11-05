@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONException;
 import org.witness.informacam.app.EditorActivity;
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 import org.witness.informacam.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.informacam.app.screens.popups.PopupClickListener;
 import org.witness.informacam.app.utils.Constants;

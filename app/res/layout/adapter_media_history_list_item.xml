@@ -1,5 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/org.witness.informacam.app"
+    xmlns:app="http://schemas.android.com/apk/res/org.ibanet.informacam"
     android:id="@+id/RelativeLayout1"
     android:layout_width="fill_parent"
     android:layout_height="60dp" >

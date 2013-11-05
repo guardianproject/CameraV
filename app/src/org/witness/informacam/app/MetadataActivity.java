@@ -19,6 +19,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+import org.ibanet.informacam.R;
 
 
 public class MetadataActivity extends Activity {

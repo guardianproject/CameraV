@@ -1,6 +1,6 @@
 package org.witness.informacam.app.screens.wizard;
 
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 import org.witness.informacam.app.utils.Constants.Preferences;
 import org.witness.informacam.utils.Constants.WizardListener;
 

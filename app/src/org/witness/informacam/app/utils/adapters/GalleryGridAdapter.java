@@ -5,7 +5,7 @@ import info.guardianproject.odkparser.utils.QD;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.app.utils.Constants.App.Editor.Forms;
 import org.witness.informacam.app.views.RoundedImageView;

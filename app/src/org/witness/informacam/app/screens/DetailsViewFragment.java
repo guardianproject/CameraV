@@ -8,7 +8,7 @@ import org.witness.informacam.app.EditorActivity;
 import org.witness.informacam.app.screens.forms.OverviewFormFragment;
 import org.witness.informacam.app.utils.Constants.Codes;
 import org.witness.informacam.models.media.IMedia;
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
