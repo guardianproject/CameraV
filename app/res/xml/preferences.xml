@@ -28,4 +28,9 @@
             android:entries="@array/panicActionOptions_"
             android:entryValues="@array/panicActionOptions" />
         
+        <CheckBoxPreference
+            android:title="@string/prefs_gps_highres"
+            android:defaultValue="false"
+            android:key="prefGpsEnableHires"
+        	/>
 </PreferenceScreen>
