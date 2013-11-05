@@ -33,6 +33,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -48,6 +49,10 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 public class EditorActivity extends SherlockFragmentActivity implements EditorActivityListener, IRegionDisplayListener
 {
@@ -109,19 +114,22 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 
 			initToolbar();
 			updateUIBasedOnActionMode();
+
+			initLayout();
 		}
 		else
 		{
 			Toast.makeText(this, "Could not open image", Toast.LENGTH_LONG).show();
 			finish();
 		}
+		
+		
 	}
 
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-		initLayout();
 	}
 
 	@Override
@@ -269,6 +277,11 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		case R.id.menu_share_meta:
 		{
 			new SharePopup(this, media, false, true);
+			return true;
+		}
+		case R.id.menu_view_meta:
+		{
+			showMetaView();
 			return true;
 		}
 		case R.id.menu_edit:
@@ -638,5 +651,28 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		}
 	}
 	
+	public void showMetaView ()
+	{
+
+		String j3m = ((IMedia) media).buildJ3M(this, new Handler());
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		JsonParser jp = new JsonParser();
+		JsonElement je = jp.parse(j3m);
+		String prettyJsonString = gson.toJson(je);
+		
+		Intent intent = new Intent(this,MetadataActivity.class);
+		intent.putExtra("title", media._id);
+		intent.putExtra("text", prettyJsonString);
+		startActivity(intent);
+		
+		
+		/*
+		Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "InformaCam J3M DATA");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, prettyJsonString);
+        startActivity(Intent.createChooser(sharingIntent, "Share using..."));
+        */
+	}
 	
 }
