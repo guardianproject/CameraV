@@ -5,7 +5,7 @@ import info.guardianproject.odkparser.widgets.ODKSeekBar;
 import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.app.utils.Constants.App.Editor.Forms;
 import org.witness.informacam.models.forms.IForm;
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 
 import android.content.Context;
 import android.media.MediaPlayer;

@@ -1,6 +1,6 @@
 package org.witness.informacam.app.views;
 
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 import org.witness.informacam.app.utils.UIHelpers;
 
 import android.annotation.SuppressLint;

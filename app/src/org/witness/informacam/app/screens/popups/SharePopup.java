@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 import org.witness.informacam.app.utils.Constants.App;
 import org.witness.informacam.utils.Constants.Codes;
 import org.witness.informacam.app.utils.UIHelpers;

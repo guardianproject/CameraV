@@ -1,6 +1,6 @@
 package org.witness.informacam.app;
 
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 import org.witness.informacam.app.utils.Constants.Preferences;
 
 import android.content.SharedPreferences;

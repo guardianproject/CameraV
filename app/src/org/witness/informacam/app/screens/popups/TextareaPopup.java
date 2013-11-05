@@ -1,6 +1,6 @@
 package org.witness.informacam.app.screens.popups;
 
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 
 import android.app.Activity;
 import android.view.View;

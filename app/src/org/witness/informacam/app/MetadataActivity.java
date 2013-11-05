@@ -8,6 +8,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View;
 import android.widget.TextView;
+import org.ibanet.informacam.R;
 
 
 public class MetadataActivity extends Activity {

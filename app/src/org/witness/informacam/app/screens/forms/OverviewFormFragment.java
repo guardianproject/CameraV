@@ -24,7 +24,7 @@ import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.TimeUtility;
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 
 import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;

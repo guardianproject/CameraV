@@ -1,6 +1,6 @@
 package org.witness.informacam.app.utils.adapters;
 
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;

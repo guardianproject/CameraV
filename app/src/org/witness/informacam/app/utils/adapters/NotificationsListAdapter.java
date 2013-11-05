@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.App.Storage.Type;

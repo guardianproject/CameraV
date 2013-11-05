@@ -3,7 +3,7 @@ package org.witness.informacam.app;
 import org.witness.informacam.app.utils.Constants;
 import org.witness.informacam.app.utils.Constants.Preferences;
 import org.witness.informacam.app.utils.UIHelpers;
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;

@@ -6,7 +6,7 @@ import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.app.views.RoundedImageView;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IVideo;
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

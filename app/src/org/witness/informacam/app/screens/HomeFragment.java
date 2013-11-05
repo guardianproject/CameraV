@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.PreferencesActivity;
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 import org.witness.informacam.app.WipeActivity;
 import org.witness.informacam.app.screens.popups.AudioNoteSavedPopup;
 import org.witness.informacam.app.screens.popups.SharePopup;

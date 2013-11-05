@@ -1,6 +1,6 @@
 package org.witness.informacam.app.screens;
 
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 
 import android.app.Activity;
 import android.os.Bundle;

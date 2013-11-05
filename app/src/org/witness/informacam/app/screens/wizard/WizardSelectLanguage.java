@@ -6,7 +6,7 @@ import org.witness.informacam.app.utils.Constants.Codes;
 import org.witness.informacam.app.utils.Constants.WizardActivityListener;
 import org.witness.informacam.app.views.DropdownSpinner;
 import org.witness.informacam.app.views.DropdownSpinner.OnSelectionChangedListener;
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 
 import android.app.Activity;
 import android.content.Context;

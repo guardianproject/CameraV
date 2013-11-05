@@ -6,7 +6,7 @@ import java.util.Vector;
 
 import org.json.JSONException;
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 import org.witness.informacam.app.utils.Constants.App.Home;
 import org.witness.informacam.app.utils.Constants.HomeActivityListener;
 import org.witness.informacam.app.utils.Constants.Preferences;

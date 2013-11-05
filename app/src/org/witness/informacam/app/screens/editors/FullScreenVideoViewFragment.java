@@ -12,7 +12,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.app.R;
+import org.ibanet.informacam.R;
 import org.witness.informacam.app.screens.FullScreenViewFragment;
 import org.witness.informacam.app.screens.popups.WaitPopup;
 import org.witness.informacam.app.utils.Constants.EditorActivityListener;

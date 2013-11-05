@@ -5,6 +5,7 @@ import java.util.Locale;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
+import org.ibanet.informacam.R;
 import org.json.JSONException;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.wizard.WizardCreateDB;
