@@ -60,7 +60,7 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 	
 	private final static String LOG = "InformaApp";
 
-	public final static String HOCKEY_APP_ID = "dafbc649fcf585d7867866d5375b6495";
+	public final static String HOCKEY_APP_ID = "819d2172183272c9d84cd3a4dbd9296b";
 
 	
 	@Override
