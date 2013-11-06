@@ -255,8 +255,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void launchCamera() {
 		resetActionBar();
 		
-		//TODO Camera flags?
-		//toCamera.removeExtra(org.witness.informacam.utils.Constants.Codes.Extras.CA);
+		if (toCamera.hasExtra(org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE))
+			toCamera.removeExtra(org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE);
 		
 		//toCamera.putExtra(
 		//		 org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
