@@ -81,7 +81,11 @@ public class TagFormFragment extends Fragment implements ODKFormListener
 
 	public boolean initTag(final IRegion region)
 	{
+		// Reset
 		tagFormRoot.removeAllViews();
+		this.form = null;
+		this.formNote = null;
+		
 		if (!region.associatedForms.isEmpty())
 		{
 			for (IForm form : region.associatedForms)
