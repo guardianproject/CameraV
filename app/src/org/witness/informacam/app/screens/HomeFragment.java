@@ -320,19 +320,15 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 
 	private void updateAdapters()
 	{
-		if (listMedia != null)
-		{
+		if (this.mPhotoAdapter != null)
 			this.mPhotoAdapter.update(listMedia);
+		if (this.mPhotoPager != null)
+			mPhotoPager.invalidate();
 
-			if (this.mPhotoPager != null)
-				mPhotoPager.invalidate();
-
-			showSwipeHint();
+		showSwipeHint();
 			
-			if (this.mNoMedia != null)
-				mNoMedia.setVisibility(mPhotoAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
-		}
-
+		if (this.mNoMedia != null)
+			mNoMedia.setVisibility((mPhotoAdapter != null && mPhotoAdapter.getCount() > 0) ? View.GONE : View.VISIBLE);
 	}
 
 	@Override

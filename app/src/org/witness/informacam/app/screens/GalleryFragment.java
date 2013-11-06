@@ -329,8 +329,7 @@ public class GalleryFragment extends SherlockFragment implements
 	public void updateAdapter(int which) {
 		Log.d(LOG, "UPDATING OUR ADAPTERS");
 		if (a != null) {
-			getMediaList();
-			updateAdapters();
+			updateData();
 		}
 	}
 
