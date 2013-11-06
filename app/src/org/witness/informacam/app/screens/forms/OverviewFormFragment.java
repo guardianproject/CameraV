@@ -189,8 +189,11 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 			}
 		}
 
-		textForm.associate(notesAnswerHolder, Forms.FreeText.PROMPT);
-		notes.setText(notesAnswerHolder.getText());		
+		if (textForm != null)
+			textForm.associate(notesAnswerHolder, Forms.FreeText.PROMPT);
+		
+		if (notesAnswerHolder != null)
+			notes.setText(notesAnswerHolder.getText());		
 		
 		updateAudioFiles();
 	}
