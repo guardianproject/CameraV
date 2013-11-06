@@ -53,6 +53,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -255,8 +256,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void launchCamera() {
 		resetActionBar();
 		
-		//TODO Camera flags?
-		//toCamera.removeExtra(org.witness.informacam.utils.Constants.Codes.Extras.CA);
+		if (toCamera.hasExtra(org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE))
+			toCamera.removeExtra(org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE);
 		
 		//toCamera.putExtra(
 		//		 org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
@@ -390,7 +391,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				{
 					if ((informaCam.mediaManifest.getById(media._id)).delete())
 					{
-						((GalleryFragment) galleryFragment).updateAdapter(0);
+						updateAdapter(0);
 					}
 				}
 			});
@@ -610,11 +611,12 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	{
 		if (informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED)
 		{
-			Fragment f = fragments.get(viewPager.getCurrentItem());
-
-			if (f instanceof ListAdapterListener)
+			for (Fragment f : fragments)
 			{
-				((ListAdapterListener) f).updateAdapter(which);
+				if (f instanceof ListAdapterListener)
+				{
+					((ListAdapterListener) f).updateAdapter(which);
+				}
 			}
 		}
 	}
@@ -624,11 +626,13 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	{
 		if (informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED)
 		{
-			Fragment f = fragments.get(viewPager.getCurrentItem());
-
-			if (f instanceof ListAdapterListener)
+			Log.d(LOG, "Set pending: " + numPending + " and completed: " + numCompleted);
+			for (Fragment f : fragments)
 			{
-				((ListAdapterListener) f).setPending(numPending, numCompleted);
+				if (f instanceof ListAdapterListener)
+				{
+					((ListAdapterListener) f).setPending(numPending, numCompleted);
+				}
 			}
 		}
 

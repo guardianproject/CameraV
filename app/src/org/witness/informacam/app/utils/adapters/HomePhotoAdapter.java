@@ -105,9 +105,11 @@ public class HomePhotoAdapter extends PagerAdapter {
 	@Override
 	public int getItemPosition(Object object) {
 		IMedia m = (IMedia) ((View) object).getTag();
-		for (int i = 0; i < media.size(); i++) {
-			if (media.get(i) == m)
-				return i;
+		if (media != null) {
+			for (int i = 0; i < media.size(); i++) {
+				if (media.get(i) == m)
+					return i;
+			}
 		}
 		return POSITION_NONE;
 	}

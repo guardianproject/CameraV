@@ -67,7 +67,8 @@ public class GalleryFragment extends SherlockFragment implements
 	private View mEncodingMedia;
 	private boolean isDataInitialized;
 	private ProgressBar progressWait;
-
+	private int mNumLoading;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -178,6 +179,7 @@ public class GalleryFragment extends SherlockFragment implements
 	{
 		progressWait.setVisibility(View.GONE);
 		galleryGridAdapter = new GalleryGridAdapter(a, listMedia);
+		galleryGridAdapter.setNumLoading(mNumLoading);
 		galleryGridAdapter.setInSelectionMode(isInMultiSelectMode);
 		if (mediaDisplayGrid != null) {
 			mediaDisplayGrid.setAdapter(galleryGridAdapter);
@@ -327,8 +329,7 @@ public class GalleryFragment extends SherlockFragment implements
 	public void updateAdapter(int which) {
 		Log.d(LOG, "UPDATING OUR ADAPTERS");
 		if (a != null) {
-			getMediaList();
-			updateAdapters();
+			updateData();
 		}
 	}
 
@@ -455,8 +456,6 @@ public class GalleryFragment extends SherlockFragment implements
 			toggleMultiSelectMode(false);
 		}
 	};
-	private int mNumLoading;
-
 
 	@Override
 	public void setPending(final int numPending, final int numCompleted) {		
