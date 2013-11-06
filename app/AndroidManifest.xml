@@ -176,6 +176,8 @@
         <service android:name="org.witness.informacam.transport.GlobaleaksTransport"
             android:enabled="true"
             android:exported="false" />
+        <activity android:name="net.hockeyapp.android.UpdateActivity" />
+
     </application>
 
 </manifest>
