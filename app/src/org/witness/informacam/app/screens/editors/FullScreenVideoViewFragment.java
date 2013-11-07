@@ -44,6 +44,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
@@ -54,7 +55,7 @@ import android.widget.VideoView;
 import com.efor18.rangeseekbar.RangeSeekBar;
 import com.efor18.rangeseekbar.RangeSeekBar.OnRangeSeekBarChangeListener;
 
-public class FullScreenVideoViewFragment extends FullScreenViewFragment implements OnCompletionListener, 
+public class FullScreenVideoViewFragment extends FullScreenViewFragment implements OnCompletionListener,OnClickListener, 
 OnErrorListener, OnInfoListener, OnBufferingUpdateListener, OnPreparedListener, OnSeekCompleteListener,
 OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaController.MediaPlayerControl, 
 OnRangeSeekBarChangeListener<Integer> {
@@ -81,8 +82,8 @@ OnRangeSeekBarChangeListener<Integer> {
 	Thread mServerThread;
 
 	ServerSocket mVideoServerSocket;
-	private final static int LOCALHOST_PORT = 8888;
-	private final static String LOCALHOST_VIDEO_PATH = "http://localhost:" + LOCALHOST_PORT + "/video";
+	private int mLocalHostPort = 8000;
+//	private final static String LOCALHOST_VIDEO_PATH = "http://localhost:" + LOCALHOST_PORT + "/video";
 	
 	@Override
 	public void onAttach(Activity a) {
@@ -108,8 +109,8 @@ OnRangeSeekBarChangeListener<Integer> {
 		mediaPlayer.setScreenOnWhilePlaying(true);
 
 		try {
-			mediaPlayer.setDataSource(videoUri.toString());
-			Log.d(LOG, "setData done.");
+			videoUri = Uri.parse("http://localhost:" + mLocalHostPort + "/video");
+			mediaPlayer.setDataSource(videoUri.toString());			
 
 			mediaPlayer.setDisplay(surfaceHolder);
 			mediaPlayer.prepare();
@@ -190,12 +191,25 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		//videoFile.delete();
+
+		closeMediaServer();
+	}
+	
+	@Override
+	public void onPause() {
+
+		super.onPause();
 		
-		if (mVideoServerSocket != null)
+		closeMediaServer();
+	}
+
+	private void closeMediaServer()
+	{
+		if (mVideoServerSocket != null && mVideoServerSocket.isBound())
 		{
 			try {
 				mVideoServerSocket.close();
+				mVideoServerSocket = null;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -207,10 +221,8 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	protected void initLayout() {
 		super.initLayout();
-		
 
-		videoUri = Uri.parse(LOCALHOST_VIDEO_PATH);
-
+	
 		mediaHolder_ = LayoutInflater.from(getActivity()).inflate(R.layout.editors_video, null);
 
 		
@@ -230,7 +242,15 @@ OnRangeSeekBarChangeListener<Integer> {
 		new VideoLoader().execute("");
 	}
 	
-	 private class VideoLoader extends AsyncTask<String, Void, String> {
+	 @Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+		new VideoLoader().execute("");
+	}
+
+	private class VideoLoader extends AsyncTask<String, Void, String> {
 
 	        @Override
 	        protected String doInBackground(String... params) {
@@ -271,76 +291,52 @@ OnRangeSeekBarChangeListener<Integer> {
 		mServerThread = new Thread(new Runnable() {
 			
 			public void run() {
+	
+					
+				InputStream is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileName, Type.IOCIPHER);
 				
-				// copy from iocipher to local :(
-				//videoFile = new java.io.File(Storage.EXTERNAL_DIR, media_.dcimEntry.name);
+				String mType = media_.dcimEntry.mediaType;
 				
-				try
+				closeMediaServer();
+				
+				mLocalHostPort += ((int)(Math.random()*1000));
+				
+				
+				boolean keepRunning = true;
+				
+				while (keepRunning)
 				{
-					
-					InputStream is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileName, Type.IOCIPHER);
-					
-					String mType = media_.dcimEntry.mediaType;
-					
-					if (mVideoServerSocket != null)
+					try
 					{
-						try {
-							mVideoServerSocket.close();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						if (mVideoServerSocket == null)
+							mVideoServerSocket = new ServerSocket (mLocalHostPort);
+						
+						Socket socket = mVideoServerSocket.accept();
+						
+						OutputStream os = socket.getOutputStream();
+						
+						IOUtils.write("HTTP/1.1 200\r\n",os);
+						IOUtils.write("Content-Type: " + mType + "\r\n",os);
+						IOUtils.write("Content-Length: " + media_.dcimEntry.size + "\r\n\r\n",os);
+						
+						byte[] buffer = new byte[2048];
+						int n = -1;
+						while ((n = is.read(buffer))!=-1)
+						{
+							os.write(buffer);
 						}
+						
+						os.close();
 					}
-					
-					mVideoServerSocket = new ServerSocket (LOCALHOST_PORT);
-					
-					
-					boolean keepRunning = true;
-					
-					while (keepRunning)
+					catch (IOException ioe)
 					{
-						try
-						{
-							Socket socket = mVideoServerSocket.accept();
-							
-							OutputStream os = socket.getOutputStream();
-							
-							IOUtils.write("HTTP/1.1 200\r\n",os);
-							IOUtils.write("Content-Type: " + mType + "\r\n",os);
-							IOUtils.write("Content-Length: " + media_.dcimEntry.size + "\r\n\r\n",os);
-							
-							byte[] buffer = new byte[2048];
-							int n = -1;
-							while ((n = is.read(buffer))!=-1)
-							{
-								os.write(buffer);
-							}
-							
-							os.close();
-						}
-						catch (IOException ioe)
-						{
-							mVideoServerSocket.close();
-						}
-					
-					}
-					/*
-					if(InformaCam.getInstance().ioService.saveBlob(is, videoFile, true)) {
-					
-						OnMediaScannedListener listener = null;
 
-						InformaCamMediaScanner icms = new InformaCamMediaScanner(getActivity(), videoFile, listener) {
-							@Override
-							public void onScanCompleted(String path, Uri uri) {
-								
-							}
-						};
-					}*/
+						closeMediaServer();
+						break;
+					}
+				
 				}
-				catch (IOException ioe)
-				{
-					Log.e(LOG,"error copying from iocipher to local",ioe);
-				}
+					
 			}
 		});
 		
@@ -435,8 +431,7 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	@Override
 	public void onClick(View v) {
-		super.onClick(v);
-
+	
 		if(v == playPauseToggle) {
 			if(mediaPlayer.isPlaying()) {
 				pause();
