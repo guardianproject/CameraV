@@ -41,6 +41,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SharePopup {
 	LayoutInflater li;
@@ -120,6 +121,13 @@ public class SharePopup {
 					}
 				} else if(b.containsKey(Codes.Keys.UI.PROGRESS)) {
 					inProgressBar.setProgress(b.getInt(Codes.Keys.UI.PROGRESS));
+				}
+				else if (msg.what == -1)
+				{
+					inProgressBar.setProgress(100);
+					
+					String errMsg = b.getString("msg");
+					Toast.makeText(a,errMsg, Toast.LENGTH_LONG).show();
 				}
 				else if (msg.what == 81181)
 				{
@@ -215,10 +223,20 @@ public class SharePopup {
 			@Override
 			public void run() {
 				
-				if (shareJ3MOnly)
-					((IMedia) context).exportJ3M(a, h, encryptTo, sendTo != null);
-				else
-					((IMedia) context).export(a, h, encryptTo, sendTo != null);
+				try
+				{
+					if (shareJ3MOnly)
+						((IMedia) context).exportJ3M(a, h, encryptTo, sendTo != null);
+					else
+						((IMedia) context).export(a, h, encryptTo, sendTo != null);
+				}
+				catch (Exception e)
+				{
+					Message msg = new Message();
+					msg.what = -1;
+					msg.getData().putString("msg", "Error exporting metadata: " + e.getMessage());
+					h.sendMessage(msg);
+				}
 			}
 		}).start();
 	}

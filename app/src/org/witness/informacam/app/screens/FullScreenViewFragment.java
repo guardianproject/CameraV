@@ -38,7 +38,7 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
-public class FullScreenViewFragment extends Fragment implements OnClickListener, OnTouchListener, IRegionDisplayListener, ODKFormListener
+public class FullScreenViewFragment extends Fragment implements OnTouchListener, IRegionDisplayListener, ODKFormListener
 {
 	public enum Mode
 	{
@@ -114,6 +114,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 	{
 	}
 
+
 	protected void deleteTag()
 	{
 		((EditorActivityListener) a).media().removeRegion(currentRegion);
@@ -176,14 +177,7 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 			updateRegionDisplay();
 		}
 
-		h.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				((EditorActivityListener) getActivity()).waiter(false);
-			}
-		});
+		
 	}
 
 	protected void updateRegionDisplay()
@@ -224,26 +218,6 @@ public class FullScreenViewFragment extends Fragment implements OnClickListener,
 		}
 
 		updateRegionDisplay();
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
-		h.post(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				((EditorActivityListener) getActivity()).waiter(true);
-			}
-		});
-
-	}
-
-	@Override
-	public void onClick(View v)
-	{
 	}
 
 	@Override

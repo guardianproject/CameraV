@@ -263,16 +263,16 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		//		 org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
 		//		 org.witness.informacam.utils.Constants.App.Camera.Type.CAMERA);
 		route = toCamera;
-		routeUs();
+		startActivityForResult(toCamera, Routes.CAMERA);
 	}
 
 	@Override
 	public void launchEditor(IMedia media)
 	{
 		toEditor.putExtra(Codes.Extras.EDIT_MEDIA, media._id);
-
+		startActivityForResult(toEditor, Routes.EDITOR);
 		route = toEditor;
-		routeUs();
+
 	}
 
 	@Override
@@ -561,9 +561,10 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	public void onInformaStart(Intent intent)
 	{
 		// waiter.cancel();
-		doRouteUs();
+//		doRouteUs();
 	}
 
+	/*
 	private void routeUs()
 	{
 		if (informaCam.informaService != null)
@@ -585,7 +586,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				startActivityForResult(toCamera, Routes.CAMERA);
 			}
 		}
-	}
+	}*/
 
 	@Override
 	public void waiter(boolean show)
@@ -738,7 +739,8 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 				org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
 				org.witness.informacam.utils.Constants.App.Camera.Type.CAMCORDER);
 		route = toCamera;
-		routeUs();
+		startActivityForResult(toCamera, Routes.CAMERA);
+		
 	}
 
 	@Override
@@ -746,7 +748,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 	{
 		viewPager.setCurrentItem(INDEX_MAIN);
 		resetActionBar();
-		routeUs();
+		//routeUs();
 	}
 
 	private void resetActionBar()

@@ -2,6 +2,7 @@ package org.witness.informacam.app;
 
 import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
@@ -24,8 +25,10 @@ import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.utils.Constants.IRegionDisplayListener;
+import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
+import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -34,9 +37,11 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -54,7 +59,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-public class EditorActivity extends SherlockFragmentActivity implements EditorActivityListener, IRegionDisplayListener
+public class EditorActivity extends SherlockFragmentActivity implements EditorActivityListener, IRegionDisplayListener, InformaCamStatusListener, InformaCamEventListener
 {
 	Intent init;
 
@@ -92,7 +97,9 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		super.onCreate(savedInstanceState);
 
 		informaCam = (InformaCam) getApplication();
-
+		informaCam.setStatusListener(this);
+		informaCam.setEventListener(this);
+		
 		initData();
 
 		if (media.bitmapPreview != null)
@@ -169,8 +176,6 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			media = new IVideo(media);
 		}
 		
-		//informaCam.informaService.associateMedia(media);
-
 		availableForms = FormUtility.getAvailableForms();
 	}
 
@@ -281,7 +286,9 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		}
 		case R.id.menu_view_meta:
 		{
-			showMetaView();
+			Intent intent = new Intent(this,MetadataActivity.class);
+			intent.putExtra(Codes.Extras.EDIT_MEDIA, media._id);			
+			startActivity(intent);
 			return true;
 		}
 		case R.id.menu_edit:
@@ -340,13 +347,6 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 	{
 		((IRegionDisplayListener) fullscreenView).onSelected(regionDisplay);
 	}
-
-	@Override
-	public void waiter(boolean show)
-	{
-
-	}
-
 	@Override
 	public IMedia media()
 	{
@@ -467,14 +467,26 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		
 		if (mode == ActivityActionMode.Normal)
 		{
-			//if we are just in normal viewing mode, don't do any cache updating
-			informaCam.informaService.unassociateMedia();
+			
+			if (informaCam.informaService != null)
+			{
+				//if we are just in normal viewing mode, don't do any cache updating
+				informaCam.informaService.unassociateMedia();
+
+				informaCam.stopInforma();
+			}
+			
 
 		}
 		else
 		{
-			//if we are in edit mode, then do cache updates
-			informaCam.informaService.associateMedia(media);
+			
+
+			if (informaCam.informaService == null)
+			{
+				informaCam.startInforma();
+			}
+			
 
 		}
 		
@@ -650,29 +662,34 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			((TagFormFragment) formView).initTag(region);
 		}
 	}
-	
-	public void showMetaView ()
-	{
 
-		String j3m = ((IMedia) media).buildJ3M(this, new Handler());
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		JsonParser jp = new JsonParser();
-		JsonElement je = jp.parse(j3m);
-		String prettyJsonString = gson.toJson(je);
+
+	@Override
+	public void onUpdate(Message message) {
 		
-		Intent intent = new Intent(this,MetadataActivity.class);
-		intent.putExtra("title", media._id);
-		intent.putExtra("text", prettyJsonString);
-		startActivity(intent);
+	}
+
+	@Override
+	public void onInformaCamStart(Intent intent) {
 		
+	}
+
+	@Override
+	public void onInformaCamStop(Intent intent) {
 		
-		/*
-		Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "InformaCam J3M DATA");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, prettyJsonString);
-        startActivity(Intent.createChooser(sharingIntent, "Share using..."));
-        */
+	}
+
+	@Override
+	public void onInformaStop(Intent intent) {
+		
+	}
+
+	@Override
+	public void onInformaStart(Intent intent) {
+		
+		//if we are in edit mode, then do cache updates
+		informaCam.informaService.associateMedia(media);
+
 	}
 	
 }

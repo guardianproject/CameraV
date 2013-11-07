@@ -20,7 +20,6 @@ public class Constants {
 	public interface EditorActivityListener {
 		public IMedia media();
 		public void onMediaScanned(Uri uri);
-		public void waiter(boolean show);
 	}
 
 	public interface HomeActivityListener {
