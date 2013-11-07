@@ -9,11 +9,11 @@
     <ImageView
         android:id="@+id/ivLogo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/ic_logo" />
 
     <org.witness.informacam.app.views.CustomFontTextView
         android:id="@+id/textView1"
