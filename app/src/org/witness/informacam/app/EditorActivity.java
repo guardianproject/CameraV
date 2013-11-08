@@ -1,8 +1,6 @@
 package org.witness.informacam.app;
 
 import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
-
-import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
@@ -36,17 +34,18 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -54,10 +53,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 public class EditorActivity extends SherlockFragmentActivity implements EditorActivityListener, IRegionDisplayListener, InformaCamStatusListener, InformaCamEventListener
 {
@@ -73,6 +68,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 	private boolean toolbarBottomShown;
 	private View toolbarBtnWriteText;
 	private View toolbarBtnAddTags;
+	private ProgressBar waitLoading;
 	
 	ActionBar actionBar;
 	ImageButton abNavigationBack, abShareMedia;
@@ -108,21 +104,16 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			setContentView(R.layout.activity_editor);
 			
 			rootMain = (TwoViewSlideLayout) findViewById(R.id.root_main);
+			waitLoading = (ProgressBar) findViewById(R.id.waitLoading);
+			installDeferredLoader();
+
 			rootForm = findViewById(R.id.root_form);
 			toolbarBottom = findViewById(R.id.toolbar_bottom);
 			toolbarBottom.setVisibility(View.GONE);
 
 			actionBar = getSupportActionBar();
-//			actionBar.setDisplayShowCustomEnabled(false);
-//			actionBar.setDisplayShowHomeEnabled(false);
-//			actionBar.setDisplayShowTitleEnabled(true);
 
 			fm = getSupportFragmentManager();
-
-			initToolbar();
-			updateUIBasedOnActionMode();
-
-			initLayout();
 		}
 		else
 		{
@@ -133,22 +124,29 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		
 	}
 
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-	}
+	private void installDeferredLoader() {
+		final ViewTreeObserver vto = rootMain.getViewTreeObserver();
+		vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener()
+		{
+			@Override
+			public void onGlobalLayout()
+			{
+				ViewTreeObserver observer = vto;
+				if (!observer.isAlive())
+					observer = rootMain.getViewTreeObserver();
+				observer.removeGlobalOnLayoutListener(this);
 
-	@Override
-	public void onPause()
-	{
-		super.onPause();
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
+				rootMain.post(new Runnable()
+				{
+					@Override
+					public void run() {
+						availableForms = FormUtility.getAvailableForms();
+						initToolbar();
+						initLayout();
+					}
+				});
+			}
+		});
 	}
 
 	private void initData()
@@ -175,8 +173,6 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		{
 			media = new IVideo(media);
 		}
-		
-		availableForms = FormUtility.getAvailableForms();
 	}
 
 	private void initLayout()
@@ -691,5 +687,13 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		informaCam.informaService.associateMedia(media);
 
 	}
+
+	public void onFragmentResumed(Fragment f) {
+		waitLoading.setVisibility(View.GONE);
+	}
+
+
+	
+	
 	
 }
