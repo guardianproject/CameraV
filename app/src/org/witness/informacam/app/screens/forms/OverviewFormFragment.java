@@ -108,6 +108,15 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		if (this.a != null && this.a instanceof EditorActivity)
+		{
+			((EditorActivity) a).onFragmentResumed(this);
+		}
+	}
+
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
