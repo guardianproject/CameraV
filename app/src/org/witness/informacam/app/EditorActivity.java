@@ -458,6 +458,12 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 
 	protected final EditFormActionMode mActionModeEditForm = new EditFormActionMode();
 
+	private boolean detailsViewResumed;
+
+	private boolean fullScreenViewResumed;
+
+	private boolean formViewResumed;
+
 	private boolean setActionMode(ActivityActionMode mode)
 	{
 		
@@ -689,7 +695,14 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 	}
 
 	public void onFragmentResumed(Fragment f) {
-		waitLoading.setVisibility(View.GONE);
+		if (f == this.detailsView)
+			detailsViewResumed = true;
+		else if (f == this.fullscreenView)
+			fullScreenViewResumed = true;
+		else if (f == formView)
+			formViewResumed = true;
+		if (detailsViewResumed && fullScreenViewResumed && formViewResumed)
+			waitLoading.setVisibility(View.GONE);
 	}
 
 

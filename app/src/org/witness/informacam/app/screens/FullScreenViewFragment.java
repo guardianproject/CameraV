@@ -77,6 +77,14 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 		this.a = a;
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (this.a != null && this.a instanceof EditorActivity)
+		{
+			((EditorActivity) a).onFragmentResumed(this);
+		}
+	}
 	// @Override
 	// public void onDestroy() {
 	// if(isEditingForm) {

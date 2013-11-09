@@ -28,9 +28,11 @@ import org.witness.informacam.app.R;
 
 import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -94,6 +96,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		notesAnswerHolder.setText("");
 
 		rlAudio = rootView.findViewById(R.id.rlAudio);
+		rlAudio.setVisibility(View.GONE);
 		llAudioFiles = (LinearLayout) rootView.findViewById(R.id.llAudioFiles);
 		sbAudio = (SeekBar) rootView.findViewById(R.id.sbAudio);
 		sbAudio.setVisibility(View.GONE);
@@ -150,60 +153,42 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		
 		historyHeaderSubTitle.setText(getString(R.string.editor_image_taken, dateAndTime[0] + " " + dateAndTime[1]));
 
-		List<INotification> listNotifications = InformaCam.getInstance().notificationsManifest.sortBy(Models.INotificationManifest.Sort.DATE_DESC);
-		lvHistory.setAdapter(new MediaHistoryListAdapter(a, media._id, listNotifications));	
-		
-		if (lvHistory.getAdapter().getCount() == 0)
+		AsyncTask<Void, Void, List<INotification>> taskLoadNotifications = new AsyncTask<Void, Void, List<INotification>>()
 		{
-			historyHeader.setOnClickListener(null);
-			showHistoryIndicator.setVisibility(View.GONE);
-		}
-		else
-		{
-			historyHeader.setOnClickListener(this);
-			showHistoryIndicator.setVisibility(View.VISIBLE);
-		}
+			@Override
+			protected List<INotification> doInBackground(Void... params) {
+				return InformaCam.getInstance().notificationsManifest.sortBy(Models.INotificationManifest.Sort.DATE_DESC);
+			}
+
+			@Override
+			protected void onPostExecute(List<INotification> result) {
+				super.onPostExecute(result);
+				lvHistory.setAdapter(new MediaHistoryListAdapter(a, ((EditorActivityListener) a).media()._id, result));	
+				
+				if (lvHistory.getAdapter().getCount() == 0)
+				{
+					historyHeader.setOnClickListener(null);
+					showHistoryIndicator.setVisibility(View.GONE);
+				}
+				else
+				{
+					historyHeader.setOnClickListener(OverviewFormFragment.this);
+					showHistoryIndicator.setVisibility(View.VISIBLE);
+				}
+			}		
+		};
+		taskLoadNotifications.execute((Void)null);
 	}
 
 	private void initForms()
 	{		
-		IMedia media = ((EditorActivityListener) a).media();
-		
-		IRegion overviewRegion = media.getTopLevelRegion();
-		if (overviewRegion == null)
-		{
-			overviewRegion = media.addRegion(a, null);
-		}
-
-		for (IForm form : media.getForms(a))
-		{
-			if (form.namespace.equals(Forms.FreeText.TAG))
-			{
-				textForm = form;
-			}
-		}
-		if (textForm == null)
-		{
-			// No text form found, add one!
-			for (IForm form : ((EditorActivity) a).availableForms)
-			{
-				if (form.namespace.equals(Forms.FreeText.TAG))
-				{
-					textForm = new IForm(form, a);
-					textForm.answerPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_t"
-							+ System.currentTimeMillis()).getAbsolutePath();
-
-					overviewRegion.addForm(textForm);
-				}
-			}
-		}
-
+		textForm = getTextForm(false);
 		if (textForm != null)
 			textForm.associate(notesAnswerHolder, Forms.FreeText.PROMPT);
-		
+				
 		if (notesAnswerHolder != null)
 			notes.setText(notesAnswerHolder.getText());		
-		
+				
 		updateAudioFiles();
 	}
 
@@ -250,20 +235,13 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 
 		try
 		{
-			textForm.save(new info.guardianproject.iocipher.FileOutputStream(textForm.answerPath));
+			if (textForm != null)
+				textForm.save(new info.guardianproject.iocipher.FileOutputStream(textForm.answerPath));
 		}
 		catch (FileNotFoundException e)
 		{
 			Logger.e(LOG, e);
 		}
-
-		// try {
-		// audioForm.save(new
-		// info.guardianproject.iocipher.FileOutputStream(audioForm.answerPath));
-		// } catch (FileNotFoundException e) {
-		// Logger.e(LOG, e);
-		// }
-
 		return InformaCam.getInstance().mediaManifest.save();
 	}
 
@@ -275,12 +253,23 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		{
 			if (TextUtils.isEmpty(notesAnswerHolder.getText()))
 			{
-				deleteForm(textForm);
-				textForm = null;
+				if (textForm != null)	
+				{
+					deleteForm(textForm);
+					textForm = null;
+				}
 				this.initForms();
 			}
 			else
 			{
+				if (textForm == null)
+				{
+					// Need to create a text form
+					textForm = getTextForm(true);
+					Editable text = notesAnswerHolder.getText();	
+					textForm.associate(notesAnswerHolder, Forms.FreeText.PROMPT);
+					notesAnswerHolder.setText(text);
+				}
 				textForm.answer(Forms.FreeText.PROMPT);
 				notes.setText(notesAnswerHolder.getText());
 			}
@@ -480,5 +469,41 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 				}
 			}
 		}
+	}
+	
+	public IForm getTextForm(boolean createIfNotFound)
+	{
+		IForm returnForm = null;
+		
+		IMedia media = ((EditorActivityListener) a).media();
+		for (IForm form : media.getForms(a))
+		{
+			if (form.namespace.equals(Forms.FreeText.TAG))
+			{
+				returnForm = form;
+			}
+		}
+		
+		if (returnForm == null && createIfNotFound)
+		{
+			// No text form found, add one!
+			IRegion overviewRegion = media.getTopLevelRegion();
+			if (overviewRegion == null)
+			{
+				overviewRegion = media.addRegion(a, null);
+			}
+			for (IForm form : ((EditorActivity) a).availableForms)
+			{
+				if (form.namespace.equals(Forms.FreeText.TAG))
+				{
+					returnForm = new IForm(form, a);
+					returnForm.answerPath = new info.guardianproject.iocipher.File(media.rootFolder, "form_t"
+							+ System.currentTimeMillis()).getAbsolutePath();
+
+					overviewRegion.addForm(returnForm);
+				}
+			}
+		}
+		return returnForm;
 	}
 }

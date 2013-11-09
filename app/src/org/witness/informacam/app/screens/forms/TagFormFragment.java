@@ -73,6 +73,15 @@ public class TagFormFragment extends Fragment implements ODKFormListener
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		if (this.a != null && this.a instanceof EditorActivity)
+		{
+			((EditorActivity) a).onFragmentResumed(this);
+		}
+	}
+	
+	@Override
 	public void onDetach()
 	{
 		super.onDetach();
