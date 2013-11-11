@@ -47,6 +47,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.efor18.rangeseekbar.RangeSeekBar;
@@ -80,14 +81,12 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	ServerSocket mVideoServerSocket;
 	private int mLocalHostPort = 9999;
-	ProgressBar mWaitLoading;
 	
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
 		this.a = a;
 		media_ = new IVideo(((EditorActivityListener) a).media());
-		mWaitLoading = (ProgressBar) a.findViewById(R.id.waitLoading);
 		
 		
 	}
@@ -100,15 +99,6 @@ OnRangeSeekBarChangeListener<Integer> {
 		
 		closeMediaServer();
 		
-		if (mVideoServerSocket == null)
-			try {
-				mVideoServerSocket = new ServerSocket (mLocalHostPort);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return;
-			}
-		
 		
 		mServerThread = new Thread(new Runnable() {
 			
@@ -119,7 +109,18 @@ OnRangeSeekBarChangeListener<Integer> {
 				{
 					try
 					{
-					
+
+						if (mVideoServerSocket == null)
+						{
+							try {
+								mVideoServerSocket = new ServerSocket (mLocalHostPort);
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								return;
+							}
+						}
+						
 						Socket socket = mVideoServerSocket.accept();
 						
 						OutputStream os = socket.getOutputStream();
@@ -158,8 +159,6 @@ OnRangeSeekBarChangeListener<Integer> {
 	
 	private void initVideo() {
 
-		mWaitLoading.setVisibility(View.VISIBLE);
-		
 		mediaPlayer = new MediaPlayer();
 		
 		mediaPlayer.setOnCompletionListener(this);
@@ -298,6 +297,8 @@ OnRangeSeekBarChangeListener<Integer> {
 		playPauseToggle = (ImageButton) mediaHolder_.findViewById(R.id.video_play_pause_toggle);
 		playPauseToggle.setOnClickListener(this);
 		playPauseToggle.setClickable(false);
+		playPauseToggle.setVisibility(View.GONE);
+		
 
 		
 		
@@ -309,6 +310,11 @@ OnRangeSeekBarChangeListener<Integer> {
 		super.onResume();
 		
 		new VideoLoader().execute("");
+		
+
+		if (a != null)
+		Toast.makeText(a, "Loading video. Please wait..." , Toast.LENGTH_LONG).show();
+		
 	}
 
 	private class VideoLoader extends AsyncTask<String, Void, String> {
@@ -329,12 +335,12 @@ OnRangeSeekBarChangeListener<Integer> {
 				videoSeekBar.hideEndpoints();
 				initRegions();
 				
+				playPauseToggle.setVisibility(View.VISIBLE);
+				
 				playPauseToggle.setClickable(true);
 				
 				updateRegionView(mediaPlayer.getCurrentPosition());
 				
-				mWaitLoading.setVisibility(View.GONE);
-	        	
 	        }
 
 	        @Override
