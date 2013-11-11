@@ -14,22 +14,17 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.R;
 import org.witness.informacam.app.screens.FullScreenViewFragment;
-import org.witness.informacam.app.screens.popups.WaitPopup;
 import org.witness.informacam.app.utils.Constants.EditorActivityListener;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.media.IRegionBounds;
 import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.models.media.IVideoRegion;
-import org.witness.informacam.storage.InformaCamMediaScanner;
-import org.witness.informacam.storage.InformaCamMediaScanner.OnMediaScannedListener;
 import org.witness.informacam.ui.editors.IRegionDisplay;
-import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.Logger;
 
 import android.app.Activity;
 import android.graphics.RectF;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -40,6 +35,7 @@ import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -50,6 +46,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.VideoView;
 
 import com.efor18.rangeseekbar.RangeSeekBar;
@@ -82,242 +79,57 @@ OnRangeSeekBarChangeListener<Integer> {
 	Thread mServerThread;
 
 	ServerSocket mVideoServerSocket;
-	private int mLocalHostPort = 8000;
-//	private final static String LOCALHOST_VIDEO_PATH = "http://localhost:" + LOCALHOST_PORT + "/video";
+	private int mLocalHostPort = 9999;
+	ProgressBar mWaitLoading;
 	
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
 		this.a = a;
-
 		media_ = new IVideo(((EditorActivityListener) a).media());
+		mWaitLoading = (ProgressBar) a.findViewById(R.id.waitLoading);
+		
+		
 	}
 	
-	private void initVideo() {
-		//retriever.setDataSource(videoFile.getAbsolutePath());
+	private void initMediaServer ()
+	{
 
-		mediaPlayer = new MediaPlayer();
-		mediaPlayer.setOnCompletionListener(this);
-		mediaPlayer.setOnErrorListener(this);
-		mediaPlayer.setOnInfoListener(this);
-		mediaPlayer.setOnPreparedListener(this);
-		mediaPlayer.setOnSeekCompleteListener(this);
-		mediaPlayer.setOnVideoSizeChangedListener(this);
-		mediaPlayer.setOnBufferingUpdateListener(this);
 
-		mediaPlayer.setLooping(false);
-		mediaPlayer.setScreenOnWhilePlaying(true);
-
-		try {
-			videoUri = Uri.parse("http://localhost:" + mLocalHostPort + "/video");
-			mediaPlayer.setDataSource(videoUri.toString());			
-
-			mediaPlayer.setDisplay(surfaceHolder);
-			mediaPlayer.prepare();
-			duration = mediaPlayer.getDuration();
-
-			mediaPlayer.start();
-			mediaPlayer.setVolume(1f, 1f);
-			mediaPlayer.seekTo(currentCue);
-			mediaPlayer.pause();
-			
-			
-			h.post(new Runnable() {
-				@Override
-				public void run() {
-					RangeSeekBar<Integer> rsb = videoSeekBar.init(mediaPlayer);
-					rsb.setOnRangeSeekBarChangeListener(FullScreenVideoViewFragment.this);
-					endpointHolder.addView(rsb);
-					videoSeekBar.hideEndpoints();
-					initRegions();
-					
-					playPauseToggle.setClickable(true);
-					
-				}
-			});
-			
-			h.post(new Runnable() {
-				@Override
-				public void run() {
-					updateRegionView(mediaPlayer.getCurrentPosition());
-					h.postDelayed(this, 1000L);
-				}
-			});
-			
-		} catch (IllegalArgumentException e) {
-			Log.e(LOG, "setDataSource error: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			Log.e(LOG, "setDataSource error: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			Log.e(LOG, "setDataSource error: " + e.getMessage());
-			e.printStackTrace();
-
-		}
-	}
-	
-	private void updateRegionView(final long timestamp) {
-		a.runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if(mediaPlayer.isPlaying()) {
-					for(IRegion r : ((EditorActivityListener) a).media().associatedRegions) {
-						if(r.bounds.displayWidth != 0 && r.bounds.displayHeight != 0) {
-							try {
-								IRegionDisplay rd = (IRegionDisplay) mediaHolder.getChildAt(r.getRegionDisplay().indexOnScreen);
-								Log.d(LOG, "OK HAVE RegionDisplay");
-								
-								if(timestamp >= r.bounds.startTime && timestamp <= r.bounds.endTime) {
-									rd.setVisibility(View.VISIBLE);
-									
-									// TODO: update region display with new bounds from trail
-									IRegionBounds rb = ((IVideoRegion) r).getBoundsAtTime(mediaPlayer.getCurrentPosition());
-									Log.d(LOG, rb.asJson().toString());
-								} else {
-									rd.setVisibility(View.GONE);
-								}
-								
-							} catch(NullPointerException e) {
-								Logger.e(LOG, e);
-							}
-						}
-					}
-				}
-			}
-		});
-	}
-	
-	@Override
-	public void onDetach() {
-		super.onDetach();
-
-		closeMediaServer();
-	}
-	
-	@Override
-	public void onPause() {
-
-		super.onPause();
+		
 		
 		closeMediaServer();
-	}
-
-	private void closeMediaServer()
-	{
-		if (mVideoServerSocket != null && mVideoServerSocket.isBound())
-		{
+		
+		if (mVideoServerSocket == null)
 			try {
-				mVideoServerSocket.close();
-				mVideoServerSocket = null;
+				mVideoServerSocket = new ServerSocket (mLocalHostPort);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return;
 			}
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	protected void initLayout() {
-		super.initLayout();
-
-	
-		mediaHolder_ = LayoutInflater.from(getActivity()).inflate(R.layout.editors_video, null);
-
 		
-		videoView = (VideoView) mediaHolder_.findViewById(R.id.video_view);
-
-		LayoutParams vv_lp = videoView.getLayoutParams();
-		vv_lp.width = dims[0];
-		vv_lp.height = (int) (((float) media_.dcimEntry.exif.height) / ((float) media_.dcimEntry.exif.width) * dims[0]);
-
-		videoView.setLayoutParams(vv_lp);
-		videoView.setOnTouchListener(this);
-
-		mediaHolder.addView(mediaHolder_);
-		
-		surfaceHolder = videoView.getHolder();
-		
-		new VideoLoader().execute("");
-	}
-	
-	 @Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		
-		new VideoLoader().execute("");
-	}
-
-	private class VideoLoader extends AsyncTask<String, Void, String> {
-
-	        @Override
-	        protected String doInBackground(String... params) {
-	        	initVideoLayout ();
-	            return "Executed";
-	        }
-
-	        @Override
-	        protected void onPostExecute(String result) {
-	        	
-	        }
-
-	        @Override
-	        protected void onPreExecute() {}
-
-	        @Override
-	        protected void onProgressUpdate(Void... values) {}
-	 };
-	 
-	private void initVideoLayout ()
-	{
-		
-		Log.d(LOG, "video view dims: " + videoView.getWidth() + " x " + videoView.getHeight());
-		Log.d(LOG, "surface holder dims: " + surfaceHolder.getSurfaceFrame().width() + " x " + surfaceHolder.getSurfaceFrame().height());
-		surfaceHolder.addCallback(this);
-		surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		
-		videoControlsHolder = (LinearLayout) mediaHolder_.findViewById(R.id.video_controls_holder);		
-
-		videoSeekBar = (VideoSeekBar) mediaHolder_.findViewById(R.id.video_seek_bar);
-		endpointHolder = (LinearLayout) mediaHolder_.findViewById(R.id.video_seek_bar_endpoint_holder);
-		
-		playPauseToggle = (ImageButton) mediaHolder_.findViewById(R.id.video_play_pause_toggle);
-		playPauseToggle.setOnClickListener(this);
-		playPauseToggle.setClickable(false);
-
 		
 		mServerThread = new Thread(new Runnable() {
 			
 			public void run() {
-	
-					
-				InputStream is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileName, Type.IOCIPHER);
-				
-				String mType = media_.dcimEntry.mediaType;
-				
-				closeMediaServer();
-				
-				mLocalHostPort += ((int)(Math.random()*1000));
-				
-				
 				boolean keepRunning = true;
-				
+
 				while (keepRunning)
 				{
 					try
 					{
-						if (mVideoServerSocket == null)
-							mVideoServerSocket = new ServerSocket (mLocalHostPort);
-						
+					
 						Socket socket = mVideoServerSocket.accept();
 						
 						OutputStream os = socket.getOutputStream();
-						
+						String mType = media_.dcimEntry.mediaType;
+
 						IOUtils.write("HTTP/1.1 200\r\n",os);
 						IOUtils.write("Content-Type: " + mType + "\r\n",os);
 						IOUtils.write("Content-Length: " + media_.dcimEntry.size + "\r\n\r\n",os);
+						InputStream is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileName, Type.IOCIPHER);
+						
 						
 						byte[] buffer = new byte[2048];
 						int n = -1;
@@ -342,8 +154,196 @@ OnRangeSeekBarChangeListener<Integer> {
 		
 		mServerThread.start();
 		
+	}
+	
+	private void initVideo() {
+
+		mWaitLoading.setVisibility(View.VISIBLE);
+		
+		mediaPlayer = new MediaPlayer();
+		
+		mediaPlayer.setOnCompletionListener(this);
+		mediaPlayer.setOnErrorListener(this);
+		mediaPlayer.setOnInfoListener(this);
+		mediaPlayer.setOnPreparedListener(this);
+		mediaPlayer.setOnSeekCompleteListener(this);
+		mediaPlayer.setOnVideoSizeChangedListener(this);
+		mediaPlayer.setOnBufferingUpdateListener(this);
+
+		mediaPlayer.setLooping(false);
+
+		try {
+			
+
+			if (mServerThread == null)
+			{
+				initMediaServer();
+			}
+			
+			videoUri = Uri.parse("http://localhost:" + mLocalHostPort + "/video");
+			mediaPlayer.setDataSource(videoUri.toString());			
+
+			mediaPlayer.prepare();
+			duration = mediaPlayer.getDuration();
+
+			mediaPlayer.setScreenOnWhilePlaying(true);
+			mediaPlayer.start();
+			mediaPlayer.setVolume(1f, 1f);
+			mediaPlayer.seekTo(currentCue);
+			mediaPlayer.pause();
+			
+			
+			
+		} catch (IllegalArgumentException e) {
+			Log.e(LOG, "setDataSource error: " + e.getMessage());
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			Log.e(LOG, "setDataSource error: " + e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.e(LOG, "setDataSource error: " + e.getMessage());
+			e.printStackTrace();
+
+		}
+	}
+	
+	private void updateRegionView(final long timestamp) {
+		
+		if (media_ == null || media_.associatedRegions == null || mediaHolder == null)
+			return;
+		
+		for(IRegion r : media_.associatedRegions) {
+			if(r.getRegionDisplay() != null && r.bounds.displayWidth != 0 && r.bounds.displayHeight != 0) {
+				
+				IRegionDisplay rd = (IRegionDisplay) mediaHolder.getChildAt(r.getRegionDisplay().indexOnScreen);
+				
+				if(timestamp >= r.bounds.startTime && timestamp <= r.bounds.endTime) {
+					rd.setVisibility(View.VISIBLE);
+					
+					// TODO: update region display with new bounds from trail
+					IRegionBounds rb = ((IVideoRegion) r).getBoundsAtTime(mediaPlayer.getCurrentPosition());
+					Log.d(LOG, rb.asJson().toString());
+				} else {
+					rd.setVisibility(View.GONE);
+				}
+				
+			}
+		}
+			
+	}
+	
+	@Override
+	public void onDetach() {
+		super.onDetach();
+
+		closeMediaServer();
+	}
+	
+	@Override
+	public void onPause() {
+
+		super.onPause();
+		
+		closeMediaServer();
+	}
+
+	private synchronized void closeMediaServer()
+	{
+		if (mVideoServerSocket != null && mVideoServerSocket.isBound())
+		{
+			try {
+				mVideoServerSocket.close();
+				mVideoServerSocket = null;
+				mServerThread = null;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	protected void initLayout() {
+		super.initLayout();
+	
+		mediaHolder_ = LayoutInflater.from(getActivity()).inflate(R.layout.editors_video, null);
+
+		videoView = (VideoView) mediaHolder_.findViewById(R.id.video_view);
+
+		LayoutParams vv_lp = videoView.getLayoutParams();
+		vv_lp.width = dims[0];
+		vv_lp.height = (int) (((float) media_.dcimEntry.exif.height) / ((float) media_.dcimEntry.exif.width) * dims[0]);
+
+		videoView.setLayoutParams(vv_lp);
+		videoView.setOnTouchListener(this);
+
+		mediaHolder.addView(mediaHolder_);
+		
+		surfaceHolder = videoView.getHolder();
+		
+		Log.d(LOG, "surface holder dims: " + surfaceHolder.getSurfaceFrame().width() + " x " + surfaceHolder.getSurfaceFrame().height());
+		surfaceHolder.addCallback(this);
+		
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		
+		Log.d(LOG, "video view dims: " + videoView.getWidth() + " x " + videoView.getHeight());
+		
+		videoControlsHolder = (LinearLayout) mediaHolder_.findViewById(R.id.video_controls_holder);		
+
+		videoSeekBar = (VideoSeekBar) mediaHolder_.findViewById(R.id.video_seek_bar);
+		endpointHolder = (LinearLayout) mediaHolder_.findViewById(R.id.video_seek_bar_endpoint_holder);
+		
+		playPauseToggle = (ImageButton) mediaHolder_.findViewById(R.id.video_play_pause_toggle);
+		playPauseToggle.setOnClickListener(this);
+		playPauseToggle.setClickable(false);
+
+		
 		
 	}
+	
+	 @Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+		new VideoLoader().execute("");
+	}
+
+	private class VideoLoader extends AsyncTask<String, Void, String> {
+
+	        @Override
+	        protected String doInBackground(String... params) {
+	        	initVideo();
+	            return "Executed";
+	        }
+
+	        @Override
+	        protected void onPostExecute(String result) {
+	        	
+
+				RangeSeekBar<Integer> rsb = videoSeekBar.init(mediaPlayer);
+				rsb.setOnRangeSeekBarChangeListener(FullScreenVideoViewFragment.this);
+				endpointHolder.addView(rsb);
+				videoSeekBar.hideEndpoints();
+				initRegions();
+				
+				playPauseToggle.setClickable(true);
+				
+				updateRegionView(mediaPlayer.getCurrentPosition());
+				
+				mWaitLoading.setVisibility(View.GONE);
+	        	
+	        }
+
+	        @Override
+	        protected void onPreExecute() {}
+
+	        @Override
+	        protected void onProgressUpdate(Void... values) {}
+	 };
+	 
 	
 	@Override
 	public void onSelected(IRegionDisplay regionDisplay) {		
@@ -352,11 +352,17 @@ OnRangeSeekBarChangeListener<Integer> {
 		
 		setCurrentRegion(regionDisplay.parent);
 		videoSeekBar.showEndpoints((IVideoRegion) regionDisplay.parent);
+		
+		mediaPlayer.seekTo((int) regionDisplay.bounds.startTime);
+		
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.v(LOG, "surfaceChanged called");
+		
+		
+		
 	}
 
 	@Override
@@ -364,11 +370,10 @@ OnRangeSeekBarChangeListener<Integer> {
 		Log.v(LOG, "surfaceCreated Called");
 		
 		surfaceHolder = holder;
-		
+		mediaPlayer.setDisplay(surfaceHolder);		
+
 		if (mediaPlayer == null)
-			initVideo();
-		
-		
+			new VideoLoader().execute("");
 	}
 
 	@Override
@@ -384,8 +389,7 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	@Override
 	public void onSeekComplete(MediaPlayer mp) {
-		Log.v(LOG, "onSeekComplete called (and at position " + mediaPlayer.getCurrentPosition() + ")");
-		updateRegionView(mediaPlayer.getCurrentPosition());
+	
 	}
 
 	@Override

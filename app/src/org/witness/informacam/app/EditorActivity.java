@@ -701,8 +701,10 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			fullScreenViewResumed = true;
 		else if (f == formView)
 			formViewResumed = true;
+		
 		if (detailsViewResumed && fullScreenViewResumed && formViewResumed)
-			waitLoading.setVisibility(View.GONE);
+			if (!(f instanceof FullScreenVideoViewFragment))
+				waitLoading.setVisibility(View.GONE);
 	}
 
 
