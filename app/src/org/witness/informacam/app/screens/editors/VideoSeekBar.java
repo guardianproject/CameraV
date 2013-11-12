@@ -19,27 +19,30 @@ public class VideoSeekBar extends SeekBar implements OnSeekBarChangeListener {
 	int thumbInactive = R.drawable.ic_videol_mark_un;
 	int thumbActive = R.drawable.ic_videol_mark_selected;
 	
-	private boolean isPlaying = false;
 	public boolean isEditing = false;
 	
 	RangeSeekBar<Integer> endpointBar;
 	Context context;
 	
 	private final static String LOG = App.Editor.LOG;
+	private boolean keepRunning = true;
 	
 	private Runnable progressRunnable = new Runnable() {
 		@Override
 		public void run() {
 			
-			if (mp != null)
+			try
 			{
-				if(isPlaying) {
-					VideoSeekBar.this.setProgress(mp.getCurrentPosition());
+				if (keepRunning && mp != null)
+				{
+					setProgress(mp.getCurrentPosition());
+					postDelayed(progressRunnable, 1000L);
 				}
 			}
-				
-			postDelayed(progressRunnable, 1000L);
-			
+			catch (IllegalStateException ise)
+			{
+				Log.d(LOG,"player not in proper state",ise);
+			}
 		}
 	};
 	
@@ -65,12 +68,15 @@ public class VideoSeekBar extends SeekBar implements OnSeekBarChangeListener {
 	}
 	
 	public void play() {
-		isPlaying = true;
 		hideEndpoints();
 	}
 	
+	public void disable ()
+	{
+		keepRunning = false;
+		
+	}
 	public void pause() {
-		isPlaying = false;
 	}
 	
 	public void showEndpoints(IVideoRegion region) {

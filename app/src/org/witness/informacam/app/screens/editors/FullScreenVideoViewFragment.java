@@ -196,7 +196,6 @@ OnRangeSeekBarChangeListener<Integer> {
 	
 	private void initVideoPost ()
 	{
-		duration = mediaPlayer.getDuration();
 
 		mediaPlayer.setScreenOnWhilePlaying(true);
 		mediaPlayer.start();
@@ -392,7 +391,9 @@ OnRangeSeekBarChangeListener<Integer> {
 		if (mediaPlayer != null)
 		{
 			mediaPlayer.stop();
+			videoSeekBar.disable();
 			mediaPlayer.release();
+			mediaPlayer = null;
 		}
 	}
 
@@ -433,7 +434,8 @@ OnRangeSeekBarChangeListener<Integer> {
 		
 		if (whatInfo == -38 || whatInfo == 1)
 		{
-			pause();
+			playPauseToggle.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_videol_play));
+			
 			currentCue = mediaPlayer.getCurrentPosition();
 			mediaPlayer.reset();
 			try {
@@ -562,6 +564,8 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void start() {
 		playPauseToggle.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_videol_pause));
+
+		duration = mediaPlayer.getDuration();
 		mediaPlayer.start();
 		videoSeekBar.play();
 	}
