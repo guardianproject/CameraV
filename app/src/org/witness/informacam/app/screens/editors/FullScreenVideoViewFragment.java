@@ -1,8 +1,8 @@
 package org.witness.informacam.app.screens.editors;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -19,9 +19,9 @@ import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.media.IRegionBounds;
 import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.models.media.IVideoRegion;
+import org.witness.informacam.storage.IOService;
 import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.utils.Constants.App.Storage.Type;
-import org.witness.informacam.utils.Constants.Logger;
 
 import android.app.Activity;
 import android.graphics.RectF;
@@ -46,7 +46,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -72,7 +71,6 @@ OnRangeSeekBarChangeListener<Integer> {
 	ImageButton playPauseToggle;
 
 	Uri videoUri;
-	//java.io.File videoFile;
 
 	long duration = 0L;
 	int currentCue = 1;
@@ -85,11 +83,13 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
-		this.a = a;
 		media_ = new IVideo(((EditorActivityListener) a).media());
 		
 		
 	}
+	
+
+	boolean keepRunning = true;
 	
 	private void initMediaServer ()
 	{
@@ -103,8 +103,9 @@ OnRangeSeekBarChangeListener<Integer> {
 		mServerThread = new Thread(new Runnable() {
 			
 			public void run() {
-				boolean keepRunning = true;
 
+				keepRunning = true;
+				
 				while (keepRunning)
 				{
 					try
@@ -115,28 +116,33 @@ OnRangeSeekBarChangeListener<Integer> {
 							try {
 								mVideoServerSocket = new ServerSocket (mLocalHostPort);
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								Log.e(LOG,"unable to open server socket",e);
 								return;
 							}
 						}
 						
 						Socket socket = mVideoServerSocket.accept();
 						
-						OutputStream os = socket.getOutputStream();
+						BufferedOutputStream os = new BufferedOutputStream(socket.getOutputStream());
 						String mType = media_.dcimEntry.mediaType;
 
+						IOService ioService = InformaCam.getInstance().ioService;
+			
 						IOUtils.write("HTTP/1.1 200\r\n",os);
 						IOUtils.write("Content-Type: " + mType + "\r\n",os);
-						IOUtils.write("Content-Length: " + media_.dcimEntry.size + "\r\n\r\n",os);
-						InputStream is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileName, Type.IOCIPHER);
+						
+						long contentLength = ioService.getLength(media_.dcimEntry.fileName, Type.IOCIPHER);
+						
+						IOUtils.write("Content-Length: " + contentLength + "\r\n\r\n",os);
+						
+						InputStream is = ioService.getStream(media_.dcimEntry.fileName, Type.IOCIPHER);
 						
 						
-						byte[] buffer = new byte[2048];
+						byte[] buffer = new byte[2048*4];
 						int n = -1;
 						while ((n = is.read(buffer))!=-1)
 						{
-							os.write(buffer);
+							os.write(buffer,0,n);
 						}
 						
 						os.close();
@@ -144,8 +150,6 @@ OnRangeSeekBarChangeListener<Integer> {
 					catch (IOException ioe)
 					{
 
-						closeMediaServer();
-						break;
 					}
 				
 				}
@@ -157,9 +161,14 @@ OnRangeSeekBarChangeListener<Integer> {
 		
 	}
 	
-	private void initVideo() {
+	private void initVideo() throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
 
-		mediaPlayer = new MediaPlayer();
+
+		if (mediaPlayer == null)
+			mediaPlayer = new MediaPlayer();
+		
+		mediaPlayer.setDisplay(surfaceHolder);		
+		
 		
 		mediaPlayer.setOnCompletionListener(this);
 		mediaPlayer.setOnErrorListener(this);
@@ -171,39 +180,41 @@ OnRangeSeekBarChangeListener<Integer> {
 
 		mediaPlayer.setLooping(false);
 
-		try {
-			
 
-			if (mServerThread == null)
-			{
-				initMediaServer();
-			}
-			
-			videoUri = Uri.parse("http://localhost:" + mLocalHostPort + "/video");
-			mediaPlayer.setDataSource(videoUri.toString());			
-
-			mediaPlayer.prepare();
-			duration = mediaPlayer.getDuration();
-
-			mediaPlayer.setScreenOnWhilePlaying(true);
-			mediaPlayer.start();
-			mediaPlayer.setVolume(1f, 1f);
-			mediaPlayer.seekTo(currentCue);
-			mediaPlayer.pause();
-			
-			
-			
-		} catch (IllegalArgumentException e) {
-			Log.e(LOG, "setDataSource error: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			Log.e(LOG, "setDataSource error: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			Log.e(LOG, "setDataSource error: " + e.getMessage());
-			e.printStackTrace();
-
+		if (mServerThread == null)
+		{
+			initMediaServer();
 		}
+		
+		videoUri = Uri.parse("http://localhost:" + mLocalHostPort + "/video");
+		mediaPlayer.setDataSource(videoUri.toString());			
+
+		mediaPlayer.prepare();
+
+			
+	}
+	
+	private void initVideoPost ()
+	{
+		duration = mediaPlayer.getDuration();
+
+		mediaPlayer.setScreenOnWhilePlaying(true);
+		mediaPlayer.start();
+		mediaPlayer.setVolume(1f, 1f);
+		mediaPlayer.seekTo(currentCue);
+		mediaPlayer.pause();
+		
+		RangeSeekBar<Integer> rsb = videoSeekBar.init(mediaPlayer);
+		rsb.setOnRangeSeekBarChangeListener(FullScreenVideoViewFragment.this);
+		endpointHolder.addView(rsb);
+		videoSeekBar.hideEndpoints();
+		initRegions();
+		
+		playPauseToggle.setVisibility(View.VISIBLE);
+		
+		playPauseToggle.setClickable(true);
+		
+		updateRegionView(mediaPlayer.getCurrentPosition());	
 	}
 	
 	private void updateRegionView(final long timestamp) {
@@ -251,12 +262,14 @@ OnRangeSeekBarChangeListener<Integer> {
 		if (mVideoServerSocket != null && mVideoServerSocket.isBound())
 		{
 			try {
+				keepRunning = false;
+				mServerThread.interrupt();
+				
 				mVideoServerSocket.close();
 				mVideoServerSocket = null;
 				mServerThread = null;
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e(LOG,"error shutting down video server",e);
 			}
 		}
 	}
@@ -308,48 +321,11 @@ OnRangeSeekBarChangeListener<Integer> {
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
-		new VideoLoader().execute("");
-		
 
-		if (a != null)
-		Toast.makeText(a, "Loading video. Please wait..." , Toast.LENGTH_LONG).show();
+		Toast.makeText(getActivity(), "Loading video. Please wait..." , Toast.LENGTH_LONG).show();
 		
 	}
 
-	private class VideoLoader extends AsyncTask<String, Void, String> {
-
-	        @Override
-	        protected String doInBackground(String... params) {
-	        	initVideo();
-	            return "Executed";
-	        }
-
-	        @Override
-	        protected void onPostExecute(String result) {
-	        	
-
-				RangeSeekBar<Integer> rsb = videoSeekBar.init(mediaPlayer);
-				rsb.setOnRangeSeekBarChangeListener(FullScreenVideoViewFragment.this);
-				endpointHolder.addView(rsb);
-				videoSeekBar.hideEndpoints();
-				initRegions();
-				
-				playPauseToggle.setVisibility(View.VISIBLE);
-				
-				playPauseToggle.setClickable(true);
-				
-				updateRegionView(mediaPlayer.getCurrentPosition());
-				
-	        }
-
-	        @Override
-	        protected void onPreExecute() {}
-
-	        @Override
-	        protected void onProgressUpdate(Void... values) {}
-	 };
-	 
 	
 	@Override
 	public void onSelected(IRegionDisplay regionDisplay) {		
@@ -367,8 +343,6 @@ OnRangeSeekBarChangeListener<Integer> {
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		Log.v(LOG, "surfaceChanged called");
 		
-		
-		
 	}
 
 	@Override
@@ -376,16 +350,50 @@ OnRangeSeekBarChangeListener<Integer> {
 		Log.v(LOG, "surfaceCreated Called");
 		
 		surfaceHolder = holder;
-		mediaPlayer.setDisplay(surfaceHolder);		
-
-		if (mediaPlayer == null)
-			new VideoLoader().execute("");
+		
+		new VideoLoader().execute("");
+		
 	}
+
+	private class VideoLoader extends AsyncTask<String, Void, Boolean> {
+           @Override
+           protected Boolean doInBackground(String... params) {
+                
+        	   try
+        	   {
+        		   initVideo();
+        	   
+        		   return true;
+        	   }
+        	   catch (Exception e)
+        	   {
+        		   Log.e(LOG,"error initVideo()",e);
+        		   return false;
+        	   }
+           }
+
+           @Override
+           protected void onPostExecute(Boolean result) {
+
+           }
+
+           @Override
+           protected void onPreExecute() {}
+
+          @Override
+           protected void onProgressUpdate(Void... values) {}
+    };
+
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		Log.v(LOG, "surfaceDestroyed called");
 
+		if (mediaPlayer != null)
+		{
+			mediaPlayer.stop();
+			mediaPlayer.release();
+		}
 	}
 
 	@Override
@@ -395,20 +403,60 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	@Override
 	public void onSeekComplete(MediaPlayer mp) {
-	
+		videoSeekBar.update();
+		mIsSeeking = false;
 	}
 
 	@Override
 	public void onPrepared(MediaPlayer mp) {
-		Log.v(LOG, "onPrepared called");
+		
+		Log.d(LOG,"mediaplayer prepared");
+		
+		 initVideoPost ();
+
+		
+		
+	}
+
+	int mBufferPercent = 0;
+	
+	@Override
+	public void onBufferingUpdate(MediaPlayer mp, int percent) {
+		mBufferPercent = percent;
+		Log.d(LOG,"buffering " + percent + "%");
 	}
 
 	@Override
-	public void onBufferingUpdate(MediaPlayer mp, int percent) {}
-
-	@Override
 	public boolean onError(MediaPlayer mp, int whatInfo, int extra) {
+		
 		Log.v(LOG, "onError called " + whatInfo + " (extra: " + extra + ")");
+		
+		if (whatInfo == -38 || whatInfo == 1)
+		{
+			pause();
+			currentCue = mediaPlayer.getCurrentPosition();
+			mediaPlayer.reset();
+			try {
+				mediaPlayer.setDataSource(videoUri.toString());
+				mediaPlayer.prepare();
+				
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+
+		}
+	
+		/*
 		if (whatInfo == MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING) {
 			Log.v(LOG, "Media Info, Media Info Bad Interleaving " + extra);
 		} else if (whatInfo == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {
@@ -423,19 +471,20 @@ OnRangeSeekBarChangeListener<Integer> {
 			Log.v(LOG, "Media Info, Media Info IO error " + extra);
 		} else if (whatInfo == -38) {
 			Log.v(LOG, "i have no clue what error -38 is");
-		}
-		return false;
+		}*/
+		
+		return true;
 	}
 
 	@Override
 	public void onCompletion(MediaPlayer mp) {
-		Log.v(LOG, "onCompletion called");
+		Log.d(LOG, "onCompletion called");
 
 	}
 
 	@Override
 	public boolean onInfo(MediaPlayer mp, int what, int extra) {
-		Log.v(LOG, "onInfo called");
+		Log.d(LOG, "onInfo called: what=" + what + "; extra=" + extra);
 		return false;
 	}
 
@@ -463,12 +512,12 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	@Override
 	public boolean canSeekForward() {
-		return true;
+		return (mBufferPercent == 100);
 	}
 
 	@Override
 	public int getBufferPercentage() {
-		return 0;
+		return mBufferPercent;
 	}
 
 	@Override
@@ -493,10 +542,21 @@ OnRangeSeekBarChangeListener<Integer> {
 		mediaPlayer.pause();
 	}
 
+	private boolean mIsSeeking = false;
+	
 	@Override
 	public void seekTo(int pos) {
-		mediaPlayer.seekTo(pos);
-		videoSeekBar.update();
+		
+		if (!mIsSeeking)
+		{
+			if (pos <= (duration * (mBufferPercent/100)))
+			{
+				mIsSeeking = true;
+				
+				mediaPlayer.seekTo(pos);
+			}
+		}
+		
 	}
 
 	@Override

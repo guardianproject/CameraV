@@ -58,8 +58,6 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 
 	protected Handler h = new Handler();
 
-	protected Activity a;
-
 	// For moving tags
 	private float mStartDragX;
 	private float mStartDragY;
@@ -70,19 +68,11 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 	protected final static String LOG = App.Editor.LOG;
 
 	@Override
-	public void onAttach(Activity a)
-	{
-		super.onAttach(a);
-
-		this.a = a;
-	}
-
-	@Override
 	public void onResume() {
 		super.onResume();
-		if (this.a != null && this.a instanceof EditorActivity)
+		if (getActivity() != null && getActivity() instanceof EditorActivity)
 		{
-			((EditorActivity) a).onFragmentResumed(this);
+			((EditorActivity) getActivity()).onFragmentResumed(this);
 		}
 	}
 	// @Override
@@ -102,7 +92,7 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 	{
 		super.onCreateView(li, container, savedInstanceState);
 
-		Display display = getActivity().getWindowManager().getDefaultDisplay();
+		Display display =getActivity().getWindowManager().getDefaultDisplay();
 		dims = new int[] { display.getWidth(), display.getHeight() };
 
 		rootView = li.inflate(R.layout.fragment_editor_media_view, null);
@@ -125,7 +115,7 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 
 	protected void deleteTag()
 	{
-		((EditorActivityListener) a).media().removeRegion(currentRegion);
+		((EditorActivityListener) getActivity()).media().removeRegion(currentRegion);
 		mediaHolder.removeView(getTagViewByRegion(currentRegion));
 		
 //		for(int v=0; v<mediaHolder.getChildCount(); v++) {
@@ -157,28 +147,27 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 
 	protected void initRegions()
 	{
+		Activity a = getActivity();
+		
 		mediaHolder.setOnTouchListener(this);
-		// mediaHolder.setOnClickListener(this);
-		// toggleControls.setOnClickListener(this);
-
+		
 		if (((EditorActivityListener) a).media().associatedRegions != null)
 		{
 			for (IRegion r : ((EditorActivityListener) a).media().associatedRegions)
 			{
-				Log.d(LOG, "setting old region: " + r.asJson().toString());
+				
 				if (r.bounds.displayWidth != 0 && r.bounds.displayHeight != 0)
 				{
-					r.init(getActivity(), r.bounds, false, this);
+					r.init(a, r.bounds, false, this);
 					IRegionDisplay regionDisplay = r.getRegionDisplay();
 					regionDisplay.setOnTouchListener(this);					
 					regionDisplay.setSoundEffectsEnabled(false);
 					//regionDisplay.indexOnScreen = mediaHolder.getChildCount();
 
-					View newView = new ChevronRegionView(getActivity(), r, this);
+					View newView = new ChevronRegionView(a, r, this);
 					newView.setOnTouchListener(this);
 					newView.setSoundEffectsEnabled(false);
 					mediaHolder.addView(newView);
-					// mediaHolder.addView(r.getRegionDisplay());
 				}
 			}
 
@@ -190,9 +179,9 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 
 	protected void updateRegionDisplay()
 	{
-		if (((EditorActivityListener) a).media().associatedRegions != null)
+		if (((EditorActivityListener) getActivity()).media().associatedRegions != null)
 		{
-			for (IRegion r : ((EditorActivityListener) a).media().associatedRegions)
+			for (IRegion r : ((EditorActivityListener) getActivity()).media().associatedRegions)
 			{
 				if (!r.equals(currentRegion) || currentMode == Mode.Normal)
 				{
@@ -302,11 +291,12 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 			{
 				try
 				{
+					Activity a = getActivity();
 
 					if (((EditorActivityListener) a).media().dcimEntry.mediaType.equals(MimeType.IMAGE))
 					{
 
-						IRegion region = ((EditorActivityListener) a).media().addRegion(getActivity(), (int) event.getY() - (DEFAULT_REGION_HEIGHT / 2),
+						IRegion region = ((EditorActivityListener) a).media().addRegion(a, (int) event.getY() - (DEFAULT_REGION_HEIGHT / 2),
 								(int) event.getX() - (DEFAULT_REGION_WIDTH / 2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT, this);
 						constrainBoundsToImage(region.bounds);
 						setCurrentRegion(region, true);
@@ -314,7 +304,7 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 					else if (((EditorActivityListener) a).media().dcimEntry.mediaType.equals(MimeType.VIDEO))
 					{
 
-						IRegion region = ((EditorActivityListener) a).media().addRegion(getActivity(), (int) event.getY() - (DEFAULT_REGION_HEIGHT / 2),
+						IRegion region = ((EditorActivityListener) a).media().addRegion(a, (int) event.getY() - (DEFAULT_REGION_HEIGHT / 2),
 								(int) event.getX() - (DEFAULT_REGION_WIDTH / 2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT,
 								((FullScreenVideoViewFragment) this).getCurrentPosition(), ((FullScreenVideoViewFragment) this).getDuration(), this);
 						constrainBoundsToImage(region.bounds);
@@ -364,6 +354,8 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 	public int[] getSpecs()
 	{
 
+		Activity a = getActivity();
+
 		if (((EditorActivityListener) a).media() != null)
 		{
 			List<Integer> specs = new ArrayList<Integer>();
@@ -393,7 +385,9 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 	{
 		try
 		{
-			LayoutInflater inflater = LayoutInflater.from(getActivity());
+			Activity a = getActivity();
+
+			LayoutInflater inflater = LayoutInflater.from(a);
 
 			View content = inflater.inflate(R.layout.popup_tag_context_menu, mediaHolder, false);
 			content.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
@@ -443,7 +437,7 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			Log.e(LOG,"error showing tag form",e);
 		}
 	}
 

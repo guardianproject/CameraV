@@ -44,7 +44,6 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
-		this.a = a;
 		
 		media_ = new IImage(((EditorActivityListener) a).media());
 	}
@@ -69,30 +68,9 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		mediaHolder_.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		mediaHolder.addView(mediaHolder_);
 		
-		new BitmapLoader().execute("");
-
+		loadBitmap ();
+		setBitmap();
 	}
-	
-	 private class BitmapLoader extends AsyncTask<String, Void, String> {
-
-	        @Override
-	        protected String doInBackground(String... params) {
-	        	loadBitmap ();
-	            return "Executed";
-	        }
-
-	        @Override
-	        protected void onPostExecute(String result) {
-	        	setBitmap();
-	        }
-
-	        @Override
-	        protected void onPreExecute() {}
-
-	        @Override
-	        protected void onProgressUpdate(Void... values) {}
-	 };
-	
 	
 	 private void loadBitmap ()
 	 {
