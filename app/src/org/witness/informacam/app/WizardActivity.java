@@ -12,6 +12,9 @@ import org.witness.informacam.app.screens.wizard.WizardSelectLanguage;
 import org.witness.informacam.app.screens.wizard.WizardTakePhoto;
 import org.witness.informacam.app.utils.Constants.Codes;
 import org.witness.informacam.app.utils.Constants.WizardActivityListener;
+import org.witness.informacam.app.utils.Constants.Codes.Extras;
+import org.witness.informacam.models.utils.ILanguage;
+import org.witness.informacam.models.utils.ILanguageMap;
 import org.witness.informacam.ui.SurfaceGrabberActivity;
 import org.witness.informacam.utils.Constants.Models.IUser;
 
@@ -44,8 +47,18 @@ public class WizardActivity extends SherlockFragmentActivity implements WizardAc
 		
 		setContentView(R.layout.activity_wizard);
 
-		Fragment step1 = Fragment.instantiate(this, WizardSelectLanguage.class.getName());
-
+		// Build language map
+		ILanguageMap languageMap = new ILanguageMap();
+		for (int l = 0; l < getResources().getStringArray(R.array.languages_).length; l++)
+		{
+			languageMap.add(getResources().getStringArray(R.array.locales)[l], getResources().getStringArray(R.array.languages_)[l]);
+		}
+		informaCam.languageMap = languageMap;
+			
+		Bundle args = new Bundle();
+		args.putSerializable(Extras.SET_LOCALES, languageMap);
+		Fragment step1 = Fragment.instantiate(this, WizardSelectLanguage.class.getName(), args);
+		
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.wizard_holder, step1);
 		//ft.addToBackStack(null);
@@ -83,13 +96,13 @@ public class WizardActivity extends SherlockFragmentActivity implements WizardAc
 	}
 
 	@Override
-	public void onLanguageSelected(String languageCode)
+	public void onLanguageSelected(ILanguage language)
 	{
 		SharedPreferences.Editor sp = PreferenceManager.getDefaultSharedPreferences(this).edit();
-		sp.putString(Codes.Extras.LOCALE_PREF_KEY, languageCode).commit();
+		sp.putString(Codes.Extras.LOCALE_PREF_KEY, language.code).commit();
 
 		Configuration configuration = new Configuration();
-		configuration.locale = new Locale(languageCode);
+		configuration.locale = new Locale(language.code);
 
 		getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
 
