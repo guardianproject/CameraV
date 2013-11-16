@@ -1,6 +1,9 @@
 package org.witness.informacam.app;
 
 import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
@@ -29,15 +32,20 @@ import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Base64;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -280,6 +288,11 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			new SharePopup(this, media, false, true);
 			return true;
 		}
+		case R.id.menu_share_hash:
+		{
+			shareHash();
+			return true;
+		}
 		case R.id.menu_view_meta:
 		{
 			Intent intent = new Intent(this,MetadataActivity.class);
@@ -330,6 +343,46 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		}
 		else
 			saveStateAndFinish();
+	}
+	
+	public void shareHash ()
+	{
+		try
+		{
+			String j3m = ((IMedia) media).buildJ3M(this, false, new Handler());
+			
+			//generate public hash id from values
+			String creatorHash = media.intent.alias;
+			String mediaHash = media.genealogy.hashes.get(0);
+			
+			MessageDigest md;
+			try {
+				md = MessageDigest.getInstance("SHA-1");
+				md.update((creatorHash+mediaHash).getBytes());
+				byte[] byteData = md.digest();
+				
+				   StringBuffer hexString = new StringBuffer();
+			    	for (int i=0;i<byteData.length;i++) {
+			    		String hex=Integer.toHexString(0xff & byteData[i]);
+			   	     	if(hex.length()==1) hexString.append('0');
+			   	     	hexString.append(hex);
+			    	}
+			    	
+			    	Intent sendIntent = new Intent();
+			    	sendIntent.setAction(Intent.ACTION_SEND);
+			    	sendIntent.putExtra(Intent.EXTRA_TEXT, "MediaHash:" + mediaHash + " J3M-ID:" + hexString.toString());
+			    	sendIntent.setType("text/plain");
+			    	startActivity(sendIntent);
+				
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		catch (Exception e)
+		{
+			
+		}
 	}
 
 	@Override
