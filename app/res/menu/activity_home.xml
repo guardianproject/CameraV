@@ -9,5 +9,7 @@
     </menu>
     </item>
     
-    <item android:id="@+id/menu_settings" android:title="@string/menu_settings" android:orderInCategory="100" android:icon="@drawable/ic_home_pref" android:showAsAction="always" android:enabled="true"/>
+    <item android:id="@+id/menu_settings" android:title="@string/menu_settings" android:orderInCategory="100" android:icon="@drawable/ic_home_pref" android:showAsAction="never" android:enabled="true"/>
+    <item android:id="@+id/menu_creds" android:title="@string/menu_creds" android:orderInCategory="100" android:icon="@drawable/ic_home_pref" android:showAsAction="never" android:enabled="true"/>
+    
 </menu>

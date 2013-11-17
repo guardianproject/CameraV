@@ -269,7 +269,14 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 				getActivity().finish();
 				
 				return true;
+			
+			case R.id.menu_creds:
+				
+				Intent intent = informaCam.exportCredentials();
+				getActivity().startActivity(intent);
+				return true;
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 
