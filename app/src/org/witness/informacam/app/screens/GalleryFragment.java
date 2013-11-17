@@ -381,8 +381,8 @@ public class GalleryFragment extends SherlockFragment implements
 			// Inflate a menu resource providing context menu items
 			// MenuInflater inflater = mode.getMenuInflater();
 			// inflater.inflate(R.menu.context_menu, menu);
-			menu.add(Menu.NONE, R.string.menu_share, 0, R.string.menu_share)
-					.setIcon(R.drawable.ic_gallery_share);
+			//menu.add(Menu.NONE, R.string.menu_share, 0, R.string.menu_share)
+				//	.setIcon(R.drawable.ic_gallery_share);
 			menu.add(Menu.NONE, R.string.home_gallery_delete, 0,
 					R.string.home_gallery_delete).setIcon(
 					R.drawable.ic_gallery_trash);
