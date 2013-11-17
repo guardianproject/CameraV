@@ -213,12 +213,7 @@
         <service android:name="org.witness.informacam.transport.GlobaleaksTransport"
             android:enabled="true"
             android:exported="false" />
-<<<<<<< HEAD
         <activity android:name="net.hockeyapp.android.UpdateActivity" />
-
-=======
- <activity android:name="net.hockeyapp.android.UpdateActivity" />
->>>>>>> added hockeyapp update activity to manifest
     </application>
 
 </manifest>
