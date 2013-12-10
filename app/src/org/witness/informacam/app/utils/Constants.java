@@ -3,6 +3,7 @@ package org.witness.informacam.app.utils;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
+import org.witness.informacam.models.utils.ILanguage;
 
 import android.net.Uri;
 import android.os.Message;
@@ -11,7 +12,7 @@ import android.view.View;
 public class Constants {	
 	
 	public interface WizardActivityListener {
-		public void onLanguageSelected(String language);
+		public void onLanguageSelected(ILanguage language);
 		public void onLanguageConfirmed();
 		public void onUsernameCreated(String username, String email, String password);
 		public void onTakePhotoClicked();
