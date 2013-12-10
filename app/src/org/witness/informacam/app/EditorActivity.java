@@ -347,42 +347,11 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 	
 	public void shareHash ()
 	{
-		try
-		{
-			String j3m = ((IMedia) media).buildJ3M(this, false, new Handler());
-			
-			//generate public hash id from values
-			String creatorHash = media.intent.alias;
-			String mediaHash = media.genealogy.hashes.get(0);
-			
-			MessageDigest md;
-			try {
-				md = MessageDigest.getInstance("SHA-1");
-				md.update((creatorHash+mediaHash).getBytes());
-				byte[] byteData = md.digest();
-				
-				   StringBuffer hexString = new StringBuffer();
-			    	for (int i=0;i<byteData.length;i++) {
-			    		String hex=Integer.toHexString(0xff & byteData[i]);
-			   	     	if(hex.length()==1) hexString.append('0');
-			   	     	hexString.append(hex);
-			    	}
-			    	
-			    	Intent sendIntent = new Intent();
-			    	sendIntent.setAction(Intent.ACTION_SEND);
-			    	sendIntent.putExtra(Intent.EXTRA_TEXT, "MediaHash:" + mediaHash + " J3M-ID:" + hexString.toString());
-			    	sendIntent.setType("text/plain");
-			    	startActivity(sendIntent);
-				
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		catch (Exception e)
-		{
-			
-		}
+		Intent sendIntent = new Intent();
+    	sendIntent.setAction(Intent.ACTION_SEND);
+    	sendIntent.putExtra(Intent.EXTRA_TEXT, "Public J3M Hash:" + media.exportHash());
+    	sendIntent.setType("text/plain");
+    	startActivity(sendIntent);
 	}
 
 	@Override
