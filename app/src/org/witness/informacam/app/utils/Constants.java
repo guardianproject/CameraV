@@ -146,7 +146,6 @@ public class Constants {
 			public class Forms {
 				public static final String FREE_AUDIO = "iWitness Free Audio Annotation";
 				public static final String FREE_TEXT = "iWitness Free Text Annotations";
-				public static final String TAG_FORM = "iWitness v 1.0";
 				
 				public class FreeText {
 					public static final String TAG = Forms.FREE_TEXT;
@@ -156,10 +155,6 @@ public class Constants {
 				public class FreeAudio {
 					public static final String TAG = Forms.FREE_AUDIO;
 					public static final String PROMPT = "iW_free_audio";
-				}
-				
-				public class TagForm {
-					public static final String TAG = Forms.TAG_FORM;
 				}
 			}
 
