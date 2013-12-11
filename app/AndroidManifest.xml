@@ -67,8 +67,8 @@
         <activity
             android:name="org.witness.informacam.app.InformaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -88,13 +88,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <action android:name="android.intent.action.VIEW" />
-				<action android:name="android.intent.action.SEND" />
-				<action android:name="android.intent.action.PICK" />
-				<action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.PICK" />
+                <action android:name="android.intent.action.EDIT" />
                 <action android:name="android.intent.action.GET_CONTENT" />
-				
+
                 <data
-                    android:mimeType="application/ictd"
+                    android:mimeType="application/octet-stream"
+                    android:pathPattern=".*\\.ictd"
                     android:scheme="content" />
             </intent-filter>
             <intent-filter>
@@ -102,119 +103,95 @@
 
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.SEND" />
-				<action android:name="android.intent.action.PICK" />
-				<action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
+                <action android:name="android.intent.action.EDIT" />
                 <action android:name="android.intent.action.GET_CONTENT" />
-				
+
                 <data
-                    android:mimeType="application/ictd"
+                    android:mimeType="application/octet-stream"
+                    android:pathPattern=".*\\.ictd"
                     android:scheme="file" />
             </intent-filter>
-            <intent-filter>
-			        <action android:name="android.intent.action.VIEW" />
-			        <category android:name="android.intent.category.DEFAULT" />
-			        <category android:name="android.intent.category.BROWSABLE" />
-			        
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.SEND" />
-				<action android:name="android.intent.action.PICK" />
-				<action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.GET_CONTENT" />
-				
-			        <data android:scheme="file" />
-			        <data android:mimeType="*/*" />
-			        <data android:pathPattern=".*\\.ictd" />
-			        <data android:host="*" />
-			    </intent-filter>
-            
         </activity>
         <activity
             android:name="org.witness.informacam.app.EditorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
-            android:theme="@style/EditorTheme"
-            android:screenOrientation="portrait"
             android:exported="false"
-             />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/EditorTheme" />
         <activity
             android:name="org.witness.informacam.app.MetadataActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false"
-             android:label="@string/app_name"   
-             />
+            android:label="@string/app_name" />
         <activity
             android:name="org.witness.informacam.app.HomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
+            android:exported="false"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/HomeTheme" 
-            android:exported="false"
-            />
+            android:theme="@style/HomeTheme" />
         <activity
             android:name="org.witness.informacam.app.LoginActivity"
-            android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
             android:exported="false"
-             />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name="org.witness.informacam.app.WipeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Transparent"
             android:exported="false"
-            />
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Transparent" />
         <activity
             android:name="org.witness.informacam.app.PreferencesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
-            android:theme="@style/HomeTheme"
             android:exported="false"
-             />
+            android:label="@string/app_name"
+            android:theme="@style/HomeTheme" />
         <activity
             android:name="org.witness.informacam.app.WizardActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
-            android:windowSoftInputMode="adjustResize"
-            android:label="@string/app_name"
-            android:theme="@style/WizardTheme"
-            android:screenOrientation="portrait"
             android:exported="false"
-             />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/WizardTheme"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.witness.informacam.ui.SurfaceGrabberActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" 
             android:exported="false"
-            />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name="org.witness.informacam.ui.CameraActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name" 
             android:exported="false"
-            />
-        <activity android:name="org.witness.informacam.transport.DriveTransport" 
-            android:exported="false"
-            />
+            android:label="@string/app_name" />
 
         <service
             android:name="org.witness.informacam.informa.InformaService"
             android:enabled="true"
             android:exported="false" />
-        <service android:name="org.witness.informacam.intake.Intake"
+        <service
+            android:name="org.witness.informacam.intake.Intake"
             android:enabled="true"
             android:exported="false" />
         <service
             android:name="info.guardianproject.cacheword.CacheWordService"
             android:enabled="true"
             android:exported="false" />
-        <service android:name="org.witness.informacam.transport.GlobaleaksTransport"
+        <service
+            android:name="org.witness.informacam.transport.GlobaleaksTransport"
             android:enabled="true"
             android:exported="false" />
-        <activity android:name="net.hockeyapp.android.UpdateActivity" />
+        <service
+            android:name="org.witness.informacam.transport.GoogleDriveTransport"
+            android:enabled="true"
+            android:exported="false" />
 
+        <activity android:name="net.hockeyapp.android.UpdateActivity" />
     </application>
 
 </manifest>

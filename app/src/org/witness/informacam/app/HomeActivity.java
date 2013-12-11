@@ -190,11 +190,15 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 							viewPager.setCurrentItem(INDEX_USER_MANAGEMENT);
 						else
 							viewPager.setCurrentItem(INDEX_MAIN);
+						
+						Toast.makeText(HomeActivity.this, getString(org.witness.informacam.R.string.imported_ictd_for_x, organization.organizationName), Toast.LENGTH_LONG).show();
 					}
 					else
 					{
 						Toast.makeText(HomeActivity.this, getString(org.witness.informacam.R.string.could_not_import_ictd), Toast.LENGTH_LONG).show();
 					}
+					
+					init.setData(null);
 				}
 			});
 
