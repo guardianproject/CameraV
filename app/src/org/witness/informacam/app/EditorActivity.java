@@ -81,7 +81,6 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 	ActionBar actionBar;
 	ImageButton abNavigationBack, abShareMedia;
 
-	private final static String LOG = Constants.App.Editor.LOG;
 
 	private InformaCam informaCam;
 	public IMedia media;
