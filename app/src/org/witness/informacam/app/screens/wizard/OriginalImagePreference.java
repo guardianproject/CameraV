@@ -1,12 +1,10 @@
 package org.witness.informacam.app.screens.wizard;
 
 import org.witness.informacam.app.R;
-import org.witness.informacam.app.utils.Constants.Preferences;
+import org.witness.informacam.app.utils.Constants.WizardActivityListener;
 import org.witness.informacam.utils.Constants.WizardListener;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -51,16 +49,14 @@ public class OriginalImagePreference extends Fragment implements WizardListener 
 
 	@Override
 	public void onSubFragmentCompleted() {
-		SharedPreferences sp = a.getSharedPreferences(a.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
-		SharedPreferences.Editor ed = sp.edit();
-		
 		for(int i=0; i<originalImagePreferenceHolder.getChildCount(); i++) {
 			RadioButton rb = (RadioButton) originalImagePreferenceHolder.getChildAt(i);
 			if(rb.isSelected()) {
-				ed.putInt(Preferences.Keys.ORIGINAL_IMAGE_HANDLING, i).commit();
+				if (a instanceof WizardActivityListener) {
+					((WizardActivityListener) a).onAssetEncryptionSelected(i == 0 ? true : false);
+				}
 			}
 		}
-		
 	}
 	
 	@Override

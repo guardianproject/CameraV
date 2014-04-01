@@ -68,7 +68,7 @@ public class GalleryListAdapter extends BaseAdapter {
 		
 		ImageView iv = (ImageView) view.findViewById(R.id.gallery_list);
 		
-		Bitmap bitmap = m.getBitmap(m.bitmapList);
+		Bitmap bitmap = m.getBitmap(m.dcimEntry.list_view);
 		iv.setImageBitmap(bitmap);
 		
 		TextView tv = (TextView) view.findViewById(R.id.gallery_details);

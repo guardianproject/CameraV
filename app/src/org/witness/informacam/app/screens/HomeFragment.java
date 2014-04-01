@@ -69,6 +69,8 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 
 	private static final String LOG = Home.LOG;
 	private final InformaCam informaCam = InformaCam.getInstance();
+	
+	@SuppressWarnings("unused")
 	private ActionMode mActionMode;
 
 	private View mBtnPhoto;
@@ -406,6 +408,8 @@ public class HomeFragment extends SherlockFragment implements ListAdapterListene
 			return;
 
 		IForm audioForm = null;
+		
+		@SuppressWarnings("unused")
 		ODKSeekBar audioFormAnswerHolder = new ODKSeekBar(a);
 
 		IRegion overviewRegion = currentMedia.getTopLevelRegion();

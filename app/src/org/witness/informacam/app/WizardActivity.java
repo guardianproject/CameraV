@@ -10,12 +10,12 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.wizard.WizardCreateDB;
 import org.witness.informacam.app.screens.wizard.WizardSelectLanguage;
 import org.witness.informacam.app.screens.wizard.WizardTakePhoto;
+import org.witness.informacam.app.utils.Constants.App;
 import org.witness.informacam.app.utils.Constants.Codes;
+import org.witness.informacam.app.utils.Constants.Preferences;
 import org.witness.informacam.app.utils.Constants.WizardActivityListener;
-import org.witness.informacam.app.utils.Constants.Codes.Extras;
-import org.witness.informacam.models.utils.ILanguage;
-import org.witness.informacam.models.utils.ILanguageMap;
 import org.witness.informacam.ui.SurfaceGrabberActivity;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models.IUser;
 
 import android.app.Activity;
@@ -32,6 +32,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 public class WizardActivity extends SherlockFragmentActivity implements WizardActivityListener
 {
 	private InformaCam informaCam;
+	private final static String LOG = App.Wizard.LOG;
 	
 	public WizardActivity()
 	{
@@ -47,18 +48,8 @@ public class WizardActivity extends SherlockFragmentActivity implements WizardAc
 		
 		setContentView(R.layout.activity_wizard);
 
-		// Build language map
-		ILanguageMap languageMap = new ILanguageMap();
-		for (int l = 0; l < getResources().getStringArray(R.array.languages_).length; l++)
-		{
-			languageMap.add(getResources().getStringArray(R.array.locales)[l], getResources().getStringArray(R.array.languages_)[l]);
-		}
-		informaCam.languageMap = languageMap;
-			
-		Bundle args = new Bundle();
-		args.putSerializable(Extras.SET_LOCALES, languageMap);
-		Fragment step1 = Fragment.instantiate(this, WizardSelectLanguage.class.getName(), args);
-		
+		Fragment step1 = Fragment.instantiate(this, WizardSelectLanguage.class.getName());
+
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.wizard_holder, step1);
 		//ft.addToBackStack(null);
@@ -68,7 +59,6 @@ public class WizardActivity extends SherlockFragmentActivity implements WizardAc
 		checkForUpdates();
 	}
 	
-
 
 	private void checkForCrashes()
 	{
@@ -96,13 +86,13 @@ public class WizardActivity extends SherlockFragmentActivity implements WizardAc
 	}
 
 	@Override
-	public void onLanguageSelected(ILanguage language)
+	public void onLanguageSelected(String languageCode)
 	{
 		SharedPreferences.Editor sp = PreferenceManager.getDefaultSharedPreferences(this).edit();
-		sp.putString(Codes.Extras.LOCALE_PREF_KEY, language.code).commit();
+		sp.putString(Codes.Extras.LOCALE_PREF_KEY, languageCode).commit();
 
 		Configuration configuration = new Configuration();
-		configuration.locale = new Locale(language.code);
+		configuration.locale = new Locale(languageCode);
 
 		getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
 
@@ -140,7 +130,7 @@ public class WizardActivity extends SherlockFragmentActivity implements WizardAc
 			ft.commit();
 
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Logger.e(LOG, e);
 		}
 	}
 
@@ -149,6 +139,18 @@ public class WizardActivity extends SherlockFragmentActivity implements WizardAc
 	{
 		Intent surfaceGrabberIntent = new Intent(this, SurfaceGrabberActivity.class);
 		startActivityForResult(surfaceGrabberIntent, org.witness.informacam.utils.Constants.Codes.Routes.IMAGE_CAPTURE);
+	}
+	
+	@Override
+	public void onAssetEncryptionSelected(boolean encryptAssets) {
+		SharedPreferences.Editor sp = PreferenceManager.getDefaultSharedPreferences(this).edit();
+		sp.putString(Preferences.Keys.ORIGINAL_IMAGE_HANDLING, encryptAssets ? "0" : "1").commit();
+		
+		try {
+			informaCam.user.put(IUser.ASSET_ENCRYPTION, encryptAssets);
+		} catch(JSONException e) {
+			Logger.e(LOG, e);
+		}
 	}
 	
 	@Override

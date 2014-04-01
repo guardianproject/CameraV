@@ -2,7 +2,6 @@ package org.witness.informacam.app.utils.adapters;
 
 import java.util.List;
 
-import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.app.views.RoundedImageView;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IVideo;
@@ -20,7 +19,7 @@ public class HomePhotoAdapter extends PagerAdapter {
 	LayoutInflater li;
 	Activity a;
 
-	private final static String LOG = App.LOG;
+	//private final static String LOG = App.LOG;
 
 	public HomePhotoAdapter(Activity a, List<? super IMedia> media)
 			throws NullPointerException {

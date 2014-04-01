@@ -10,10 +10,9 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.FullScreenViewFragment;
-import org.witness.informacam.app.utils.Constants;
 import org.witness.informacam.app.utils.Constants.EditorActivityListener;
+import org.witness.informacam.app.utils.Constants.App.Editor;
 import org.witness.informacam.models.media.IImage;
-import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.Logger;
 
 import android.app.Activity;
@@ -22,7 +21,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.media.ExifInterface;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +39,8 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 
 	// Saved Matrix for not allowing a current operation (over max zoom)
 	Matrix savedMatrix = new Matrix();
+	
+	private final static String LOG = Editor.LOG;
 	
 	@Override
 	public void onAttach(Activity a) {
@@ -76,29 +76,21 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	 private void loadBitmap ()
 	 {
 		BitmapFactory.Options bfo = new BitmapFactory.Options();
-		bfo.inJustDecodeBounds = true;		
-		//bfo.inPreferredConfig = Bitmap.Config.RGB_565;
+		bfo.inJustDecodeBounds = true;
+		bfo.inPreferredConfig = Bitmap.Config.RGB_565;
 
+		BufferedInputStream bytes = null;
 		InputStream is = null;
-		info.guardianproject.iocipher.File bitmapBytes = null;
 		
-		if(media_.bitmap != null) {
-			
-			//Log.d(LOG, "we didn't have this bitmap before for some reason...");
-			
-			bitmapBytes = new info.guardianproject.iocipher.File(media_.rootFolder, media_.dcimEntry.name);
-			media_.bitmap = bitmapBytes.getAbsolutePath();
-			
-		}
+		is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileAsset.path, media_.dcimEntry.fileAsset.source);
+		bytes = new BufferedInputStream(is);
 		
-		is = InformaCam.getInstance().ioService.getStream(media_.bitmap, Type.IOCIPHER);			
-		
-		bitmap = BitmapFactory.decodeStream(is, null, bfo);
+		bitmap = BitmapFactory.decodeStream(bytes, null, bfo);
 		
 		// Ratios between the display and the image
 		double widthRatio =  Math.floor(bfo.outWidth / dims[0]);
 		double heightRatio = Math.floor(bfo.outHeight / dims[1]);
-		//Log.d(LOG, "wRatio: " + widthRatio + ", hRatio: " + heightRatio);
+		Log.d(LOG, "wRatio: " + widthRatio + ", hRatio: " + heightRatio);
 
 		// If both of the ratios are greater than 1,
 		// one of the sides of the image is greater than the screen
@@ -115,22 +107,26 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 
 		try {
 			is.close();
+			bytes.close();
 			
-			is = InformaCam.getInstance().ioService.getStream(media_.bitmap, Type.IOCIPHER);			
+			is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileAsset.path, media_.dcimEntry.fileAsset.source);
+			bytes = new BufferedInputStream(is);
 			
-			bitmap = BitmapFactory.decodeStream(is, null, bfo);
+			bitmap = BitmapFactory.decodeStream(bytes, null, bfo);
 			
 			is.close();
+			bytes.close();
 		} catch (IOException e) {
-			Logger.e(Constants.App.TAG,e);
-			
+			Logger.e(LOG, e);
 		}
 
 		if (media_.dcimEntry.exif.orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+			Log.d(LOG, "Rotating Bitmap 90");
 			Matrix rotateMatrix = new Matrix();
 			rotateMatrix.postRotate(90);
 			bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),rotateMatrix,false);
 		} else if (media_.dcimEntry.exif.orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+			Log.d(LOG,"Rotating Bitmap 270");
 			Matrix rotateMatrix = new Matrix();
 			rotateMatrix.postRotate(270);
 			bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),rotateMatrix,false);
@@ -164,7 +160,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 				(dims[1] - bitmap.getHeight() * matrixScale)/2f
 		};
 		matrix.postTranslate(matrixTranslate[0], matrixTranslate[1]);
-	//	Log.d(LOG, String.format("MATRIX TRANSLATE FOR IMAGE: %f , %f", matrixTranslate[0], matrixTranslate[1]));
+		Log.d(LOG, String.format("MATRIX TRANSLATE FOR IMAGE: %f , %f", matrixTranslate[0], matrixTranslate[1]));
 
 		mediaHolder_.setImageMatrix(matrix);
 		
@@ -173,6 +169,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	
 	@Override
 	public int[] getSpecs() {
+		Log.d(LOG, "RECALCULATING FOR IMAGE");
 		
 		List<Integer> specs = new ArrayList<Integer>(Arrays.asList(ArrayUtils.toObject(super.getSpecs())));
 		

@@ -13,7 +13,6 @@ import org.witness.informacam.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.informacam.app.screens.forms.OverviewFormFragment;
 import org.witness.informacam.app.screens.forms.TagFormFragment;
 import org.witness.informacam.app.screens.popups.SharePopup;
-import org.witness.informacam.app.utils.Constants;
 import org.witness.informacam.app.utils.Constants.Codes;
 import org.witness.informacam.app.utils.Constants.EditorActivityListener;
 import org.witness.informacam.app.utils.UIHelpers;
@@ -32,9 +31,6 @@ import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
@@ -45,7 +41,6 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Base64;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -81,6 +76,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 	ActionBar actionBar;
 	ImageButton abNavigationBack, abShareMedia;
 
+	//private final static String LOG = Constants.App.Editor.LOG;
 
 	private InformaCam informaCam;
 	public IMedia media;
@@ -105,7 +101,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		
 		initData();
 
-		if (media.bitmapPreview != null)
+		if (media.dcimEntry.preview != null)
 		{
 
 			setContentView(R.layout.activity_editor);
@@ -135,6 +131,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 		final ViewTreeObserver vto = rootMain.getViewTreeObserver();
 		vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener()
 		{
+			@SuppressWarnings("deprecation")
 			@Override
 			public void onGlobalLayout()
 			{
@@ -346,11 +343,43 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 	
 	public void shareHash ()
 	{
-		Intent sendIntent = new Intent();
-    	sendIntent.setAction(Intent.ACTION_SEND);
-    	sendIntent.putExtra(Intent.EXTRA_TEXT, "Public J3M Hash:" + media.exportHash());
-    	sendIntent.setType("text/plain");
-    	startActivity(sendIntent);
+		try
+		{
+			@SuppressWarnings("unused")
+			String j3m = ((IMedia) media).buildJ3M(this, false, new Handler());
+			
+			//generate public hash id from values
+			String creatorHash = media.intent.alias;
+			String mediaHash = media.genealogy.hashes.get(0);
+			
+			MessageDigest md;
+			try {
+				md = MessageDigest.getInstance("SHA-1");
+				md.update((creatorHash+mediaHash).getBytes());
+				byte[] byteData = md.digest();
+				
+				   StringBuffer hexString = new StringBuffer();
+			    	for (int i=0;i<byteData.length;i++) {
+			    		String hex=Integer.toHexString(0xff & byteData[i]);
+			   	     	if(hex.length()==1) hexString.append('0');
+			   	     	hexString.append(hex);
+			    	}
+			    	
+			    	Intent sendIntent = new Intent();
+			    	sendIntent.setAction(Intent.ACTION_SEND);
+			    	sendIntent.putExtra(Intent.EXTRA_TEXT, "MediaHash:" + mediaHash + " J3M-ID:" + hexString.toString());
+			    	sendIntent.setType("text/plain");
+			    	startActivity(sendIntent);
+				
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		catch (Exception e)
+		{
+			
+		}
 	}
 
 	@Override
@@ -582,6 +611,8 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			getSupportActionBar().setTitle(R.string.menu_edit);
 
 			rootMain.collapse();
+			
+			@SuppressWarnings("unused")
 			Rect rectAudioFiles = UIHelpers.getRectRelativeToView(rootMain, detailsView.getAudioFilesView());
 			//this.svRootMain.smoothScrollTo(0, rectAudioFiles.top);
 			detailsView.startEditNotes();

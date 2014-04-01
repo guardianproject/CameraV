@@ -11,7 +11,6 @@ import org.witness.informacam.app.R;
 import org.witness.informacam.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.informacam.app.screens.popups.PopupClickListener;
 import org.witness.informacam.app.utils.Constants;
-import org.witness.informacam.app.utils.Constants.App;
 import org.witness.informacam.app.utils.Constants.EditorActivityListener;
 import org.witness.informacam.app.views.ChevronRegionView;
 import org.witness.informacam.models.media.IRegion;
@@ -31,8 +30,6 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
@@ -378,6 +375,7 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void showTagContextMenu(IRegionDisplay view)
 	{
 		try

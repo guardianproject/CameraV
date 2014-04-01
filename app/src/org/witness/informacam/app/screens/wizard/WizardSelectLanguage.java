@@ -1,17 +1,12 @@
 package org.witness.informacam.app.screens.wizard;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 import org.witness.informacam.app.utils.Constants.Codes;
-import org.witness.informacam.app.utils.Constants.Codes.Extras;
 import org.witness.informacam.app.utils.Constants.WizardActivityListener;
 import org.witness.informacam.app.views.DropdownSpinner;
 import org.witness.informacam.app.views.DropdownSpinner.OnSelectionChangedListener;
 import org.witness.informacam.app.R;
-import org.witness.informacam.models.utils.ILanguage;
-import org.witness.informacam.models.utils.ILanguageMap;
 
 import android.app.Activity;
 import android.content.Context;
@@ -43,7 +38,7 @@ public class WizardSelectLanguage extends Fragment implements OnClickListener, O
 
 	Handler handler = new Handler();
 
-	private ILanguageMap mLanguageMap;
+	private String[] mCodes;
 	private DropdownSpinner mDropdownLanguage;
 
 	@Override
@@ -59,10 +54,9 @@ public class WizardSelectLanguage extends Fragment implements OnClickListener, O
 		rootView = li.inflate(R.layout.fragment_wizard_select_language, null);
 
 		mDropdownLanguage = (DropdownSpinner) rootView.findViewById(R.id.languagePopup);
-		
-		mLanguageMap = (ILanguageMap) this.getArguments().getSerializable(Extras.SET_LOCALES);
+		mCodes = getResources().getStringArray(R.array.locales);
 
-		ListAdapter adapter = new LanguageListAdapter(rootView.getContext(), mLanguageMap.languages.toArray(new ILanguage[0]));
+		ListAdapter adapter = new LanguageListAdapter(rootView.getContext(), rootView.getContext().getResources().getStringArray(R.array.languages_));
 		mDropdownLanguage.setAdapter(adapter);
 		mDropdownLanguage.setOnSelectionChangedListener(this);
 
@@ -93,9 +87,9 @@ public class WizardSelectLanguage extends Fragment implements OnClickListener, O
 
 	private boolean selectLanguageByLanguageCode(String code, boolean sendNotification)
 	{
-		for (int i = 0; i < mLanguageMap.languages.size(); i++)
+		for (int i = 0; i < mCodes.length; i++)
 		{
-			if (mLanguageMap.getCode(i).equals(code))
+			if (mCodes[i].equals(code))
 			{
 				mDropdownLanguage.setCurrentSelection(i, sendNotification);
 				return true;
@@ -111,9 +105,9 @@ public class WizardSelectLanguage extends Fragment implements OnClickListener, O
 		this.a = a;
 	}
 
-	private class LanguageListAdapter extends ArrayAdapter<ILanguage>
+	private class LanguageListAdapter extends ArrayAdapter<String>
 	{
-		public LanguageListAdapter(Context context, ILanguage[] languages)
+		public LanguageListAdapter(Context context, String[] languages)
 		{
 			super(context, R.layout.wizard_language_item, R.id.tvLanguageName, languages);
 		}
@@ -124,7 +118,7 @@ public class WizardSelectLanguage extends Fragment implements OnClickListener, O
 			// User super class to create the View
 			View v = super.getView(position, convertView, parent);
 			TextView tv = (TextView) v.findViewById(R.id.tvLanguageName);
-			tv.setText(getItem(position).label);
+			tv.setText(getItem(position));
 			return v;
 		}
 	}
@@ -146,7 +140,7 @@ public class WizardSelectLanguage extends Fragment implements OnClickListener, O
 	{
 		if (a instanceof WizardActivityListener)
 		{
-			((WizardActivityListener) a).onLanguageSelected(mLanguageMap.languages.get(position));
+			((WizardActivityListener) a).onLanguageSelected(mCodes[position]);
 		}
 	};
 }

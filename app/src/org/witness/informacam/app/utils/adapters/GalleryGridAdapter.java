@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.witness.informacam.app.R;
-import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.app.utils.Constants.App.Editor.Forms;
 import org.witness.informacam.app.views.RoundedImageView;
 import org.witness.informacam.models.forms.IForm;
@@ -17,7 +16,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +50,7 @@ public class GalleryGridAdapter extends BaseAdapter {
 	
 	private AsyncTask<List<? super IMedia>, Void, Void> mUpdateInfoTask;
 
-	private final static String LOG = App.LOG;
+	//private final static String LOG = App.LOG;
 
 	public GalleryGridAdapter(Activity a, List<? super IMedia> media)
 			throws NullPointerException {

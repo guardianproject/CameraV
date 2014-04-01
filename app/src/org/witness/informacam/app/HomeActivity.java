@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
-
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.CameraFragment;
 import org.witness.informacam.app.screens.GalleryFragment;
@@ -101,6 +98,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 
 	Intent toEditor, toCamera;
 
+	@SuppressWarnings("unused")
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -182,6 +180,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 			final Uri ictdURI = init.getData();
 
 			mHandlerUI.post(new Runnable() {
+				@SuppressWarnings("unused")
 				@Override
 				public void run() {
 					IOrganization organization = informaCam.installICTD(ictdURI, mHandlerUI, HomeActivity.this);
@@ -364,6 +363,7 @@ public class HomeActivity extends SherlockFragmentActivity implements HomeActivi
 		mam.Show();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void getContextualMenuFor(final IMedia media, View anchorView)
 	{

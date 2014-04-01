@@ -55,9 +55,7 @@ public class DetailsViewFragment extends Fragment implements ODKFormListener {
 		String mediaId = this.getArguments().getString("mediaId");
 		
 		IMedia media = InformaCam.getInstance().mediaManifest.getById(mediaId);
-		String strBmpPath = media.bitmapPreview;
-		
-		Bitmap bmp = media.getBitmap(strBmpPath);
+		Bitmap bmp = media.getBitmap(media.dcimEntry.preview);
 		
 		mediaPreview.setImageBitmap(bmp);
 		

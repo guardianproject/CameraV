@@ -6,26 +6,18 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.R;
 import org.witness.informacam.app.utils.UIHelpers;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.models.notifications.INotification;
-import org.witness.informacam.utils.Constants.App.Storage.Type;
-import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
-import org.witness.informacam.utils.TimeUtility;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MediaHistoryListAdapter extends BaseAdapter {

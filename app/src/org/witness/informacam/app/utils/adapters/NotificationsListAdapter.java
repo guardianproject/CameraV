@@ -8,7 +8,6 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.R;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.models.notifications.INotification;
-import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.TimeUtility;
@@ -131,10 +130,7 @@ public class NotificationsListAdapter extends BaseAdapter {
 		}
 		
 		if(notification.icon != null) {
-			byte[] iconBytes = null;
-			if(notification.iconSource == Type.IOCIPHER) {
-				iconBytes = InformaCam.getInstance().ioService.getBytes(notification.icon, Type.IOCIPHER);
-			}
+			byte[] iconBytes = InformaCam.getInstance().ioService.getBytes(notification.icon.path, notification.icon.source);
 			
 			if(iconBytes != null) {
 				ImageView icon = (ImageView) convertView.findViewById(R.id.notification_icon);

@@ -65,7 +65,10 @@ public class GalleryFragment extends SherlockFragment implements
 	private int mCurrentFiltering;
 	private MenuItem mMenuItemBatchOperations;
 	private View mEncodingMedia;
+	
+	@SuppressWarnings("unused")
 	private boolean isDataInitialized;
+	
 	private ProgressBar progressWait;
 	private int mNumLoading;
 	

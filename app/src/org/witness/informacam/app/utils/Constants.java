@@ -3,7 +3,6 @@ package org.witness.informacam.app.utils;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
-import org.witness.informacam.models.utils.ILanguage;
 
 import android.net.Uri;
 import android.os.Message;
@@ -12,10 +11,11 @@ import android.view.View;
 public class Constants {	
 	
 	public interface WizardActivityListener {
-		public void onLanguageSelected(ILanguage language);
+		public void onLanguageSelected(String language);
 		public void onLanguageConfirmed();
 		public void onUsernameCreated(String username, String email, String password);
 		public void onTakePhotoClicked();
+		public void onAssetEncryptionSelected(boolean encryptAssets);
 	}
 	
 	public interface EditorActivityListener {
@@ -127,7 +127,7 @@ public class Constants {
 		}
 
 		public class Editor {
-		//	public final static String LOG = "******************** iWitness : EditorActivity ********************";
+			public final static String LOG = "******************** iWitness : EditorActivity ********************";
 			public static final int ROUTE_CODE = Codes.Routes.EDITOR;
 
 			public class Mode {
