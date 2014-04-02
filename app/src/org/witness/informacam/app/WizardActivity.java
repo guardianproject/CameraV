@@ -145,12 +145,6 @@ public class WizardActivity extends SherlockFragmentActivity implements WizardAc
 	public void onAssetEncryptionSelected(boolean encryptAssets) {
 		SharedPreferences.Editor sp = PreferenceManager.getDefaultSharedPreferences(this).edit();
 		sp.putString(Preferences.Keys.ORIGINAL_IMAGE_HANDLING, encryptAssets ? "0" : "1").commit();
-		
-		try {
-			informaCam.user.put(IUser.ASSET_ENCRYPTION, encryptAssets);
-		} catch(JSONException e) {
-			Logger.e(LOG, e);
-		}
 	}
 	
 	@Override
