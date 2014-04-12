@@ -370,7 +370,7 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 										informaCam.addNotification(notification, null);
 										
 										ITransportStub transportStub = new ITransportStub(organization, notification);
-										transportStub.setAsset(IUser.PUBLIC_CREDENTIALS, IUser.PUBLIC_CREDENTIALS, MimeType.ZIP);
+										transportStub.setAsset(IUser.PUBLIC_CREDENTIALS, IUser.PUBLIC_CREDENTIALS, MimeType.ZIP, Type.IOCIPHER);
 										TransportUtility.initTransport(transportStub);
 									}
 								}
