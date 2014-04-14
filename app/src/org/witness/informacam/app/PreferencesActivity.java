@@ -2,6 +2,7 @@ package org.witness.informacam.app;
 
 import org.witness.informacam.app.R;
 import org.witness.informacam.app.utils.Constants.Preferences;
+import org.witness.informacam.utils.Constants.Models;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -39,7 +40,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements O
 		language = (ListPreference) findPreference(Preferences.Keys.LANGUAGE);
 		updateSummaryWithChoice(language, language.getValue(), getResources().getStringArray(R.array.languages_));
 		
-		originalImage = (ListPreference) findPreference(Preferences.Keys.ORIGINAL_IMAGE_HANDLING);
+		originalImage = (ListPreference) findPreference(Models.IUser.ASSET_ENCRYPTION);
 		updateSummaryWithChoice(originalImage, originalImage.getValue(), getResources().getStringArray(R.array.originalImageOptions_));
 
 		panicAction = (ListPreference) findPreference(Preferences.Keys.PANIC_ACTION);
@@ -67,7 +68,7 @@ public class PreferencesActivity extends SherlockPreferenceActivity implements O
 //		} else
 		if(key.equals(Preferences.Keys.LANGUAGE)) {
 			updateSummaryWithChoice(language, sharedPreferences.getString(key, "0"), getResources().getStringArray(R.array.languages_));
-		} else if(key.equals(Preferences.Keys.ORIGINAL_IMAGE_HANDLING)) {
+		} else if(key.equals(Models.IUser.ASSET_ENCRYPTION)) {
 			updateSummaryWithChoice(originalImage, sharedPreferences.getString(key, "0"), getResources().getStringArray(R.array.originalImageOptions_));
 		} else if(key.equals(Preferences.Keys.PANIC_ACTION)) {
 			updateSummaryWithChoice(panicAction, sharedPreferences.getString(key, "0"), getResources().getStringArray(R.array.panicActionOptions_));

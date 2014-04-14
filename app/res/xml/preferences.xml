@@ -17,7 +17,7 @@
         <ListPreference
             android:title="@string/original_images_should_be"
             android:defaultValue="0"
-            android:key="originalImageHandling"
+            android:key="assetEncryption"
             android:entries="@array/originalImageOptions_"
             android:entryValues="@array/originalImageOptions" />
 

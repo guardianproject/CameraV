@@ -18,8 +18,8 @@
         <item>1</item>
     </string-array>
     <string-array name="originalImageOptions_">
-        <item>@string/prefs_images_deleted</item>
         <item>@string/prefs_images_saved</item>
+        <item>@string/prefs_images_deleted</item>
     </string-array>
     
     <string-array name="languages">
