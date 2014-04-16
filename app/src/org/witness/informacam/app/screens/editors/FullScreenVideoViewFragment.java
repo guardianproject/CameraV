@@ -22,6 +22,7 @@ import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.models.media.IVideoRegion;
 import org.witness.informacam.storage.IOService;
 import org.witness.informacam.ui.editors.IRegionDisplay;
+import org.witness.informacam.utils.Constants.App.Storage;
 
 import android.app.Activity;
 import android.graphics.RectF;
@@ -139,7 +140,6 @@ OnRangeSeekBarChangeListener<Integer> {
 						
 						InputStream is = ioService.getStream(media_.dcimEntry.fileAsset.path, media_.dcimEntry.fileAsset.source);
 						
-						
 						byte[] buffer = new byte[2048*4];
 						int n = -1;
 						while ((n = is.read(buffer))!=-1)
@@ -182,15 +182,22 @@ OnRangeSeekBarChangeListener<Integer> {
 
 		mediaPlayer.setLooping(false);
 
-
-		if (mServerThread == null)
+		if (media_.dcimEntry.fileAsset.source == Storage.Type.IOCIPHER)
 		{
-			initMediaServer();
+			if (mServerThread == null)
+			{
+				initMediaServer();
+			}
+			
+			videoUri = Uri.parse("http://localhost:" + mLocalHostPort + "/video");
+			mediaPlayer.setDataSource(videoUri.toString());			
+		}
+		else
+		{
+			videoUri = Uri.parse(media_.dcimEntry.fileAsset.path);
+			mediaPlayer.setDataSource(videoUri.toString());
 		}
 		
-		videoUri = Uri.parse("http://localhost:" + mLocalHostPort + "/video");
-		mediaPlayer.setDataSource(videoUri.toString());			
-
 		mediaPlayer.prepare();
 
 			
