@@ -27,6 +27,7 @@ import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.utils.Constants.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
@@ -341,6 +342,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			saveStateAndFinish();
 	}
 	
+				
 	public void shareHash ()
 	{
 		try
@@ -349,13 +351,17 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			String j3m = ((IMedia) media).buildJ3M(this, false, new Handler());
 			
 			//generate public hash id from values
-			String creatorHash = media.intent.alias;
-			String mediaHash = media.genealogy.hashes.get(0);
+			String creatorHash = media.genealogy.createdOnDevice;
+			StringBuffer mediaHash = new StringBuffer();
+			for(String mHash : media.genealogy.hashes) {
+				mediaHash.append(mHash);
+			}
 			
 			MessageDigest md;
 			try {
 				md = MessageDigest.getInstance("SHA-1");
-				md.update((creatorHash+mediaHash).getBytes());
+				md.update((creatorHash+mediaHash.toString()).getBytes());
+				
 				byte[] byteData = md.digest();
 				
 				   StringBuffer hexString = new StringBuffer();
