@@ -39,7 +39,6 @@ public class MetadataActivity extends Activity {
 	}
 
 	
-	
 	@Override
 	protected void onResume() {
 		

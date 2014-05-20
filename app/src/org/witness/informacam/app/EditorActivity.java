@@ -7,7 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
-import org.witness.informacam.app.EditorActivity.ActivityActionMode;
 import org.witness.informacam.app.screens.FullScreenViewFragment;
 import org.witness.informacam.app.screens.editors.FullScreenImageViewFragment;
 import org.witness.informacam.app.screens.editors.FullScreenVideoViewFragment;
@@ -23,11 +22,11 @@ import org.witness.informacam.models.media.IImage;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.media.IVideo;
+import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.utils.Constants.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
-import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
@@ -347,6 +346,24 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 	{
 		try
 		{
+			String mediaId = ((IMedia) media)._id;
+			boolean hasBeenShared = false;
+			
+			List<INotification> listNotifs = InformaCam.getInstance().notificationsManifest.sortBy(Models.INotificationManifest.Sort.DATE_DESC);
+			for (INotification n :listNotifs)
+			{
+				
+				if (mediaId.equals(n.mediaId))
+				{
+					//this means we sent to an organization, likely the testbed
+					if ((n.type == Models.INotification.Type.EXPORTED_MEDIA) &&
+						n.taskComplete)
+					{
+						hasBeenShared = true;
+					}
+				}
+			}
+			
 			@SuppressWarnings("unused")
 			String j3m = ((IMedia) media).buildJ3M(this, false, new Handler());
 			
@@ -373,7 +390,12 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			    	
 			    	Intent sendIntent = new Intent();
 			    	sendIntent.setAction(Intent.ACTION_SEND);
-			    	sendIntent.putExtra(Intent.EXTRA_TEXT, "#InformaCam ID:" + hexString + " File:" + mediaHash);
+			    	
+			    	if (!hasBeenShared) //if it hasn't been shared, then just show the hashes
+			    		sendIntent.putExtra(Intent.EXTRA_TEXT, "#InformaCam ID:" + hexString + " (MEDIA:" + mediaHash + ")");
+			    	else //if it has, then show a URL
+			    		sendIntent.putExtra(Intent.EXTRA_TEXT, "#InformaCam https://j3m.info/submissions/?hashes=" + hexString + " (media:" + mediaHash + ")");
+			    	
 			    	sendIntent.setType("text/plain");
 			    	startActivity(sendIntent);
 				
