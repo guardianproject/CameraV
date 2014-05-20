@@ -373,7 +373,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			    	
 			    	Intent sendIntent = new Intent();
 			    	sendIntent.setAction(Intent.ACTION_SEND);
-			    	sendIntent.putExtra(Intent.EXTRA_TEXT, "MediaHash:" + mediaHash + " J3M-ID:" + hexString.toString());
+			    	sendIntent.putExtra(Intent.EXTRA_TEXT, "#InformaCam ID:" + hexString + " File:" + mediaHash);
 			    	sendIntent.setType("text/plain");
 			    	startActivity(sendIntent);
 				
