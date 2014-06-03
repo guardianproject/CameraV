@@ -22,6 +22,7 @@ import org.witness.informacam.models.media.IImage;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.media.IVideo;
+import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.utils.Constants.IRegionDisplayListener;
@@ -30,6 +31,7 @@ import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -39,8 +41,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -51,13 +57,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
-public class EditorActivity extends SherlockFragmentActivity implements EditorActivityListener, IRegionDisplayListener, InformaCamStatusListener, InformaCamEventListener
+public class EditorActivity extends FragmentActivity implements EditorActivityListener, IRegionDisplayListener, InformaCamStatusListener, InformaCamEventListener
 {
 	Intent init;
 
@@ -114,7 +114,7 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			toolbarBottom = findViewById(R.id.toolbar_bottom);
 			toolbarBottom.setVisibility(View.GONE);
 
-			actionBar = getSupportActionBar();
+			actionBar = getActionBar();
 
 			fm = getSupportFragmentManager();
 		}
@@ -245,11 +245,11 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 	{
 		super.onCreateOptionsMenu(menu);
 		if (mActionMode == ActivityActionMode.Edit)
-			getSupportMenuInflater().inflate(R.menu.activity_edit_edit, menu);
+			getMenuInflater().inflate(R.menu.activity_edit_edit, menu);
 		else if (mActionMode == ActivityActionMode.EditText)
-			getSupportMenuInflater().inflate(R.menu.activity_edit_edit_text, menu);
+			getMenuInflater().inflate(R.menu.activity_edit_edit_text, menu);
 		else
-			getSupportMenuInflater().inflate(R.menu.activity_edit_normal, menu);
+			getMenuInflater().inflate(R.menu.activity_edit_normal, menu);
 		return true;
 	}
 
@@ -341,21 +341,44 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			saveStateAndFinish();
 	}
 	
+				
 	public void shareHash ()
 	{
 		try
 		{
+			String mediaId = ((IMedia) media)._id;
+			boolean hasBeenShared = false;
+			
+			List<INotification> listNotifs = InformaCam.getInstance().notificationsManifest.sortBy(Models.INotificationManifest.Sort.DATE_DESC);
+			for (INotification n :listNotifs)
+			{
+				
+				if (mediaId.equals(n.mediaId))
+				{
+					//this means we sent to an organization, likely the testbed
+					if ((n.type == Models.INotification.Type.EXPORTED_MEDIA) &&
+						n.taskComplete)
+					{
+						hasBeenShared = true;
+					}
+				}
+			}
+			
 			@SuppressWarnings("unused")
 			String j3m = ((IMedia) media).buildJ3M(this, false, new Handler());
 			
 			//generate public hash id from values
-			String creatorHash = media.intent.alias;
-			String mediaHash = media.genealogy.hashes.get(0);
+			String creatorHash = media.genealogy.createdOnDevice;
+			StringBuffer mediaHash = new StringBuffer();
+			for(String mHash : media.genealogy.hashes) {
+				mediaHash.append(mHash);
+			}
 			
 			MessageDigest md;
 			try {
 				md = MessageDigest.getInstance("SHA-1");
-				md.update((creatorHash+mediaHash).getBytes());
+				md.update((creatorHash+mediaHash.toString()).getBytes());
+				
 				byte[] byteData = md.digest();
 				
 				   StringBuffer hexString = new StringBuffer();
@@ -367,7 +390,12 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			    	
 			    	Intent sendIntent = new Intent();
 			    	sendIntent.setAction(Intent.ACTION_SEND);
-			    	sendIntent.putExtra(Intent.EXTRA_TEXT, "MediaHash:" + mediaHash + " J3M-ID:" + hexString.toString());
+			    	
+			    	if (!hasBeenShared) //if it hasn't been shared, then just show the hashes
+			    		sendIntent.putExtra(Intent.EXTRA_TEXT, "#InformaCam ID:" + hexString + " (MEDIA:" + mediaHash + ")");
+			    	else //if it has, then show a URL
+			    		sendIntent.putExtra(Intent.EXTRA_TEXT, "#InformaCam https://j3m.info/submissions/?hashes=" + hexString + " (media:" + mediaHash + ")");
+			    	
 			    	sendIntent.setType("text/plain");
 			    	startActivity(sendIntent);
 				
@@ -594,21 +622,21 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			rootForm.setVisibility(View.VISIBLE);
 			enableToolbar(false);
 			showToolbar(true);
-			getSupportActionBar().setTitle(R.string.editor_form_edit);
+			getActionBar().setTitle(R.string.editor_form_edit);
 			break;
 		case AddTags:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
 			enableToolbar(false);
 			showToolbar(true);
-			getSupportActionBar().setTitle(R.string.editor_tags_add);
+			getActionBar().setTitle(R.string.editor_tags_add);
 			break;
 		case EditText:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
 			enableToolbar(false);
 			showToolbar(false);
-			getSupportActionBar().setTitle(R.string.menu_edit);
+			getActionBar().setTitle(R.string.menu_edit);
 
 			rootMain.collapse();
 			
@@ -625,13 +653,13 @@ public class EditorActivity extends SherlockFragmentActivity implements EditorAc
 			rootMain.setVisibility(View.VISIBLE);
 			enableToolbar(true);
 			showToolbar(true);
-			getSupportActionBar().setTitle(R.string.menu_edit);
+			getActionBar().setTitle(R.string.menu_edit);
 			break;
 		default:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
 			showToolbar(false);
-			getSupportActionBar().setTitle(R.string.menu_view);
+			getActionBar().setTitle(R.string.menu_view);
 			break;
 		}
 	}
