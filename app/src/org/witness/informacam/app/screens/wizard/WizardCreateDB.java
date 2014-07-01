@@ -84,10 +84,8 @@ public class WizardCreateDB extends Fragment implements OnClickListener
 	}
 	
 	private boolean checkPasswordFormat(String password)
-	{
-		if(password.length() >= 10) 
-			return true;
-		return false;
+	{		
+		return true;
 	}
 	
 	private boolean checkPasswordsMatch(String p1, String p2)
