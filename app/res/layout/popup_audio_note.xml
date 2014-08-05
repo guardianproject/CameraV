@@ -31,7 +31,7 @@
 
             <TextView
                 android:id="@+id/audio_action_toggle_label"
-                style="@style/H1"
+                style="@style/iwitness_h1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -39,7 +39,7 @@
 
             <TextView
                 android:id="@+id/audio_action_clock"
-                style="@style/H1"
+                style="@style/iwitness_h1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

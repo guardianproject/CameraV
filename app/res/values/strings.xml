@@ -16,6 +16,7 @@
 	<string name="get_in">Get In</string>
 	<string name="we_could_not_log">We could not log you in.  Please try again.</string>
 	<string name="change_settings"><u>Change Settings</u></string>
+	<string name="save"><u>Save</u></string>
 	<string name="cancel"><u>Cancel</u></string>
 	<string name="log_out">Log Out</string>
 	<string name="no_notifications">No notifications.</string>
