@@ -225,10 +225,12 @@ public class SharePopup {
 				
 				try
 				{
+					boolean doSendTo = sendTo != null;
+					
 					if (shareJ3MOnly)
-						((IMedia) context).exportJ3M(a, h, encryptTo, sendTo != null);
+						((IMedia) context).exportJ3M(a, h, encryptTo, doSendTo);
 					else
-						((IMedia) context).export(a, h, encryptTo, sendTo != null);
+						((IMedia) context).export(a, h, encryptTo);
 				}
 				catch (Exception e)
 				{
