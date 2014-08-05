@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.spongycastle.openpgp.PGPException;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.wizard.OriginalImagePreference;
@@ -20,6 +17,9 @@ import org.witness.informacam.app.utils.Constants.App.Wizard;
 import org.witness.informacam.app.utils.Constants.Codes;
 import org.witness.informacam.app.utils.Constants.Preferences;
 import org.witness.informacam.crypto.KeyUtility;
+import org.witness.informacam.json.JSONException;
+import org.witness.informacam.json.JSONObject;
+import org.witness.informacam.json.JSONTokener;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.models.transport.ITransportStub;
@@ -35,7 +35,6 @@ import org.witness.informacam.utils.Constants.Models.IUser;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -363,7 +362,7 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 									byte[] ictdBytes = new byte[ictdIS.available()];
 									ictdIS.read(ictdBytes);
 									
-									IOrganization organization = informaCam.installICTD((JSONObject) new JSONTokener(new String(ictdBytes)).nextValue(), null, InformaActivity.this);
+									IOrganization organization = informaCam.installICTD((JSONObject) new JSONTokener(new String(ictdBytes)).nextValue(), mHandler, InformaActivity.this);
 									if(organization != null && !informaCam.user.isInOfflineMode) {
 										INotification notification = new INotification(getResources().getString(R.string.key_sent), getResources().getString(R.string.you_have_sent_your_credentials_to_x, organization.organizationName), Models.INotification.Type.NEW_KEY);
 										notification.taskComplete = false;
@@ -389,7 +388,7 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 									InputStream formXML = informaCam.ioService.getStream("includedForms/" + s, Type.APPLICATION_ASSET);
 									FormUtility.importAndParse(formXML);
 								}
-							} catch(IOException e) {
+							} catch(Exception e) {
 								Log.e(LOG, e.toString());
 								e.printStackTrace();
 							}

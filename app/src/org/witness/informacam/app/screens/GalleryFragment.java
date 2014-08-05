@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.json.JSONException;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.R;
 import org.witness.informacam.app.utils.Constants.App.Home;
@@ -12,6 +11,7 @@ import org.witness.informacam.app.utils.Constants.HomeActivityListener;
 import org.witness.informacam.app.utils.Constants.Preferences;
 import org.witness.informacam.app.utils.adapters.GalleryFilterAdapter;
 import org.witness.informacam.app.utils.adapters.GalleryGridAdapter;
+import org.witness.informacam.json.JSONException;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.ListAdapterListener;

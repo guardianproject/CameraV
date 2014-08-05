@@ -48,7 +48,7 @@ public class MetadataActivity extends Activity {
 		{
 			boolean signData = false;
 			IMedia media = informaCam.mediaManifest.getById(getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA));
-			String j3m = ((IMedia) media).buildJ3M(this, signData, new Handler());
+			String j3m = ((IMedia) media).buildJ3M(this, signData, null);
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			JsonParser jp = new JsonParser();
 			JsonElement je = jp.parse(j3m);

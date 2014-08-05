@@ -8,14 +8,12 @@ import java.util.List;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.EditorActivity;
+import org.witness.informacam.app.R;
 import org.witness.informacam.app.screens.popups.PopupClickListener;
 import org.witness.informacam.app.utils.AudioNoteHelper;
-import org.witness.informacam.app.utils.UIHelpers;
-import org.witness.informacam.utils.Constants.App;
-import org.witness.informacam.app.utils.Constants.EditorActivityListener;
-import org.witness.informacam.utils.Constants.Logger;
-import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.app.utils.Constants.App.Editor.Forms;
+import org.witness.informacam.app.utils.Constants.EditorActivityListener;
+import org.witness.informacam.app.utils.UIHelpers;
 import org.witness.informacam.app.utils.adapters.MediaHistoryListAdapter;
 import org.witness.informacam.app.views.AdapteredLinearLayout;
 import org.witness.informacam.app.views.AudioNoteInfoView;
@@ -23,8 +21,10 @@ import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.notifications.INotification;
+import org.witness.informacam.utils.Constants.App;
+import org.witness.informacam.utils.Constants.Logger;
+import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.TimeUtility;
-import org.witness.informacam.app.R;
 
 import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
@@ -142,7 +142,15 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 	private void initLayout()
 	{
 		initData();
-		initForms();
+		try {
+			initForms();
+		} catch (java.lang.InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void initData()
@@ -180,7 +188,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		taskLoadNotifications.execute((Void)null);
 	}
 
-	private void initForms()
+	private void initForms() throws java.lang.InstantiationException, IllegalAccessException
 	{		
 		textForm = getTextForm(false);
 		if (textForm != null)
@@ -192,7 +200,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		updateAudioFiles();
 	}
 
-	private void updateAudioFiles()
+	private void updateAudioFiles() throws java.lang.InstantiationException, IllegalAccessException
 	{
 		llAudioFiles.removeAllViews();
 		LayoutInflater inflater = LayoutInflater.from(this.getActivity());
@@ -245,7 +253,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		return InformaCam.getInstance().mediaManifest.save();
 	}
 
-	public void stopEditNotes(boolean save)
+	public void stopEditNotes(boolean save) throws java.lang.InstantiationException, IllegalAccessException
 	{
 		notes.setVisibility(View.VISIBLE);
 		notesAnswerHolder.setVisibility(View.GONE);
@@ -436,8 +444,17 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 				protected void onSelected()
 				{
 					// Delete!
-					deleteForm(view.getForm());
-					updateAudioFiles();
+					try {
+						deleteForm(view.getForm());
+						updateAudioFiles();
+					} catch (java.lang.InstantiationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 				}
 			});
 
@@ -453,7 +470,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		}
 	}
 	
-	private void deleteForm(IForm formToDelete)
+	private void deleteForm(IForm formToDelete) throws java.lang.InstantiationException, IllegalAccessException
 	{
 		// Delete!
 		IRegion overviewRegion = ((EditorActivityListener) a).media().getTopLevelRegion();
@@ -471,7 +488,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		}
 	}
 	
-	public IForm getTextForm(boolean createIfNotFound)
+	public IForm getTextForm(boolean createIfNotFound) throws java.lang.InstantiationException, IllegalAccessException
 	{
 		IForm returnForm = null;
 		

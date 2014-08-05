@@ -46,7 +46,15 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	public void onAttach(Activity a) {
 		super.onAttach(a);
 		
-		media_ = new IImage(((EditorActivityListener) a).media());
+		try {
+			media_ = new IImage(((EditorActivityListener) a).media());
+		} catch (java.lang.InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

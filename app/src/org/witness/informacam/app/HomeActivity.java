@@ -304,7 +304,15 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 				public void onClick(View v)
 				{
 					mam.cancel();
-					notification.retry();
+					try {
+						notification.retry();
+					} catch (InstantiationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			};
 			actions.add(action);

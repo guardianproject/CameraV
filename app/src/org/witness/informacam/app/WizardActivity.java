@@ -5,7 +5,6 @@ import java.util.Locale;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
-import org.json.JSONException;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.wizard.WizardCreateDB;
 import org.witness.informacam.app.screens.wizard.WizardSelectLanguage;
@@ -13,6 +12,7 @@ import org.witness.informacam.app.screens.wizard.WizardTakePhoto;
 import org.witness.informacam.app.utils.Constants.App;
 import org.witness.informacam.app.utils.Constants.Codes;
 import org.witness.informacam.app.utils.Constants.WizardActivityListener;
+import org.witness.informacam.json.JSONException;
 import org.witness.informacam.ui.SurfaceGrabberActivity;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models.IUser;

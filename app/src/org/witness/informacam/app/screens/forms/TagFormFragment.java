@@ -86,7 +86,7 @@ public class TagFormFragment extends Fragment implements ODKFormListener
 		super.onDetach();
 	}
 
-	public boolean initTag(final IRegion region)
+	public boolean initTag(final IRegion region) throws java.lang.InstantiationException, IllegalAccessException
 	{
 		// Reset
 		tagFormRoot.removeAllViews();
@@ -174,7 +174,7 @@ public class TagFormFragment extends Fragment implements ODKFormListener
 					form.save(new info.guardianproject.iocipher.FileOutputStream(form.answerPath));
 					((EditorActivityListener) a).media().save();
 				}
-				catch (FileNotFoundException e)
+				catch (Exception e)
 				{
 					Logger.e("error opening file for answer path", e);
 				}

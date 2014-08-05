@@ -105,18 +105,26 @@ public class GalleryGridAdapter extends BaseAdapter {
 					boolean hasAudio = false;
 					boolean hasNotes = false;
 					boolean hasTags = false;
-					for (IForm form : m.getForms(a)) {
-						if (form.namespace.equals(Forms.FreeAudio.TAG)) {
-							hasAudio = true;
-						} else if (form.namespace.equals(Forms.FreeText.TAG)) {
-							QD question = form
-									.getQuestionDefByTitleId(Forms.FreeText.PROMPT);
-							if (question != null
-									&& question.hasInitialValue
-									&& !TextUtils
-											.isEmpty(question.initialValue))
-								hasNotes = true;
+					try {
+						for (IForm form : m.getForms(a)) {
+							if (form.namespace.equals(Forms.FreeAudio.TAG)) {
+								hasAudio = true;
+							} else if (form.namespace.equals(Forms.FreeText.TAG)) {
+								QD question = form
+										.getQuestionDefByTitleId(Forms.FreeText.PROMPT);
+								if (question != null
+										&& question.hasInitialValue
+										&& !TextUtils
+												.isEmpty(question.initialValue))
+									hasNotes = true;
+							}
 						}
+					} catch (InstantiationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 
 					hasTags = (m.getInnerLevelRegions().size() > 0);

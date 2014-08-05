@@ -86,7 +86,15 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
-		media_ = new IVideo(((EditorActivityListener) a).media());
+		try {
+			media_ = new IVideo(((EditorActivityListener) a).media());
+		} catch (java.lang.InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 	}

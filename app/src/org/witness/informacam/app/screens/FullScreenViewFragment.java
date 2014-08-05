@@ -4,8 +4,8 @@ import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang3.ArrayUtils;
-import org.json.JSONException;
 import org.witness.informacam.app.EditorActivity;
 import org.witness.informacam.app.R;
 import org.witness.informacam.app.screens.editors.FullScreenVideoViewFragment;
@@ -13,6 +13,7 @@ import org.witness.informacam.app.screens.popups.PopupClickListener;
 import org.witness.informacam.app.utils.Constants;
 import org.witness.informacam.app.utils.Constants.EditorActivityListener;
 import org.witness.informacam.app.views.ChevronRegionView;
+import org.witness.informacam.json.JSONException;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.media.IRegionBounds;
 import org.witness.informacam.ui.editors.IRegionDisplay;
@@ -310,6 +311,12 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 				catch (JSONException e)
 				{
 					Log.e(Constants.App.TAG,"error parsing region json",e);
+				} catch (java.lang.InstantiationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 			return true;
@@ -408,7 +415,15 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 				@Override
 				protected void onSelected()
 				{
-					showTagFormPopup(currentRegion);
+					try {
+						showTagFormPopup(currentRegion);
+					} catch (java.lang.InstantiationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			});
 
@@ -424,7 +439,7 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 		}
 	}
 
-	private void showTagFormPopup(IRegion region)
+	private void showTagFormPopup(IRegion region) throws java.lang.InstantiationException, IllegalAccessException
 	{
 	
 			((EditorActivity) getActivity()).showTagForm(region);

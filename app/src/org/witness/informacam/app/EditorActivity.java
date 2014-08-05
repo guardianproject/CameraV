@@ -99,31 +99,40 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		informaCam.setStatusListener(this);
 		informaCam.setEventListener(this);
 		
-		initData();
-
-		if (media.dcimEntry.preview != null)
-		{
-
-			setContentView(R.layout.activity_editor);
-			
-			rootMain = (TwoViewSlideLayout) findViewById(R.id.root_main);
-			waitLoading = (ProgressBar) findViewById(R.id.waitLoading);
-			installDeferredLoader();
-
-			rootForm = findViewById(R.id.root_form);
-			toolbarBottom = findViewById(R.id.toolbar_bottom);
-			toolbarBottom.setVisibility(View.GONE);
-
-			actionBar = getActionBar();
-
-			fm = getSupportFragmentManager();
-		}
-		else
-		{
-			Toast.makeText(this, "Could not open image", Toast.LENGTH_LONG).show();
-			finish();
-		}
+		try {
+			initData();
 		
+
+			if (media.dcimEntry.preview != null)
+			{
+	
+				setContentView(R.layout.activity_editor);
+				
+				rootMain = (TwoViewSlideLayout) findViewById(R.id.root_main);
+				waitLoading = (ProgressBar) findViewById(R.id.waitLoading);
+				installDeferredLoader();
+	
+				rootForm = findViewById(R.id.root_form);
+				toolbarBottom = findViewById(R.id.toolbar_bottom);
+				toolbarBottom.setVisibility(View.GONE);
+	
+				actionBar = getActionBar();
+	
+				fm = getSupportFragmentManager();
+			}
+			else
+			{
+				Toast.makeText(this, "Could not open image", Toast.LENGTH_LONG).show();
+				finish();
+			}
+		
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -144,16 +153,25 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 				{
 					@Override
 					public void run() {
-						availableForms = FormUtility.getAvailableForms();
-						initToolbar();
-						initLayout();
+						try {
+							availableForms = FormUtility.getAvailableForms();
+
+							initToolbar();
+							initLayout();
+						} catch (InstantiationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IllegalAccessException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				});
 			}
 		});
 	}
 
-	private void initData()
+	private void initData() throws InstantiationException, IllegalAccessException
 	{
 		if (!getIntent().hasExtra(Codes.Extras.EDIT_MEDIA))
 		{
@@ -234,7 +252,15 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			{
 				if (((ODKFormListener) fullscreenView).saveForm() && ((ODKFormListener) detailsView).saveForm())
 				{
-					media.save();
+					try {
+						media.save();
+					} catch (InstantiationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}).start();		
@@ -262,7 +288,15 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		{
 			if (mActionMode == ActivityActionMode.EditText)
 			{
-				detailsView.stopEditNotes(true);
+				try {
+					detailsView.stopEditNotes(true);
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				setActionMode(ActivityActionMode.Normal);
 			}
 			else if (mActionMode == ActivityActionMode.Edit)
@@ -309,13 +343,29 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		}
 		case R.id.menu_edittext_cancel:
 		{
-			detailsView.stopEditNotes(false);
+			try {
+				detailsView.stopEditNotes(false);
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			setActionMode(ActivityActionMode.Edit);
 			return true;
 		}
 		case R.id.menu_edittext_save:
 		{
-			detailsView.stopEditNotes(true);
+			try {
+				detailsView.stopEditNotes(true);
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			setActionMode(ActivityActionMode.Edit);
 			return true;
 		}
@@ -334,7 +384,15 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			this.setActionMode(ActivityActionMode.Normal);
 		else if (mActionMode == ActivityActionMode.EditText)
 		{
-			detailsView.stopEditNotes(true);
+			try {
+				detailsView.stopEditNotes(true);
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			this.setActionMode(ActivityActionMode.Normal);
 		}
 		else
@@ -365,7 +423,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			}
 			
 			@SuppressWarnings("unused")
-			String j3m = ((IMedia) media).buildJ3M(this, false, new Handler());
+			String j3m = ((IMedia) media).buildJ3M(this, false, null);
 			
 			//generate public hash id from values
 			String creatorHash = media.genealogy.createdOnDevice;
@@ -648,7 +706,15 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		case Edit:
 			rootMain.expand();
 			//this.svRootMain.smoothScrollTo(0, 0);
-			detailsView.stopEditNotes(false);
+			try {
+				detailsView.stopEditNotes(false);
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
 			enableToolbar(true);
@@ -736,7 +802,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		}
 	}
 
-	public void showTagForm(IRegion region)
+	public void showTagForm(IRegion region) throws InstantiationException, IllegalAccessException
 	{
 		if (setActionMode(ActivityActionMode.EditForm))
 		{
@@ -768,9 +834,11 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 
 	@Override
 	public void onInformaStart(Intent intent) {
-		
+	
 		//if we are in edit mode, then do cache updates
-		informaCam.informaService.associateMedia(media);
+		
+		if (informaCam != null && informaCam.informaService != null)		
+			informaCam.informaService.associateMedia(media);
 
 	}
 

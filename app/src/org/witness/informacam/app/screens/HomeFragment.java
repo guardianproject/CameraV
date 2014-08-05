@@ -369,7 +369,15 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		}
 		else if (v == mBtnAudioNote)
 		{
-			recordNewAudio();
+			try {
+				recordNewAudio();
+			} catch (java.lang.InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else if (v == mBtnStopRecording)
 		{
@@ -399,7 +407,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		}
 	}
 
-	private void recordNewAudio()
+	private void recordNewAudio() throws java.lang.InstantiationException, IllegalAccessException
 	{
 
 		IMedia currentMedia = (IMedia) mPhotoAdapter.getObjectFromIndex(mPhotoPager.getCurrentItem());
