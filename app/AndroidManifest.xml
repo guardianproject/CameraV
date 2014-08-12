@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.witness.informacam.app"
     android:installLocation="preferExternal"
-    android:versionCode="146"
-    android:versionName="0.1.46" >
+    android:versionCode="147"
+    android:versionName="0.1.47" >
 
     <uses-sdk
         android:minSdkVersion="14"
