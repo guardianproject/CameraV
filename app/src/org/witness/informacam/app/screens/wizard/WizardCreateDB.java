@@ -23,6 +23,8 @@ public class WizardCreateDB extends Fragment implements OnClickListener
 	private Button commit;
 	private EditText alias, email, password, passwordAgain;
 
+	public final static int MINIMUM_PASSWORD_LENGTH = 4; //we know it sucks, but we'll leave it up to the user to provide longer
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -85,7 +87,9 @@ public class WizardCreateDB extends Fragment implements OnClickListener
 	
 	private boolean checkPasswordFormat(String password)
 	{		
-		return true;
+		if(password.length() >= MINIMUM_PASSWORD_LENGTH) 
+			return true;
+		return false;
 	}
 	
 	private boolean checkPasswordsMatch(String p1, String p2)
