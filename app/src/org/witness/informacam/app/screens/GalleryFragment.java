@@ -207,13 +207,15 @@ public class GalleryFragment extends Fragment implements
 			@Override
 			public void run() {
 				getMediaList();
-				a.runOnUiThread(new Runnable()
-				{
-					@Override
-					public void run() {
-						onMediaListAvailable();
-					}
-				});
+				
+				if (a != null)
+					a.runOnUiThread(new Runnable()
+					{
+						@Override
+						public void run() {
+							onMediaListAvailable();
+						}
+					});
 			}
 		});
 		getMediaListThread.start();

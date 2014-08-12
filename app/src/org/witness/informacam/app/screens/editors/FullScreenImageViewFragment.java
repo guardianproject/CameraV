@@ -13,6 +13,7 @@ import org.witness.informacam.app.screens.FullScreenViewFragment;
 import org.witness.informacam.app.utils.Constants.EditorActivityListener;
 import org.witness.informacam.app.utils.Constants.App.Editor;
 import org.witness.informacam.models.media.IImage;
+import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.utils.Constants.Logger;
 
 import android.app.Activity;
@@ -47,7 +48,10 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		super.onAttach(a);
 		
 		try {
-			media_ = new IImage(((EditorActivityListener) a).media());
+			IMedia iMedia = ((EditorActivityListener) a).media();
+			if (iMedia != null)
+				media_ = new IImage(iMedia);
+			
 		} catch (java.lang.InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
