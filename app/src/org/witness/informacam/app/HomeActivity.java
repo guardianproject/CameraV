@@ -254,12 +254,20 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	public void launchCamera() {
 		resetActionBar();
 		
+		boolean externalCamera = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefExternalCamera", false);
+		
 		if (toCamera.hasExtra(org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE))
 			toCamera.removeExtra(org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE);
 		
-		//toCamera.putExtra(
-		//		 org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
-		//		 org.witness.informacam.utils.Constants.App.Camera.Type.CAMERA);
+		if (!externalCamera)
+			toCamera.putExtra(
+					 org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
+					 org.witness.informacam.utils.Constants.App.Camera.Type.CAMERA);
+		else
+			toCamera.putExtra(
+					 org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
+					 org.witness.informacam.utils.Constants.App.Camera.Type.USERCONTROLLED);
+		
 		route = toCamera;
 		startActivityForResult(toCamera, Routes.CAMERA);
 	}
@@ -473,14 +481,14 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 				 * Codes.Extras.Messages.DCIM.ADD code, which is handled by
 				 * "onUpdate()"
 				 */
-				IDCIMSerializable returnedMedia = (IDCIMSerializable) data.getSerializableExtra(Codes.Extras.RETURNED_MEDIA);
-				Logger.d(LOG, "new dcim:\n" + returnedMedia.asJson().toString());
+				//IDCIMSerializable returnedMedia = (IDCIMSerializable) data.getSerializableExtra(Codes.Extras.RETURNED_MEDIA);
+				//Logger.d(LOG, "new dcim:\n" + returnedMedia.asJson().toString());
 				
-				if(!returnedMedia.dcimList.isEmpty()) {
-					setPending(returnedMedia.dcimList.size(), 0);
-				}
+				//if(!returnedMedia.dcimList.isEmpty()) {
+			//		setPending(returnedMedia.dcimList.size(), 0);
+			//	}
 
-				informaCam.stopInforma();
+		//		informaCam.stopInforma(); //camera activity handles this
 				route = null;
 				break;
 			case Codes.Routes.LOGOUT:
@@ -634,12 +642,12 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	{
 		if (informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED)
 		{
-			Log.d(LOG, "Set pending: " + numPending + " and completed: " + numCompleted);
+			//Log.d(LOG, "Set pending: " + numPending + " and completed: " + numCompleted);
 			for (Fragment f : fragments)
 			{
 				if (f instanceof ListAdapterListener)
 				{
-					((ListAdapterListener) f).setPending(numPending, numCompleted);
+					((ListAdapterListener) f).setPending(numPending, numCompleted);					
 				}
 			}
 		}
@@ -742,13 +750,23 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	public void launchVideo()
 	{
 		resetActionBar();
-		toCamera.putExtra(
-				org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
-				org.witness.informacam.utils.Constants.App.Camera.Type.CAMCORDER);
+		
+		boolean externalCamera = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefExternalCamera", false);
+		
+		if (!externalCamera)
+			toCamera.putExtra(
+					org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
+					org.witness.informacam.utils.Constants.App.Camera.Type.CAMCORDER);
+		else
+			toCamera.putExtra(
+					org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
+					org.witness.informacam.utils.Constants.App.Camera.Type.USERCONTROLLED);
+			
 		route = toCamera;
 		startActivityForResult(toCamera, Routes.CAMERA);
 		
 	}
+
 
 	@Override
 	public void launchMain()

@@ -2,6 +2,7 @@ package org.witness.informacam.app.screens.popups;
 
 import info.guardianproject.onionkit.ui.OrbotHelper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,8 +99,17 @@ public class SharePopup {
 		divider2 = alert.findViewById(R.id.divider2);
 		
 		li = LayoutInflater.from(a);
-		initLayout();
-
+		
+		try
+		{
+			initLayout();
+		}
+		catch (Exception re)
+		{
+			Log.e("Setup","Could not init data and layout",re);
+			throw new RuntimeException("Could not init data");
+		}
+		
 		h = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -147,11 +157,11 @@ public class SharePopup {
 				new ColorDrawable(android.graphics.Color.TRANSPARENT));
 	}
 
-	private void initLayout() {
+	private void initLayout() throws IllegalAccessException, InstantiationException, IOException {
 		initData();
 	}
 
-	private void initData() {
+	private void initData() throws IllegalAccessException, InstantiationException, IOException {
 		informaCam = InformaCam.getInstance();
 		IInstalledOrganizations installedOrganizations = (IInstalledOrganizations) informaCam.getModel(new IInstalledOrganizations());
 

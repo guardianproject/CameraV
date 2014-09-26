@@ -377,9 +377,9 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 								Log.e(LOG, e.toString(),e);
 							} catch (JSONException e) {
 								Log.e(LOG, e.toString(),e);
-							} catch (PGPException e) {
+							} catch (Exception e) {
 								Log.e(LOG, e.toString(),e);
-								throw new RuntimeException("could not init pgp data",e);
+								throw new RuntimeException("could not init data",e);
 							}
 							
 							

@@ -1,6 +1,5 @@
 package org.witness.informacam.app.screens.editors;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -10,8 +9,8 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.FullScreenViewFragment;
-import org.witness.informacam.app.utils.Constants.EditorActivityListener;
 import org.witness.informacam.app.utils.Constants.App.Editor;
+import org.witness.informacam.app.utils.Constants.EditorActivityListener;
 import org.witness.informacam.models.media.IImage;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.utils.Constants.Logger;
@@ -25,6 +24,7 @@ import android.media.ExifInterface;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	Bitmap bitmap, originalBitmap, previewBitmap;
@@ -81,28 +81,39 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		mediaHolder_.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		mediaHolder.addView(mediaHolder_);
 		
-		loadBitmap ();
-		setBitmap();
+		try
+		{
+			boolean loaded = loadBitmap ();
+			
+			if (loaded)
+				setBitmap();
+		}
+		catch (IOException ioe)
+		{
+			Toast.makeText(getActivity(), "There was an error loading the image", Toast.LENGTH_SHORT).show();
+			Logger.e(LOG, ioe);
+		}
 	}
 	
-	 private void loadBitmap ()
+	 private boolean loadBitmap () throws IOException
 	 {
 		BitmapFactory.Options bfo = new BitmapFactory.Options();
 		bfo.inJustDecodeBounds = true;
 		bfo.inPreferredConfig = Bitmap.Config.RGB_565;
 
-		BufferedInputStream bytes = null;
-		InputStream is = null;
 		
-		is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileAsset.path, media_.dcimEntry.fileAsset.source);
-		bytes = new BufferedInputStream(is);
+		InputStream is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileAsset.path, media_.dcimEntry.fileAsset.source);
 		
-		bitmap = BitmapFactory.decodeStream(bytes, null, bfo);
+		if (is == null)
+			return false;
 		
+		BitmapFactory.decodeStream(is, null, bfo);
+		is.close();
+				
 		// Ratios between the display and the image
 		double widthRatio =  Math.floor(bfo.outWidth / dims[0]);
 		double heightRatio = Math.floor(bfo.outHeight / dims[1]);
-		Log.d(LOG, "wRatio: " + widthRatio + ", hRatio: " + heightRatio);
+		//Log.d(LOG, "wRatio: " + widthRatio + ", hRatio: " + heightRatio);
 
 		// If both of the ratios are greater than 1,
 		// one of the sides of the image is greater than the screen
@@ -117,23 +128,12 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		bfo.inSampleSize = inSampleSize;
 		bfo.inJustDecodeBounds = false;
 
-		try {
-			is.close();
-			bytes.close();
-			
-			is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileAsset.path, media_.dcimEntry.fileAsset.source);
-			bytes = new BufferedInputStream(is);
-			
-			bitmap = BitmapFactory.decodeStream(bytes, null, bfo);
-			
-			is.close();
-			bytes.close();
-		} catch (IOException e) {
-			Logger.e(LOG, e);
-		}
+		is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileAsset.path, media_.dcimEntry.fileAsset.source);
+		bitmap = BitmapFactory.decodeStream(is, null, bfo);
+		is.close();
 
 		if (media_.dcimEntry.exif.orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-			Log.d(LOG, "Rotating Bitmap 90");
+		//	Log.d(LOG, "Rotating Bitmap 90");
 			Matrix rotateMatrix = new Matrix();
 			rotateMatrix.postRotate(90);
 			bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),rotateMatrix,false);
@@ -146,6 +146,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 
 		originalBitmap = bitmap;
 		
+		return true;
 	}
 
 	private void setBitmap() {

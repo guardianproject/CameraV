@@ -122,7 +122,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
 		super.onActivityCreated(savedInstanceState);
-		Log.d(LOG, "GALLERY ON ACTIVITY CREATED CALLED");
+		//Log.d(LOG, "GALLERY ON ACTIVITY CREATED CALLED");
 
 		initLayout(savedInstanceState);
 	}
@@ -342,7 +342,6 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	@Override
 	public void updateAdapter(int which)
 	{
-		Log.d(LOG, "UPDATING OUR ADAPTERS");
 		if (a != null)
 		{
 			listMedia = informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
