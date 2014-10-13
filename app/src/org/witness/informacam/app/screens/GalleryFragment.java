@@ -12,9 +12,11 @@ import org.witness.informacam.app.utils.Constants.Preferences;
 import org.witness.informacam.app.utils.adapters.GalleryFilterAdapter;
 import org.witness.informacam.app.utils.adapters.GalleryGridAdapter;
 import org.witness.informacam.json.JSONException;
+import org.witness.informacam.models.media.IAsset;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
+import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 
 import android.app.ActionBar;
@@ -385,8 +387,8 @@ public class GalleryFragment extends Fragment implements
 			// Inflate a menu resource providing context menu items
 			// MenuInflater inflater = mode.getMenuInflater();
 			// inflater.inflate(R.menu.context_menu, menu);
-			//menu.add(Menu.NONE, R.string.menu_share, 0, R.string.menu_share)
-				//	.setIcon(R.drawable.ic_gallery_share);
+			menu.add(Menu.NONE, R.string.menu_share, 0, R.string.menu_share)
+				.setIcon(R.drawable.ic_gallery_share);
 			menu.add(Menu.NONE, R.string.home_gallery_delete, 0,
 					R.string.home_gallery_delete).setIcon(
 					R.drawable.ic_gallery_trash);
@@ -414,6 +416,44 @@ public class GalleryFragment extends Fragment implements
 				mode.finish(); // Action picked, so close the CAB
 				return true;
 			case R.string.menu_share:
+				((HomeActivityListener) a).waiter(true);
+				new Thread(new Runnable() {
+					private ActionMode mMode;
+
+					@Override
+					public void run() {
+						for (IMedia m : batch) {
+							
+							try
+							{
+								IAsset a = m.export(getActivity(), h);
+								
+							}
+							catch (Exception e)
+							{
+								Logger.e(LOG, e);
+							}
+						}
+						h.post(new Runnable() {
+							private ActionMode mMode;
+
+							@Override
+							public void run() {
+								mMode.finish();
+							}
+
+							public Runnable init(ActionMode mode) {
+								mMode = mode;
+								return this;
+							}
+						}.init(mMode));
+					}
+
+					public Runnable init(ActionMode mode) {
+						mMode = mode;
+						return this;
+					}
+				}.init(mode)).start();
 				return true;
 			case R.string.home_gallery_delete:
 				((HomeActivityListener) a).waiter(true);
