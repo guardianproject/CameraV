@@ -83,7 +83,7 @@ public class HashActivity extends Activity {
 		final String hashTag = "\n\nSearch for this file on our public notary: " + searchLink + " #informacam";
 		
 		new AlertDialog.Builder(this)
-	    .setTitle("InformaCam PixelHash")
+	    .setTitle(getString(R.string.app_name) + " PixelHash")
 	    .setMessage(hashMessage)
 	    .setPositiveButton("Share Hash", new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int which) { 
