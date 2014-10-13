@@ -450,9 +450,9 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			    	sendIntent.setAction(Intent.ACTION_SEND);
 			    	
 			    	if (!hasBeenShared) //if it hasn't been shared, then just show the hashes
-			    		sendIntent.putExtra(Intent.EXTRA_TEXT, "#InformaCam ID:" + hexString + " (MEDIA:" + mediaHash + ")");
+			    		sendIntent.putExtra(Intent.EXTRA_TEXT, "#" + getString(R.string.app_name) + " ID:" + hexString + " (MEDIA:" + mediaHash + ")");
 			    	else //if it has, then show a URL
-			    		sendIntent.putExtra(Intent.EXTRA_TEXT, "#InformaCam https://j3m.info/submissions/?hashes=" + hexString + " (media:" + mediaHash + ")");
+			    		sendIntent.putExtra(Intent.EXTRA_TEXT, "#" + getString(R.string.app_name) + " https://j3m.info/submissions/?hashes=" + hexString + " (media:" + mediaHash + ")");
 			    	
 			    	sendIntent.setType("text/plain");
 			    	startActivity(sendIntent);
