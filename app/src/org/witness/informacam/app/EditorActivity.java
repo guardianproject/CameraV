@@ -103,7 +103,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			initData();
 		
 
-			if (media.dcimEntry.preview != null)
+			if (media.dcimEntry.thumbnail != null)
 			{
 	
 				setContentView(R.layout.activity_editor);

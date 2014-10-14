@@ -64,26 +64,27 @@ public class GalleryListAdapter extends BaseAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		IMedia m = (IMedia) media.get(position);
 		
-		View view = li.inflate(R.layout.adapter_gallery_list, null);
+		if (convertView == null)
+			convertView = li.inflate(R.layout.adapter_gallery_list, null);
 		
-		ImageView iv = (ImageView) view.findViewById(R.id.gallery_list);
+		ImageView iv = (ImageView) convertView.findViewById(R.id.gallery_list);
 		
-		Bitmap bitmap = m.getBitmap(m.dcimEntry.list_view);
+		Bitmap bitmap = m.getBitmap(m.dcimEntry.thumbnail);
 		iv.setImageBitmap(bitmap);
 		
-		TextView tv = (TextView) view.findViewById(R.id.gallery_details);
+		TextView tv = (TextView) convertView.findViewById(R.id.gallery_details);
 		tv.setText(m.renderDetailsAsText(1));
 		
 		try {
 			if(!m.getBoolean(Models.IMediaManifest.Sort.IS_SHOWING)) {
-				view.setVisibility(View.GONE);
+				convertView.setVisibility(View.GONE);
 			}
 		} catch (JSONException e) {
 			Log.e(LOG, e.toString());
 			e.printStackTrace();
 		}
 		
-		return view;
+		return convertView;
 	}
 
 }
