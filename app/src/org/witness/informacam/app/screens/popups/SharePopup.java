@@ -6,14 +6,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.javarosa.core.services.Logger;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.R;
 import org.witness.informacam.app.utils.Constants.App;
-import org.witness.informacam.utils.Constants.Codes;
 import org.witness.informacam.app.utils.UIHelpers;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.organizations.IInstalledOrganizations;
 import org.witness.informacam.models.organizations.IOrganization;
+import org.witness.informacam.utils.Constants.Codes;
 import org.witness.informacam.utils.Constants.Models;
 
 import android.annotation.SuppressLint;
@@ -135,6 +136,7 @@ public class SharePopup {
 				else if (msg.what == -1)
 				{
 					inProgressBar.setProgress(100);
+					alert.cancel();
 					
 					String errMsg = b.getString("msg");
 					Toast.makeText(a,errMsg, Toast.LENGTH_LONG).show();
@@ -244,6 +246,7 @@ public class SharePopup {
 				}
 				catch (Exception e)
 				{
+					Logger.exception(LOG, e);
 					Message msg = new Message();
 					msg.what = -1;
 					msg.getData().putString("msg", "Error exporting metadata: " + e.getMessage());

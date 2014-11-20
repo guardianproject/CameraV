@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Camera✓</string>
+    <string name="app_name">CameraV</string>
 	<string name="photo">Photo</string>
 	<string name="video">Video</string>
 	<string name="menu_all_media">All Media</string>
@@ -21,7 +21,6 @@
 	<string name="log_out">Log Out</string>
 	<string name="no_notifications">No notifications.</string>
 	<string name="connect_with_organizations">Connect with organizations:</string>
-	<string name="original_images_should_be">Original images should be:</string>
 	<string name="delete">Delete</string>
 	<string name="rename">Rename</string>
 	<string name="export">Export</string>
@@ -67,8 +66,9 @@
 	<string name="login_passphrase">Passphrase</string>
 	
 	<string name="preferences">Preferences</string>
-	<string name="prefs_images_deleted">Deleted</string>
-	<string name="prefs_images_saved">Saved</string>
+	<string name="original_images_should_be">Captured photos &amp; video should be stored in:</string>	
+	<string name="prefs_images_deleted">Encrypted Storage (Slower)</string>
+	<string name="prefs_images_saved">Standard Storage (Faster))</string>
 	<string name="prefs_lock_screen">Lock screen</string>
 	<string name="prefs_lock_screen_on">On</string>
 	<string name="prefs_lock_screen_off">Off</string>
@@ -164,4 +164,5 @@
     <string name="panic_test_successful">Good job! In a real scenario, you would have successfully completed a wipe.</string>
     
     <string name="prefs_gps_highres">Force GPS High-Res</string>
+    <string name="prefs_external_camera">Use External Camera Apps</string>
 </resources>

@@ -262,11 +262,11 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 		if (!externalCamera)
 			toCamera.putExtra(
 					 org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
-					 org.witness.informacam.utils.Constants.App.Camera.Type.CAMERA);
+					 org.witness.informacam.utils.Constants.App.Camera.Type.SECURE_CAMERA);
 		else
 			toCamera.putExtra(
 					 org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
-					 org.witness.informacam.utils.Constants.App.Camera.Type.USERCONTROLLED);
+					 org.witness.informacam.utils.Constants.App.Camera.Type.CAMERA);
 		
 		route = toCamera;
 		startActivityForResult(toCamera, Routes.CAMERA);
@@ -720,7 +720,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 					oh.requestOrbotStart(HomeActivity.this);
 				}
 			});
-			break;
+			break; 
 
 		}
 	}
@@ -752,15 +752,15 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 		resetActionBar();
 		
 		boolean externalCamera = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefExternalCamera", false);
-		
+
 		if (!externalCamera)
 			toCamera.putExtra(
 					org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
-					org.witness.informacam.utils.Constants.App.Camera.Type.CAMCORDER);
+					org.witness.informacam.utils.Constants.App.Camera.Type.SECURE_CAMCORDER);
 		else
 			toCamera.putExtra(
 					org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE,
-					org.witness.informacam.utils.Constants.App.Camera.Type.USERCONTROLLED);
+					org.witness.informacam.utils.Constants.App.Camera.Type.CAMCORDER);
 			
 		route = toCamera;
 		startActivityForResult(toCamera, Routes.CAMERA);

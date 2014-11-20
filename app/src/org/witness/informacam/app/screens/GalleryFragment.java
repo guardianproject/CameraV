@@ -139,6 +139,7 @@ public class GalleryFragment extends Fragment implements
 			sorting = Models.IMediaManifest.Sort.TYPE_VIDEO;
 		
 		listMedia = informaCam.mediaManifest.sortBy(sorting);
+		
 		if (listMedia != null)
 			listMedia = new ArrayList<IMedia>(listMedia);
 		

@@ -224,7 +224,34 @@
             android:exported="false"
             />
         <activity
+            android:name="info.guardianproject.informacam.camera.SecureVideoRecorderActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name" 
+            android:exported="true"
+            >
+            <intent-filter>                
+				<action android:name="info.guardianproject.action.SECURE_VIDEO_CAMERA" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            
+			</activity>
+        <activity
+            android:name="info.guardianproject.informacam.camera.SecureCameraActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name" 
+            android:exported="true"
+            >
+            <intent-filter>                
+				<action android:name="info.guardianproject.action.SECURE_STILL_IMAGE_CAMERA" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+                           
+			</activity>
+        <activity
             android:name="org.witness.informacam.ui.CameraActivity"
+            android:screenOrientation="landscape"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name" 
             android:exported="false"
