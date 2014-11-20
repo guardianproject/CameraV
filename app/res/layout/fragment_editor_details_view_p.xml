@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/details_media_preview"
         android:layout_width="0dip"
-        android:layout_weight="0.5"
+        android:layout_weight="0.9"
         android:layout_height="match_parent"
         android:layout_margin="0dip"
         android:padding="0dip"
@@ -18,7 +18,7 @@
 
     <ScrollView
         android:layout_width="0dip"
-        android:layout_weight="0.5"
+        android:layout_weight="0.1"
         android:layout_height="match_parent" >
 
         <FrameLayout
