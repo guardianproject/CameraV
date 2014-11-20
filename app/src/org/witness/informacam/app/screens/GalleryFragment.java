@@ -506,7 +506,7 @@ public class GalleryFragment extends Fragment implements
 	public void setPending(final int numPending, final int numCompleted) {		
 		
 		if(a == null) {
-			return;
+			return; 
 		}
 		
 		mNumLoading = numPending - numCompleted;

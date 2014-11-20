@@ -141,12 +141,12 @@ public class SharePopup {
 					String errMsg = b.getString("msg");
 					Toast.makeText(a,errMsg, Toast.LENGTH_LONG).show();
 				}
-				else if (msg.what == 81181)
+				else if (msg.what == Codes.Messages.Transport.ORBOT_UNINSTALLED)
 				{
 					OrbotHelper oh = new OrbotHelper(a);
 					oh.promptToInstall(a);
 				}
-				else if (msg.what == 81182)
+				else if (msg.what == Codes.Messages.Transport.ORBOT_NOT_RUNNING)
 				{
 					OrbotHelper oh = new OrbotHelper(a);
 					oh.requestOrbotStart(a);
