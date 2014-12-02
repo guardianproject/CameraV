@@ -37,6 +37,7 @@ import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -80,6 +81,8 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	ServerSocket mVideoServerSocket;
 	private int mLocalHostPort = 9999;
+	
+	private Handler handler = new Handler();
 	
 	private final static String LOG = Editor.LOG;
 	
@@ -197,8 +200,9 @@ OnRangeSeekBarChangeListener<Integer> {
 				initMediaServer();
 			}
 			
-			videoUri = Uri.parse("http://localhost:" + mLocalHostPort + "/video");
-			mediaPlayer.setDataSource(videoUri.toString());			
+			String urlPath = "http://localhost:" + mLocalHostPort + "/video";
+			videoUri = Uri.parse(urlPath);
+			mediaPlayer.setDataSource(urlPath);			
 		}
 		else
 		{
@@ -206,8 +210,26 @@ OnRangeSeekBarChangeListener<Integer> {
 			mediaPlayer.setDataSource(videoUri.toString());
 		}
 		
-		mediaPlayer.prepare();
+		handler.postDelayed(new Runnable ()
+		{
+			public void run ()
+			{
 
+				try {
+					mediaPlayer.prepare();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		}
+		
+		, 2000);
+		
 			
 	}
 	
