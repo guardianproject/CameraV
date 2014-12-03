@@ -165,4 +165,6 @@
     
     <string name="prefs_gps_highres">Force GPS High-Res</string>
     <string name="prefs_external_camera">Use External Camera Apps</string>
+    
+    <string name="menu_alwayson">Toggle Always-On</string>
 </resources>

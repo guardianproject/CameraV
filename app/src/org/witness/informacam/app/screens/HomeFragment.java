@@ -24,6 +24,7 @@ import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.storage.FormUtility;
+import org.witness.informacam.ui.AlwaysOnActivity;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
@@ -37,7 +38,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -276,6 +276,12 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 				Intent intent = informaCam.exportCredentials();
 				getActivity().startActivity(intent);
 				return true;
+				
+			case R.id.menu_alwayson:
+				Intent intentAlwaysOn = new Intent(a, AlwaysOnActivity.class);
+				getActivity().startActivity(intentAlwaysOn);
+				return true;
+				
 		}
 		
 		return super.onOptionsItemSelected(item);
