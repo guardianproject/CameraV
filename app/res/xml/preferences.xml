@@ -14,13 +14,15 @@
             android:entryValues="@array/languages"
             android:key="iw_language"
             android:title="@string/prefs_language_title" />
+        <!-- 
         <ListPreference
             android:title="@string/original_images_should_be"
             android:defaultValue="0"
             android:key="assetEncryption"
             android:entries="@array/originalImageOptions_"
             android:entryValues="@array/originalImageOptions" />
-
+ -->
+ 
         <ListPreference
             android:title="@string/prefs_panic"
             android:defaultValue="0"

@@ -215,20 +215,23 @@ OnRangeSeekBarChangeListener<Integer> {
 			public void run ()
 			{
 
-				try {
-					mediaPlayer.prepare();
-				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (mediaPlayer != null)
+				{
+					try {
+						mediaPlayer.prepare();
+					} catch (IllegalStateException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 
 			}
 		}
 		
-		, 2000);
+		, 500);
 		
 			
 	}
