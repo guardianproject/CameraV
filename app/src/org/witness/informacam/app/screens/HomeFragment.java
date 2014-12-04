@@ -326,10 +326,6 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 				getActivity().startActivity(intent);
 				return true;
 				
-			case R.id.menu_alwayson:
-				Intent intentAlwaysOn = new Intent(a, AlwaysOnActivity.class);
-				getActivity().startActivity(intentAlwaysOn);
-				return true;
 				
 		}
 		
