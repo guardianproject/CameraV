@@ -22,12 +22,9 @@ import org.witness.informacam.app.utils.Constants.Preferences;
 import org.witness.informacam.app.utils.adapters.HomePhotoAdapter;
 import org.witness.informacam.informa.InformaService;
 import org.witness.informacam.models.forms.IForm;
-import org.witness.informacam.models.j3m.IDCIMDescriptor.IDCIMSerializable;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.storage.FormUtility;
-import org.witness.informacam.ui.AlwaysOnActivity;
-import org.witness.informacam.utils.Constants.Codes;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Logger;
@@ -76,7 +73,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	List<IMedia> listMedia = null;
 
 	private static final String LOG = Home.LOG;
-	private final InformaCam informaCam = InformaCam.getInstance();
+	private InformaCam informaCam;
 	
 	@SuppressWarnings("unused")
 	private ActionMode mActionMode;
@@ -104,14 +101,16 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 
 	private AudioNoteRecorder mRecorder;
 
+	Switch mActionView;
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		
-		informaCam.setStatusListener(this);
-		informaCam.setEventListener(this);
+		
 	}
 
 	@Override
@@ -128,6 +127,18 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	{
 		super.onAttach(a);
 		this.a = a;
+
+		informaCam = (InformaCam)a.getApplication();
+		
+		informaCam.setStatusListener(this);
+		informaCam.setEventListener(this);
+		
+		if (mActionView != null)
+		{
+			boolean isActive = (InformaService.getInstance() != null && InformaService.getInstance().suckersActive());
+			mActionView.setChecked(isActive);
+		}
+
 	}
 
 	@Override
@@ -251,33 +262,31 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 
 	    // Get the action view used in your toggleservice item
 	    final MenuItem toggleservice = menu.findItem(R.id.toggleservice);
-	    final Switch actionView = (Switch) toggleservice.getActionView();
+	    mActionView = (Switch) toggleservice.getActionView();
+
+	    		
+
+	    if (InformaService.getInstance() != null 
+	    		&& InformaService.getInstance().suckersActive())
+	    	mActionView.setChecked(true);
 	    
-	    if (informaCam.informaService != null && informaCam.informaService.suckersActive())
-	    	actionView.setChecked(true);
-	    
-	    actionView.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+	    mActionView.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 	        @Override
 	        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 	            
 	        	if (isChecked)
 	        	{
-	        		if (informaCam.informaService == null)
-	        			informaCam.startInforma();
-	        		else
-	        		{
-	        			onInformaStart(null);
-	        		}
+	        		onInformaStart(null);
+	        		
 	        	}
 	        	else
 	        	{
 
-	        		if(informaCam.informaService != null && informaCam.informaService.suckersActive()) {
+	        		if(InformaService.getInstance() != null && InformaService.getInstance().suckersActive()) {
 	        						
-	        			informaCam.informaService.stopAllSuckers();
+	        			InformaService.getInstance().stopAllSuckers();
 	        			informaCam.ioService.stopDCIMObserver();
-	        			informaCam.stopInforma();
 	        			
 	        			
 	        		}
@@ -602,15 +611,18 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	@Override
 	public void onInformaStart(Intent intent) {
 		
-		informaCam.informaService = InformaService.getInstance();		
-		
-		if (!informaCam.informaService.suckersActive())
+		if (!InformaService.getInstance().suckersActive())
 		{
-			informaCam.informaService.startAllSuckers();
+			InformaService.getInstance().startAllSuckers();
 			informaCam.ioService.startDCIMObserver(HomeFragment.this, null, null);
+
 		}
 		
-		
+		if (mActionView != null)
+		{
+			boolean isActive = (InformaService.getInstance() != null && InformaService.getInstance().suckersActive());
+			mActionView.setChecked(isActive);
+		}
 	}
 	
 	@Override
@@ -624,5 +636,20 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		super.onHiddenChanged(hidden);
+		
+		if (!hidden)
+		{
+			if (mActionView != null)
+			{
+				boolean isActive = (InformaService.getInstance() != null && InformaService.getInstance().suckersActive());
+				mActionView.setChecked(isActive);
+			}
+		}
+	}
+
 
 }

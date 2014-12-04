@@ -5,7 +5,7 @@
     <string name="cacheword_notification_cached_title">CameraV Unlocked</string>
     <string name="cacheword_notification_cached">Tap to lock.</string>
     <string name="cacheword_notification_cached_message">Tap to lock.</string>
-    <bool name="cacheword_use_notification_default">true</bool>
+    <bool name="cacheword_use_notification_default">false</bool>
 
     <!-- To configure the notification icon create a drawable resource named:
            cacheword_notification_icon

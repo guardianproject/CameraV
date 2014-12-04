@@ -495,7 +495,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 				logoutUser();
 				break;
 			case Codes.Routes.EDITOR:
-				informaCam.stopInforma();
+				//informaCam.stopInforma();
 				route = null;
 				break;
 			case Codes.Routes.WIPE:
@@ -742,7 +742,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	@Override
 	public void launchGallery()
 	{
-		informaCam.stopInforma();
+		//informaCam.stopInforma();
 		viewPager.setCurrentItem(INDEX_GALLERY);
 	}
 

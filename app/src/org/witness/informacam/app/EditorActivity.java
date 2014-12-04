@@ -17,6 +17,7 @@ import org.witness.informacam.app.utils.Constants.Codes;
 import org.witness.informacam.app.utils.Constants.EditorActivityListener;
 import org.witness.informacam.app.utils.UIHelpers;
 import org.witness.informacam.app.views.TwoViewSlideLayout;
+import org.witness.informacam.informa.InformaService;
 import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IImage;
 import org.witness.informacam.models.media.IMedia;
@@ -38,7 +39,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -606,28 +606,15 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		if (mode == ActivityActionMode.Normal)
 		{
 			
-			if (informaCam.informaService != null)
+			if (InformaService.getInstance() != null)
 			{
 				//if we are just in normal viewing mode, don't do any cache updating
-				informaCam.informaService.unassociateMedia();
+				InformaService.getInstance().unassociateMedia();
 
-				informaCam.stopInforma();
 			}
 			
 
 		}
-		else
-		{
-			
-
-			if (informaCam.informaService == null)
-			{
-				informaCam.startInforma();
-			}
-			
-
-		}
-		
 		// Already in action mode
 		if (mActionMode == mode)
 			return false;
@@ -837,8 +824,8 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 	
 		//if we are in edit mode, then do cache updates
 		
-		if (informaCam != null && informaCam.informaService != null)		
-			informaCam.informaService.associateMedia(media);
+		if (informaCam != null && InformaService.getInstance() != null)		
+			InformaService.getInstance().associateMedia(media);
 
 	}
 

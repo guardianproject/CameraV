@@ -167,7 +167,7 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 			{
 				Logger.d(LOG, "Logout the user and close.");
 				informaCam.setStatusListener(null);
-				informaCam.stopInforma();
+				//informaCam.stopInforma();
 				route = null;
 				setResult(resultCode, getIntent());
 				finish();
