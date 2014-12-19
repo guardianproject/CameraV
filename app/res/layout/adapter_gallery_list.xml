@@ -9,8 +9,7 @@
         android:id="@+id/gallery_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:src="@drawable/test_img_list" />
+        android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/gallery_details"
