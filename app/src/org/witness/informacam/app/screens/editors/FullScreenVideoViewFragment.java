@@ -1,6 +1,6 @@
 package org.witness.informacam.app.screens.editors;
 
-import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
@@ -137,7 +137,7 @@ OnRangeSeekBarChangeListener<Integer> {
 						
 						Socket socket = mVideoServerSocket.accept();
 						
-						BufferedOutputStream os = new BufferedOutputStream(socket.getOutputStream());
+						DataOutputStream os = new DataOutputStream(socket.getOutputStream());
 						String mType = media_.dcimEntry.mediaType;
 
 						IOService ioService = InformaCam.getInstance().ioService;
