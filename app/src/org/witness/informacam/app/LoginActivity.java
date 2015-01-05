@@ -6,26 +6,27 @@ import net.hockeyapp.android.UpdateManager;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.utils.Constants;
 import org.witness.informacam.app.utils.UIHelpers;
-import org.witness.informacam.app.R;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-public class LoginActivity extends Activity implements OnClickListener {
+public class LoginActivity extends Activity {
 	private final static String LOG = Constants.App.Login.LOG;
 	private String packageName;
 
 	View rootView;
 	EditText password;
-	Button commit;
+//	Button commit;
 	ProgressBar waiter;
 
 	Handler h = new Handler();
@@ -41,9 +42,26 @@ public class LoginActivity extends Activity implements OnClickListener {
 		rootView = findViewById(R.id.llRoot);
 
 		password = (EditText) findViewById(R.id.login_password);
+		password.setImeOptions(EditorInfo.IME_ACTION_DONE);
+		password.setOnEditorActionListener(new OnEditorActionListener ()
+		{
+			@Override
+			public boolean onEditorAction(TextView arg0, int actionId, KeyEvent event) {
+				 if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+			                actionId == EditorInfo.IME_ACTION_DONE ||
+			                event.getAction() == KeyEvent.ACTION_DOWN &&
+			                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {			
+							doLogin ();
+						}
+					   return true;
+			}
+			
+		});
 
+		/**
 		commit = (Button) findViewById(R.id.login_commit);
 		commit.setOnClickListener(this);
+		*/
 
 		waiter = (ProgressBar) findViewById(R.id.login_waiter);
 		
@@ -54,16 +72,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private void toggleStatus(boolean showButton) {
 		if(showButton) {
 			waiter.setVisibility(View.GONE);
-			commit.setVisibility(View.VISIBLE);
+		//	commit.setVisibility(View.VISIBLE);
 		} else {
-			commit.setVisibility(View.GONE);
+			//commit.setVisibility(View.GONE);
 			waiter.setVisibility(View.VISIBLE);
 		}
 	}
 
-	@Override
-	public void onClick(View v) {
-		if(v == commit && password.getText().length() > 0) {
+	
+	public void doLogin () 
+	{
+		if(password.getText().length() > 0) {
 			h.post(new Runnable() {
 				@Override
 				public void run() {

@@ -11,12 +11,14 @@
     android:descendantFocusability="beforeDescendants"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:layout_gravity="center"
+    android:gravity="center"
     >
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:gravity="top|center"
+        android:gravity="center"
         android:src="@drawable/ic_logo" />
 
     <LinearLayout
@@ -28,6 +30,8 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/wizard_rounded_background"
         android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center"
         android:padding="10dp" >
 
         <org.witness.informacam.app.views.CustomFontEditText
@@ -37,11 +41,13 @@
             android:layout_height="wrap_content"
             android:hint="@string/login_passphrase"
             android:inputType="textPassword"
+            android:gravity="center_horizontal"
             android:maxLength="50" />
 
     </LinearLayout>
 
-    <Button
+    <!-- 
+    <Button        
         android:id="@+id/login_commit"
         style="@style/BlueRoundedButton"
         android:layout_width="match_parent"
@@ -51,6 +57,7 @@
         android:layout_marginRight="30dp"
         android:layout_marginTop="15dp"
         android:text="@string/login_open" />
+         -->
 
     <ProgressBar
         android:id="@+id/login_waiter"
