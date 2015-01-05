@@ -1,15 +1,14 @@
 package org.witness.informacam.app.screens.editors;
 
-import java.io.DataOutputStream;
+import info.guardianproject.informacam.camera.StreamOverHttp;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.R;
@@ -20,9 +19,8 @@ import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.media.IRegionBounds;
 import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.models.media.IVideoRegion;
-import org.witness.informacam.storage.IOService;
 import org.witness.informacam.ui.editors.IRegionDisplay;
-import org.witness.informacam.utils.Constants.App.Storage;
+import org.witness.informacam.utils.Constants.App.Informa;
 
 import android.app.Activity;
 import android.graphics.RectF;
@@ -58,8 +56,10 @@ public class FullScreenVideoViewFragment extends FullScreenViewFragment implemen
 OnErrorListener, OnInfoListener, OnBufferingUpdateListener, OnPreparedListener, OnSeekCompleteListener,
 OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaController.MediaPlayerControl, 
 OnRangeSeekBarChangeListener<Integer> {
+	
 	IVideo media_;
-
+	InformaCam informa;
+	
 	//MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 	VideoView videoView;
 	SurfaceHolder surfaceHolder;
@@ -76,11 +76,8 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	long duration = 0L;
 	int currentCue = 1;
-	
-	Thread mServerThread;
 
-	ServerSocket mVideoServerSocket;
-	private int mLocalHostPort = 9999;
+	private int mLocalHostPort = 7231;
 	
 	private Handler handler = new Handler();
 	
@@ -99,78 +96,34 @@ OnRangeSeekBarChangeListener<Integer> {
 			e.printStackTrace();
 		}
 		
-		
+		informa = (InformaCam)a.getApplication();
 	}
 	
 
 	boolean keepRunning = true;
+	//StreamProxy mStreamProxy = null;
+	StreamOverHttp mStreamProxy = null;
+	int serverPort = 7231;
 	
 	private void initMediaServer ()
 	{
 
 
-		
-		
 		closeMediaServer();
 		
+		//mStreamProxy = new StreamProxy(7231);
+		//mStreamProxy.start();
 		
-		mServerThread = new Thread(new Runnable() {
-			
-			public void run() {
-
-				keepRunning = true;
-				
-				while (keepRunning)
-				{
-					try
-					{
-
-						if (mVideoServerSocket == null)
-						{
-							try {
-								mVideoServerSocket = new ServerSocket (mLocalHostPort);
-							} catch (IOException e) {
-								Log.e(LOG, "unable to open server socket",e);
-								return;
-							}
-						}
-						
-						Socket socket = mVideoServerSocket.accept();
-						
-						DataOutputStream os = new DataOutputStream(socket.getOutputStream());
-						String mType = media_.dcimEntry.mediaType;
-
-						IOService ioService = InformaCam.getInstance().ioService;
-			
-						IOUtils.write("HTTP/1.1 200\r\n",os);
-						IOUtils.write("Content-Type: " + mType + "\r\n",os);
-						
-						long contentLength = ioService.getLength(media_.dcimEntry.fileAsset.path, media_.dcimEntry.fileAsset.source);
-						
-						IOUtils.write("Content-Length: " + contentLength + "\r\n\r\n",os);
-						
-						InputStream is = ioService.getStream(media_.dcimEntry.fileAsset.path, media_.dcimEntry.fileAsset.source);
-						
-						byte[] buffer = new byte[2048*4];
-						int n = -1;
-						while ((n = is.read(buffer))!=-1)
-						{
-							os.write(buffer,0,n);
-						}
-						
-						os.close();
-					}
-					catch (IOException ioe)
-					{
-
-					}
-				
-				}
-					
-			}
-		});
+		//File f, String forceMimeType, long forceFileSize, int serverPort
+		File f = new File(media_.dcimEntry.fileAsset.path);
 		
-		mServerThread.start();
+		try {
+			InputStream is = informa.ioService.getStream(media_.dcimEntry.fileAsset);
+			mStreamProxy = new StreamOverHttp(f, media_.dcimEntry.mediaType, media_.dcimEntry.size,is,serverPort);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -193,47 +146,33 @@ OnRangeSeekBarChangeListener<Integer> {
 
 		mediaPlayer.setLooping(false);
 
-		if (media_.dcimEntry.fileAsset.source == Storage.Type.IOCIPHER)
-		{
-			if (mServerThread == null)
-			{
-				initMediaServer();
-			}
-			
-			String urlPath = "http://localhost:" + mLocalHostPort + "/video";
-			videoUri = Uri.parse(urlPath);
-			mediaPlayer.setDataSource(urlPath);			
-		}
-		else
-		{
-			videoUri = Uri.parse(media_.dcimEntry.fileAsset.path);
-			mediaPlayer.setDataSource(videoUri.toString());
-		}
+		initMediaServer();
 		
 		handler.postDelayed(new Runnable ()
 		{
 			public void run ()
 			{
-
+				String urlPath = "http://localhost:" + mLocalHostPort + "/video.mp4";
+				videoUri = Uri.parse(urlPath);
+				
 				if (mediaPlayer != null)
 				{
-					try {
-						mediaPlayer.prepare();
-					} catch (IllegalStateException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					try
+					{
+						mediaPlayer.setDataSource(urlPath);
+						mediaPlayer.prepareAsync();
 					}
-				}
-
+					catch (Exception e)
+					{
+						Log.e(LOG,"can't prepare mediaplayer for: " + urlPath,e);
+					}
+				}			
 			}
-		}
-		
-		, 500);
-		
+		},1000);
 			
+		
+		
+					
 	}
 	
 	private void initVideoPost ()
@@ -300,19 +239,8 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	private synchronized void closeMediaServer()
 	{
-		if (mVideoServerSocket != null && mVideoServerSocket.isBound())
-		{
-			try {
-				keepRunning = false;
-				mServerThread.interrupt();
-				
-				mVideoServerSocket.close();
-				mVideoServerSocket = null;
-				mServerThread = null;
-			} catch (IOException e) {
-				Log.e(LOG,"error shutting down video server",e);
-			}
-		}
+		if (mStreamProxy != null)
+			mStreamProxy.close();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -382,13 +310,13 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		Log.v(LOG, "surfaceChanged called");
+		Log.d(LOG, "surfaceChanged called");
 		
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		Log.v(LOG, "surfaceCreated Called");
+		Log.d(LOG, "surfaceCreated Called");
 		
 		surfaceHolder = holder;
 		
@@ -428,7 +356,7 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		Log.v(LOG, "surfaceDestroyed called");
+		Log.d(LOG, "surfaceDestroyed called");
 
 		if (mediaPlayer != null)
 		{
@@ -441,7 +369,7 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	@Override
 	public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-		Log.v(LOG, "onVideoSizeChanged called, new width: " + width + ", new height: " + height);
+		Log.d(LOG, "onVideoSizeChanged called, new width: " + width + ", new height: " + height);
 	}
 
 	@Override
@@ -472,7 +400,7 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public boolean onError(MediaPlayer mp, int whatInfo, int extra) {
 		
-		Log.v(LOG, "onError called " + whatInfo + " (extra: " + extra + ")");
+		Log.d(LOG, "onError called " + whatInfo + " (extra: " + extra + ")");
 		
 		if (whatInfo == -38 || whatInfo == 1)
 		{
@@ -480,42 +408,23 @@ OnRangeSeekBarChangeListener<Integer> {
 			
 			currentCue = mediaPlayer.getCurrentPosition();
 			mediaPlayer.reset();
-			try {
-				mediaPlayer.setDataSource(videoUri.toString());
-				mediaPlayer.prepare();
-				
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
-
+					
+			if (whatInfo == MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING) {
+				Log.d(LOG, "Media Info, Media Info Bad Interleaving " + extra);
+			} else if (whatInfo == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {
+				Log.d(LOG, "Media Info, Media Info Not Seekable " + extra);
+			} else if (whatInfo == MediaPlayer.MEDIA_INFO_UNKNOWN) {
+				Log.d(LOG, "Media Info, Media Info Unknown " + extra);
+			} else if (whatInfo == MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING) {
+				Log.d(LOG, "MediaInfo, Media Info Video Track Lagging " + extra);
+			} else if (whatInfo == MediaPlayer.MEDIA_INFO_METADATA_UPDATE) { 
+				Log.d(LOG, "MediaInfo, Media Info Metadata Update " + extra); 
+			} else if (whatInfo == MediaPlayer.MEDIA_ERROR_IO) {
+				Log.d(LOG, "Media Info, Media Info IO error " + extra);
+			} else if (whatInfo == -38) {
+				Log.d(LOG, "i have no clue what error -38 is");
+			}
 		}
-	
-		/*
-		if (whatInfo == MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING) {
-			Log.v(LOG, "Media Info, Media Info Bad Interleaving " + extra);
-		} else if (whatInfo == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {
-			Log.v(LOG, "Media Info, Media Info Not Seekable " + extra);
-		} else if (whatInfo == MediaPlayer.MEDIA_INFO_UNKNOWN) {
-			Log.v(LOG, "Media Info, Media Info Unknown " + extra);
-		} else if (whatInfo == MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING) {
-			Log.v(LOG, "MediaInfo, Media Info Video Track Lagging " + extra);
-		} else if (whatInfo == MediaPlayer.MEDIA_INFO_METADATA_UPDATE) { 
-			Log.v(LOG, "MediaInfo, Media Info Metadata Update " + extra); 
-		} else if (whatInfo == MediaPlayer.MEDIA_ERROR_IO) {
-			Log.v(LOG, "Media Info, Media Info IO error " + extra);
-		} else if (whatInfo == -38) {
-			Log.v(LOG, "i have no clue what error -38 is");
-		}*/
 		
 		return true;
 	}
