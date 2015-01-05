@@ -47,7 +47,7 @@ import android.widget.Toast;
 
 public class SharePopup {
 	LayoutInflater li;
-	Object context;
+	IMedia media;
 
 	protected final static String LOG = App.Home.LOG;
 
@@ -70,19 +70,19 @@ public class SharePopup {
 
 	private boolean shareJ3MOnly = false;
 	
-	public SharePopup(Activity a, final Object context) {
-		this(a, context, false, false);
+	public SharePopup(Activity a, final IMedia media) {
+		this(a, media, false, false);
 	}
 
 	@SuppressLint("HandlerLeak")
-	public SharePopup(final Activity a, final Object context, boolean startsInforma, boolean shareJ3MOnly) {
+	public SharePopup(final Activity a, final IMedia media, boolean startsInforma, boolean shareJ3MOnly) {
 		this.a = a;
 
 		alert = new Dialog(a);
 		alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		alert.setContentView(R.layout.popup_share);
 
-		this.context = context;
+		this.media = media;
 		this.shareJ3MOnly = shareJ3MOnly;
 		
 		informaCam = InformaCam.getInstance();
@@ -240,9 +240,9 @@ public class SharePopup {
 					boolean doSendTo = sendTo != null;
 					
 					if (shareJ3MOnly)
-						((IMedia) context).exportJ3M(a, h, encryptTo, doSendTo);
+						media.exportJ3M(a, h, encryptTo, doSendTo);
 					else
-						((IMedia) context).export(a, h, encryptTo);
+						media.export(a, h, encryptTo);
 				}
 				catch (Exception e)
 				{

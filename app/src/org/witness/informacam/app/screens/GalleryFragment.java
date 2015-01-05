@@ -15,16 +15,21 @@ import org.witness.informacam.json.JSONException;
 import org.witness.informacam.models.media.IAsset;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
+import org.witness.informacam.utils.Constants.Codes;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ActionMode;
@@ -43,6 +48,7 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class GalleryFragment extends Fragment implements
 		OnItemClickListener, OnItemLongClickListener, ListAdapterListener,
@@ -58,7 +64,7 @@ public class GalleryFragment extends Fragment implements
 	boolean isInMultiSelectMode;
 	List<IMedia> batch = null;
 	List<IMedia> listMedia = null;
-	Handler h = new Handler();
+	
 
 	private static final String LOG = Home.LOG;
 	private final InformaCam informaCam = InformaCam.getInstance();
@@ -72,6 +78,49 @@ public class GalleryFragment extends Fragment implements
 	
 	private ProgressBar progressWait;
 	private int mNumLoading;
+	
+	private ArrayList<Uri> mediaExportUris = new ArrayList<Uri>();
+	private int mLastProgress = -1;
+	
+	private Handler h = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			Bundle b = msg.getData();
+			if(b.containsKey(Models.IMedia.VERSION)) {
+
+				if (b.getString(Models.IMedia.VERSION) != null) {
+
+					mediaExportUris.add(Uri
+							.fromFile(new java.io.File(b
+									.getString(Models.IMedia.VERSION))));
+					
+					h.post(new Runnable ()
+					{
+							public void run ()
+							{
+								barProgressDialog.incrementProgressBy(1);
+
+								if (barProgressDialog.getProgress() == barProgressDialog.getMax())
+								{
+									barProgressDialog.dismiss();
+									showShareDialog();
+								}
+								
+							}
+					});
+					
+				}
+			} else if(b.containsKey(Codes.Keys.UI.PROGRESS)) {
+				
+			}
+			else if (msg.what == -1)
+			{				
+				String errMsg = b.getString("msg");
+				Toast.makeText(a,errMsg, Toast.LENGTH_LONG).show();
+			}
+		
+		}
+	};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -262,8 +311,40 @@ public class GalleryFragment extends Fragment implements
 			return false; // Ignore clicks on incomplete items
 		position -= mNumLoading;
 		
-		((HomeActivityListener) a)
-				.getContextualMenuFor(listMedia.get(position), view);
+		//((HomeActivityListener) a)
+			//	.getContextualMenuFor(listMedia.get(position), view);
+		toggleMultiSelectMode(true);
+
+		try {
+			IMedia m = listMedia.get(position);
+
+			if (!m.has(Models.IMedia.TempKeys.IS_SELECTED)) {
+				m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
+			}
+
+			if (m.getBoolean(Models.IMedia.TempKeys.IS_SELECTED)) {
+				m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
+				batch.remove(m);
+			} else {
+				m.put(Models.IMedia.TempKeys.IS_SELECTED, true);
+				batch.add(m);
+			}
+
+			CheckBox chkSelected = (CheckBox) view
+					.findViewById(R.id.chkSelect);
+			chkSelected.setChecked(m
+					.getBoolean(Models.IMedia.TempKeys.IS_SELECTED));
+
+			if (mActionMode != null)
+				mActionMode.invalidate();
+			// LinearLayout ll = (LinearLayout)
+			// view.findViewById(R.id.gallery_thumb_holder);
+			// ll.setBackgroundDrawable(getResources().getDrawable(selectedColor));
+		} catch (JSONException e) {
+			Log.e(LOG, e.toString());
+			e.printStackTrace();
+		}
+		
 		return true;
 	}
 
@@ -423,23 +504,36 @@ public class GalleryFragment extends Fragment implements
 
 					@Override
 					public void run() {
+						
+						mediaExportUris.clear();
+						
+						h.post(new Runnable ()
+						{
+								public void run ()
+								{
+									showProgressDialog(batch.size());
+								}
+						});
+								
 						for (IMedia m : batch) {
 							
 							try
 							{
-								IAsset a = m.export(getActivity(), h);
-								
+								IAsset a = m.export(getActivity(), h);																
 							}
 							catch (Exception e)
 							{
 								Logger.e(LOG, e);
 							}
 						}
+
+						
+						/*
 						h.post(new Runnable() {
 							private ActionMode mMode;
 
 							@Override
-							public void run() {
+							public void run() {								
 								mMode.finish();
 							}
 
@@ -448,6 +542,7 @@ public class GalleryFragment extends Fragment implements
 								return this;
 							}
 						}.init(mMode));
+						*/
 					}
 
 					public Runnable init(ActionMode mode) {
@@ -551,5 +646,31 @@ public class GalleryFragment extends Fragment implements
 	public void onNothingSelected(AdapterView<?> arg0) {
 	}
 	
+	ProgressDialog barProgressDialog = null;
 	
+	private void showProgressDialog (int max)
+	{
+		if (barProgressDialog == null)
+		{
+			barProgressDialog = new ProgressDialog(a);				
+		}
+		
+		barProgressDialog.setProgressStyle(barProgressDialog.STYLE_HORIZONTAL);	
+		barProgressDialog.setProgress(0);
+		barProgressDialog.setMax(max);
+		barProgressDialog.setCancelable(true);
+		barProgressDialog.show();
+
+	}
+	
+	private void showShareDialog ()
+	{
+
+		Intent shareIntent = new Intent();
+		shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+		shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, mediaExportUris);
+		shareIntent.setType("*/*");
+		startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)));
+		
+	}
 }
