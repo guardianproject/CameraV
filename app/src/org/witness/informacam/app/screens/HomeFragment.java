@@ -261,6 +261,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		inflater.inflate(R.menu.activity_home, menu);
 
 	    // Get the action view used in your toggleservice item
+		/*
 	    final MenuItem toggleservice = menu.findItem(R.id.toggleservice);
 	    mActionView = (Switch) toggleservice.getActionView();
 
@@ -293,7 +294,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	        	}
 	        	
 	        }
-	    });
+	    });*/
 	}
 
 	@Override
