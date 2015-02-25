@@ -21,6 +21,7 @@ import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.models.media.IVideoRegion;
 import org.witness.informacam.ui.editors.IRegionDisplay;
 import org.witness.informacam.utils.Constants.App.Informa;
+import org.witness.informacam.utils.Constants.App.Storage;
 
 import android.app.Activity;
 import android.graphics.RectF;
@@ -115,9 +116,16 @@ OnRangeSeekBarChangeListener<Integer> {
 		//mStreamProxy.start();
 		
 		//File f, String forceMimeType, long forceFileSize, int serverPort
-		File f = new File(media_.dcimEntry.fileAsset.path);
+		File f = null;
 		
+		if (media_.dcimEntry.fileAsset.source == Storage.Type.INTERNAL_STORAGE 
+				|| media_.dcimEntry.fileAsset.source == Storage.Type.FILE_SYSTEM)
+				f = new File(media_.dcimEntry.fileAsset.path);
+		else if (media_.dcimEntry.fileAsset.source == Storage.Type.IOCIPHER)
+			f = new info.guardianproject.iocipher.File(media_.dcimEntry.fileAsset.path);
+				
 		try {
+			
 			InputStream is = informa.ioService.getStream(media_.dcimEntry.fileAsset);
 			mStreamProxy = new StreamOverHttp(f, media_.dcimEntry.mediaType, media_.dcimEntry.size,is,serverPort);
 		} catch (IOException e) {
@@ -152,7 +160,8 @@ OnRangeSeekBarChangeListener<Integer> {
 		{
 			public void run ()
 			{
-				String urlPath = "http://localhost:" + mLocalHostPort + "/video.mp4";
+				String fileName = new File(media_.dcimEntry.fileAsset.path).getName();
+				String urlPath = "http://localhost:" + mLocalHostPort + "/" + fileName;
 				videoUri = Uri.parse(urlPath);
 				
 				if (mediaPlayer != null)
