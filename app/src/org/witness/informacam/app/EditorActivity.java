@@ -191,7 +191,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		{
 			media = new IImage(media);
 		}
-		else if (media.dcimEntry.mediaType.equals(MimeType.VIDEO))
+		else if (media.dcimEntry.mediaType.startsWith(MimeType.VIDEO_BASE))
 		{
 			media = new IVideo(media);
 		}
@@ -211,7 +211,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		{
 			fullscreenView = Fragment.instantiate(this, FullScreenImageViewFragment.class.getName(), fullscreenViewArgs);
 		}
-		else if (media.dcimEntry.mediaType.equals(Models.IMedia.MimeType.VIDEO))
+		else if (media.dcimEntry.mediaType.startsWith(Models.IMedia.MimeType.VIDEO_BASE))
 		{
 			fullscreenView = Fragment.instantiate(this, FullScreenVideoViewFragment.class.getName(), fullscreenViewArgs);
 		}
