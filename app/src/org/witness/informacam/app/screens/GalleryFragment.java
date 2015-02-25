@@ -313,6 +313,8 @@ public class GalleryFragment extends Fragment implements
 		
 		//((HomeActivityListener) a)
 			//	.getContextualMenuFor(listMedia.get(position), view);
+		 getActivity().startActionMode(
+					mActionModeSelect);
 		toggleMultiSelectMode(true);
 
 		try {

@@ -567,6 +567,8 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	public void setIsGeneratingKey(boolean generatingKey)
 	{
 		mIsGeneratingKey = generatingKey;
+		
+		/*
 		if (rootView != null)
 		{
 			rootView.post(new Runnable()
@@ -592,7 +594,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 					}
 				}
 			});
-		}
+		}*/
 	}
 
 	@Override

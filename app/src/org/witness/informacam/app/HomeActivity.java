@@ -254,7 +254,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	public void launchCamera() {
 		resetActionBar();
 		
-		boolean externalCamera = false;//PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefExternalCamera", false);
+		boolean externalCamera = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefExternalCamera", true);
 		
 		if (toCamera.hasExtra(org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE))
 			toCamera.removeExtra(org.witness.informacam.utils.Constants.Codes.Extras.CAMERA_TYPE);
@@ -751,7 +751,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	{
 		resetActionBar();
 		
-		boolean externalCamera = false;//PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefExternalCamera", false);
+		boolean externalCamera = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefExternalCamera", true);
 
 		if (!externalCamera)
 			toCamera.putExtra(

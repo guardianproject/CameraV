@@ -36,11 +36,11 @@
             android:key="prefGpsEnableHires"
         	/>
         
-        <!-- 
+        
          <CheckBoxPreference
             android:title="@string/prefs_external_camera"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="prefExternalCamera"
         	/>
-        	 -->
+        	 
 </PreferenceScreen>
