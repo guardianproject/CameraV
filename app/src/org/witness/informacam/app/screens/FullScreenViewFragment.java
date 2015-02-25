@@ -297,7 +297,7 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 						constrainBoundsToImage(region.bounds);
 						setCurrentRegion(region, true);
 					}
-					else if (((EditorActivityListener) a).media().dcimEntry.mediaType.equals(MimeType.VIDEO))
+					else if (((EditorActivityListener) a).media().dcimEntry.mediaType.startsWith(MimeType.VIDEO_BASE))
 					{
 
 						IRegion region = ((EditorActivityListener) a).media().addRegion(a, (int) event.getY() - (DEFAULT_REGION_HEIGHT / 2),
