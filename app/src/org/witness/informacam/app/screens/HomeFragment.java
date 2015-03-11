@@ -128,15 +128,12 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		if (getActivity() != null)
 		{
 			ActionBar actionBar = getActivity().getActionBar();
-			actionBar.setDisplayShowTitleEnabled(true);
-			actionBar.setTitle(R.string.app_name);
-			actionBar.setDisplayShowHomeEnabled(false);
-			actionBar.setDisplayHomeAsUpEnabled(false);
-			actionBar.setHomeButtonEnabled(false);
-			actionBar.setIcon(this.getResources().getDrawable(
-					R.drawable.ic_launcher));
-			actionBar.setDisplayUseLogoEnabled(true);
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_SHOW_TITLE);
+			actionBar.setTitle(R.string.app_name);			
+			actionBar.setDisplayHomeAsUpEnabled(false);			
+			actionBar.setIcon(R.drawable.ic_launcher);			
+			
 		}
 	}
 
@@ -372,21 +369,25 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 				 boolean isChecked = item.isChecked();
 				 
 				 if (!isChecked) //then start it up
-		        	{
-		        		onInformaStart(null);
-		        		
-		        	}
-		        	else
-		        	{
+	        	{
+	        		onInformaStart(null);
+	        		
+	        	}
+	        	else
+	        	{
 
-		        		if(InformaService.getInstance() != null && InformaService.getInstance().suckersActive()) {
-		        						
-		        			InformaService.getInstance().stopAllSuckers();
-		        			informaCam.ioService.stopDCIMObserver();
-		        			
-		        			
-		        		}
-		        	}
+	        		if(InformaService.getInstance() != null && InformaService.getInstance().suckersActive()) {
+	        						
+
+	    				Intent intentSuckers = new Intent(informaCam, InformaService.class);
+	    				intentSuckers.setAction("stopsuckers");
+	    				informaCam.startService(intentSuckers);
+	    				
+	        			informaCam.ioService.stopDCIMObserver();
+	        			
+	        			
+	        		}
+	        	}
 				 
 				 
 		         item.setChecked(!isChecked);
@@ -686,7 +687,11 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		
 		if (!InformaService.getInstance().suckersActive())
 		{
-			InformaService.getInstance().startAllSuckers();
+
+			Intent intentSuckers = new Intent(informaCam, InformaService.class);
+			intentSuckers.setAction("startsuckers");
+			informaCam.startService(intentSuckers);
+			
 			informaCam.ioService.startDCIMObserver(HomeFragment.this, null, null);
 
 		}

@@ -532,12 +532,12 @@ public class GalleryFragment extends Fragment implements
 							}
 						}
 						
-						/*
 						h.post(new Runnable() {
 							private ActionMode mMode;
 
 							@Override
-							public void run() {								
+							public void run() {
+								batch.clear();
 								mMode.finish();
 							}
 
@@ -546,7 +546,7 @@ public class GalleryFragment extends Fragment implements
 								return this;
 							}
 						}.init(mMode));
-						*/
+						
 					}
 
 					public Runnable init(ActionMode mode) {
