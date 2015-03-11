@@ -227,6 +227,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		mBtnGallery = rootView.findViewById(R.id.btnGallery);
 		mBtnGallery.setOnClickListener(this);
 
+		/*
 		mBtnAudioNote = rootView.findViewById(R.id.btnAudioNote);
 		mBtnAudioNote.setOnClickListener(this);
 		mBtnStopRecording = rootView.findViewById(R.id.btnStopRecording);
@@ -236,6 +237,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		mTvRecordingTime.setText("");
 		mBtnShare = rootView.findViewById(R.id.btnShare);
 		mBtnShare.setOnClickListener(this);
+		**/
 
 		showSwipeHint();
 	}

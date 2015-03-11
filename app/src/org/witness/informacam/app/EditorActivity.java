@@ -2,6 +2,7 @@ package org.witness.informacam.app;
 
 import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
+import java.io.FileNotFoundException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -31,6 +32,11 @@ import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -399,7 +405,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			saveStateAndFinish();
 	}
 	
-				
+			
 	public void shareHash ()
 	{
 		try
@@ -449,10 +455,10 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			    	Intent sendIntent = new Intent();
 			    	sendIntent.setAction(Intent.ACTION_SEND);
 			    	
-			    	if (!hasBeenShared) //if it hasn't been shared, then just show the hashes
-			    		sendIntent.putExtra(Intent.EXTRA_TEXT, "#" + getString(R.string.app_name) + " ID:" + hexString + " (MEDIA:" + mediaHash + ")");
-			    	else //if it has, then show a URL
-			    		sendIntent.putExtra(Intent.EXTRA_TEXT, "#" + getString(R.string.app_name) + " https://j3m.info/submissions/?hashes=" + hexString + " (media:" + mediaHash + ")");
+			    	//if (!hasBeenShared) //if it hasn't been shared, then just show the hashes
+			    	sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string._camerav_notarization_id_) + hexString);
+			    	//else //if it has, then show a URL
+			    		//sendIntent.putExtra(Intent.EXTRA_TEXT, "#" + getString(R.string.app_name) + " https://j3m.info/submissions/?hashes=" + hexString + " (media:" + mediaHash + ")");
 			    	
 			    	sendIntent.setType("text/plain");
 			    	startActivity(sendIntent);

@@ -17,12 +17,14 @@
     </menu>
     </item>
 
-    
         <item android:id="@+id/menu_alwayson"
              android:title="@string/menu_alwayson"
               android:orderInCategory="100" android:icon="@drawable/ic_home_pref" android:showAsAction="never" android:enabled="true"/>
          
-    <item android:id="@+id/menu_settings" android:title="@string/menu_settings" android:orderInCategory="100" android:icon="@drawable/ic_home_pref" android:showAsAction="never" android:enabled="true"/>
-    <item android:id="@+id/menu_creds" android:title="@string/menu_creds" android:orderInCategory="100" android:icon="@drawable/ic_home_pref" android:showAsAction="never" android:enabled="true"/>
     
+    <item android:id="@+id/menu_creds" android:title="@string/menu_creds" android:orderInCategory="100" android:icon="@drawable/ic_home_pref" android:showAsAction="never" android:enabled="true"/>
+    <!-- 
+        <item android:id="@+id/menu_export_keys" android:title="@string/menu_export_keys" android:orderInCategory="100" android:icon="@drawable/ic_home_pref" android:showAsAction="never" android:enabled="true"/>
+         -->
+        <item android:id="@+id/menu_settings" android:title="@string/menu_settings" android:orderInCategory="100" android:icon="@drawable/ic_home_pref" android:showAsAction="never" android:enabled="true"/>
 </menu>

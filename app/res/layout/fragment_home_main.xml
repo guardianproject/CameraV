@@ -14,9 +14,11 @@
     <LinearLayout
         android:id="@+id/llOperations"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="10dp"
+        android:orientation="horizontal"
         android:layout_above="@id/toolbar_bottom" >
 
+        <!-- 
         <FrameLayout
             android:id="@+id/ffAutioNote"
             android:layout_width="match_parent"
@@ -65,7 +67,7 @@
             </LinearLayout>
 
         </FrameLayout>
-
+ 
         <View
             android:layout_width="1px"
             android:layout_height="match_parent"
@@ -96,6 +98,8 @@
                 android:textColor="#6D6E71" />
 
         </LinearLayout>
+-->
+        
     </LinearLayout>
 
     <android.support.v4.view.ViewPager

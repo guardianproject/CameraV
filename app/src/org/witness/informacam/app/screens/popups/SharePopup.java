@@ -2,6 +2,7 @@ package org.witness.informacam.app.screens.popups;
 
 import info.guardianproject.onionkit.ui.OrbotHelper;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,11 @@ import org.witness.informacam.models.organizations.IInstalledOrganizations;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.utils.Constants.Codes;
 import org.witness.informacam.utils.Constants.Models;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -122,9 +128,24 @@ public class SharePopup {
 					if (sendTo != null
 							&& b.getString(Models.IMedia.VERSION) != null) {
 
+						
 						sendTo.intent.setClassName(
 								sendTo.resolveInfo.activityInfo.packageName,
 								sendTo.resolveInfo.activityInfo.name);
+						
+						try
+						{
+							String j3mText = generateJ3M(a, media._id);
+							sendTo.intent.putExtra(Intent.EXTRA_TEXT, j3mText);
+						}
+						catch (Exception e)
+						{
+							//unable to generate j3m
+							e.printStackTrace();
+						}
+						
+							
+						
 						sendTo.intent.putExtra(Intent.EXTRA_STREAM, Uri
 								.fromFile(new java.io.File(b
 										.getString(Models.IMedia.VERSION))));
@@ -159,6 +180,18 @@ public class SharePopup {
 				new ColorDrawable(android.graphics.Color.TRANSPARENT));
 	}
 
+	public String generateJ3M (Context context, String id) throws FileNotFoundException, InstantiationException, IllegalAccessException
+	{
+		boolean signData = false;
+		IMedia media = informaCam.mediaManifest.getById(id);
+		String j3m = ((IMedia) media).buildJ3M(context, signData, null);
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		JsonParser jp = new JsonParser();
+		JsonElement je = jp.parse(j3m);
+		String prettyJsonString = gson.toJson(je);
+		return prettyJsonString;
+	}
+		
 	private void initLayout() throws IllegalAccessException, InstantiationException, IOException {
 		initData();
 	}
