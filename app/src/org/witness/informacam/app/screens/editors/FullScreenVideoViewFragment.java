@@ -199,8 +199,6 @@ OnRangeSeekBarChangeListener<Integer> {
 		videoSeekBar.hideEndpoints();
 		initRegions();
 		
-		playPauseToggle.setVisibility(View.VISIBLE);
-		
 		playPauseToggle.setClickable(true);
 		
 		updateRegionView(mediaPlayer.getCurrentPosition());	
@@ -287,10 +285,7 @@ OnRangeSeekBarChangeListener<Integer> {
 		
 		playPauseToggle = (ImageButton) mediaHolder_.findViewById(R.id.video_play_pause_toggle);
 		playPauseToggle.setOnClickListener(this);
-		playPauseToggle.setClickable(false);
-		playPauseToggle.setVisibility(View.GONE);
-		
-
+		playPauseToggle.setClickable(false);		
 		
 		
 	}

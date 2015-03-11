@@ -509,26 +509,28 @@ public class GalleryFragment extends Fragment implements
 						
 						mediaExportUris.clear();
 						
-						h.post(new Runnable ()
+						if (batch.size() > 0)
 						{
-								public void run ()
-								{
-									showProgressDialog(batch.size());
-								}
-						});
+							h.post(new Runnable ()
+							{
+									public void run ()
+									{
+										showProgressDialog(batch.size());
+									}
+							});
+									
+							for (IMedia m : batch) {
 								
-						for (IMedia m : batch) {
-							
-							try
-							{
-								IAsset a = m.export(getActivity(), h);																
-							}
-							catch (Exception e)
-							{
-								Logger.e(LOG, e);
+								try
+								{
+									IAsset a = m.export(getActivity(), h);																
+								}
+								catch (Exception e)
+								{
+									Logger.e(LOG, e);
+								}
 							}
 						}
-
 						
 						/*
 						h.post(new Runnable() {

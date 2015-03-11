@@ -66,7 +66,7 @@ public class WizardActivity extends FragmentActivity implements WizardActivityLi
 	private void checkForUpdates()
 	{
 		// XXX: Remove this for store builds!
-		UpdateManager.register(this, InformaActivity.HOCKEY_APP_ID);
+		//UpdateManager.register(this, InformaActivity.HOCKEY_APP_ID);
 	}
 
 	@Override

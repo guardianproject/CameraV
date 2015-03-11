@@ -368,9 +368,9 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 										notification.taskComplete = false;
 										informaCam.addNotification(notification, null);
 										
-										ITransportStub transportStub = new ITransportStub(organization, notification);
-										transportStub.setAsset(IUser.PUBLIC_CREDENTIALS, IUser.PUBLIC_CREDENTIALS, MimeType.ZIP, Type.IOCIPHER);
-										TransportUtility.initTransport(transportStub);
+									//	ITransportStub transportStub = new ITransportStub(organization, notification);
+									//	transportStub.setAsset(IUser.PUBLIC_CREDENTIALS, IUser.PUBLIC_CREDENTIALS, MimeType.ZIP, Type.IOCIPHER);
+									//	TransportUtility.initTransport(transportStub);
 									}
 								}
 							} catch(IOException e) {
@@ -402,7 +402,7 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 							
 							informaCam.update(data);
 
-							Toast.makeText(InformaActivity.this, getString(R.string.wizard_key_made), Toast.LENGTH_LONG).show();
+							//Toast.makeText(InformaActivity.this, getString(R.string.wizard_key_made), Toast.LENGTH_LONG).show();
 						}
 					});
 				}

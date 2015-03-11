@@ -31,6 +31,7 @@ import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -113,6 +114,41 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		
 	}
 
+	
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+	}
+	
+	private void initHomeActionBar ()
+	{
+		if (getActivity() != null)
+		{
+			ActionBar actionBar = getActivity().getActionBar();
+			actionBar.setDisplayShowTitleEnabled(true);
+			actionBar.setTitle(R.string.app_name);
+			actionBar.setDisplayShowHomeEnabled(false);
+			actionBar.setDisplayHomeAsUpEnabled(false);
+			actionBar.setHomeButtonEnabled(false);
+			actionBar.setIcon(this.getResources().getDrawable(
+					R.drawable.ic_launcher));
+			actionBar.setDisplayUseLogoEnabled(true);
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		}
+	}
+
+	@Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (visible) {
+        	initHomeActionBar();
+        }
+    }
+
+
 	@Override
 	public View onCreateView(LayoutInflater li, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -139,6 +175,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 			mActionView.setChecked(isActive);
 		}
 
+		initHomeActionBar();
 	}
 
 	@Override

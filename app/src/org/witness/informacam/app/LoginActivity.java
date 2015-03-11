@@ -134,7 +134,7 @@ public class LoginActivity extends Activity {
 	private void checkForUpdates()
 	{
 		// XXX: Remove this for store builds!
-		UpdateManager.register(this, InformaActivity.HOCKEY_APP_ID);
+		//UpdateManager.register(this, InformaActivity.HOCKEY_APP_ID);
 	}
 
 	
