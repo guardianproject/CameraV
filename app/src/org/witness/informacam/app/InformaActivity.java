@@ -330,7 +330,7 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 	
 	private void generateKey()
 	{
-		Toast.makeText(this, getString(R.string.wizard_key_is_being_made), Toast.LENGTH_LONG).show();
+		//Toast.makeText(this, getString(R.string.wizard_key_is_being_made), Toast.LENGTH_LONG).show();
 		new Thread(new Runnable() {
 			@Override
 			public void run() {

@@ -25,6 +25,7 @@ import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.storage.FormUtility;
+import org.witness.informacam.ui.AlwaysOnActivity;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Logger;
@@ -293,14 +294,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	{
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.activity_home, menu);
-
-		 if (InformaService.getInstance() != null 
-		    		&& InformaService.getInstance().suckersActive())
-		 {
-		MenuItem checkable = menu.findItem(R.id.menu_alwayson);
-	    checkable.setChecked(true);
-		 }
-		 
+ 
 	    // Get the action view used in your toggleservice item
 		/*
 	    final MenuItem toggleservice = menu.findItem(R.id.toggleservice);
@@ -366,33 +360,10 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 				
 			case R.id.menu_alwayson:
 			{
-				 boolean isChecked = item.isChecked();
-				 
-				 if (!isChecked) //then start it up
-	        	{
-	        		onInformaStart(null);
-	        		
-	        	}
-	        	else
-	        	{
-
-	        		if(InformaService.getInstance() != null && InformaService.getInstance().suckersActive()) {
-	        						
-
-	    				Intent intentSuckers = new Intent(informaCam, InformaService.class);
-	    				intentSuckers.setAction("stopsuckers");
-	    				informaCam.startService(intentSuckers);
-	    				
-	        			informaCam.ioService.stopDCIMObserver();
-	        			
-	        			
-	        		}
-	        	}
-				 
-				 
-		         item.setChecked(!isChecked);
-				
-				return true;
+				onInformaStart(null);
+				a.startActivity(new Intent(a, AlwaysOnActivity.class));
+				  
+	        	return true;
 			}
 			case R.id.menu_lock:
 				
