@@ -35,7 +35,11 @@ public class VideoSeekBar extends SeekBar implements OnSeekBarChangeListener {
 			{
 				if (keepRunning && mp != null)
 				{
-					setProgress(mp.getCurrentPosition());
+					if (mp.isPlaying())
+					{
+						setProgress(mp.getCurrentPosition());
+					}
+					
 					postDelayed(progressRunnable, 1000L);
 				}
 			}
@@ -64,7 +68,10 @@ public class VideoSeekBar extends SeekBar implements OnSeekBarChangeListener {
 	}
 	
 	public void update() {
-		setProgress(mp.getCurrentPosition());
+		if (mp.isPlaying())
+		{
+			setProgress(mp.getCurrentPosition());
+		}
 	}
 	
 	public void play() {
