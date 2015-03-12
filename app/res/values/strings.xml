@@ -170,4 +170,6 @@
     <string name="menu_alwayson">Proof Mode</string>
     
     <string name="_camerav_notarization_id_">#CameraV Notarization ID:</string>
+    
+    <string name="share_from_">"Share from "</string>
 </resources>
