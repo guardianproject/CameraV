@@ -4,10 +4,13 @@ import info.guardianproject.onionkit.ui.OrbotHelper;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.javarosa.core.services.Logger;
+import org.spongycastle.openpgp.PGPException;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.R;
 import org.witness.informacam.app.utils.Constants.App;
@@ -136,7 +139,9 @@ public class SharePopup {
 						try
 						{
 							String j3mText = generateJ3M(a, media._id);
-							sendTo.intent.putExtra(Intent.EXTRA_TEXT, j3mText);
+							
+							if (j3mText != null)
+								sendTo.intent.putExtra(Intent.EXTRA_TEXT, j3mText);
 						}
 						catch (Exception e)
 						{
@@ -144,7 +149,9 @@ public class SharePopup {
 							e.printStackTrace();
 						}
 						
-							
+						String title = a.getString(R.string.share_from_) + a.getString(R.string.app_name);
+						sendTo.intent.putExtra(Intent.EXTRA_TITLE, title);
+						sendTo.intent.putExtra(Intent.EXTRA_SUBJECT, title);
 						
 						sendTo.intent.putExtra(Intent.EXTRA_STREAM, Uri
 								.fromFile(new java.io.File(b
@@ -180,7 +187,7 @@ public class SharePopup {
 				new ColorDrawable(android.graphics.Color.TRANSPARENT));
 	}
 
-	public String generateJ3M (Context context, String id) throws FileNotFoundException, InstantiationException, IllegalAccessException
+	public String generateJ3M (Context context, String id) throws InstantiationException, IllegalAccessException, NoSuchAlgorithmException, SignatureException, PGPException, IOException
 	{
 		boolean signData = false;
 		IMedia media = informaCam.mediaManifest.getById(id);
@@ -189,7 +196,19 @@ public class SharePopup {
 		JsonParser jp = new JsonParser();
 		JsonElement je = jp.parse(j3m);
 		String prettyJsonString = gson.toJson(je);
-		return prettyJsonString;
+		
+		byte[] sig = informaCam.signatureService.signData(prettyJsonString.getBytes());
+	
+		StringBuffer sbLog = new StringBuffer();
+		sbLog.append("-----BEGIN PGP SIGNED MESSAGE-----\n");
+		sbLog.append("Hash: SHA1\n\n");
+		sbLog.append(prettyJsonString);
+		
+		String sigString = new String(sig);
+		
+		sbLog.append(sigString.replace("PGP MESSAGE", "PGP SIGNATURE"));
+	
+		return sbLog.toString();
 	}
 		
 	private void initLayout() throws IllegalAccessException, InstantiationException, IOException {
