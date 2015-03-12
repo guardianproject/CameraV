@@ -24,14 +24,12 @@ import org.witness.informacam.app.utils.Constants.Codes.Routes;
 import org.witness.informacam.app.utils.Constants.HomeActivityListener;
 import org.witness.informacam.app.utils.Constants.Preferences;
 import org.witness.informacam.app.utils.actions.ContextMenuAction;
-import org.witness.informacam.models.j3m.IDCIMDescriptor.IDCIMSerializable;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
-import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 
@@ -52,7 +50,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,6 +146,14 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	public void onResume()
 	{
 		super.onResume();
+		
+		if (informaCam.getCredentialManagerStatus() != org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED)
+		{
+			informaCam.attemptLogout();
+			finish();
+			return;
+		}
+		
 		
 		informaCam.setStatusListener(this);
 		informaCam.setEventListener(this);
