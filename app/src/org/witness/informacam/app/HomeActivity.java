@@ -147,7 +147,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	{
 		super.onResume();
 		
-		if (informaCam.getCredentialManagerStatus() != org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED)
+		if (informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.LOCKED)
 		{
 			informaCam.attemptLogout();
 			finish();
