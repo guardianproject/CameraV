@@ -304,48 +304,27 @@ public class GalleryFragment extends Fragment implements
 	}
 
 	@Override
-	public boolean onItemLongClick(AdapterView<?> adapterView, View view,
-			int position, long id) {
+	public boolean onItemLongClick(final AdapterView<?> adapterView, final View view,
+			final int position, final long id) {
 		
 		if (position < mNumLoading)
 			return false; // Ignore clicks on incomplete items
-		position -= mNumLoading;
-		
-		//((HomeActivityListener) a)
-			//	.getContextualMenuFor(listMedia.get(position), view);
-		 getActivity().startActionMode(
+		 
+		 mActionMode = getActivity().startActionMode(
 					mActionModeSelect);
-		toggleMultiSelectMode(true);
 
-		try {
-			IMedia m = listMedia.get(position);
 
-			if (!m.has(Models.IMedia.TempKeys.IS_SELECTED)) {
-				m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
-			}
-
-			if (m.getBoolean(Models.IMedia.TempKeys.IS_SELECTED)) {
-				m.put(Models.IMedia.TempKeys.IS_SELECTED, false);
-				batch.remove(m);
-			} else {
-				m.put(Models.IMedia.TempKeys.IS_SELECTED, true);
-				batch.add(m);
-			}
-
-			CheckBox chkSelected = (CheckBox) view
-					.findViewById(R.id.chkSelect);
-			chkSelected.setChecked(m
-					.getBoolean(Models.IMedia.TempKeys.IS_SELECTED));
-
-			if (mActionMode != null)
-				mActionMode.invalidate();
-			// LinearLayout ll = (LinearLayout)
-			// view.findViewById(R.id.gallery_thumb_holder);
-			// ll.setBackgroundDrawable(getResources().getDrawable(selectedColor));
-		} catch (JSONException e) {
-			Log.e(LOG, e.toString());
-			e.printStackTrace();
-		}
+		 h.postDelayed(new Runnable ()
+		 {
+			 public void run ()
+			 {
+				int actualPosition = position - mNumLoading;
+					
+				 onItemClick(adapterView, view, actualPosition, id);
+			 }
+		 }
+		 , 100);
+		 
 		
 		return true;
 	}
