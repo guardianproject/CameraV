@@ -16,12 +16,14 @@ import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.utils.Constants.Logger;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.util.Log;
+import android.view.Display;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -95,6 +97,19 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		}
 	}
 	
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		super.onConfigurationChanged(newConfig);
+		
+		Display display =getActivity().getWindowManager().getDefaultDisplay();
+		dims = new int[] { display.getWidth(), display.getHeight() };
+		
+		setBitmap();
+		
+	}
+
 	 private boolean loadBitmap () throws IOException
 	 {
 		BitmapFactory.Options bfo = new BitmapFactory.Options();

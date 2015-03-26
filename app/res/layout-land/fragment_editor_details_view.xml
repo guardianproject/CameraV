@@ -8,13 +8,13 @@
     <ImageView
         android:id="@+id/details_media_preview"
         android:layout_width="match_parent"
-        android:layout_weight="0.5"
+        android:layout_weight="1"
         android:scaleType="fitXY"
         android:layout_height="0dip" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="0.5" >
+        android:layout_weight="0" >
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -24,6 +24,7 @@ import org.witness.informacam.utils.Constants.App.Informa;
 import org.witness.informacam.utils.Constants.App.Storage;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.graphics.RectF;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
@@ -38,6 +39,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -135,6 +137,17 @@ OnRangeSeekBarChangeListener<Integer> {
 		
 	}
 	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		super.onConfigurationChanged(newConfig);
+		
+		Display display =getActivity().getWindowManager().getDefaultDisplay();
+		dims = new int[] { display.getWidth(), display.getHeight() };
+
+		initVideoPost();
+	}
+
 	private void initVideo() throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
 
 
@@ -153,6 +166,7 @@ OnRangeSeekBarChangeListener<Integer> {
 		mediaPlayer.setOnBufferingUpdateListener(this);
 
 		mediaPlayer.setLooping(false);
+		
 
 		initMediaServer();
 		
@@ -187,6 +201,25 @@ OnRangeSeekBarChangeListener<Integer> {
 	private void initVideoPost ()
 	{
 
+
+		  // so it fits on the screen
+	    int videoWidth = mediaPlayer.getVideoWidth();
+	    int videoHeight = mediaPlayer.getVideoHeight();
+	    float videoProportion = (float) videoWidth / (float) videoHeight;      
+	    float screenProportion = (float) dims[0] / (float) dims[1];
+	    android.view.ViewGroup.LayoutParams lp = videoView.getLayoutParams();
+
+	    if (videoProportion > screenProportion) {
+	        lp.width = dims[0];
+	        lp.height = (int) ((float) dims[0] / videoProportion);
+	    } else {
+	        lp.width = (int) (videoProportion * (float) dims[1]);
+	        lp.height = dims[1];
+	    }
+	    
+	    videoView.setLayoutParams(lp);
+	    
+	    
 		mediaPlayer.setScreenOnWhilePlaying(true);
 		
 		RangeSeekBar<Integer> rsb = videoSeekBar.init(mediaPlayer);
@@ -260,24 +293,24 @@ OnRangeSeekBarChangeListener<Integer> {
 
 		videoView = (VideoView) mediaHolder_.findViewById(R.id.video_view);
 
-		LayoutParams vv_lp = videoView.getLayoutParams();
-		vv_lp.width = dims[0];
-		vv_lp.height = (int) (((float) media_.dcimEntry.exif.height) / ((float) media_.dcimEntry.exif.width) * dims[0]);
+	//	LayoutParams vv_lp = videoView.getLayoutParams();
+//		vv_lp.width = dims[0];
+//		vv_lp.height = (int) (((float) media_.dcimEntry.exif.height) / ((float) media_.dcimEntry.exif.width) * dims[0]);
 
-		videoView.setLayoutParams(vv_lp);
+	//	videoView.setLayoutParams(vv_lp);
 		videoView.setOnTouchListener(this);
 
 		mediaHolder.addView(mediaHolder_);
 		
 		surfaceHolder = videoView.getHolder();
 		
-		Log.d(LOG, "surface holder dims: " + surfaceHolder.getSurfaceFrame().width() + " x " + surfaceHolder.getSurfaceFrame().height());
+		//Log.d(LOG, "surface holder dims: " + surfaceHolder.getSurfaceFrame().width() + " x " + surfaceHolder.getSurfaceFrame().height());
 		surfaceHolder.addCallback(this);
 		
 		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
 			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		
-		Log.d(LOG, "video view dims: " + videoView.getWidth() + " x " + videoView.getHeight());
+		//Log.d(LOG, "video view dims: " + videoView.getWidth() + " x " + videoView.getHeight());
 		
 		videoControlsHolder = (LinearLayout) mediaHolder_.findViewById(R.id.video_controls_holder);		
 
@@ -517,7 +550,7 @@ OnRangeSeekBarChangeListener<Integer> {
 	
 	@Override
 	public int[] getSpecs() {
-		Log.d(LOG, "RECALCULATING FOR VIDEO");
+		//Log.d(LOG, "RECALCULATING FOR VIDEO");
 		List<Integer> specs = new ArrayList<Integer>(Arrays.asList(ArrayUtils.toObject(super.getSpecs())));
 		
 		int[] locationInWindow = new int[2];

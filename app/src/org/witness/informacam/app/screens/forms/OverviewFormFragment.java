@@ -86,8 +86,8 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		historyHeaderSubTitle = (TextView) historyHeader.findViewById(R.id.tvSubTitle);
 		showHistoryIndicator = (ImageView) rootView.findViewById(R.id.indicator);
 		lvHistory = (AdapteredLinearLayout) rootView.findViewById(R.id.lvHistory);
-		lvHistory.setVisibility(View.GONE);
-		mShowingHistory = false;
+		lvHistory.setVisibility(View.VISIBLE);
+		mShowingHistory = true;
 		
 		notes = (TextView) rootView.findViewById(R.id.media_notes);
 		notes.setText("");

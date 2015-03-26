@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 public class TwoViewSlideLayout extends ViewGroup
 {
-	private float mSeparatorPosition = 0.5f;
+	private float mSeparatorPosition = 0.8f;
 	
 	public TwoViewSlideLayout(Context context, AttributeSet attrs, int defStyle)
 	{
@@ -72,7 +72,13 @@ public class TwoViewSlideLayout extends ViewGroup
 	
 	public void expand()
 	{
-		mSeparatorPosition = 0.5f;
+		mSeparatorPosition = 0.8f;
+		this.requestLayout();
+	}
+	
+	public void fullscreen ()
+	{
+		mSeparatorPosition = 1f;
 		this.requestLayout();
 	}
 	

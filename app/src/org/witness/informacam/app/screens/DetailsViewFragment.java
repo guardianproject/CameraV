@@ -35,10 +35,7 @@ public class DetailsViewFragment extends Fragment implements ODKFormListener {
 		
 		Bundle b = getArguments();
 		
-		int viewId = R.layout.fragment_editor_details_view_p;
-		if(b.getInt(Codes.Extras.SET_ORIENTATION) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-			viewId = R.layout.fragment_editor_details_view_l;
-		}
+		int viewId = R.layout.fragment_editor_details_view;
 		
 		rootView = li.inflate(viewId, null);
 		

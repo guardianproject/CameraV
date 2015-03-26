@@ -13,7 +13,7 @@ import android.preference.PreferenceActivity;
 import android.view.MenuItem;
 
 public class PreferencesActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
-	ListPreference lockScreenMode, language, originalImage, panicAction;
+	ListPreference lockScreenMode, language, panicAction;//originalImage, 
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -38,8 +38,8 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 		language = (ListPreference) findPreference(Preferences.Keys.LANGUAGE);
 		updateSummaryWithChoice(language, language.getValue(), getResources().getStringArray(R.array.languages_));
 		
-		originalImage = (ListPreference) findPreference(Models.IUser.ASSET_ENCRYPTION);
-		updateSummaryWithChoice(originalImage, originalImage.getValue(), getResources().getStringArray(R.array.originalImageOptions_));
+		//originalImage = (ListPreference) findPreference(Models.IUser.ASSET_ENCRYPTION);
+		//updateSummaryWithChoice(originalImage, originalImage.getValue(), getResources().getStringArray(R.array.originalImageOptions_));
 
 		panicAction = (ListPreference) findPreference(Preferences.Keys.PANIC_ACTION);
 		updateSummaryWithChoice(panicAction, panicAction.getValue(), getResources().getStringArray(R.array.panicActionOptions_));
@@ -66,9 +66,10 @@ public class PreferencesActivity extends PreferenceActivity implements OnSharedP
 //		} else
 		if(key.equals(Preferences.Keys.LANGUAGE)) {
 			updateSummaryWithChoice(language, sharedPreferences.getString(key, "0"), getResources().getStringArray(R.array.languages_));
-		} else if(key.equals(Models.IUser.ASSET_ENCRYPTION)) {
-			updateSummaryWithChoice(originalImage, sharedPreferences.getString(key, "0"), getResources().getStringArray(R.array.originalImageOptions_));
-		} else if(key.equals(Preferences.Keys.PANIC_ACTION)) {
+		} //else if(key.equals(Models.IUser.ASSET_ENCRYPTION)) {
+		//	updateSummaryWithChoice(originalImage, sharedPreferences.getString(key, "0"), getResources().getStringArray(R.array.originalImageOptions_));
+		//}
+	else if(key.equals(Preferences.Keys.PANIC_ACTION)) {
 			updateSummaryWithChoice(panicAction, sharedPreferences.getString(key, "0"), getResources().getStringArray(R.array.panicActionOptions_));
 		}
 	}

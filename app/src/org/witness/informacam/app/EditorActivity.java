@@ -2,7 +2,6 @@ package org.witness.informacam.app;
 
 import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
-import java.io.FileNotFoundException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -33,15 +32,11 @@ import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -140,6 +135,37 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		
+		if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+		    //Do some stuff
+
+			rootMain.fullscreen();
+		}
+	}
+	
+	
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		super.onConfigurationChanged(newConfig);
+		
+
+		if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+		    //Do some stuff
+
+			rootMain.fullscreen();
+		}
+		else
+		{
+			rootMain.expand();
+		}
 	}
 
 	private void installDeferredLoader() {

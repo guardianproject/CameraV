@@ -252,6 +252,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name" 
             android:exported="false"
+            android:theme="@android:style/Theme.Dialog"
             />
         <activity android:name="org.witness.informacam.transport.DriveTransport" 
             android:exported="false"
