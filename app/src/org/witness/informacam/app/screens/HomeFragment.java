@@ -491,12 +491,13 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 				mRecorder = null;
 			}
 		}
+		/**
 		else if (v == mBtnShare)
 		{
 			IMedia currentMedia = (IMedia) mPhotoAdapter.getObjectFromIndex(mPhotoPager.getCurrentItem());
 			if (currentMedia != null)
 				new SharePopup(a, currentMedia);
-		}
+		}*/
 	}
 
 	class TapGestureListener extends GestureDetector.SimpleOnGestureListener

@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/menu_share" android:icon="@drawable/ic_gallery_share"
+         android:orderInCategory="99" android:showAsAction="always" android:enabled="true">
+        
+        <menu>
+        	    <item android:id="@+id/menu_share" android:title="@string/menu_share_media" android:orderInCategory="100" android:icon="@drawable/ic_action_share" android:showAsAction="always" android:enabled="true"/>
+        	    <item android:id="@+id/menu_share_meta" android:title="@string/menu_share_meta" android:orderInCategory="100" android:icon="@drawable/ic_action_share" android:showAsAction="always" android:enabled="true"/>
+       	        <item android:id="@+id/menu_share_hash" android:title="@string/menu_share_hash" android:orderInCategory="100" android:icon="@drawable/ic_action_share" android:showAsAction="always" android:enabled="true"/>
+        	</menu>
+        
+    </item>
+    <item android:id="@+id/menu_home_gallery_delete" 
+        android:title="@string/home_gallery_delete" 
+        android:icon="@drawable/ic_gallery_trash" android:orderInCategory="100" android:showAsAction="always" android:enabled="true"/>
+</menu>

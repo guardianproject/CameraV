@@ -1,11 +1,14 @@
 package org.witness.informacam.app.screens;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.R;
+import org.witness.informacam.app.screens.popups.SharePopup;
 import org.witness.informacam.app.utils.Constants.App.Home;
 import org.witness.informacam.app.utils.Constants.HomeActivityListener;
 import org.witness.informacam.app.utils.Constants.Preferences;
@@ -15,18 +18,15 @@ import org.witness.informacam.json.JSONException;
 import org.witness.informacam.models.media.IAsset;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
-import org.witness.informacam.utils.Constants.Codes;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -62,9 +62,8 @@ public class GalleryFragment extends Fragment implements
 	Activity a = null;
 
 	boolean isInMultiSelectMode;
-	List<IMedia> batch = null;
+	ArrayList<IMedia> batch = null;
 	List<IMedia> listMedia = null;
-	
 
 	private static final String LOG = Home.LOG;
 	private final InformaCam informaCam = InformaCam.getInstance();
@@ -79,13 +78,13 @@ public class GalleryFragment extends Fragment implements
 	private ProgressBar progressWait;
 	private int mNumLoading;
 	
-	private ArrayList<Uri> mediaExportUris = new ArrayList<Uri>();
 	private int mLastProgress = -1;
 	
 	private Handler h = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			Bundle b = msg.getData();
+			/*
 			if(b.containsKey(Models.IMedia.VERSION)) {
 
 				if (b.getString(Models.IMedia.VERSION) != null) {
@@ -113,7 +112,9 @@ public class GalleryFragment extends Fragment implements
 			} else if(b.containsKey(Codes.Keys.UI.PROGRESS)) {
 				
 			}
-			else if (msg.what == -1)
+			else
+			*/
+			if (msg.what == -1)
 			{				
 				String errMsg = b.getString("msg");
 				Toast.makeText(a,errMsg, Toast.LENGTH_LONG).show();
@@ -284,7 +285,7 @@ public class GalleryFragment extends Fragment implements
 		// multiSelect.setImageDrawable(a.getResources().getDrawable(isInMultiSelectMode
 		// ? R.drawable.ic_action_selected : R.drawable.ic_action_select));
 		if (isInMultiSelectMode) {
-			batch = new Vector<IMedia>();
+			batch = new ArrayList<IMedia>();
 			// batchEditHolder.setVisibility(View.VISIBLE);
 		} else {
 			batch = null;
@@ -448,13 +449,13 @@ public class GalleryFragment extends Fragment implements
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// Inflate a menu resource providing context menu items
-			// MenuInflater inflater = mode.getMenuInflater();
-			// inflater.inflate(R.menu.context_menu, menu);
-			menu.add(Menu.NONE, R.string.menu_share, 0, R.string.menu_share)
-				.setIcon(R.drawable.ic_gallery_share);
-			menu.add(Menu.NONE, R.string.home_gallery_delete, 0,
-					R.string.home_gallery_delete).setIcon(
-					R.drawable.ic_gallery_trash);
+			 MenuInflater inflater = mode.getMenuInflater();
+			 inflater.inflate(R.menu.activity_home_gallery_action_mode, menu);
+		//	menu.add(Menu.NONE, R.string.menu_share, 0, R.string.menu_share)
+		//		.setIcon(R.drawable.ic_gallery_share);
+		//	menu.add(Menu.NONE, R.string.home_gallery_delete, 0,
+			//		R.string.home_gallery_delete).setIcon(
+				//	R.drawable.ic_gallery_trash);
 
 			toggleMultiSelectMode(true);
 			return true;
@@ -474,67 +475,35 @@ public class GalleryFragment extends Fragment implements
 		// Called when the user selects a contextual menu item
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			
+			boolean shareJ3mOnly = false;
+			
 			switch (item.getItemId()) {
 			case R.string.menu_done:
 				mode.finish(); // Action picked, so close the CAB
 				return true;
-			case R.string.menu_share:
-				((HomeActivityListener) a).waiter(true);
-				new Thread(new Runnable() {
-					private ActionMode mMode;
-
-					@Override
-					public void run() {
-						
-						mediaExportUris.clear();
-						
-						if (batch.size() > 0)
-						{
-							h.post(new Runnable ()
-							{
-									public void run ()
-									{
-										showProgressDialog(batch.size());
-									}
-							});
-									
-							for (IMedia m : batch) {
-								
-								try
-								{
-									IAsset a = m.export(getActivity(), h);																
-								}
-								catch (Exception e)
-								{
-									Logger.e(LOG, e);
-								}
-							}
-						}
-						
-						h.post(new Runnable() {
-							private ActionMode mMode;
-
-							@Override
-							public void run() {
-								batch.clear();
-								mMode.finish();
-							}
-
-							public Runnable init(ActionMode mode) {
-								mMode = mode;
-								return this;
-							}
-						}.init(mMode));
-						
-					}
-
-					public Runnable init(ActionMode mode) {
-						mMode = mode;
-						return this;
-					}
-				}.init(mode)).start();
+			case R.id.menu_share_hash:
+				shareHashes();
 				return true;
-			case R.string.home_gallery_delete:
+			case R.id.menu_share_meta:
+				shareJ3mOnly = true;
+			case R.id.menu_share:
+				
+					if (batch.size() > 0)
+					{
+						new SharePopup(a,batch,false,shareJ3mOnly);
+								
+					}
+					else
+					{
+
+								batch.clear();
+								mode.finish();
+						
+					}						
+
+				return true;
+			case R.id.menu_home_gallery_delete:
 				((HomeActivityListener) a).waiter(true);
 				new Thread(new Runnable() {
 					private ActionMode mMode;
@@ -579,6 +548,82 @@ public class GalleryFragment extends Fragment implements
 			toggleMultiSelectMode(false);
 		}
 	};
+	
+	private void shareHashes ()
+	{
+		try
+		{
+			StringBuffer hexStrings = new StringBuffer();
+			
+			for (IMedia media : batch)
+			{
+				String mediaId = ((IMedia) media)._id;
+				boolean hasBeenShared = false;
+				
+				List<INotification> listNotifs = InformaCam.getInstance().notificationsManifest.sortBy(Models.INotificationManifest.Sort.DATE_DESC);
+				for (INotification n :listNotifs)
+				{
+					
+					if (mediaId.equals(n.mediaId))
+					{
+						//this means we sent to an organization, likely the testbed
+						if ((n.type == Models.INotification.Type.EXPORTED_MEDIA) &&
+							n.taskComplete)
+						{
+							hasBeenShared = true;
+						}
+					}
+				}
+				
+				@SuppressWarnings("unused")
+				String j3m = ((IMedia) media).buildJ3M(a, false, null);
+				
+				//generate public hash id from values
+				String creatorHash = media.genealogy.createdOnDevice;
+				StringBuffer mediaHash = new StringBuffer();
+				for(String mHash : media.genealogy.hashes) {
+					mediaHash.append(mHash);
+				}
+				
+				MessageDigest md;
+				try {
+					md = MessageDigest.getInstance("SHA-1");
+					md.update((creatorHash+mediaHash.toString()).getBytes());
+					
+					byte[] byteData = md.digest();
+					
+					   StringBuffer hexString = new StringBuffer();
+				    	for (int i=0;i<byteData.length;i++) {
+				    		String hex=Integer.toHexString(0xff & byteData[i]);
+				   	     	if(hex.length()==1) hexString.append('0');
+				   	     	hexString.append(hex);
+				    	}
+				    	
+				    	hexStrings.append(getString(R.string._id_)).append(hexString).append(' ');
+					
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			Intent sendIntent = new Intent();
+	    	sendIntent.setAction(Intent.ACTION_SEND);
+	    	
+	    	//if (!hasBeenShared) //if it hasn't been shared, then just show the hashes
+	    	sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string._camerav_notarization_id_) + hexStrings.toString().trim());
+	    	//else //if it has, then show a URL
+	    		//sendIntent.putExtra(Intent.EXTRA_TEXT, "#" + getString(R.string.app_name) + " https://j3m.info/submissions/?hashes=" + hexString + " (media:" + mediaHash + ")");
+	    	
+	    	sendIntent.setType("text/plain");
+	    	startActivity(sendIntent);
+		}
+		catch (Exception e)
+		{
+			
+		}
+		
+	}
 
 	@Override
 	public void setPending(final int numPending, final int numCompleted) {		
@@ -629,31 +674,6 @@ public class GalleryFragment extends Fragment implements
 	public void onNothingSelected(AdapterView<?> arg0) {
 	}
 	
-	ProgressDialog barProgressDialog = null;
 	
-	private void showProgressDialog (int max)
-	{
-		if (barProgressDialog == null)
-		{
-			barProgressDialog = new ProgressDialog(a);				
-		}
-		
-		barProgressDialog.setProgressStyle(barProgressDialog.STYLE_HORIZONTAL);	
-		barProgressDialog.setProgress(0);
-		barProgressDialog.setMax(max);
-		barProgressDialog.setCancelable(true);
-		barProgressDialog.show();
-
-	}
 	
-	private void showShareDialog ()
-	{
-
-		Intent shareIntent = new Intent();
-		shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-		shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, mediaExportUris);
-		shareIntent.setType("*/*");
-		startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)));
-		
-	}
 }

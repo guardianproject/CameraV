@@ -2,7 +2,6 @@ package org.witness.informacam.app.screens.popups;
 
 import info.guardianproject.onionkit.ui.OrbotHelper;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
@@ -20,11 +19,6 @@ import org.witness.informacam.models.organizations.IInstalledOrganizations;
 import org.witness.informacam.models.organizations.IOrganization;
 import org.witness.informacam.utils.Constants.Codes;
 import org.witness.informacam.utils.Constants.Models;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -54,10 +48,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 public class SharePopup {
 	LayoutInflater li;
-	IMedia media;
-
+	
+	ArrayList<IMedia> mediaList;
+	ArrayList<Uri> mediaListUri;
+	int exportCounter = 0;
+	
 	protected final static String LOG = App.Home.LOG;
 
 	InformaCam informaCam;
@@ -79,20 +81,23 @@ public class SharePopup {
 
 	private boolean shareJ3MOnly = false;
 	
-	public SharePopup(Activity a, final IMedia media) {
-		this(a, media, false, false);
+	public SharePopup(Activity a, final ArrayList<IMedia> mediaList) {
+		this(a, mediaList, false, false);
 	}
+	
 
 	@SuppressLint("HandlerLeak")
-	public SharePopup(final Activity a, final IMedia media, boolean startsInforma, boolean shareJ3MOnly) {
+	public SharePopup(final Activity a, final ArrayList<IMedia> mediaList, boolean startsInforma, boolean shareJ3MOnly) {
 		this.a = a;
 
 		alert = new Dialog(a);
 		alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		alert.setContentView(R.layout.popup_share);
 
-		this.media = media;
+		this.mediaList = mediaList;
 		this.shareJ3MOnly = shareJ3MOnly;
+		
+		mediaListUri = new ArrayList<Uri>();
 		
 		informaCam = InformaCam.getInstance();
 
@@ -125,45 +130,57 @@ public class SharePopup {
 			public void handleMessage(Message msg) {
 				Bundle b = msg.getData();
 				if(b.containsKey(Models.IMedia.VERSION)) {
-					inProgressBar.setProgress(100);
-					alert.cancel();
+					
 
-					if (sendTo != null
-							&& b.getString(Models.IMedia.VERSION) != null) {
-
-						sendTo.intent.setClassName(
-								sendTo.resolveInfo.activityInfo.packageName,
-								sendTo.resolveInfo.activityInfo.name);
+					Uri uriShare = Uri
+							.fromFile(new java.io.File(b
+									.getString(Models.IMedia.VERSION)));
+					mediaListUri.add(uriShare);
+					exportCounter++;
+					
+					if (exportCounter == mediaList.size())
+					{
+						inProgressBar.setProgress(100);
 						
-						/*
-						try
-						{
-							String j3mText = generateJ3M(a, media._id);
+						alert.cancel();
+	
+						if (sendTo != null
+								&& b.getString(Models.IMedia.VERSION) != null) {
+	
+							sendTo.intent.setClassName(
+									sendTo.resolveInfo.activityInfo.packageName,
+									sendTo.resolveInfo.activityInfo.name);
 							
-							if (j3mText != null)
-								sendTo.intent.putExtra(Intent.EXTRA_TEXT, j3mText);
+							String title = a.getString(R.string.share_from_) + a.getString(R.string.app_name);
+							sendTo.intent.putExtra(Intent.EXTRA_TITLE, title);
+							sendTo.intent.putExtra(Intent.EXTRA_SUBJECT, title);
+							
+							sendTo.intent.setType("*/*");
+							
+							if (mediaListUri.size() > 1)
+							{
+								sendTo.intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+								sendTo.intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, mediaListUri);
+							}
+							else
+							{
+								sendTo.intent.setAction(Intent.ACTION_SEND);
+								sendTo.intent.putExtra(Intent.EXTRA_STREAM, mediaListUri.get(0));
+							}
+							
+							a.startActivity(sendTo.intent);
+							
 						}
-						catch (Exception e)
-						{
-							//unable to generate j3m
-							e.printStackTrace();
-						}*/
-						
-						String title = a.getString(R.string.share_from_) + a.getString(R.string.app_name);
-						sendTo.intent.putExtra(Intent.EXTRA_TITLE, title);
-					//	sendTo.intent.putExtra(Intent.EXTRA_SUBJECT, title);
-						
-						Uri uriShare = Uri
-								.fromFile(new java.io.File(b
-										.getString(Models.IMedia.VERSION)));
-						sendTo.intent.setType("*/*");
-						
-						sendTo.intent.putExtra(Intent.EXTRA_STREAM, uriShare);
-						a.startActivity(sendTo.intent);
-						
 					}
+					else
+					{
+						inProgressBar.setProgress((int)(100*(((float)exportCounter)/((float)mediaList.size()))));
+					}
+					
 				} else if(b.containsKey(Codes.Keys.UI.PROGRESS)) {
-					inProgressBar.setProgress(b.getInt(Codes.Keys.UI.PROGRESS));
+					
+					//inProgressBar.setProgress(b.getInt(Codes.Keys.UI.PROGRESS));
+					
 				}
 				else if (msg.what == -1)
 				{
@@ -295,10 +312,13 @@ public class SharePopup {
 				{
 					boolean doSendTo = sendTo != null;
 					
-					if (shareJ3MOnly)
-						media.exportJ3M(a, h, encryptTo, doSendTo);
-					else
-						media.export(a, h, encryptTo);
+					for (IMedia media : mediaList)
+					{
+						if (shareJ3MOnly)
+							media.exportJ3M(a, h, encryptTo, doSendTo);
+						else
+							media.export(a, h, encryptTo);
+					}
 				}
 				catch (Exception e)
 				{

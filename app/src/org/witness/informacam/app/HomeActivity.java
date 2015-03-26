@@ -416,6 +416,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 				}
 			});
 
+			/**
 			// Share
 			//
 			View btnShare = content.findViewById(R.id.btnShareMedia);
@@ -426,7 +427,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 				{
 					new SharePopup(HomeActivity.this, informaCam.mediaManifest.getById(media._id), true, false);
 				}
-			});	
+			});	*/
 			
 			mMenuPopup.setOutsideTouchable(true);
 			mMenuPopup.setBackgroundDrawable(new BitmapDrawable());

@@ -4,6 +4,7 @@ import info.guardianproject.odkparser.FormWrapper.ODKFormListener;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.witness.informacam.InformaCam;
@@ -342,12 +343,16 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		}
 		case R.id.menu_share:
 		{
-			new SharePopup(this, media);
+			ArrayList<IMedia> mList = new ArrayList<IMedia>();
+			mList.add(media);
+			new SharePopup(this, mList);
 			return true;
 		}
 		case R.id.menu_share_meta:
 		{
-			new SharePopup(this, media, false, true);
+			ArrayList<IMedia> mList = new ArrayList<IMedia>();
+			mList.add(media);
+			new SharePopup(this, mList, false, true);
 			return true;
 		}
 		case R.id.menu_share_hash:
@@ -480,9 +485,10 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			    	
 			    	Intent sendIntent = new Intent();
 			    	sendIntent.setAction(Intent.ACTION_SEND);
-			    	
+
+			    	String shareHash = getString(R.string._camerav_notarization_id_) + getString(R.string._id_)+ hexString;
 			    	//if (!hasBeenShared) //if it hasn't been shared, then just show the hashes
-			    	sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string._camerav_notarization_id_) + hexString);
+			    	sendIntent.putExtra(Intent.EXTRA_TEXT, shareHash);
 			    	//else //if it has, then show a URL
 			    		//sendIntent.putExtra(Intent.EXTRA_TEXT, "#" + getString(R.string.app_name) + " https://j3m.info/submissions/?hashes=" + hexString + " (media:" + mediaHash + ")");
 			    	
