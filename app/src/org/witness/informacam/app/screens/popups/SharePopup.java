@@ -131,11 +131,11 @@ public class SharePopup {
 					if (sendTo != null
 							&& b.getString(Models.IMedia.VERSION) != null) {
 
-						
 						sendTo.intent.setClassName(
 								sendTo.resolveInfo.activityInfo.packageName,
 								sendTo.resolveInfo.activityInfo.name);
 						
+						/*
 						try
 						{
 							String j3mText = generateJ3M(a, media._id);
@@ -147,16 +147,20 @@ public class SharePopup {
 						{
 							//unable to generate j3m
 							e.printStackTrace();
-						}
+						}*/
 						
 						String title = a.getString(R.string.share_from_) + a.getString(R.string.app_name);
 						sendTo.intent.putExtra(Intent.EXTRA_TITLE, title);
-						sendTo.intent.putExtra(Intent.EXTRA_SUBJECT, title);
+					//	sendTo.intent.putExtra(Intent.EXTRA_SUBJECT, title);
 						
-						sendTo.intent.putExtra(Intent.EXTRA_STREAM, Uri
+						Uri uriShare = Uri
 								.fromFile(new java.io.File(b
-										.getString(Models.IMedia.VERSION))));
+										.getString(Models.IMedia.VERSION)));
+						sendTo.intent.setType("*/*");
+						
+						sendTo.intent.putExtra(Intent.EXTRA_STREAM, uriShare);
 						a.startActivity(sendTo.intent);
+						
 					}
 				} else if(b.containsKey(Codes.Keys.UI.PROGRESS)) {
 					inProgressBar.setProgress(b.getInt(Codes.Keys.UI.PROGRESS));
