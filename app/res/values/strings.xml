@@ -102,6 +102,7 @@
 	<string name="menu_share_hash">Notarize</string>
 	<string name="menu_creds">Share Credentials</string>
 	<string name="menu_export_keys">Backup Keys</string>
+	<string name="menu_home_gallery_select_all">Select All</string>
 	
     <string name="wizard_welcome">Welcome!</string>
     <string name="wizard_choose_language">Choose a language:</string>

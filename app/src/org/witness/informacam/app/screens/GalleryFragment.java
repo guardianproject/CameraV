@@ -373,6 +373,27 @@ public class GalleryFragment extends Fragment implements
 		}
 
 	}
+	
+	private boolean mIsSelectAll = false;
+	
+	private void selectAll (boolean select)
+	{
+		mIsSelectAll = select;
+		
+		for (IMedia m : listMedia)
+		{
+			m.put(Models.IMedia.TempKeys.IS_SELECTED, select);
+			
+			if (select)
+				batch.add(m);
+			else
+				batch.remove(m);
+
+			mediaDisplayGrid.invalidate();
+			mActionMode.invalidate();
+			updateAdapters();
+		}
+	}
 
 	private void updateAdapters() {
 
@@ -481,6 +502,9 @@ public class GalleryFragment extends Fragment implements
 			switch (item.getItemId()) {
 			case R.string.menu_done:
 				mode.finish(); // Action picked, so close the CAB
+				return true;
+			case R.id.menu_home_gallery_select_all:
+				selectAll(!mIsSelectAll);
 				return true;
 			case R.id.menu_share_hash:
 				shareHashes();

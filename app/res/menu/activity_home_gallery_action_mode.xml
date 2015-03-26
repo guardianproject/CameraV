@@ -9,6 +9,9 @@
         	</menu>
         
     </item>
+    <item android:id="@+id/menu_home_gallery_select_all" 
+        android:title="@string/menu_home_gallery_select_all" 
+        android:icon="@drawable/ic_action_select_all" android:orderInCategory="100" android:showAsAction="always" android:enabled="true"/>
     <item android:id="@+id/menu_home_gallery_delete" 
         android:title="@string/home_gallery_delete" 
         android:icon="@drawable/ic_gallery_trash" android:orderInCategory="100" android:showAsAction="always" android:enabled="true"/>

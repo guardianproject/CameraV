@@ -10,6 +10,7 @@ import org.witness.informacam.app.utils.Constants.App.Editor.Forms;
 import org.witness.informacam.app.views.RoundedImageView;
 import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
+import org.witness.informacam.utils.Constants.Models;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 
 public class GalleryGridAdapter extends BaseAdapter {
@@ -210,9 +212,21 @@ public class GalleryGridAdapter extends BaseAdapter {
 			else
 				view = li.inflate(R.layout.adapter_gallery_grid, parent, false);
 
-			// Show or hide the selection layer
-			view.findViewById(R.id.chkSelect).setVisibility(
-				mInSelectionMode ? View.VISIBLE : View.GONE);
+				CheckBox chkSelected = (CheckBox) view
+				.findViewById(R.id.chkSelect);
+			chkSelected.setVisibility(
+					mInSelectionMode ? View.VISIBLE : View.GONE);
+		
+			if (m.has(Models.IMedia.TempKeys.IS_SELECTED))
+			{
+				chkSelected.setChecked(m
+					.getBoolean(Models.IMedia.TempKeys.IS_SELECTED));
+			}
+			else
+			{
+				chkSelected.setChecked(false);	
+			}
+			
 
 			ImageView iv = (ImageView) view.findViewById(R.id.gallery_thumb);
 
