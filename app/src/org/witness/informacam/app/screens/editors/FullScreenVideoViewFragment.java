@@ -188,10 +188,6 @@ OnRangeSeekBarChangeListener<Integer> {
 	{
 
 		mediaPlayer.setScreenOnWhilePlaying(true);
-		mediaPlayer.start();
-		mediaPlayer.setVolume(1f, 1f);
-		mediaPlayer.seekTo(currentCue);
-		mediaPlayer.pause();
 		
 		RangeSeekBar<Integer> rsb = videoSeekBar.init(mediaPlayer);
 		rsb.setOnRangeSeekBarChangeListener(FullScreenVideoViewFragment.this);
@@ -200,6 +196,11 @@ OnRangeSeekBarChangeListener<Integer> {
 		initRegions();
 		
 		playPauseToggle.setClickable(true);
+		
+		mediaPlayer.start();
+		mediaPlayer.setVolume(1f, 1f);
+		mediaPlayer.seekTo(currentCue);
+		mediaPlayer.pause();
 		
 		updateRegionView(mediaPlayer.getCurrentPosition());	
 	}
@@ -290,16 +291,6 @@ OnRangeSeekBarChangeListener<Integer> {
 		
 	}
 	
-	 @Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-
-		Toast.makeText(getActivity(), "Loading video. Please wait..." , Toast.LENGTH_LONG).show();
-		
-	}
-
-	
 	@Override
 	public void onSelected(IRegionDisplay regionDisplay) {		
 		
@@ -324,39 +315,23 @@ OnRangeSeekBarChangeListener<Integer> {
 		
 		surfaceHolder = holder;
 		
-		new VideoLoader().execute("");
+		try {
+			initVideo();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
-
-	private class VideoLoader extends AsyncTask<String, Void, Boolean> {
-           @Override
-           protected Boolean doInBackground(String... params) {
-                
-        	   try
-        	   {
-        		   initVideo();
-        	   
-        		   return true;
-        	   }
-        	   catch (Exception e)
-        	   {
-        		   Log.e(LOG,"error initVideo()",e);
-        		   return false;
-        	   }
-           }
-
-           @Override
-           protected void onPostExecute(Boolean result) {
-
-           }
-
-           @Override
-           protected void onPreExecute() {}
-
-          @Override
-           protected void onProgressUpdate(Void... values) {}
-    };
-
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
