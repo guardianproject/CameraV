@@ -79,7 +79,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	protected void initLayout() {
 		super.initLayout();
 
-		mediaHolder_ = new ImageView(getActivity());
+		mediaHolder_ = new org.witness.informacam.app.views.PZSImageView(getActivity());
 		mediaHolder_.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		mediaHolder.addView(mediaHolder_);
 		
