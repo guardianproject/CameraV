@@ -384,6 +384,8 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 			if (appDir.exists())
 				deleteDir(appDir);
 		}
+		
+		
     }
 
     public void deleteDir(File dir) {

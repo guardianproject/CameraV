@@ -11,8 +11,8 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.PreferencesActivity;
 import org.witness.informacam.app.R;
 import org.witness.informacam.app.WipeActivity;
+import org.witness.informacam.app.screens.HomeFragment.TapGestureListener;
 import org.witness.informacam.app.screens.popups.AudioNoteSavedPopup;
-import org.witness.informacam.app.screens.popups.SharePopup;
 import org.witness.informacam.app.utils.AudioNoteHelper;
 import org.witness.informacam.app.utils.Constants.App.Editor.Forms;
 import org.witness.informacam.app.utils.Constants.App.Home;
@@ -57,8 +57,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -186,7 +184,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		super.onActivityCreated(savedInstanceState);
 		//Log.d(LOG, "GALLERY ON ACTIVITY CREATED CALLED");
 
-		initLayout(savedInstanceState);
+		initLayout();
 	}
 
 	private void initData()
@@ -213,7 +211,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		});
 	}
 
-	private void initLayout(Bundle savedInstanceState)
+	private void initLayout()
 	{
 
 		mPhotoPager = (ViewPager) rootView.findViewById(R.id.pagerPhotos);
@@ -381,7 +379,9 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 			case R.id.menu_creds:
 				
 				Intent intent = informaCam.exportCredentials();
-				getActivity().startActivity(intent);
+				if (intent != null)
+					getActivity().startActivity(intent);
+				
 				return true;
 				
 				
@@ -618,7 +618,6 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	{
 		mIsGeneratingKey = generatingKey;
 		
-		/*
 		if (rootView != null)
 		{
 			rootView.post(new Runnable()
@@ -644,7 +643,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 					}
 				}
 			});
-		}*/
+		}
 	}
 
 	@Override

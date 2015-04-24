@@ -3,7 +3,6 @@ package org.witness.informacam.app;
 import java.util.Locale;
 
 import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.wizard.WizardCreateDB;
@@ -12,8 +11,10 @@ import org.witness.informacam.app.screens.wizard.WizardTakePhoto;
 import org.witness.informacam.app.utils.Constants.App;
 import org.witness.informacam.app.utils.Constants.Codes;
 import org.witness.informacam.app.utils.Constants.WizardActivityListener;
+import org.witness.informacam.crypto.KeyUtility;
 import org.witness.informacam.json.JSONException;
 import org.witness.informacam.ui.SurfaceGrabberActivity;
+import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models.IUser;
 
@@ -22,10 +23,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
 public class WizardActivity extends FragmentActivity implements WizardActivityListener
 {
@@ -154,26 +157,28 @@ public class WizardActivity extends FragmentActivity implements WizardActivityLi
 			switch(requestCode) {
 			case org.witness.informacam.utils.Constants.Codes.Routes.IMAGE_CAPTURE:
 				// init the key...
-//				Toast.makeText(this, getString(R.string.wizard_key_is_being_made), Toast.LENGTH_LONG).show();
-//
-////				toImageCapture.setClickable(false);
-////				((WizardActivity) a).autoAdvance();
-////				
-//				new Thread(new Runnable() {
-//					@Override
-//					public void run() {
-//						if(KeyUtility.initDevice()) {
-//							Bundle data = new Bundle();
-//							data.putInt(Codes.Extras.MESSAGE_CODE, Codes.Messages.UI.REPLACE);
-//							
-//							Message message = new Message();
-//							message.setData(data);
-//							
-//							Toast.makeText(WizardActivity.this, getString(R.string.done), Toast.LENGTH_LONG).show();
-//							//((InformaCamEventListener) this).onUpdate(message);
-//						}
-//					}
-//				}).start();
+				
+			//	Toast.makeText(this, getString(R.string.wizard_key_is_being_made), Toast.LENGTH_LONG).show();
+
+			//	toImageCapture.setClickable(false);
+				//((WizardActivity) a).autoAdvance();
+				/*
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						if(KeyUtility.initDevice()) {
+							Bundle data = new Bundle();
+							data.putInt(Codes.Extras.MESSAGE_CODE, Codes.Messages.UI.REPLACE);
+							
+							Message message = new Message();
+							message.setData(data);
+							
+							Toast.makeText(WizardActivity.this, getString(R.string.done), Toast.LENGTH_LONG).show();
+							((InformaCamEventListener) this).onUpdate(message);
+						}
+					}
+				}).start();*/
+				
 				setResult(RESULT_OK);
 				finish();
 				break;
