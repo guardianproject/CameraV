@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" 
+     android:id="@+id/root_main"
+     android:background="#000000"
+    >
 
+            <FrameLayout
+                android:id="@+id/media_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="0dip"
+                 android:layout_margin="0dip"
+                 />
+    
+    <!-- 
         <org.witness.informacam.app.views.TwoViewSlideLayout
             android:id="@+id/root_main"
             android:layout_width="match_parent"
@@ -10,17 +22,16 @@
             android:orientation="vertical"
             android:background="@drawable/black"
              >
-
-            <FrameLayout
-                android:id="@+id/media_holder"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="0dip" />
-
+ -->
+    
+   
             <RelativeLayout
                 android:id="@+id/rlBottomPart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="wrap_content"
+    			android:paddingTop="?android:attr/actionBarSize"
+    			android:visibility="gone"
+                 >
 
                                 <include
             android:id="@+id/toolbar_bottom"
@@ -46,7 +57,6 @@
 
                         
             </RelativeLayout>
-        </org.witness.informacam.app.views.TwoViewSlideLayout>
 
 
     <FrameLayout

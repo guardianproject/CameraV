@@ -1,5 +1,7 @@
 package org.witness.informacam.app.screens.popups;
 
+import info.guardianproject.iocipher.File;
+import info.guardianproject.iocipher.camera.io.IOCipherContentProvider;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 
 import java.io.IOException;
@@ -131,10 +133,21 @@ public class SharePopup {
 				Bundle b = msg.getData();
 				if(b.containsKey(Models.IMedia.VERSION)) {
 					
-
-					Uri uriShare = Uri
-							.fromFile(new java.io.File(b
-									.getString(Models.IMedia.VERSION)));
+					Uri uriShare = null;
+					
+					java.io.File fileShare = new java.io.File(b.getString(Models.IMedia.VERSION));
+					
+					if (fileShare.exists())
+					{
+						uriShare = Uri.fromFile(fileShare);
+					}
+					else
+					{
+						String uriPath = IOCipherContentProvider.addShare(b.getString(Models.IMedia.VERSION),"org.witness.informacam");
+						uriShare = Uri.parse(uriPath);
+								
+					}
+					
 					mediaListUri.add(uriShare);
 					exportCounter++;
 					

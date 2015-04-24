@@ -64,7 +64,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 	private AdapteredLinearLayout lvHistory;
 	private View historyHeader;
 	private boolean mShowingHistory;
-	private ImageView showHistoryIndicator;
+//	private ImageView showHistoryIndicator;
 	private TextView historyHeaderSubTitle;
 	
 	private final static String LOG = App.LOG;
@@ -84,7 +84,7 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 
 		historyHeader = rootView.findViewById(R.id.historyHeader);
 		historyHeaderSubTitle = (TextView) historyHeader.findViewById(R.id.tvSubTitle);
-		showHistoryIndicator = (ImageView) rootView.findViewById(R.id.indicator);
+	//	showHistoryIndicator = (ImageView) rootView.findViewById(R.id.indicator);
 		lvHistory = (AdapteredLinearLayout) rootView.findViewById(R.id.lvHistory);
 		lvHistory.setVisibility(View.VISIBLE);
 		mShowingHistory = true;
@@ -176,12 +176,12 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 				if (lvHistory.getAdapter().getCount() == 0)
 				{
 					historyHeader.setOnClickListener(null);
-					showHistoryIndicator.setVisibility(View.GONE);
+				//	showHistoryIndicator.setVisibility(View.GONE);
 				}
 				else
 				{
 					historyHeader.setOnClickListener(OverviewFormFragment.this);
-					showHistoryIndicator.setVisibility(View.VISIBLE);
+				//	showHistoryIndicator.setVisibility(View.VISIBLE);
 				}
 			}		
 		};
@@ -321,12 +321,12 @@ public class OverviewFormFragment extends Fragment implements ODKFormListener, O
 		{
 			if (mShowingHistory)
 			{
-				this.showHistoryIndicator.setImageResource(R.drawable.ic_context_open);
+			//	this.showHistoryIndicator.setImageResource(R.drawable.ic_context_open);
 				this.lvHistory.setVisibility(View.GONE);
 			}
 			else
 			{
-				this.showHistoryIndicator.setImageResource(R.drawable.ic_context_close);
+				//this.showHistoryIndicator.setImageResource(R.drawable.ic_context_close);
 				this.lvHistory.setVisibility(View.VISIBLE);
 			}
 			mShowingHistory = !mShowingHistory;

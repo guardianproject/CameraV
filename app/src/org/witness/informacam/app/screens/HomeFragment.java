@@ -119,8 +119,12 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
+		
+		if (mPhotoPager != null)
+			initData();
+		
+
 		
 	}
 	
@@ -214,8 +218,6 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 
 		mPhotoPager = (ViewPager) rootView.findViewById(R.id.pagerPhotos);
 		mNoMedia = rootView.findViewById(R.id.media_display_no_media);
-		
-		initData();
 
 		mBtnPhoto = rootView.findViewById(R.id.btnPhoto);
 		mBtnPhoto.setOnClickListener(this);
@@ -239,6 +241,8 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		mBtnShare.setOnClickListener(this);
 		**/
 
+		initData();
+		
 		showSwipeHint();
 	}
 

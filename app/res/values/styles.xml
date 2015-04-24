@@ -115,10 +115,11 @@
         <item name="android:backgroundSplit">@drawable/actionbar_actionmode_background</item>
         </style>
     
-    <style name="EditorActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-    	<item name="android:background">@drawable/actionbar_background</item>
+    <style name="EditorActionBar"   parent="@android:style/Widget.Holo.Light.ActionBar">
+    	 <item name="android:background">@drawable/actionbar_background</item>
     	<item name="android:titleTextStyle">@style/EditorActionBarTitle</item>
         <item name="android:backgroundSplit">@drawable/actionbar_background</item>
+    
     </style>
 
 	<style name="EditorActionBarTitle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
@@ -129,6 +130,8 @@
         <item name="android:actionBarStyle">@style/EditorActionBar</item>
     	<item name="android:actionModeBackground">@drawable/actionbar_actionmode_background</item>
     	<item name="android:actionModeCloseDrawable">@drawable/ic_action_select</item>
+    	
+        
     </style>
     
 	<!-- 

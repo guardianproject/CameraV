@@ -229,7 +229,17 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 				route = new Intent(this, HomeActivity.class);
 				routeCode = Home.ROUTE_CODE;
 				route.putExtra(Codes.Extras.GENERATING_KEY, true);
-				generateKey();
+				
+				if(KeyUtility.initDevice()) {
+					
+					informaCam.user.hasCompletedWizard = true;
+					informaCam.user.lastLogIn = System.currentTimeMillis();
+					informaCam.user.isLoggedIn = true;
+					
+					informaCam.saveState(informaCam.user);
+					informaCam.saveState(informaCam.languageMap);
+				}
+				
 				break;
 			}
 				
@@ -328,87 +338,7 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 	{
 	}
 	
-	private void generateKey()
-	{
-		//Toast.makeText(this, getString(R.string.wizard_key_is_being_made), Toast.LENGTH_LONG).show();
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				if(KeyUtility.initDevice()) {
-					
-					mHandler.post(new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							// save everything
-							InformaCam informaCam = (InformaCam)getApplication();
-							
-							informaCam.user.hasCompletedWizard = true;
-							informaCam.user.lastLogIn = System.currentTimeMillis();
-							informaCam.user.isLoggedIn = true;
-							
-							informaCam.saveState(informaCam.user);
-							informaCam.saveState(informaCam.languageMap);
-							
-							try {
-								
-								informaCam.initData();
-								
-								for(String s : informaCam.getAssets().list("includedOrganizations")) {
-									
-									InputStream ictdIS = informaCam.ioService.getStream("includedOrganizations/" + s, Type.APPLICATION_ASSET);
-									
-									byte[] ictdBytes = new byte[ictdIS.available()];
-									ictdIS.read(ictdBytes);
-									
-									IOrganization organization = informaCam.installICTD((JSONObject) new JSONTokener(new String(ictdBytes)).nextValue(), mHandler, InformaActivity.this);
-									if(organization != null && !informaCam.user.isInOfflineMode) {
-										INotification notification = new INotification(getResources().getString(R.string.key_sent), getResources().getString(R.string.you_have_sent_your_credentials_to_x, organization.organizationName), Models.INotification.Type.NEW_KEY);
-										notification.taskComplete = false;
-										informaCam.addNotification(notification, null);
-										
-									//	ITransportStub transportStub = new ITransportStub(organization, notification);
-									//	transportStub.setAsset(IUser.PUBLIC_CREDENTIALS, IUser.PUBLIC_CREDENTIALS, MimeType.ZIP, Type.IOCIPHER);
-									//	TransportUtility.initTransport(transportStub);
-									}
-								}
-							} catch(IOException e) {
-								Log.e(LOG, e.toString(),e);
-							} catch (JSONException e) {
-								Log.e(LOG, e.toString(),e);
-							} catch (Exception e) {
-								Log.e(LOG, e.toString(),e);
-								throw new RuntimeException("could not init data",e);
-							}
-							
-							
-							try {
-								for(String s : informaCam.getAssets().list("includedForms")) {
-									InputStream formXML = informaCam.ioService.getStream("includedForms/" + s, Type.APPLICATION_ASSET);
-									FormUtility.importAndParse(formXML);
-								}
-							} catch(Exception e) {
-								Log.e(LOG, e.toString());
-								e.printStackTrace();
-							}
-							
-							// Tell others we are done!
-							Bundle data = new Bundle();
-							data.putInt(Codes.Extras.MESSAGE_CODE, org.witness.informacam.utils.Constants.Codes.Messages.UI.REPLACE);
-							
-							Message message = new Message();
-							message.setData(data);
-							
-							informaCam.update(data);
-
-							//Toast.makeText(InformaActivity.this, getString(R.string.wizard_key_made), Toast.LENGTH_LONG).show();
-						}
-					});
-				}
-			}
-		}).start();
-	}
+	
 	
 	public void wipe()
 	{

@@ -8,9 +8,6 @@
         android:id="@+id/details_form_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@color/blue_washed"
-        android:dividerHeight="1px"
-        android:dividerPadding="10dp"
         android:orientation="vertical"
         android:padding="10dp"
         android:showDividers="middle" />

@@ -30,6 +30,7 @@
         android:textSize="12sp"
         app:font="Roboto-Bold" />
 
+    <!-- 
     <ImageView
         android:id="@+id/indicator"
         android:layout_width="wrap_content"
@@ -39,5 +40,6 @@
         android:layout_margin="10dp"
         android:visibility="gone"
         android:src="@drawable/ic_context_open" />
+         -->
 
 </RelativeLayout>

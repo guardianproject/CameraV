@@ -39,6 +39,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
+        
         <receiver
             android:name="org.witness.informacam.utils.InformaCamBroadcaster"
             android:enabled="true"
@@ -166,7 +167,6 @@
             android:label="@string/app_name"
             android:theme="@style/EditorTheme"
             android:exported="false"
-            android:uiOptions="splitActionBarWhenNarrow"
              >
             <meta-data android:name="android.support.UI_OPTIONS"
                    android:value="splitActionBarWhenNarrow" />
@@ -222,23 +222,7 @@
             android:screenOrientation="portrait" 
             android:exported="false"
             />
-        <activity
-            android:name="info.guardianproject.informacam.camera.SecureCameraActivity"
-            android:screenOrientation="landscape"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name" 
-            android:exported="true"
-            >
-            <intent-filter>                
-				<action android:name="info.guardianproject.action.SECURE_STILL_IMAGE_CAMERA" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>                
-				<action android:name="info.guardianproject.action.SECURE_VIDEO_CAMERA" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-                
-			</activity>
+      
         <activity
             android:name="org.witness.informacam.ui.CameraActivity"
             android:screenOrientation="landscape"
@@ -265,10 +249,7 @@
         <service android:name="org.witness.informacam.intake.Intake"
             android:enabled="true"
             android:exported="false" />
-        <service
-            android:name="info.guardianproject.cacheword.CacheWordService"
-            android:enabled="true"
-            android:exported="false" />
+        
         <service android:name="org.witness.informacam.transport.GlobaleaksTransport"
             android:enabled="true"
             android:exported="false" />
@@ -288,6 +269,73 @@
             <data android:mimeType="video/*" />
         </intent-filter>
     </receiver>
+    
+          <activity
+            android:name="info.guardianproject.iocipher.camera.GalleryActivity"
+            android:label="@string/app_name" 
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:icon="@drawable/ic_launcher"
+            >
+            
+            <intent-filter>                
+				<action android:name="info.guardianproject.action.SECURE_STILL_IMAGE_CAMERA" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>                
+				<action android:name="info.guardianproject.action.SECURE_VIDEO_CAMERA" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+                
+            
+            
+            <intent-filter>
+                <action android:name="android.provider.MediaStore.ACTION_VIDEO_CAPTURE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+        
+
+         <activity
+            android:name="info.guardianproject.iocipher.camera.StillCameraActivity"
+            android:label="Secure Selfie"
+                android:theme="@android:style/Theme.NoTitleBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+                />
+
+                 <activity
+            android:name="info.guardianproject.iocipher.camera.VideoCameraActivity"
+            android:label="Secure Video (Native)"
+                android:theme="@android:style/Theme.NoTitleBar"
+                
+            android:configChanges="keyboardHidden|orientation|screenSize"
+                />                        
+        
+                 <activity
+            android:name="info.guardianproject.iocipher.camera.viewer.ImageViewerActivity"
+            android:label="Secure Selfie Viewer"
+            
+            android:configChanges="keyboardHidden|orientation|screenSize"
+                android:theme="@android:style/Theme.NoTitleBar"/>
+        
+                  <activity
+            android:name="info.guardianproject.iocipher.camera.viewer.MjpegViewerActivity"   
+            
+            android:configChanges="keyboardHidden|orientation|screenSize"         
+                android:theme="@android:style/Theme.NoTitleBar"/>
+        
+        <provider
+            android:name="info.guardianproject.iocipher.camera.io.IOCipherContentProvider"
+            android:authorities="org.witness.informacam"
+            android:exported="true"
+            android:multiprocess="true"
+            android:syncable="false"            
+             />
+        
+         <service
+            android:name="info.guardianproject.cacheword.CacheWordService"
+            android:enabled="true"
+            android:exported="false" />
     
     </application>
     

@@ -5,7 +5,7 @@
         android:background="#000000"
      >
 
-    <VideoView
+    <info.guardianproject.iocipher.camera.viewer.MjpegView
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

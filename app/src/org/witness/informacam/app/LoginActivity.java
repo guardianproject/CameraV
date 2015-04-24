@@ -1,19 +1,20 @@
 package org.witness.informacam.app;
 
 import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.utils.Constants;
 import org.witness.informacam.app.utils.UIHelpers;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -52,6 +53,7 @@ public class LoginActivity extends Activity {
 			                event.getAction() == KeyEvent.ACTION_DOWN &&
 			                event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {			
 							doLogin ();
+							
 						}
 					   return true;
 			}
@@ -82,6 +84,11 @@ public class LoginActivity extends Activity {
 	
 	public void doLogin () 
 	{
+
+		InputMethodManager imm = (InputMethodManager)getSystemService(
+			      Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(password.getWindowToken(), 0);
+			
 		if(password.getText().length() > 0) {
 			h.post(new Runnable() {
 				@Override

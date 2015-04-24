@@ -10,6 +10,7 @@ import java.util.List;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.FullScreenViewFragment;
 import org.witness.informacam.app.screens.editors.FullScreenImageViewFragment;
+import org.witness.informacam.app.screens.editors.FullScreenMJPEGViewFragment;
 import org.witness.informacam.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.informacam.app.screens.forms.OverviewFormFragment;
 import org.witness.informacam.app.screens.forms.TagFormFragment;
@@ -17,7 +18,6 @@ import org.witness.informacam.app.screens.popups.SharePopup;
 import org.witness.informacam.app.utils.Constants.Codes;
 import org.witness.informacam.app.utils.Constants.EditorActivityListener;
 import org.witness.informacam.app.utils.UIHelpers;
-import org.witness.informacam.app.views.TwoViewSlideLayout;
 import org.witness.informacam.informa.InformaService;
 import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IImage;
@@ -27,6 +27,7 @@ import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.storage.FormUtility;
 import org.witness.informacam.ui.editors.IRegionDisplay;
+import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.IRegionDisplayListener;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.Models;
@@ -38,8 +39,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -52,9 +56,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -63,8 +70,9 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 {
 	Intent init;
 
-	TwoViewSlideLayout rootMain;
+	FrameLayout rootMain;
 	View rootForm;
+	View bottomPart;
 	Fragment fullscreenView, formView;
 	OverviewFormFragment detailsView;
 	public FragmentManager fm;
@@ -96,6 +104,23 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+	
+		getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);//or add in style.xml
+
+  		getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+  				WindowManager.LayoutParams.FLAG_SECURE);      
+		/*
+		if (Build.VERSION.SDK_INT >= 16) { //ye olde method
+		    View decorView = getWindow().getDecorView();
+		    // Hide the status bar.
+		    int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+		    decorView.setSystemUiVisibility(uiOptions);
+		   
+		}*/
+		
+	  actionBar = getActionBar();
+      actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#33cccccc")));
+      actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#55cccccc")));
 
 		informaCam = (InformaCam) getApplication();
 		informaCam.setStatusListener(this);
@@ -110,15 +135,15 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 	
 				setContentView(R.layout.activity_editor);
 				
-				rootMain = (TwoViewSlideLayout) findViewById(R.id.root_main);
+				rootMain = (FrameLayout) findViewById(R.id.root_main);
 				waitLoading = (ProgressBar) findViewById(R.id.waitLoading);
+				bottomPart = findViewById(R.id.rlBottomPart);
+				
 				installDeferredLoader();
 	
 				rootForm = findViewById(R.id.root_form);
 				toolbarBottom = findViewById(R.id.toolbar_bottom);
 				toolbarBottom.setVisibility(View.GONE);
-	
-				actionBar = getActionBar();
 	
 				fm = getSupportFragmentManager();
 			}
@@ -146,12 +171,12 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
 		    //Do some stuff
 
-			rootMain.fullscreen();
+		//	rootMain.fullscreen();
 		}
 	}
 	
 	
-
+/**
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// TODO Auto-generated method stub
@@ -161,13 +186,13 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
 		    //Do some stuff
 
-			rootMain.fullscreen();
+		//	rootMain.fullscreen();
 		}
 		else
 		{
-			rootMain.expand();
+		//	rootMain.expand();
 		}
-	}
+	}*/
 
 	private void installDeferredLoader() {
 		final ViewTreeObserver vto = rootMain.getViewTreeObserver();
@@ -243,6 +268,10 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		if (media.dcimEntry.mediaType.equals(Models.IMedia.MimeType.IMAGE))
 		{
 			fullscreenView = Fragment.instantiate(this, FullScreenImageViewFragment.class.getName(), fullscreenViewArgs);
+		}
+		else if ( media.dcimEntry.fileAsset.source == Storage.Type.IOCIPHER)
+		{
+			fullscreenView = Fragment.instantiate(this, FullScreenMJPEGViewFragment.class.getName(), fullscreenViewArgs);
 		}
 		else if (media.dcimEntry.mediaType.startsWith(Models.IMedia.MimeType.VIDEO_BASE))
 		{
@@ -330,10 +359,15 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				bottomPart.setVisibility(View.GONE);
+				
 				setActionMode(ActivityActionMode.Normal);
 			}
 			else if (mActionMode == ActivityActionMode.Edit)
 			{
+				bottomPart.setVisibility(View.GONE);
+				
 				saveState();
 				setActionMode(ActivityActionMode.Normal);
 			}
@@ -369,6 +403,8 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		}
 		case R.id.menu_edit:
 		{
+			bottomPart.setVisibility(View.VISIBLE);
+			
 			setActionMode(ActivityActionMode.Edit);
 			return true;
 		}
@@ -376,6 +412,8 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		{
 			saveState();
 			setActionMode(ActivityActionMode.Normal);
+			bottomPart.setVisibility(View.GONE);
+			
 			return true;
 		}
 		case R.id.menu_edittext_cancel:
@@ -418,7 +456,10 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		else if (mActionMode == ActivityActionMode.AddTags)
 			this.setActionMode(ActivityActionMode.Edit);
 		else if (mActionMode == ActivityActionMode.Edit)
+		{
+			bottomPart.setVisibility(View.GONE);
 			this.setActionMode(ActivityActionMode.Normal);
+		}
 		else if (mActionMode == ActivityActionMode.EditText)
 		{
 			try {
@@ -721,7 +762,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			showToolbar(false);
 			getActionBar().setTitle(R.string.menu_edit);
 
-			rootMain.collapse();
+			//rootMain.collapse();
 			
 			@SuppressWarnings("unused")
 			Rect rectAudioFiles = UIHelpers.getRectRelativeToView(rootMain, detailsView.getAudioFilesView());
@@ -729,7 +770,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			detailsView.startEditNotes();
 			break;
 		case Edit:
-			rootMain.expand();
+		//	rootMain.expand();
 			//this.svRootMain.smoothScrollTo(0, 0);
 			try {
 				detailsView.stopEditNotes(false);

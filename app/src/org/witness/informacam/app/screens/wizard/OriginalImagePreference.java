@@ -49,6 +49,7 @@ public class OriginalImagePreference extends Fragment implements WizardListener 
 
 	@Override
 	public void onSubFragmentCompleted() {
+		/*
 		for(int i=0; i<originalImagePreferenceHolder.getChildCount(); i++) {
 			RadioButton rb = (RadioButton) originalImagePreferenceHolder.getChildAt(i);
 			if(rb.isSelected()) {
@@ -56,7 +57,7 @@ public class OriginalImagePreference extends Fragment implements WizardListener 
 					((WizardActivityListener) a).onAssetEncryptionSelected(i == 0 ? true : false);
 				}
 			}
-		}
+		}*/
 	}
 	
 	@Override

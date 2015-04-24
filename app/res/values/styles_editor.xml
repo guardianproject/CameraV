@@ -15,13 +15,13 @@
     </style>
     
     <style name="EditorTopLevelNote">
-        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textColor">@drawable/white</item>
         <item name="android:textSize">18sp</item>
         <item name="android:paddingTop">10dip</item>
         <item name="android:paddingBottom">10dip</item>
         <item name="android:paddingLeft">10dip</item>
         <item name="android:paddingRight">10dip</item>
-<!--         <item name="android:background">@drawable/extras_list_item_selector</item> -->
+        <item name="android:background">@drawable/trans_black</item> 
     </style>
 
     <style name="EditorBottomToolbarButtonStyle">

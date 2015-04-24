@@ -141,8 +141,10 @@ public class WizardActivity extends FragmentActivity implements WizardActivityLi
 	
 	@Override
 	public void onAssetEncryptionSelected(boolean encryptAssets) {
+		/*
 		SharedPreferences.Editor sp = PreferenceManager.getDefaultSharedPreferences(this).edit();
 		sp.putString(IUser.ASSET_ENCRYPTION, encryptAssets ? "0" : "1").commit();
+		*/
 	}
 	
 	@Override

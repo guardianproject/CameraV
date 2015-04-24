@@ -635,7 +635,7 @@ public class GalleryFragment extends Fragment implements
 	    	sendIntent.setAction(Intent.ACTION_SEND);
 	    	
 	    	//if (!hasBeenShared) //if it hasn't been shared, then just show the hashes
-	    	sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string._camerav_notarization_id_) + hexStrings.toString().trim());
+	    	sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string._camerav_notarization_id_) + ' ' + hexStrings.toString().trim());
 	    	//else //if it has, then show a URL
 	    		//sendIntent.putExtra(Intent.EXTRA_TEXT, "#" + getString(R.string.app_name) + " https://j3m.info/submissions/?hashes=" + hexString + " (media:" + mediaHash + ")");
 	    	

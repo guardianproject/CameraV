@@ -17,8 +17,7 @@
         android:layout_height="wrap_content"
         android:background="#ffffffff"
         android:divider="@drawable/media_history_divider"
-        android:dividerHeight="1dp"
-        android:visibility="gone" >
+        android:dividerHeight="1dp" >
     </org.witness.informacam.app.views.AdapteredLinearLayout>
 
     <View
@@ -65,7 +64,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="top|left"
         android:layout_weight="1"
-        android:background="@null"
         android:gravity="top|left"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium" />

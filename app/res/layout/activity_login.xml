@@ -57,13 +57,12 @@
         android:layout_marginTop="15dp"
         android:text="@string/login_open" />
          -->
-
     <ProgressBar
         android:id="@+id/login_waiter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:visibility="gone" />
-
+        android:visibility="invisible" />
+   
 </LinearLayout>
