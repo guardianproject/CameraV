@@ -133,22 +133,30 @@ public class SharePopup {
 				Bundle b = msg.getData();
 				if(b.containsKey(Models.IMedia.VERSION)) {
 					
-					Uri uriShare = null;
 					
 					java.io.File fileShare = new java.io.File(b.getString(Models.IMedia.VERSION));
 					
 					if (fileShare.exists())
 					{
-						uriShare = Uri.fromFile(fileShare);
+						mediaListUri.add(Uri.fromFile(fileShare));
 					}
-					else
+					else 
 					{
-						String uriPath = IOCipherContentProvider.addShare(b.getString(Models.IMedia.VERSION),"org.witness.informacam");
-						uriShare = Uri.parse(uriPath);
+						String sharePath = b.getString(Models.IMedia.VERSION);
+						
+						String uriPath = IOCipherContentProvider.addShare(sharePath,"org.witness.informacam");
+						mediaListUri.add(Uri.parse(uriPath));
+						
+						//if there is a j3m file, then share that too
+						if (new info.guardianproject.iocipher.File(sharePath+".j3m").exists())
+						{
+							uriPath = IOCipherContentProvider.addShare(sharePath+".j3m","org.witness.informacam");
+							mediaListUri.add(Uri.parse(uriPath));
+
+						}
 								
 					}
 					
-					mediaListUri.add(uriShare);
 					exportCounter++;
 					
 					if (exportCounter == mediaList.size())
@@ -251,10 +259,16 @@ public class SharePopup {
 
 	private void initData() throws IllegalAccessException, InstantiationException, IOException {
 		informaCam = InformaCam.getInstance();
+
+		ListAdapter adapter = null;
+		ArrayList<Object> shareDestinations = new ArrayList<Object>();
+
+		/*
+		 * 	//REMOVE SPECIFIC ORG SHARING FOR NOW
+		
 		IInstalledOrganizations installedOrganizations = (IInstalledOrganizations) informaCam.getModel(new IInstalledOrganizations());
 
 		// Add organizations
-		ArrayList<Object> shareDestinations = new ArrayList<Object>();
 		if(installedOrganizations.organizations != null && installedOrganizations.organizations.size() > 0) {
 			organizations = installedOrganizations.organizations;
 			
@@ -262,11 +276,12 @@ public class SharePopup {
 				shareDestinations.add(org);
 			}
 		}
-
+			
 		ListAdapter adapter = new HandlerIntentListAdapter(a,
 				shareDestinations.toArray(new Object[shareDestinations.size()]));
 		mLvItemsOrg.setAdapter(adapter);
-
+		*/
+		
 		// Add other handlers
 		shareDestinations.clear();
 		Intent intent = new Intent(Intent.ACTION_SEND);
