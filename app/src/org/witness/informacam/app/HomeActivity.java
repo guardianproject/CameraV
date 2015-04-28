@@ -1,5 +1,7 @@
 package org.witness.informacam.app;
 
+import info.guardianproject.cacheword.CacheWordHandler;
+import info.guardianproject.cacheword.ICacheWordSubscriber;
 import info.guardianproject.odkparser.widgets.ODKSeekBar.OnMediaRecorderStopListener;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 
@@ -60,7 +62,7 @@ import android.widget.Toast;
 
 @SuppressLint("HandlerLeak")
 public class HomeActivity extends FragmentActivity implements HomeActivityListener, InformaCamStatusListener, InformaCamEventListener,
-		ListAdapterListener, OnMediaRecorderStopListener
+		ListAdapterListener, OnMediaRecorderStopListener, ICacheWordSubscriber
 {
 	Intent init, route;
 
@@ -93,6 +95,8 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	// WaitPopup waiter;
 
 	Intent toEditor, toCamera;
+	
+	CacheWordHandler cacheWord;
 
 	@SuppressWarnings("unused")
 	@Override
@@ -100,6 +104,9 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	{
 		super.onCreate(savedInstanceState);
 
+		cacheWord = new CacheWordHandler(this, this);
+		cacheWord.connectToService();
+		
 		informaCam = (InformaCam)getApplication();		
 		
 		setContentView(R.layout.activity_home);
@@ -146,6 +153,8 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	public void onResume()
 	{
 		super.onResume();
+
+		cacheWord.reattach();
 		
 		if (informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.LOCKED)
 		{
@@ -239,12 +248,16 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	public void onPause()
 	{
 		super.onPause();
+		
+		cacheWord.detach();
 	}
 
 	@Override
 	public void onDestroy()
 	{
 		super.onDestroy();
+		
+		cacheWord.disconnectFromService();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -798,5 +811,20 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	@Override
 	public void onMediaRecorderStop()
 	{
+	}
+
+	@Override
+	public void onCacheWordLocked() {
+		logoutUser();
+	}
+
+	@Override
+	public void onCacheWordOpened() {
+		cacheWord.setTimeout(0);
+	}
+
+	@Override
+	public void onCacheWordUninitialized() {
+		finish();
 	}
 }
