@@ -121,10 +121,10 @@ public class SharePopup {
 		{
 			initLayout();
 		}
-		catch (Exception re)
+		catch (Exception e)
 		{
-			Log.e("Setup","Could not init data and layout",re);
-			throw new RuntimeException("Could not init data");
+			Log.e("Share Popup","error setting up popup layout",e);
+			return;
 		}
 		
 		h = new Handler() {
@@ -132,7 +132,6 @@ public class SharePopup {
 			public void handleMessage(Message msg) {
 				Bundle b = msg.getData();
 				if(b.containsKey(Models.IMedia.VERSION)) {
-					
 					
 					java.io.File fileShare = new java.io.File(b.getString(Models.IMedia.VERSION));
 					
