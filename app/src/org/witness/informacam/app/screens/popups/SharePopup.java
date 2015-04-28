@@ -135,7 +135,7 @@ public class SharePopup {
 					
 					java.io.File fileShare = new java.io.File(b.getString(Models.IMedia.VERSION));
 					
-					if (fileShare.exists())
+					if (fileShare.exists()) //this is an external, unencrypted share
 					{
 						mediaListUri.add(Uri.fromFile(fileShare));
 					}
@@ -145,15 +145,7 @@ public class SharePopup {
 						
 						String uriPath = IOCipherContentProvider.addShare(sharePath,"org.witness.informacam");
 						mediaListUri.add(Uri.parse(uriPath));
-						
-						//if there is a j3m file, then share that too
-						if (new info.guardianproject.iocipher.File(sharePath+".j3m").exists())
-						{
-							uriPath = IOCipherContentProvider.addShare(sharePath+".j3m","org.witness.informacam");
-							mediaListUri.add(Uri.parse(uriPath));
-
-						}
-								
+							
 					}
 					
 					exportCounter++;
@@ -184,6 +176,17 @@ public class SharePopup {
 							}
 							else
 							{
+								
+								try
+								{
+									String value = generateJ3M(a, b.getString(Models.IMedia._ID));
+									sendTo.intent.putExtra(Intent.EXTRA_TEXT, value);
+								}
+								catch (Exception ioe)
+								{
+									Log.e("Export","error generate j3M",ioe);
+								}
+								
 								sendTo.intent.setAction(Intent.ACTION_SEND);
 								sendTo.intent.putExtra(Intent.EXTRA_STREAM, mediaListUri.get(0));
 							}
