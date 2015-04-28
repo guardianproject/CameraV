@@ -243,6 +243,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		{
 			setResult(Activity.RESULT_CANCELED);
 			finish();
+			return;
 		}
 
 		if (media.dcimEntry.mediaType.equals(MimeType.IMAGE))

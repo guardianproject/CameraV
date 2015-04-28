@@ -7,9 +7,13 @@ import org.witness.informacam.app.utils.Constants;
 import org.witness.informacam.app.utils.UIHelpers;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.NotificationCompat;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -100,7 +104,9 @@ public class LoginActivity extends Activity {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					if(informaCam.attemptLogin(password.getText().toString())) {
+					char[] charPass = new char[password.length()];
+					password.getText().getChars(0, password.length(), charPass, 0);
+					if(informaCam.attemptLogin(charPass)) {
 						setResult(Activity.RESULT_OK);
 						finish();
 					} else {
@@ -119,7 +125,7 @@ public class LoginActivity extends Activity {
 		}
 
 	}
-
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event)
 	{
