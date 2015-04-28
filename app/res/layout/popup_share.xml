@@ -6,7 +6,7 @@
         android:background="@drawable/extras_popup_background_rounded"
         android:padding="20dp" >
 
-        <!-- 
+        
         <TextView
             android:id="@+id/tvTitleShareOrg"
             android:layout_width="wrap_content"
@@ -14,16 +14,20 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:text="@string/share_secure"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone"
+             />
 
         <ListView
             android:id="@+id/lvItemsOrg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvTitleShareOrg"
-            android:layout_marginTop="10dp" >
+            android:layout_marginTop="10dp" 
+            android:visibility="gone"
+            >
         </ListView>
-         -->
+         
 
         <View
             android:id="@+id/divider1"
@@ -31,7 +35,9 @@
             android:layout_height="4dp"
             android:layout_alignLeft="@+id/tvTitleShareOrg"
             android:layout_below="@+id/tvTitleShareOrg"
-            android:background="@android:color/black" />
+            android:background="@android:color/black"
+            android:visibility="gone"
+             />
 
         <TextView
             android:id="@+id/tvTitleShare"
