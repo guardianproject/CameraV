@@ -6,6 +6,7 @@
         android:background="@drawable/extras_popup_background_rounded"
         android:padding="20dp" >
 
+        <!-- 
         <TextView
             android:id="@+id/tvTitleShareOrg"
             android:layout_width="wrap_content"
@@ -22,6 +23,7 @@
             android:layout_below="@+id/tvTitleShareOrg"
             android:layout_marginTop="10dp" >
         </ListView>
+         -->
 
         <View
             android:id="@+id/divider1"
