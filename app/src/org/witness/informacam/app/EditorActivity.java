@@ -239,7 +239,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 
 		mediaId = getIntent().getStringExtra(Codes.Extras.EDIT_MEDIA);
 		media = informaCam.mediaManifest.getById(mediaId);
-		if (media == null || media.dcimEntry == null)
+		if (media == null || media.dcimEntry == null || media.dcimEntry.mediaType == null)
 		{
 			setResult(Activity.RESULT_CANCELED);
 			finish();
