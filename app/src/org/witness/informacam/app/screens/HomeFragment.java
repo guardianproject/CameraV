@@ -190,25 +190,28 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	private void initData()
 	{
 
-		listMedia = informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
-		if (listMedia != null)
-			listMedia = new ArrayList<IMedia>(listMedia);
-
-		mPhotoAdapter = new HomePhotoAdapter(a, listMedia);
-		mPhotoPager.setAdapter(mPhotoAdapter);
-		if (mNoMedia != null)
-			mNoMedia.setVisibility(mPhotoAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
-
-		mTapGestureDetector = new GestureDetector(a, new TapGestureListener(), h);
-		mPhotoPager.setOnTouchListener(new OnTouchListener()
+		List<IMedia> newListMedia = informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
+		boolean isChanged = false;
+		
+		if (newListMedia != null)
 		{
-			@Override
-			public boolean onTouch(View v, MotionEvent event)
+			if (listMedia == null || (listMedia.size() != newListMedia.size()))
 			{
-				mTapGestureDetector.onTouchEvent(event);
-				return false;
+				listMedia = new ArrayList<IMedia>(newListMedia);
+				isChanged = true;
 			}
-		});
+		}
+		
+		if (isChanged)
+		{
+			mPhotoAdapter = new HomePhotoAdapter(a, listMedia);
+			mPhotoPager.setAdapter(mPhotoAdapter);
+			if (mNoMedia != null)
+				mNoMedia.setVisibility(mPhotoAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
+	
+			
+		}
+		
 	}
 
 	private void initLayout()
@@ -239,6 +242,17 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		mBtnShare.setOnClickListener(this);
 		**/
 
+		mTapGestureDetector = new GestureDetector(a, new TapGestureListener(), h);
+		mPhotoPager.setOnTouchListener(new OnTouchListener()
+		{
+			@Override
+			public boolean onTouch(View v, MotionEvent event)
+			{
+				mTapGestureDetector.onTouchEvent(event);
+				return false;
+			}
+		});
+		
 		initData();
 		
 		showSwipeHint();
