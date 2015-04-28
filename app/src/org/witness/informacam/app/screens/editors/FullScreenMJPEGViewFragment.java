@@ -1,10 +1,16 @@
 package org.witness.informacam.app.screens.editors;
 
+import info.guardianproject.iocipher.File;
+import info.guardianproject.iocipher.FileInputStream;
+import info.guardianproject.iocipher.camera.MediaConstants;
+import info.guardianproject.iocipher.camera.encoders.AACHelper;
 import info.guardianproject.iocipher.camera.viewer.MjpegInputStream;
 import info.guardianproject.iocipher.camera.viewer.MjpegView;
 
+import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +28,9 @@ import org.witness.informacam.ui.editors.IRegionDisplay;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.RectF;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -47,9 +56,8 @@ import android.widget.MediaController;
 import com.efor18.rangeseekbar.RangeSeekBar;
 import com.efor18.rangeseekbar.RangeSeekBar.OnRangeSeekBarChangeListener;
 
-public class FullScreenMJPEGViewFragment extends FullScreenViewFragment implements OnCompletionListener,OnClickListener, 
-OnErrorListener, OnInfoListener, OnBufferingUpdateListener, OnSeekCompleteListener,
-OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener, MediaController.MediaPlayerControl, 
+public class FullScreenMJPEGViewFragment extends FullScreenViewFragment implements OnClickListener, 
+OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener,  
 OnRangeSeekBarChangeListener<Integer> {
 	
 	IVideo media_;
@@ -58,6 +66,10 @@ OnRangeSeekBarChangeListener<Integer> {
 	MjpegView videoView;
 	SurfaceHolder surfaceHolder;
 
+	AudioTrack at;
+    InputStream isAudio = null;
+    boolean useAAC = false;
+	
 	View mediaHolder_;
 	LinearLayout videoControlsHolder, endpointHolder;
 	//VideoSeekBar videoSeekBar;
@@ -111,6 +123,74 @@ OnRangeSeekBarChangeListener<Integer> {
 		}
 			
 	}
+	
+	private void initAudio () throws Exception
+	{
+		File fileAudio = null;
+		
+		String ioCipherAudioPath = null;
+		String ioCipherVideoPath = media_.dcimEntry.fileAsset.path;
+		
+		if (ioCipherAudioPath == null)
+		{
+			fileAudio = new File(ioCipherVideoPath + ".pcm");
+		
+			if (fileAudio.exists())
+			{
+				initAudio(fileAudio.getAbsolutePath());
+				new Thread ()
+				{
+					public void run ()
+					{
+						try {							
+							playAudio();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}.start();
+			}
+		}
+	}
+	
+	public void initAudio(String vfsPath) throws Exception {
+
+    	isAudio = new BufferedInputStream(new FileInputStream(vfsPath));
+
+	
+        int minBufferSize = AudioTrack.getMinBufferSize(MediaConstants.sAudioSampleRate,
+        		MediaConstants.sChannelConfigOut, AudioFormat.ENCODING_PCM_16BIT)*8;
+
+        at = new AudioTrack(AudioManager.STREAM_MUSIC, MediaConstants.sAudioSampleRate,
+        		MediaConstants.sChannelConfigOut, AudioFormat.ENCODING_PCM_16BIT,
+            minBufferSize, AudioTrack.MODE_STREAM);
+        
+	     
+    }
+    
+    public void playAudio () throws IOException
+    {
+    
+        try{
+        	byte[] music = null;
+        	music = new byte[512];
+            at.play();
+
+            int i = 0;
+            while((i = isAudio.read(music)) != -1)
+                at.write(music, 0, i);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        at.stop();
+        at.release();
+        isAudio.close();
+        at = null;
+    	
+    }
 	
 	
 	private void updateRegionView(final long timestamp) {
@@ -203,9 +283,8 @@ OnRangeSeekBarChangeListener<Integer> {
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.d(LOG, "surfaceCreated Called");
 		
-		//surfaceHolder = holder;
-		
 		try {
+			initAudio ();
 			initVideo();
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
@@ -217,6 +296,9 @@ OnRangeSeekBarChangeListener<Integer> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -242,66 +324,11 @@ OnRangeSeekBarChangeListener<Integer> {
 		Log.d(LOG, "onVideoSizeChanged called, new width: " + width + ", new height: " + height);
 	}
 
-	@Override
 	public void onSeekComplete(MediaPlayer mp) {
 		//videoSeekBar.update();
 		mIsSeeking = false;
 	}
-
-
-
-	int mBufferPercent = 0;
 	
-	@Override
-	public void onBufferingUpdate(MediaPlayer mp, int percent) {
-		mBufferPercent = percent;
-		Log.d(LOG,"buffering " + percent + "%");
-	}
-
-	@Override
-	public boolean onError(MediaPlayer mp, int whatInfo, int extra) {
-		
-		Log.d(LOG, "onError called " + whatInfo + " (extra: " + extra + ")");
-		
-		if (whatInfo == -38 || whatInfo == 1)
-		{
-			//playPauseToggle.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_videol_play));
-			
-			//currentCue = mediaPlayer.getCurrentPosition();
-			//mediaPlayer.reset();
-					
-			if (whatInfo == MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING) {
-				Log.d(LOG, "Media Info, Media Info Bad Interleaving " + extra);
-			} else if (whatInfo == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {
-				Log.d(LOG, "Media Info, Media Info Not Seekable " + extra);
-			} else if (whatInfo == MediaPlayer.MEDIA_INFO_UNKNOWN) {
-				Log.d(LOG, "Media Info, Media Info Unknown " + extra);
-			} else if (whatInfo == MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING) {
-				Log.d(LOG, "MediaInfo, Media Info Video Track Lagging " + extra);
-			} else if (whatInfo == MediaPlayer.MEDIA_INFO_METADATA_UPDATE) { 
-				Log.d(LOG, "MediaInfo, Media Info Metadata Update " + extra); 
-			} else if (whatInfo == MediaPlayer.MEDIA_ERROR_IO) {
-				Log.d(LOG, "Media Info, Media Info IO error " + extra);
-			} else if (whatInfo == -38) {
-				Log.d(LOG, "i have no clue what error -38 is");
-			}
-		}
-		
-		return true;
-	}
-
-	@Override
-	public void onCompletion(MediaPlayer mp) {
-		Log.d(LOG, "onCompletion called");
-
-	}
-
-	@Override
-	public boolean onInfo(MediaPlayer mp, int what, int extra) {
-		Log.d(LOG, "onInfo called: what=" + what + "; extra=" + extra);
-		return false;
-	}
-
 	@Override
 	public void onClick(View v) {
 	
@@ -316,67 +343,49 @@ OnRangeSeekBarChangeListener<Integer> {
 		}
 	}
 
-	@Override
-	public boolean canPause() {
-		return true;
-	}
+	
 
 	@Override
-	public boolean canSeekBackward() {
-		return true;
+	public void onPause() {
+		
+		super.onPause();
+		
+		pause(); //pause media playback
+		
 	}
 
-	@Override
-	public boolean canSeekForward() {
-		return (mBufferPercent == 100);
-	}
 
-	@Override
-	public int getBufferPercentage() {
-		return mBufferPercent;
-	}
 
-	@Override
-	public int getCurrentPosition() {
-		return 0;//mediaPlayer.getCurrentPosition();
-	}
-
-	@Override
-	public int getDuration() {
-		return 0;//mediaPlayer.getDuration();
-	}
-
-	@Override
 	public boolean isPlaying() {
 		return videoView.isPlaying();
 	}
 
-	@Override
 	public void pause() {
-		//playPauseToggle.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_videol_play));
-		//videoSeekBar.pause();
-	//	mediaPlayer.pause();
+		
 		videoView.stopPlayback();
+			
+		if (at != null)
+			at.stop();
+		
 	}
 
 	private boolean mIsSeeking = false;
 	
-	@Override
 	public void seekTo(int pos) {
 		
 		if (!mIsSeeking)
 		{
+			/**
 			if (pos <= (duration * (mBufferPercent/100)))
 			{
 				mIsSeeking = true;
 				
 		//		mediaPlayer.seekTo(pos);
-			}
+			}*/
 		}
 		
 	}
 
-	@Override
 	public void start() {
 		playPauseToggle.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_videol_pause));
 		//videoSeekBar.play();
@@ -425,8 +434,4 @@ OnRangeSeekBarChangeListener<Integer> {
 		return new RectF(0,0,videoView.getWidth(),videoView.getHeight());
 	}
 
-	@Override
-	public int getAudioSessionId() {
-		return 1;
-	}
 }
