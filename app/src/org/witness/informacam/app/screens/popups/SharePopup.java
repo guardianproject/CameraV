@@ -177,14 +177,18 @@ public class SharePopup {
 							else
 							{
 								
-								try
+								//if a google app like gmail, hangouts or drive is being used, then add the extra_text
+								if (sendTo.resolveInfo.activityInfo.packageName.startsWith("com.google"))
 								{
-									String value = generateJ3M(a, b.getString(Models.IMedia._ID));
-									sendTo.intent.putExtra(Intent.EXTRA_TEXT, value);
-								}
-								catch (Exception ioe)
-								{
-									Log.e("Export","error generate j3M",ioe);
+									try
+									{
+										String value = generateJ3MSummary(a, b.getString(Models.IMedia._ID));
+										sendTo.intent.putExtra(Intent.EXTRA_TEXT, value);
+									}
+									catch (Exception ioe)
+									{
+										Log.e("Export","error generate j3M",ioe);
+									}
 								}
 								
 								sendTo.intent.setAction(Intent.ACTION_SEND);
@@ -231,28 +235,19 @@ public class SharePopup {
 				new ColorDrawable(android.graphics.Color.TRANSPARENT));
 	}
 
-	public String generateJ3M (Context context, String id) throws InstantiationException, IllegalAccessException, NoSuchAlgorithmException, SignatureException, PGPException, IOException
+	public String generateJ3MSummary (Context context, String id) throws InstantiationException, IllegalAccessException, NoSuchAlgorithmException, SignatureException, PGPException, IOException
 	{
-		boolean signData = false;
+		
 		IMedia media = informaCam.mediaManifest.getById(id);
-		String j3m = ((IMedia) media).buildJ3M(context, signData, null);
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		JsonParser jp = new JsonParser();
-		JsonElement je = jp.parse(j3m);
-		String prettyJsonString = gson.toJson(je);
 		
-		byte[] sig = informaCam.signatureService.signData(prettyJsonString.getBytes());
-	
-		StringBuffer sbLog = new StringBuffer();
-		sbLog.append("-----BEGIN PGP SIGNED MESSAGE-----\n");
-		sbLog.append("Hash: SHA1\n\n");
-		sbLog.append(prettyJsonString);
+		//String j3m = ((IMedia) media).buildJ3M(context, signData, null);
+		//Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		//JsonParser jp = new JsonParser();
+		//JsonElement je = jp.parse(j3m);
+		//String prettyJsonString = gson.toJson(je);
 		
-		String sigString = new String(sig);
-		
-		sbLog.append(sigString.replace("PGP MESSAGE", "PGP SIGNATURE"));
-	
-		return sbLog.toString();
+		String prettyString = ((IMedia) media).buildSummary(context, null);
+		return prettyString;
 	}
 		
 	private void initLayout() throws IllegalAccessException, InstantiationException, IOException {
