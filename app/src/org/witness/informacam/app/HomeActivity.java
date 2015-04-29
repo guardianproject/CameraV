@@ -792,6 +792,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	{
 		viewPager.setCurrentItem(INDEX_MAIN);
 		resetActionBar();
+		mainFragment.initData();
 		//routeUs();
 	}
 

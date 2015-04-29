@@ -119,11 +119,8 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	public void onResume() {
 		super.onResume();
 		
-		if (mPhotoPager != null)
-			initData();
-		
+		initData();
 
-		
 	}
 	
 	private void initHomeActionBar ()
@@ -187,31 +184,33 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		initLayout();
 	}
 
-	private void initData()
+	public void initData()
 	{
 
-		List<IMedia> newListMedia = informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
-		boolean isChanged = false;
-		
-		if (newListMedia != null)
+		if (informaCam != null && informaCam.mediaManifest != null)
 		{
-			if (listMedia == null || (listMedia.size() != newListMedia.size()))
-			{
-				listMedia = new ArrayList<IMedia>(newListMedia);
-				isChanged = true;
-			}
-		}
-		
-		if (isChanged)
-		{
-			mPhotoAdapter = new HomePhotoAdapter(a, listMedia);
-			mPhotoPager.setAdapter(mPhotoAdapter);
-			if (mNoMedia != null)
-				mNoMedia.setVisibility(mPhotoAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
-	
+			List<IMedia> newListMedia = informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
+			boolean isChanged = false;
 			
-		}
+			if (newListMedia != null)
+			{
+				if (listMedia == null || (listMedia.size() != newListMedia.size()))
+				{
+					listMedia = new ArrayList<IMedia>(newListMedia);
+					isChanged = true;
+				}
+			}
+			
+			if (isChanged && mPhotoPager != null)
+			{
+				mPhotoAdapter = new HomePhotoAdapter(a, listMedia);
+				mPhotoPager.setAdapter(mPhotoAdapter);
+				if (mNoMedia != null)
+					mNoMedia.setVisibility(mPhotoAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
 		
+				
+			}
+		}		
 	}
 
 	private void initLayout()
@@ -467,9 +466,9 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	{
 		if (a != null)
 		{
-			listMedia = informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
-			if (listMedia != null)
-				listMedia = new ArrayList<IMedia>(listMedia);
+			//listMedia = informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
+			initData();
+			
 			updateAdapters();
 		}
 	}
@@ -717,8 +716,20 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 				boolean isActive = (InformaService.getInstance() != null && InformaService.getInstance().suckersActive());
 				mActionView.setChecked(isActive);
 			}
+			
+			initData();
 		}
 	}
+	
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+	
+		super.setUserVisibleHint(isVisibleToUser);
+		
+		onHiddenChanged(!isVisibleToUser);
+	}
+
 
 
 }
