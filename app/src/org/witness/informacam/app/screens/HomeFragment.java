@@ -60,8 +60,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class HomeFragment extends Fragment implements ListAdapterListener, OnClickListener, InformaCamStatusListener, InformaCamEventListener
+public class HomeFragment extends Fragment implements ListAdapterListener, OnClickListener, InformaCamStatusListener
 {
 	View rootView;
 
@@ -163,9 +164,6 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 
 		informaCam = (InformaCam)a.getApplication();
 		
-		informaCam.setStatusListener(this);
-		informaCam.setEventListener(this);
-		
 		if (mActionView != null)
 		{
 			boolean isActive = (InformaService.getInstance() != null && InformaService.getInstance().suckersActive());
@@ -187,7 +185,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	public void initData()
 	{
 
-		if (informaCam != null && informaCam.mediaManifest != null)
+		if (informaCam != null && informaCam.mediaManifest != null && mPhotoPager != null)
 		{
 			List<IMedia> newListMedia = informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
 			boolean isChanged = false;
@@ -201,14 +199,13 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 				}
 			}
 			
-			if (isChanged && mPhotoPager != null)
+			if (isChanged)
 			{
 				mPhotoAdapter = new HomePhotoAdapter(a, listMedia);
 				mPhotoPager.setAdapter(mPhotoAdapter);
 				if (mNoMedia != null)
 					mNoMedia.setVisibility(mPhotoAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
 		
-				
 			}
 		}		
 	}
@@ -629,6 +626,8 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 	
 	public void setIsGeneratingKey(boolean generatingKey)
 	{
+		
+		
 		mIsGeneratingKey = generatingKey;
 		
 		if (rootView != null)
@@ -654,17 +653,17 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 						else
 							mBtnVideoIcon.setImageResource(R.drawable.ic_home_video);
 					}
+					
+					if (mIsGeneratingKey)
+					{
+						Toast.makeText(a, R.string.wizard_key_is_being_made, Toast.LENGTH_SHORT).show();						
+					}
+					
 				}
 			});
 		}
 	}
 
-	@Override
-	public void onUpdate(Message message) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	@Override
 	public void onInformaCamStart(Intent intent) {
 				
@@ -682,7 +681,15 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 			intentSuckers.setAction("startsuckers");
 			informaCam.startService(intentSuckers);
 			
-			informaCam.ioService.startDCIMObserver(HomeFragment.this, null, null);
+			informaCam.ioService.startDCIMObserver(new InformaCamEventListener ()
+			{
+
+				@Override
+				public void onUpdate(Message message) {
+					
+				}
+				
+			}, null, null);
 
 		}
 		

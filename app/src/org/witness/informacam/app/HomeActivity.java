@@ -61,7 +61,7 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 @SuppressLint("HandlerLeak")
-public class HomeActivity extends FragmentActivity implements HomeActivityListener, InformaCamStatusListener, InformaCamEventListener,
+public class HomeActivity extends FragmentActivity implements HomeActivityListener, InformaCamEventListener,
 		ListAdapterListener, OnMediaRecorderStopListener, ICacheWordSubscriber
 {
 	Intent init, route;
@@ -108,6 +108,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 		cacheWord.connectToService();
 		
 		informaCam = (InformaCam)getApplication();		
+		informaCam.setEventListener(this);
 		
 		setContentView(R.layout.activity_home);
 
@@ -164,7 +165,6 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 		}
 		
 		
-		informaCam.setStatusListener(this);
 		informaCam.setEventListener(this);
 		informaCam.setListAdapterListener(this);
 		
@@ -477,7 +477,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 
 	@Override
 	public void onActivityResult(int requestCode, int responseCode, Intent data) {
-		informaCam.setStatusListener(this);
+		
 		informaCam.setEventListener(this);
 		informaCam.setListAdapterListener(this);
 		
@@ -573,29 +573,6 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 			return fragments.size();
 		}
 
-	}
-
-	@Override
-	public void onInformaCamStart(Intent intent)
-	{
-	}
-
-	@Override
-	public void onInformaCamStop(Intent intent)
-	{
-	}
-
-	@Override
-	public void onInformaStop(Intent intent)
-	{
-		route = null;
-	}
-
-	@Override
-	public void onInformaStart(Intent intent)
-	{
-		// waiter.cancel();
-//		doRouteUs();
 	}
 
 	/*
@@ -822,6 +799,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	@Override
 	public void onCacheWordOpened() {
 		cacheWord.setTimeout(0);
+		
 	}
 
 	@Override
