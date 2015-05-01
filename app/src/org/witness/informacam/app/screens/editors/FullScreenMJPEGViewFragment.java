@@ -42,6 +42,7 @@ import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.os.storage.OnObbStateChangeListener;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -52,6 +53,7 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.SeekBar;
 
 import com.efor18.rangeseekbar.RangeSeekBar;
 import com.efor18.rangeseekbar.RangeSeekBar.OnRangeSeekBarChangeListener;
@@ -72,7 +74,7 @@ OnRangeSeekBarChangeListener<Integer> {
 	
 	View mediaHolder_;
 	LinearLayout videoControlsHolder, endpointHolder;
-	//VideoSeekBar videoSeekBar;
+	VideoSeekBar videoSeekBar;
 	ImageButton playPauseToggle;
 	
 	Uri videoUri;
@@ -80,6 +82,8 @@ OnRangeSeekBarChangeListener<Integer> {
 	long duration = 0L;
 	int currentCue = 1;
 
+	private boolean isPlaying = false;
+	
 	private Handler handler = new Handler();
 	
 	private final static String LOG = Editor.LOG;
@@ -138,18 +142,7 @@ OnRangeSeekBarChangeListener<Integer> {
 			if (fileAudio.exists())
 			{
 				initAudio(fileAudio.getAbsolutePath());
-				new Thread ()
-				{
-					public void run ()
-					{
-						try {							
-							playAudio();
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}.start();
+				
 			}
 		}
 	}
@@ -169,26 +162,36 @@ OnRangeSeekBarChangeListener<Integer> {
 	     
     }
     
-    public void playAudio () throws IOException
+    public void playAudio ()
     {
     
-        try{
-        	byte[] music = null;
-        	music = new byte[512];
-            at.play();
+    	new Thread ()
+		{
+			public void run ()
+			{
+				try {							
 
-            int i = 0;
-            while((i = isAudio.read(music)) != -1)
-                at.write(music, 0, i);
+			        try{
+			        	byte[] music = null;
+			        	music = new byte[512];
+			            at.play();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+			            int i = 0;
+			            while(isPlaying && (i = isAudio.read(music)) != -1)
+			                at.write(music, 0, i);
 
-        at.stop();
-        at.release();
-        isAudio.close();
-        at = null;
+			        } catch (IOException e) {
+			            e.printStackTrace();
+			        }
+
+			        at.stop();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}.start();
+		
     	
     }
 	
@@ -242,20 +245,39 @@ OnRangeSeekBarChangeListener<Integer> {
 		mediaHolder.addView(mediaHolder_);
 		
 		surfaceHolder = videoView.getHolder();
-		
-		//Log.d(LOG, "surface holder dims: " + surfaceHolder.getSurfaceFrame().width() + " x " + surfaceHolder.getSurfaceFrame().height());
 		surfaceHolder.addCallback(this);
-		
-		//Log.d(LOG, "video view dims: " + videoView.getWidth() + " x " + videoView.getHeight());
 		
 		videoControlsHolder = (LinearLayout) mediaHolder_.findViewById(R.id.video_controls_holder);		
 
-		//videoSeekBar = (VideoSeekBar) mediaHolder_.findViewById(R.id.video_seek_bar);
+		videoSeekBar = (VideoSeekBar) mediaHolder_.findViewById(R.id.video_seek_bar);
 		endpointHolder = (LinearLayout) mediaHolder_.findViewById(R.id.video_seek_bar_endpoint_holder);
 		
 		playPauseToggle = (ImageButton) mediaHolder_.findViewById(R.id.video_play_pause_toggle);
 		playPauseToggle.setOnClickListener(this);	
 		
+		videoSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+		{
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+			
+				if (progress == 0)
+				{
+					pause();
+					initAndStart();
+				}
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				
+				
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				
+			}
+		});
 		
 	}
 	
@@ -282,10 +304,15 @@ OnRangeSeekBarChangeListener<Integer> {
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		Log.d(LOG, "surfaceCreated Called");
-		
+		initAndStart();
+	}
+	
+	private void initAndStart()
+	{
 		try {
 			initAudio ();
 			initVideo();
+			start();
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -354,6 +381,24 @@ OnRangeSeekBarChangeListener<Integer> {
 		
 	}
 
+	@Override
+	public void onDestroy() {
+		
+		super.onDestroy();
+
+		if (at != null)
+		{
+			at.release();
+			try {
+				isAudio.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
 
 
 	public boolean isPlaying() {
@@ -362,10 +407,18 @@ OnRangeSeekBarChangeListener<Integer> {
 
 	public void pause() {
 		
-		videoView.stopPlayback();
-			
-		if (at != null)
-			at.stop();
+		playPauseToggle.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_videol_play));
+
+		if (isPlaying)
+		{
+			videoView.stopPlayback();
+				
+			if (at != null)
+				at.stop();
+		}
+		
+		isPlaying = false;
+		
 		
 	}
 
@@ -387,9 +440,12 @@ OnRangeSeekBarChangeListener<Integer> {
 	}
 
 	public void start() {
+
+		isPlaying = true;
+		
 		playPauseToggle.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_videol_pause));
-		//videoSeekBar.play();
-	
+
+		playAudio ();
 		videoView.startPlayback();
 	}
 
