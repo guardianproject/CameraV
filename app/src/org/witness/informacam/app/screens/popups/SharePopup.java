@@ -200,10 +200,12 @@ public class SharePopup {
 									}
 								}
 								
-								sendTo.intent.setAction(Intent.ACTION_SEND);
-								sendTo.intent.putExtra(Intent.EXTRA_STREAM, mediaListUri.get(0));
 								
 								sendTo.intent.setData(mediaListUri.get(0));
+								sendTo.intent.putExtra(Intent.EXTRA_STREAM, mediaListUri.get(0));
+								
+								sendTo.intent.setAction(Intent.ACTION_SEND);
+								
 							}
 							
 							a.startActivity(sendTo.intent);
