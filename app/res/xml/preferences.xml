@@ -43,5 +43,11 @@
             android:defaultValue="false"
             android:key="prefExternalCamera"
         	/>
+         
+          <CheckBoxPreference
+            android:title="@string/prefs_export_local"
+            android:defaultValue="false"
+            android:key="prefExportLocal"
+        	/>
         	 
 </PreferenceScreen>

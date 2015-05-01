@@ -175,4 +175,6 @@
     <string name="share_from_">"Share from "</string>
     
     <string name="_id_">" ID:"</string>
+    
+    <string name="prefs_export_local">Copy Shared Media to External Storage (Less Secure)</string>
 </resources>

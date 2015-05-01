@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ActionMode;
@@ -498,6 +499,7 @@ public class GalleryFragment extends Fragment implements
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			
 			boolean shareJ3mOnly = false;
+			boolean isLocalShare = PreferenceManager.getDefaultSharedPreferences(a).getBoolean("prefExportLocal", false);
 			
 			switch (item.getItemId()) {
 			case R.string.menu_done:
@@ -515,7 +517,7 @@ public class GalleryFragment extends Fragment implements
 				
 					if (batch.size() > 0)
 					{
-						new SharePopup(a,batch,false,shareJ3mOnly);
+						new SharePopup(a,batch,false,shareJ3mOnly,isLocalShare);
 								
 					}
 					else

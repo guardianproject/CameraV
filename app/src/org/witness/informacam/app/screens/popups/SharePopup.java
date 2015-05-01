@@ -82,14 +82,15 @@ public class SharePopup {
 	private final Dialog alert;
 
 	private boolean shareJ3MOnly = false;
+	private boolean isLocalShare = false;
 	
-	public SharePopup(Activity a, final ArrayList<IMedia> mediaList) {
-		this(a, mediaList, false, false);
+	public SharePopup(Activity a, final ArrayList<IMedia> mediaList, boolean isLocalShare) {
+		this(a, mediaList, false, false, isLocalShare);
 	}
 	
 
 	@SuppressLint("HandlerLeak")
-	public SharePopup(final Activity a, final ArrayList<IMedia> mediaList, boolean startsInforma, boolean shareJ3MOnly) {
+	public SharePopup(final Activity a, final ArrayList<IMedia> mediaList, boolean startsInforma, boolean shareJ3MOnly, boolean isLocalShare) {
 		this.a = a;
 
 		alert = new Dialog(a);
@@ -98,6 +99,7 @@ public class SharePopup {
 
 		this.mediaList = mediaList;
 		this.shareJ3MOnly = shareJ3MOnly;
+		this.isLocalShare = isLocalShare;
 		
 		mediaListUri = new ArrayList<Uri>();
 		
@@ -163,19 +165,26 @@ public class SharePopup {
 									sendTo.resolveInfo.activityInfo.packageName,
 									sendTo.resolveInfo.activityInfo.name);
 							
-							String title = a.getString(R.string.share_from_) + a.getString(R.string.app_name);
-							sendTo.intent.putExtra(Intent.EXTRA_TITLE, title);
-							sendTo.intent.putExtra(Intent.EXTRA_SUBJECT, title);
 							
 							sendTo.intent.setType("*/*");
 							
 							if (mediaListUri.size() > 1)
 							{
+								String title = a.getString(R.string.share_from_) + a.getString(R.string.app_name);
+								sendTo.intent.putExtra(Intent.EXTRA_TITLE, title);
+								sendTo.intent.putExtra(Intent.EXTRA_SUBJECT, title);
+								
 								sendTo.intent.setAction(Intent.ACTION_SEND_MULTIPLE);
 								sendTo.intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, mediaListUri);
 							}
 							else
 							{
+								
+								String title = a.getString(R.string.share_from_) 
+										+ a.getString(R.string.app_name) 
+										+ ' ' + fileShare.getName();
+								sendTo.intent.putExtra(Intent.EXTRA_TITLE, title);
+								sendTo.intent.putExtra(Intent.EXTRA_SUBJECT, title);
 								
 								//if a google app like gmail, hangouts or drive is being used, then add the extra_text
 								if (sendTo.resolveInfo.activityInfo.packageName.startsWith("com.google"))
@@ -193,6 +202,8 @@ public class SharePopup {
 								
 								sendTo.intent.setAction(Intent.ACTION_SEND);
 								sendTo.intent.putExtra(Intent.EXTRA_STREAM, mediaListUri.get(0));
+								
+								sendTo.intent.setData(mediaListUri.get(0));
 							}
 							
 							a.startActivity(sendTo.intent);
@@ -342,7 +353,8 @@ public class SharePopup {
 						if (shareJ3MOnly)
 							media.exportJ3M(a, h, encryptTo, doSendTo);
 						else
-							media.export(a, h, encryptTo);
+							media.export(a, h, null, true, isLocalShare, false);
+						
 					}
 				}
 				catch (Exception e)

@@ -46,6 +46,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -345,6 +346,8 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		boolean isLocalShare = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefExportLocal", false);
+		
 		switch (item.getItemId())
 		{
 		case android.R.id.home:
@@ -380,14 +383,14 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		{
 			ArrayList<IMedia> mList = new ArrayList<IMedia>();
 			mList.add(media);
-			new SharePopup(this, mList);
+			new SharePopup(this, mList, isLocalShare);
 			return true;
 		}
 		case R.id.menu_share_meta:
 		{
 			ArrayList<IMedia> mList = new ArrayList<IMedia>();
 			mList.add(media);
-			new SharePopup(this, mList, false, true);
+			new SharePopup(this, mList, false, true, isLocalShare);
 			return true;
 		}
 		case R.id.menu_share_hash:
