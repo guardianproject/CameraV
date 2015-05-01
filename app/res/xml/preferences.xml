@@ -49,5 +49,11 @@
             android:defaultValue="false"
             android:key="prefExportLocal"
         	/>
+          
+          <CheckBoxPreference
+            android:title="@string/prefs_run_foreground"
+            android:defaultValue="false"
+            android:key="prefRunForeground"
+        	/>
         	 
 </PreferenceScreen>
