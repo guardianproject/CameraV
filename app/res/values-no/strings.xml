@@ -19,7 +19,6 @@
   <string name="log_out">Logg ut</string>
   <string name="no_notifications">Ingen varslinger.</string>
   <string name="connect_with_organizations">Opprett kontakt med organisasjoner:</string>
-  <string name="original_images_should_be">Originalbilder bør være:</string>
   <string name="delete">Slett</string>
   <string name="rename">Endre navn</string>
   <string name="export">Eksporter</string>
@@ -62,4 +61,9 @@
   <string name="pref_languages_fr">Fransk</string>
   <string name="pref_languages_es">Spansk</string>
   <string name="pref_languages_ar">Arabisk</string>
+  <string name="pref_languages_no">Norsk</string>
+  <string name="pref_languages_sv">Svensk</string>
+  <string name="pref_languages_pt_PT">Portugisisk (Portugal)</string>
+  <string name="pref_languages_si_LK">Singalesisk (Sri Lanka)</string>
+  <string name="pref_languages_tr_TR">Tyrkisk (Tyrkia)</string>
 </resources>

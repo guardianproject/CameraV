@@ -2,7 +2,7 @@
 <resources>
   <string name="photo">Foto</string>
   <string name="video">Vídeo</string>
-  <string name="menu_all_media">Todos los tipos de multimedia</string>
+  <string name="menu_all_media">Todos el material multimedia</string>
   <string name="menu_list">Lista</string>
   <string name="menu_grid">Red</string>
   <string name="menu_location">Lugar</string>
@@ -13,20 +13,19 @@
   <string name="notifications">Notificaciones</string>
   <string name="organizations">Organizaciones</string>
   <string name="get_in">Entrar En</string>
-  <string name="we_could_not_log">No hemos podido conectarte. Por favor, intentalo de nuevo.</string>
+  <string name="we_could_not_log">No hemos podido conectarte. Por favor, inténtalo de nuevo.</string>
   <string name="change_settings"><u>Editar configuración</u></string>
   <string name="cancel"><u>Cancelar</u></string>
   <string name="log_out">Desconectarse</string>
   <string name="no_notifications">No hay notificaciones.</string>
   <string name="connect_with_organizations">Conectarse con organizaciones:</string>
-  <string name="original_images_should_be">Las imágenes originales deberian ser:</string>
   <string name="delete">Borrar</string>
   <string name="rename">Renombrar</string>
   <string name="export">Exportar</string>
   <string name="send">Enviar\u2026</string>
   <string name="your_gallery_is_hungry">Tu galería esta con hambre de fotos y vídeos.</string>
   <string name="swipe_left_for_cameras">Arrastra hacia la izquierda para las cámaras.</string>
-  <string name="all_media">Todos los tipos de multimadia</string>
+  <string name="all_media">Todos el material multimedia</string>
   <string name="share">Compartir</string>
   <string name="add_a_quick_note">Añadir una nota rápida \u2026</string>
   <string name="untitled">Sin título</string>
@@ -35,13 +34,13 @@
   <string name="x_location">%1$f, %2$f</string>
   <string name="location_unknown">Lugar desconocido</string>
   <string name="send_to_org">Enviar a Org</string>
-  <string name="share_via">Compartir Via</string>
-  <string name="choose_an_organization">Elige una organización</string>
-  <string name="send_encrypted_to_organization">Comparte lo encriptado con la organización\u2026</string>
+  <string name="share_via">Compartir vía</string>
+  <string name="choose_an_organization">Elige una organización:</string>
+  <string name="send_encrypted_to_organization">Compartir cifrado con la organización/u2026</string>
   <string name="send_encrypted_to_x">Compartir cifrado con %1$s</string>
-  <string name="sending_encrypted_to_x">Compartiendo lo encriptado con %1$s. (¿Cambiar?)</string>
-  <string name="there_are_no_organizations">No hay organizaciones a las que le puedas enviar algo. Mejor intenta compartir los tipos de multimedia.</string>
-  <string name="sharing_outside_of_informacam">Compartiendo fuera de %1$s significa que la cadena de custodia de tus tipos de multimedia pueden competir con otros. ¿Quieres compartir de todas formas?</string>
+  <string name="sending_encrypted_to_x">Compartiendo cifrado con %1$s. (¿Cambiar?)</string>
+  <string name="there_are_no_organizations">No hay organizaciones a las que le puedas enviar algo. Mejor intenta compartir el material multimedia.</string>
+  <string name="sharing_outside_of_informacam">Compartiendo fuera de %1$s significa que la cadena de custodia de su material multimedia puede ser impugnada. ¿Quiere compartir de todas formas?</string>
   <string name="export_my_credentials">Exportar mis credenciales\u2026</string>
   <string name="send_message">Enviar mensaje\u2026</string>
   <string name="notes">Notas</string>
@@ -62,4 +61,9 @@
   <string name="pref_languages_fr">Francés</string>
   <string name="pref_languages_es">Español</string>
   <string name="pref_languages_ar">Árabe</string>
+  <string name="pref_languages_no">Noruego</string>
+  <string name="pref_languages_sv">Sueco</string>
+  <string name="pref_languages_pt_PT">Portugués (Portugal)</string>
+  <string name="pref_languages_si_LK">Cingalés (Sri Lanka)</string>
+  <string name="pref_languages_tr_TR">Turco (Turquía)</string>
 </resources>
