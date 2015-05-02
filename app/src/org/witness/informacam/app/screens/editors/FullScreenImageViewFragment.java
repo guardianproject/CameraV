@@ -11,6 +11,7 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.FullScreenViewFragment;
 import org.witness.informacam.app.utils.Constants.App.Editor;
 import org.witness.informacam.app.utils.Constants.EditorActivityListener;
+import org.witness.informacam.app.views.PZSImageView;
 import org.witness.informacam.models.media.IImage;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.utils.Constants.Logger;
@@ -30,7 +31,7 @@ import android.widget.Toast;
 
 public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	Bitmap bitmap, originalBitmap, previewBitmap;
-	ImageView mediaHolder_;
+	PZSImageView mediaHolder_;
 	IImage media_;
 
 	// sample sized used to downsize from native photo
@@ -79,7 +80,7 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 	protected void initLayout() {
 		super.initLayout();
 
-		mediaHolder_ = new org.witness.informacam.app.views.PZSImageView(getActivity());
+		mediaHolder_ = new PZSImageView(getActivity());
 		mediaHolder_.setLayoutParams(new LinearLayout.LayoutParams(dims[0], dims[1]));
 		mediaHolder.addView(mediaHolder_);
 		
@@ -97,6 +98,10 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		}
 	}
 	
+	public PZSImageView getImageView ()
+	{
+		return mediaHolder_;
+	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -192,7 +197,6 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 
 		mediaHolder_.setImageMatrix(matrix);
 		
-		initRegions();
 	}
 	
 	@Override

@@ -45,6 +45,8 @@ public class PZSImageView extends ImageView {
 	private int mImageWidth;	//current set image width
 	private int mImageHeight;	//current set image height
 
+	private boolean mHandleTouch = true;
+	
 	/**
 	 * constructor
 	 * @param context
@@ -118,37 +120,47 @@ public class PZSImageView extends ImageView {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
-		int action = parseMotionEvent(event);
-
-		switch(action){
-		case PZS_ACTION_INIT:
-			initGestureAction(event.getX(), event.getY());
-			break;
-		case PZS_ACTION_SCALE:
-			handleScale(event);
-			break;
-		case PZS_ACTION_TRANSLATE:
-			handleTranslate(event);
-			break;
-		case PZS_ACTION_TRANSLATE_TO_SCALE:
-			initGestureAction(event.getX(), event.getY());
-			break;
-		case PZS_ACTION_SCALE_TO_TRANSLATE:
-			int activeIndex = (event.getActionIndex() == 0 ? 1 : 0);
-			initGestureAction(event.getX(activeIndex), event.getY(activeIndex));
-			break;
-		case PZS_ACTION_FIT_CENTER:
-			fitCenter();
-			initGestureAction(event.getX(), event.getY());
-			break;
-		case PZS_ACTION_CANCEL:
-			break;
+		if (mHandleTouch)
+		{
+			int action = parseMotionEvent(event);
+			switch(action){
+			case PZS_ACTION_INIT:				
+				initGestureAction(event.getX(), event.getY());
+				break;
+			case PZS_ACTION_SCALE:
+				handleScale(event);
+				break;
+			case PZS_ACTION_TRANSLATE:
+				handleTranslate(event);
+				break;
+			case PZS_ACTION_TRANSLATE_TO_SCALE:
+				initGestureAction(event.getX(), event.getY());
+				break;
+			case PZS_ACTION_SCALE_TO_TRANSLATE:
+				int activeIndex = (event.getActionIndex() == 0 ? 1 : 0);
+				initGestureAction(event.getX(activeIndex), event.getY(activeIndex));
+				break;
+			case PZS_ACTION_FIT_CENTER:
+				fitCenter();
+				initGestureAction(event.getX(), event.getY());
+				break;
+			case PZS_ACTION_CANCEL:		
+				break;
+			}
+			
+			//check current position of bitmap.
+			validateMatrix();
+			updateMatrix();
+			
+			return true;
 		}
-		
-		//check current position of bitmap.
-		validateMatrix();
-		updateMatrix();
-		return true; // indicate event was handled
+		else
+			return false;
+	}
+	
+	public void setHandleTouch (boolean handleTouch)
+	{
+		mHandleTouch = handleTouch;
 	}
 
 	private int parseMotionEvent(MotionEvent ev) {
@@ -218,12 +230,12 @@ public class PZSImageView extends ImageView {
 		return diff < DOUBLE_TAP_MARGIN_TIME;
 	}
 
-	protected void handleScale(MotionEvent event){
+	protected boolean handleScale(MotionEvent event){
 		float newSpan = spacing(event);
 
 		//if two finger is too close, pointer index is bumped.. so just ignore it.
 		if( newSpan < MIN_SCALE_SPAN )
-			return;
+			return false;
 
 		if( mInitScaleSpan == 0.f ){
 			//init values. scale gesture action is just started.
@@ -234,6 +246,8 @@ public class PZSImageView extends ImageView {
 			mCurrentMatrix.set(mSavedMatrix);
 			mCurrentMatrix.postScale(scale, scale, mMidPoint.x, mMidPoint.y);
 		}
+		
+		return true;
 	}
 
 	private float normalizeScaleFactor(Matrix curMat, float newSpan, float stdSpan) {
@@ -258,9 +272,15 @@ public class PZSImageView extends ImageView {
 		}
 	}
 	
-	protected void handleTranslate(MotionEvent event){
+	protected boolean handleTranslate(MotionEvent event){
+		
+		float xDiff = event.getX() - mStartPoint.x;
+		float yDiff = event.getY() - mStartPoint.y;
+		
 		mCurrentMatrix.set(mSavedMatrix);
-		mCurrentMatrix.postTranslate(event.getX() - mStartPoint.x, event.getY() - mStartPoint.y);
+		mCurrentMatrix.postTranslate(xDiff,yDiff);
+		
+		return (xDiff > 0.1 || yDiff > 0.1);
 	}	
 	
 	private RectF mTraslateLimitRect = new RectF(); //reuse instance.

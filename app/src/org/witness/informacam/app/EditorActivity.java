@@ -18,6 +18,7 @@ import org.witness.informacam.app.screens.popups.SharePopup;
 import org.witness.informacam.app.utils.Constants.Codes;
 import org.witness.informacam.app.utils.Constants.EditorActivityListener;
 import org.witness.informacam.app.utils.UIHelpers;
+import org.witness.informacam.app.views.PZSImageView;
 import org.witness.informacam.informa.InformaService;
 import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IImage;
@@ -74,6 +75,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 	FrameLayout rootMain;
 	View rootForm;
 	View bottomPart;
+	View mediaHolderView;
 	Fragment fullscreenView, formView;
 	OverviewFormFragment detailsView;
 	public FragmentManager fm;
@@ -270,6 +272,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		if (media.dcimEntry.mediaType.equals(Models.IMedia.MimeType.IMAGE))
 		{
 			fullscreenView = Fragment.instantiate(this, FullScreenImageViewFragment.class.getName(), fullscreenViewArgs);
+			mediaHolderView = ((FullScreenImageViewFragment)fullscreenView).getImageView();			
 		}
 		else if ( media.dcimEntry.fileAsset.source == Storage.Type.IOCIPHER)
 		{
@@ -298,7 +301,10 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		ft.addToBackStack(null);
 		ft.commit();
 		
+		
 		updateUIBasedOnActionMode();
+		
+		
 	}
 
 	private void saveStateAndFinish()
@@ -364,14 +370,10 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 					e.printStackTrace();
 				}
 				
-				bottomPart.setVisibility(View.GONE);
-				
 				setActionMode(ActivityActionMode.Normal);
 			}
 			else if (mActionMode == ActivityActionMode.Edit)
 			{
-				bottomPart.setVisibility(View.GONE);
-				
 				saveState();
 				setActionMode(ActivityActionMode.Normal);
 			}
@@ -407,7 +409,6 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		}
 		case R.id.menu_edit:
 		{
-			bottomPart.setVisibility(View.VISIBLE);
 			
 			setActionMode(ActivityActionMode.Edit);
 			return true;
@@ -461,7 +462,6 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			this.setActionMode(ActivityActionMode.Edit);
 		else if (mActionMode == ActivityActionMode.Edit)
 		{
-			bottomPart.setVisibility(View.GONE);
 			this.setActionMode(ActivityActionMode.Normal);
 		}
 		else if (mActionMode == ActivityActionMode.EditText)
@@ -658,7 +658,10 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 
 			case R.string.save:
 				if (mRegion != null)
+				{
 					((TagFormFragment) formView).saveTagFormData(mRegion);
+					rootForm.setVisibility(View.GONE);
+				}
 				mode.finish(); // Action picked, so close the CAB
 				return true;
 			default:
@@ -703,7 +706,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			return false;
 		else if (mActionMode == ActivityActionMode.Normal && mode != ActivityActionMode.Edit)
 			return false; // Invalid state
-		else if (mActionMode == ActivityActionMode.AddTags && (mode == ActivityActionMode.EditForm || mode == ActivityActionMode.EditText))
+		else if (mActionMode == ActivityActionMode.AddTags && (mode == ActivityActionMode.EditText))
 			return false;
 		else if (mActionMode == ActivityActionMode.EditForm && (mode == ActivityActionMode.AddTags || mode == ActivityActionMode.EditText))
 			return false;
@@ -714,7 +717,8 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		if (mActionMode == ActivityActionMode.AddTags)
 		{
 			((FullScreenViewFragment) fullscreenView).setCurrentMode(FullScreenViewFragment.Mode.AddTags);
-			startActionMode(this.mActionModeEditTags);
+			startActionMode(this.mActionModeEditTags);			
+			
 		}
 		else if (mActionMode == ActivityActionMode.EditText)
 		{
@@ -746,8 +750,10 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		switch (mActionMode)
 		{
 		case EditForm:
-			rootMain.setVisibility(View.GONE);
+			rootMain.setVisibility(View.VISIBLE);
 			rootForm.setVisibility(View.VISIBLE);
+			bottomPart.setVisibility(View.VISIBLE);
+
 			enableToolbar(false);
 			showToolbar(true);
 			getActionBar().setTitle(R.string.editor_form_edit);
@@ -755,25 +761,39 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		case AddTags:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
+			bottomPart.setVisibility(View.GONE);
+
 			enableToolbar(false);
-			showToolbar(true);
+			showToolbar(false);
 			getActionBar().setTitle(R.string.editor_tags_add);
+			
+			if (fullscreenView instanceof FullScreenImageViewFragment)
+			{
+				mediaHolderView = ((FullScreenImageViewFragment)fullscreenView).getImageView();			
+				if (mediaHolderView != null && mediaHolderView instanceof PZSImageView)
+				{
+					((PZSImageView)mediaHolderView).setHandleTouch(false);
+				}
+			}
+			
 			break;
 		case EditText:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
+			bottomPart.setVisibility(View.VISIBLE);
+
 			enableToolbar(false);
 			showToolbar(false);
 			getActionBar().setTitle(R.string.menu_edit);
-
-			//rootMain.collapse();
-			
+			//rootMain.collapse();			
 			@SuppressWarnings("unused")
 			Rect rectAudioFiles = UIHelpers.getRectRelativeToView(rootMain, detailsView.getAudioFilesView());
 			//this.svRootMain.smoothScrollTo(0, rectAudioFiles.top);
 			detailsView.startEditNotes();
 			break;
 		case Edit:
+			bottomPart.setVisibility(View.VISIBLE);
+
 		//	rootMain.expand();
 			//this.svRootMain.smoothScrollTo(0, 0);
 			try {
@@ -794,6 +814,12 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		default:
 			rootForm.setVisibility(View.GONE);
 			rootMain.setVisibility(View.VISIBLE);
+			bottomPart.setVisibility(View.GONE);
+			
+			if (mediaHolderView != null && mediaHolderView instanceof PZSImageView)
+			{
+				((PZSImageView)mediaHolderView).setHandleTouch(true);
+			}
 			showToolbar(false);
 			getActionBar().setTitle(R.string.menu_view);
 			break;
@@ -876,6 +902,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 	{
 		if (setActionMode(ActivityActionMode.EditForm))
 		{
+			rootForm.setVisibility(View.VISIBLE);
 			mActionModeEditForm.setEditedRegion(region);
 			((TagFormFragment) formView).initTag(region);
 		}

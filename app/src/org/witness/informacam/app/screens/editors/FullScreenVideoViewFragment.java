@@ -221,7 +221,6 @@ OnRangeSeekBarChangeListener<Integer> {
 		rsb.setOnRangeSeekBarChangeListener(FullScreenVideoViewFragment.this);
 		endpointHolder.addView(rsb);
 		videoSeekBar.hideEndpoints();
-		initRegions();
 		
 		playPauseToggle.setClickable(true);
 		

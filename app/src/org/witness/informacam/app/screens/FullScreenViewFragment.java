@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.app.EditorActivity;
 import org.witness.informacam.app.R;
+import org.witness.informacam.app.screens.editors.FullScreenMJPEGViewFragment;
 import org.witness.informacam.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.informacam.app.screens.popups.PopupClickListener;
 import org.witness.informacam.app.utils.Constants;
@@ -186,6 +187,7 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 					if (display != null)
 						display.setStatus(false);
 				}
+				
 			}
 		}
 	}
@@ -205,12 +207,16 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 			View newView = new ChevronRegionView(getActivity(), currentRegion, this);
 			newView.setSoundEffectsEnabled(false);
 			newView.setOnTouchListener(this);
-			mediaHolder.addView(newView);
-			// mediaHolder.addView(currentRegion.getRegionDisplay());
+			mediaHolder.addView(newView);			
+			
 			currentRegion.getRegionDisplay().setSoundEffectsEnabled(false);
+			updateRegionDisplay();
+		//	showTagContextMenu(currentRegion.getRegionDisplay());
 		}
-
-		updateRegionDisplay();
+		else
+		{
+			updateRegionDisplay();
+		}
 	}
 
 	@Override
@@ -234,13 +240,13 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 				v.performClick();
 				((IRegionDisplay) v).update();
 				v.postInvalidate();
-				if (currentMode == Mode.Edit)
+				if (currentMode == Mode.Edit || currentMode == Mode.AddTags)
 				{
 					// Bring up the context menu
 					IRegionDisplay regionDisplay = (IRegionDisplay) v;
 					this.setCurrentRegion(regionDisplay.parent);
 					showTagContextMenu(regionDisplay);
-			}
+				}
 				break;
 			}
 			case MotionEvent.ACTION_MOVE:
@@ -295,16 +301,28 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 						IRegion region = ((EditorActivityListener) a).media().addRegion(a, (int) event.getY() - (DEFAULT_REGION_HEIGHT / 2),
 								(int) event.getX() - (DEFAULT_REGION_WIDTH / 2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT, this);
 						constrainBoundsToImage(region.bounds);
-						setCurrentRegion(region, true);
+						setCurrentRegion(region, true);						
+						
 					}
 					else if (((EditorActivityListener) a).media().dcimEntry.mediaType.startsWith(MimeType.VIDEO_BASE))
 					{
 
-						IRegion region = ((EditorActivityListener) a).media().addRegion(a, (int) event.getY() - (DEFAULT_REGION_HEIGHT / 2),
-								(int) event.getX() - (DEFAULT_REGION_WIDTH / 2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT,
-								((FullScreenVideoViewFragment) this).getCurrentPosition(), ((FullScreenVideoViewFragment) this).getDuration(), this);
-						constrainBoundsToImage(region.bounds);
-						setCurrentRegion(region, true);
+						if (this instanceof FullScreenVideoViewFragment)
+						{
+							IRegion region = ((EditorActivityListener) a).media().addRegion(a, (int) event.getY() - (DEFAULT_REGION_HEIGHT / 2),
+									(int) event.getX() - (DEFAULT_REGION_WIDTH / 2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT,
+									((FullScreenVideoViewFragment) this).getCurrentPosition(), ((FullScreenVideoViewFragment) this).getDuration(), this);
+							constrainBoundsToImage(region.bounds);
+							setCurrentRegion(region, true);
+						}
+						else if (this instanceof FullScreenMJPEGViewFragment)
+						{
+							IRegion region = ((EditorActivityListener) a).media().addRegion(a, (int) event.getY() - (DEFAULT_REGION_HEIGHT / 2),
+									(int) event.getX() - (DEFAULT_REGION_WIDTH / 2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT,
+									0, 0, this);
+							constrainBoundsToImage(region.bounds);
+							setCurrentRegion(region, true);
+						}
 					}
 
 				}
@@ -379,6 +397,10 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 			// clear current selection
 			currentRegion = null;
 			updateRegionDisplay();
+		}
+		else if (currentMode == Mode.Edit)
+		{
+			initRegions();
 		}
 	}
 

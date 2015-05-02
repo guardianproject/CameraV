@@ -68,7 +68,7 @@
 	<string name="preferences">Preferences</string>
 	<string name="original_images_should_be">Captured photos &amp; video should be stored in:</string>	
 	<string name="prefs_images_deleted">Encrypted Storage (Slower)</string>
-	<string name="prefs_images_saved">Standard Storage (Faster))</string>
+	<string name="prefs_images_saved">Standard Storage (Faster)</string>
 	<string name="prefs_lock_screen">Lock screen</string>
 	<string name="prefs_lock_screen_on">On</string>
 	<string name="prefs_lock_screen_off">Off</string>

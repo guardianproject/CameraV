@@ -14,25 +14,14 @@
                  android:layout_margin="0dip"
                  />
     
-    <!-- 
-        <org.witness.informacam.app.views.TwoViewSlideLayout
-            android:id="@+id/root_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@drawable/black"
-             >
- -->
-    
    
             <RelativeLayout
                 android:id="@+id/rlBottomPart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
     			android:paddingTop="?android:attr/actionBarSize"
-    			android:visibility="gone"
+    			android:visibility="gone"    			    		
                  >
-
                                 <include
             android:id="@+id/toolbar_bottom"
             android:layout_width="match_parent"
@@ -53,18 +42,15 @@
                         android:layout_height="wrap_content" >
                     </FrameLayout>
                 </ScrollView>
-                
 
-                        
             </RelativeLayout>
-
 
     <FrameLayout
         android:id="@+id/root_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="0dip"
-        android:padding="0dip" />
+        android:layout_height="wrap_content"
+        android:paddingTop="?android:attr/actionBarSize"
+       	android:visibility="gone"    />
 
     <ProgressBar
         android:id="@+id/waitLoading"
