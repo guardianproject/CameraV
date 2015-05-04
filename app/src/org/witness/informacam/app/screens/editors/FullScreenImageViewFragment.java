@@ -120,7 +120,6 @@ public class FullScreenImageViewFragment extends FullScreenViewFragment {
 		BitmapFactory.Options bfo = new BitmapFactory.Options();
 		bfo.inJustDecodeBounds = true;
 		bfo.inPreferredConfig = Bitmap.Config.RGB_565;
-
 		
 		InputStream is = InformaCam.getInstance().ioService.getStream(media_.dcimEntry.fileAsset.path, media_.dcimEntry.fileAsset.source);
 		

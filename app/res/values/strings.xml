@@ -179,4 +179,8 @@
     
     <string name="prefs_export_local">Export Encrypted Media on Share</string>
     <string name="prefs_run_foreground">Keep app in foreground</string>
+    <string name="light">Light</string>
+    <string name="air_pressure">Air Pressure</string>
+    <string name="orientation">Orientation</string>
+    <string name="motion">Motion</string>
 </resources>

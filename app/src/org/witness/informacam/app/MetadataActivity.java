@@ -1,24 +1,18 @@
 package org.witness.informacam.app;
 
-import java.io.FileNotFoundException;
-
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.utils.Constants.Codes;
 import org.witness.informacam.models.media.IMedia;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
+import android.widget.EditText;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class MetadataActivity extends Activity {
@@ -54,7 +48,7 @@ public class MetadataActivity extends Activity {
 			JsonElement je = jp.parse(j3m);
 			String prettyJsonString = gson.toJson(je);
 			
-			TextView txtView = (TextView)findViewById(R.id.textarea_metadata);
+			EditText txtView = (EditText)findViewById(R.id.textarea_metadata);
 			txtView.setText(prettyJsonString);
 			
 			txtView.setMovementMethod(new ScrollingMovementMethod());
