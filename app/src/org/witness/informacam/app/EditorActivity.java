@@ -407,6 +407,13 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			startActivity(intent);
 			return true;
 		}
+		case R.id.menu_view_charts:
+		{
+			Intent intent = new Intent(this,ChartsActivity.class);
+			intent.putExtra(Codes.Extras.EDIT_MEDIA, media._id);			
+			startActivity(intent);
+			return true;
+		}
 		case R.id.menu_edit:
 		{
 			
