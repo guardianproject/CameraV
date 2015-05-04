@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 import org.witness.informacam.InformaCam;
@@ -19,7 +21,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.media.ExifInterface;
@@ -38,7 +39,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -137,6 +137,24 @@ public class ChartsActivity extends Activity {
 		
 		//LimitLine line = new LimitLine(10f);
 		//data.addLimitLine(line);v
+
+		ArrayList<ISensorCapture> listSensorEvents = new ArrayList<ISensorCapture>(media.data.sensorCapture);
+		
+		Collections.sort(listSensorEvents,new Comparator<ISensorCapture>()
+		{
+
+			@Override
+			public int compare(ISensorCapture lhs, ISensorCapture rhs) {
+				
+				if (lhs.timestamp < rhs.timestamp)
+					return -1;
+				else if (lhs.timestamp == rhs.timestamp)
+					return 0;
+				else
+					return 1;
+			}
+			
+		});
 		
 		DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG);				
 
@@ -147,7 +165,7 @@ public class ChartsActivity extends Activity {
 			ArrayList<String> alPoints = new ArrayList<String>();
 			
 			//do map
-			for (ISensorCapture sensor : media.data.sensorCapture)
+			for (ISensorCapture sensor : listSensorEvents)
 			{				
 				if (sensor.sensorPlayback.has("gps_coords"))
 				{										
@@ -180,7 +198,7 @@ public class ChartsActivity extends Activity {
 					 int i = 0;
 					 ArrayList<Entry> yVals = new ArrayList<Entry>();
 					 
-					for (ISensorCapture sensor : media.data.sensorCapture)
+					for (ISensorCapture sensor : listSensorEvents)
 					{
 						
 						if (sensor.sensorPlayback.has(sensorType))
@@ -197,7 +215,7 @@ public class ChartsActivity extends Activity {
 							
 						}
 					}
-								
+
 					if (yVals.size() > 0)
 					{	
 						LineDataSet dataSet = addLineDataSet(sensorType, yVals);
