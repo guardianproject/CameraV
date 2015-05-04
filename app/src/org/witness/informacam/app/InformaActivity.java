@@ -155,34 +155,36 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 		informaCam.setStatusListener(this);
 		
 		if(resultCode == Activity.RESULT_CANCELED) {
-			Log.d(LOG, "finishing with request code " + requestCode);
 			
-			if(informaCam.isOutsideTheLoop(init.getAction())) {
-				Logger.d(LOG, "coming back from VMM call WITH NOOOOO MEDIA, and i shoudl finish.");
-				setResult(resultCode, getIntent());
-				finish();
-				return;
-			}
-			else if (data != null && data.hasExtra(Codes.Extras.LOGOUT_USER) && data.getBooleanExtra(Codes.Extras.LOGOUT_USER, false))
+			if (data != null)
 			{
-				Logger.d(LOG, "Logout the user and close.");
-				informaCam.setStatusListener(null);
-				//informaCam.stopInforma();
-				route = null;
-				setResult(resultCode, getIntent());
-				finish();
-				
-				if (data.hasExtra(Codes.Extras.PERFORM_WIPE) && data.getBooleanExtra(Codes.Extras.PERFORM_WIPE, false))
+				if(informaCam.isOutsideTheLoop(init.getAction())) {
+					//Logger.d(LOG, "coming back from VMM call WITH NOOOOO MEDIA, and i shoudl finish.");
+					setResult(resultCode, getIntent());
+					finish();
+					return;
+				}
+				else if (data != null && data.hasExtra(Codes.Extras.LOGOUT_USER) && data.getBooleanExtra(Codes.Extras.LOGOUT_USER, false))
 				{
-					wipe();
+					Logger.d(LOG, "Logout the user and close.");
+					informaCam.setStatusListener(null);
+					//informaCam.stopInforma();
+					route = null;
+					setResult(resultCode, getIntent());
+					finish();
+					
+					if (data.hasExtra(Codes.Extras.PERFORM_WIPE) && data.getBooleanExtra(Codes.Extras.PERFORM_WIPE, false))
+					{
+						wipe();
+					}
+					
+					return;
 				}
 				
-				return;
+				// XXX: DOES THIS BREAK LOGOUT?
+				setResult(resultCode, data);
+				finish();
 			}
-			
-			// XXX: DOES THIS BREAK LOGOUT?
-			setResult(resultCode, data);
-			finish();
 			
 		} else if(resultCode == Activity.RESULT_OK) {
 			Log.d(LOG, "returning with request code " + requestCode);
@@ -288,7 +290,7 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 	{
 		int code = intent.getBundleExtra(org.witness.informacam.utils.Constants.Codes.Keys.SERVICE).getInt(
 				org.witness.informacam.app.utils.Constants.Codes.Extras.MESSAGE_CODE);
-		Log.d(LOG, "STARTING INFORMACAM ON IWITNESS (routeCode = " + code + ")");
+		//Log.d(LOG, "STARTING INFORMACAM ON IWITNESS (routeCode = " + code + ")");
 
 		switch (code)
 		{
