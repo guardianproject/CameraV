@@ -166,8 +166,8 @@ public class ChartsActivity extends Activity {
 			
 			for (String[] sensorTypeSet : sensorTypes)
 			{
-				ArrayList<String> xLabels = new ArrayList<String>();
-				ArrayList<Entry> xVals = new ArrayList<Entry>();				
+				
+				ArrayList<String> xVals = new ArrayList<String>();				
 			    ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
 			    
 			    int[] colors = ColorTemplate.JOYFUL_COLORS;
@@ -184,19 +184,17 @@ public class ChartsActivity extends Activity {
 					{
 						
 						if (sensor.sensorPlayback.has(sensorType))
-						{
-							Entry entryX = new Entry(sensor.timestamp,i);
-							xVals.add(entryX);
-							xLabels.add(dateFormat.format(new Date(sensor.timestamp)));
-							
+						{																			
 							Object val = sensor.sensorPlayback.get(sensorType);
+							xVals.add(dateFormat.format(new Date(sensor.timestamp)));						
 							
-							if (val instanceof Integer)
-								yVals.add(new Entry(((Integer)val).intValue(), i++));
-							else if (val instanceof Double)
-								yVals.add(new Entry(((Double)val).floatValue(), i++));
-							else if (val instanceof Float)
+							if (val instanceof Integer)							
+								yVals.add(new Entry(((Integer)val).intValue(), i++));								
+							else if (val instanceof Double)							
+								yVals.add(new Entry(((Double)val).floatValue(), i++));							
+							else if (val instanceof Float)													
 								yVals.add(new Entry(((Float)val).floatValue(), i++));
+							
 						}
 					}
 								
@@ -208,18 +206,23 @@ public class ChartsActivity extends Activity {
 					}
 				}
 				
-		        // create a data object with the datasets
-		        LineData data = new LineData(xLabels, dataSets);				
-		        LineChart chart = addChart(sensorLabels[labelIdx++],data);
-		        
-		        LimitLine limitCapture = new LimitLine(media.dcimEntry.timeCaptured, "Capture");
-		        limitCapture.setLineColor(Color.RED);
-		        limitCapture.setLineWidth(4f);
-		        limitCapture.enableDashedLine(10f, 10f, 0f);		        
-		        limitCapture.setTextSize(10f);		        
-		        chart.getXAxis().addLimitLine(limitCapture);
-		        
-		        listCharts.add(chart);
+				if (dataSets.size() > 0)
+				{
+			        // create a data object with the datasets
+			        LineData data = new LineData(xVals, dataSets);				
+			        LineChart chart = addChart(sensorLabels[labelIdx++],data);
+			        
+			        /*
+			        LimitLine limitCapture = new LimitLine(media.dcimEntry.timeCaptured, "Capture");
+			        limitCapture.setLineColor(Color.RED);
+			        limitCapture.setLineWidth(4f);
+			        limitCapture.enableDashedLine(10f, 10f, 0f);		        
+			        limitCapture.setTextSize(10f);		        
+			        chart.getXAxis().addLimitLine(limitCapture);
+			        */
+			        
+			        listCharts.add(chart);
+				}
 			}
 			
 
@@ -331,16 +334,26 @@ public class ChartsActivity extends Activity {
 			}
 			
 			Bitmap bmOut = combineImageIntoOne(listBitmap);
-		
 			File fileImage = saveBitmap(bmOut,media._id);
+			
+			String summary = media.buildSummary(this, null);
+			
 			Intent intent = new Intent(Intent.ACTION_SEND);
 			Uri uriData = Uri.fromFile(fileImage);
 			intent.setData(uriData);
+			intent.putExtra(Intent.EXTRA_TITLE,media._id);
+			intent.putExtra(Intent.EXTRA_TEXT, summary);
 			intent.putExtra(Intent.EXTRA_STREAM, uriData);
 			intent.setType("image/jpeg");
 			startActivity(intent);
 			
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
