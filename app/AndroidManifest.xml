@@ -176,6 +176,12 @@
             android:exported="false"
              android:label="@string/app_name"   
              />
+         <activity
+            android:name="org.witness.informacam.app.ChartsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false"
+             android:label="@string/app_name"   
+             />
         <activity
             android:name="org.witness.informacam.app.HomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
