@@ -13,6 +13,7 @@ import java.util.Date;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.utils.Constants.Codes;
+import org.witness.informacam.json.JSONArray;
 import org.witness.informacam.models.j3m.ISensorCapture;
 import org.witness.informacam.models.media.IMedia;
 
@@ -86,8 +87,6 @@ public class ChartsActivity extends Activity {
 		StringBuffer mapUrl = new StringBuffer();
 		mapUrl.append(baseMap);
 		mapUrl.append(basePath);
-			
-		//		40.737102,-73.990318|40.749825,-73.987963|40.752946,-73.987384|40.755823,-73.986397
 		
 		for (String point : alPoints)
 		{
@@ -135,32 +134,32 @@ public class ChartsActivity extends Activity {
 	private void initCharts ()
 	{
 		
-		//LimitLine line = new LimitLine(10f);
-		//data.addLimitLine(line);v
-
-		ArrayList<ISensorCapture> listSensorEvents = new ArrayList<ISensorCapture>(media.data.sensorCapture);
-		
-		Collections.sort(listSensorEvents,new Comparator<ISensorCapture>()
-		{
-
-			@Override
-			public int compare(ISensorCapture lhs, ISensorCapture rhs) {
-				
-				if (lhs.timestamp < rhs.timestamp)
-					return -1;
-				else if (lhs.timestamp == rhs.timestamp)
-					return 0;
-				else
-					return 1;
-			}
-			
-		});
-		
-		DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG);				
 
 		try
 		{
+
 			String j3m = ((IMedia) media).buildJ3M(this, false, null);
+			
+			ArrayList<ISensorCapture> listSensorEvents = new ArrayList<ISensorCapture>(media.data.sensorCapture);
+			
+			Collections.sort(listSensorEvents,new Comparator<ISensorCapture>()
+			{
+	
+				@Override
+				public int compare(ISensorCapture lhs, ISensorCapture rhs) {
+					
+					if (lhs.timestamp < rhs.timestamp)
+						return -1;
+					else if (lhs.timestamp == rhs.timestamp)
+						return 0;
+					else
+						return 1;
+				}
+				
+			});
+			
+			DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG);				
+
 
 			ArrayList<String> alPoints = new ArrayList<String>();
 			
@@ -178,8 +177,9 @@ public class ChartsActivity extends Activity {
 				addMap(alPoints);
 			
 			//do charts
-			String[] sensorLabels = {getString(R.string.light),getString(R.string.air_pressure),getString(R.string.orientation),getString(R.string.motion)};
-			String[][] sensorTypes = {{"lightMeterValue"},{"pressureHPAOrMBAR"},{"pitch","roll","azimuth"},{"acc_x","acc_y","acc_z"}};
+			final String[] sensorLabels = {getString(R.string.light),getString(R.string.air_pressure),getString(R.string.orientation),getString(R.string.motion),"Wifi Networks"};
+			final String[][] sensorTypes = {{"lightMeterValue"},{"pressureHPAOrMBAR"},{"pitch","roll","azimuth"},{"acc_x","acc_y","acc_z"},{"visibleWifiNetworks"}};
+			
 			int labelIdx = 0;
 			
 			for (String[] sensorTypeSet : sensorTypes)
@@ -206,13 +206,16 @@ public class ChartsActivity extends Activity {
 							Object val = sensor.sensorPlayback.get(sensorType);
 							xVals.add(dateFormat.format(new Date(sensor.timestamp)));						
 							
+							//Log.d("Chart","adding: " + sensor.timestamp + " val=" + val);
+							
 							if (val instanceof Integer)							
 								yVals.add(new Entry(((Integer)val).intValue(), i++));								
 							else if (val instanceof Double)							
 								yVals.add(new Entry(((Double)val).floatValue(), i++));							
 							else if (val instanceof Float)													
 								yVals.add(new Entry(((Float)val).floatValue(), i++));
-							
+							else if (val instanceof JSONArray)
+								yVals.add(new Entry(((JSONArray)val).length(), i++));
 						}
 					}
 
@@ -228,7 +231,7 @@ public class ChartsActivity extends Activity {
 				{
 			        // create a data object with the datasets
 			        LineData data = new LineData(xVals, dataSets);				
-			        LineChart chart = addChart(sensorLabels[labelIdx++],data);
+			        LineChart chart = addChart(sensorLabels[labelIdx],data);
 			        
 			        /*
 			        LimitLine limitCapture = new LimitLine(media.dcimEntry.timeCaptured, "Capture");
@@ -241,6 +244,9 @@ public class ChartsActivity extends Activity {
 			        
 			        listCharts.add(chart);
 				}
+				
+				labelIdx++;
+				
 			}
 			
 

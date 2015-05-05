@@ -517,7 +517,7 @@ public class GalleryFragment extends Fragment implements
 				
 					if (batch.size() > 0)
 					{
-						new SharePopup(a,batch,false,shareJ3mOnly,isLocalShare);
+						new SharePopup(a,batch,false,SharePopup.SHARE_TYPE_J3M,isLocalShare);
 								
 					}
 					else

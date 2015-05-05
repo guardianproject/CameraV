@@ -90,6 +90,9 @@
     <string name="menu_share">Share</string>
     <string name="menu_share_media">Share Media</string>
     <string name="menu_share_meta">Share Metadata</string>
+    <string name="menu_share_meta_j3m">Share J3M JSON format</string>
+    <string name="menu_share_meta_csv">Share CSV format</string>
+    
     <string name="menu_edit">Edit</string>
     <string name="menu_done">Done</string>
     <string name="menu_save">Save</string>

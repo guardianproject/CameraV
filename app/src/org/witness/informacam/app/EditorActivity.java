@@ -388,11 +388,18 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 			new SharePopup(this, mList, isLocalShare);
 			return true;
 		}
-		case R.id.menu_share_meta:
+		case R.id.menu_share_meta_j3m:
 		{
 			ArrayList<IMedia> mList = new ArrayList<IMedia>();
 			mList.add(media);
-			new SharePopup(this, mList, false, true, isLocalShare);
+			new SharePopup(this, mList, false, SharePopup.SHARE_TYPE_J3M, isLocalShare);
+			return true;
+		}
+		case R.id.menu_share_meta_csv:
+		{
+			ArrayList<IMedia> mList = new ArrayList<IMedia>();
+			mList.add(media);
+			new SharePopup(this, mList, false, SharePopup.SHARE_TYPE_CSV, isLocalShare);
 			return true;
 		}
 		case R.id.menu_share_hash:

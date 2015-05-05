@@ -81,16 +81,22 @@ public class SharePopup {
 	Handler h;
 	private final Dialog alert;
 
-	private boolean shareJ3MOnly = false;
 	private boolean isLocalShare = false;
+
+	private int shareType = SHARE_TYPE_MEDIA;
+	public final static int SHARE_TYPE_MEDIA = 0;
+	public final static int SHARE_TYPE_J3M = 1;
+	public final static int SHARE_TYPE_CSV = 2;
+	
+	
 	
 	public SharePopup(Activity a, final ArrayList<IMedia> mediaList, boolean isLocalShare) {
-		this(a, mediaList, false, false, isLocalShare);
+		this(a, mediaList, false, SHARE_TYPE_MEDIA, isLocalShare);
 	}
 	
 
 	@SuppressLint("HandlerLeak")
-	public SharePopup(final Activity a, final ArrayList<IMedia> mediaList, boolean startsInforma, boolean shareJ3MOnly, boolean isLocalShare) {
+	public SharePopup(final Activity a, final ArrayList<IMedia> mediaList, boolean startsInforma, int shareType, boolean isLocalShare) {
 		this.a = a;
 
 		alert = new Dialog(a);
@@ -98,7 +104,7 @@ public class SharePopup {
 		alert.setContentView(R.layout.popup_share);
 
 		this.mediaList = mediaList;
-		this.shareJ3MOnly = shareJ3MOnly;
+		this.shareType = shareType;
 		this.isLocalShare = isLocalShare;
 		
 		mediaListUri = new ArrayList<Uri>();
@@ -171,7 +177,7 @@ public class SharePopup {
 							if (mediaListUri.size() > 1)
 							{
 								String title = a.getString(R.string.share_from_) + a.getString(R.string.app_name);
-								sendTo.intent.putExtra(Intent.EXTRA_TITLE, title);
+							//	sendTo.intent.putExtra(Intent.EXTRA_TITLE, title);
 								sendTo.intent.putExtra(Intent.EXTRA_SUBJECT, title);
 								
 								sendTo.intent.setAction(Intent.ACTION_SEND_MULTIPLE);
@@ -183,7 +189,7 @@ public class SharePopup {
 								String title = a.getString(R.string.share_from_) 
 										+ a.getString(R.string.app_name) 
 										+ ' ' + fileShare.getName();
-								sendTo.intent.putExtra(Intent.EXTRA_TITLE, title);
+							//	sendTo.intent.putExtra(Intent.EXTRA_TITLE, title);
 								sendTo.intent.putExtra(Intent.EXTRA_SUBJECT, title);
 								
 								//if a google app like gmail, hangouts or drive is being used, then add the extra_text
@@ -247,7 +253,7 @@ public class SharePopup {
 		alert.getWindow().setBackgroundDrawable(
 				new ColorDrawable(android.graphics.Color.TRANSPARENT));
 	}
-
+	
 	public String generateJ3MSummary (Context context, String id) throws InstantiationException, IllegalAccessException, NoSuchAlgorithmException, SignatureException, PGPException, IOException
 	{
 		
@@ -352,8 +358,10 @@ public class SharePopup {
 					
 					for (IMedia media : mediaList)
 					{
-						if (shareJ3MOnly)
+						if (shareType == SHARE_TYPE_J3M)
 							media.exportJ3M(a, h, encryptTo, doSendTo);
+						else if (shareType == SHARE_TYPE_CSV)
+							media.exportCSV(a, h, encryptTo, doSendTo);
 						else
 							media.export(a, h, null, true, isLocalShare, false);
 						
