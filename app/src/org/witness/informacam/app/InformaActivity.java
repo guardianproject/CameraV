@@ -156,35 +156,32 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 		
 		if(resultCode == Activity.RESULT_CANCELED) {
 			
-			if (data != null)
+			if(informaCam.isOutsideTheLoop(init.getAction())) {
+				//Logger.d(LOG, "coming back from VMM call WITH NOOOOO MEDIA, and i shoudl finish.");
+				setResult(resultCode, getIntent());
+				finish();
+				return;
+			}
+			else if (data != null && data.hasExtra(Codes.Extras.LOGOUT_USER) && data.getBooleanExtra(Codes.Extras.LOGOUT_USER, false))
 			{
-				if(informaCam.isOutsideTheLoop(init.getAction())) {
-					//Logger.d(LOG, "coming back from VMM call WITH NOOOOO MEDIA, and i shoudl finish.");
-					setResult(resultCode, getIntent());
-					finish();
-					return;
-				}
-				else if (data != null && data.hasExtra(Codes.Extras.LOGOUT_USER) && data.getBooleanExtra(Codes.Extras.LOGOUT_USER, false))
+				Logger.d(LOG, "Logout the user and close.");
+				informaCam.setStatusListener(null);
+				//informaCam.stopInforma();
+				route = null;
+				setResult(resultCode, getIntent());
+				finish();
+				
+				if (data.hasExtra(Codes.Extras.PERFORM_WIPE) && data.getBooleanExtra(Codes.Extras.PERFORM_WIPE, false))
 				{
-					Logger.d(LOG, "Logout the user and close.");
-					informaCam.setStatusListener(null);
-					//informaCam.stopInforma();
-					route = null;
-					setResult(resultCode, getIntent());
-					finish();
-					
-					if (data.hasExtra(Codes.Extras.PERFORM_WIPE) && data.getBooleanExtra(Codes.Extras.PERFORM_WIPE, false))
-					{
-						wipe();
-					}
-					
-					return;
+					wipe();
 				}
 				
-				// XXX: DOES THIS BREAK LOGOUT?
-				setResult(resultCode, data);
-				finish();
+				return;
 			}
+			
+			// XXX: DOES THIS BREAK LOGOUT?
+			setResult(resultCode, data);
+			finish();
 			
 		} else if(resultCode == Activity.RESULT_OK) {
 			Log.d(LOG, "returning with request code " + requestCode);

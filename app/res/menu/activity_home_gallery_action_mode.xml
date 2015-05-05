@@ -4,8 +4,25 @@
         
         <menu>
         	    <item android:id="@+id/menu_share" android:title="@string/menu_share_media" android:orderInCategory="100" android:icon="@drawable/ic_action_share" android:showAsAction="always" android:enabled="true"/>
-        	    <item android:id="@+id/menu_share_meta" android:title="@string/menu_share_meta" android:orderInCategory="100" android:icon="@drawable/ic_action_share" android:showAsAction="always" android:enabled="true"/>
-       	        <item android:id="@+id/menu_share_hash" android:title="@string/menu_share_hash" android:orderInCategory="100" android:icon="@drawable/ic_action_share" android:showAsAction="always" android:enabled="true"/>
+        	    
+        	    <item android:title="@string/menu_share_meta" android:orderInCategory="100" android:icon="@drawable/ic_action_share" android:showAsAction="always" android:enabled="true">
+       	  
+        	        <menu>
+        	    <item 
+        	        android:id="@+id/menu_share_meta_j3m" 
+        	        android:title="@string/menu_share_meta_j3m" 
+        	        android:orderInCategory="100" android:icon="@drawable/ic_action_share" 
+        	        android:showAsAction="always" android:enabled="true"/>
+       	        <item 
+        	        android:id="@+id/menu_share_meta_csv" 
+        	        android:title="@string/menu_share_meta_csv" 
+        	        android:orderInCategory="100" android:icon="@drawable/ic_action_share" 
+        	        android:showAsAction="always" android:enabled="true"/>
+       	            
+        	    </menu>
+        	        </item>
+        	    
+        	    <item android:id="@+id/menu_share_hash" android:title="@string/menu_share_hash" android:orderInCategory="100" android:icon="@drawable/ic_action_share" android:showAsAction="always" android:enabled="true"/>
         	</menu>
         
     </item>

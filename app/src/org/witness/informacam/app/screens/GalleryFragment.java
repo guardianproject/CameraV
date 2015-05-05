@@ -498,7 +498,7 @@ public class GalleryFragment extends Fragment implements
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			
-			boolean shareJ3mOnly = false;
+			int shareType = SharePopup.SHARE_TYPE_MEDIA;
 			boolean isLocalShare = PreferenceManager.getDefaultSharedPreferences(a).getBoolean("prefExportLocal", false);
 			
 			switch (item.getItemId()) {
@@ -511,13 +511,15 @@ public class GalleryFragment extends Fragment implements
 			case R.id.menu_share_hash:
 				shareHashes();
 				return true;
-			case R.id.menu_share_meta:
-				shareJ3mOnly = true;
+			case R.id.menu_share_meta_j3m:
+				shareType = SharePopup.SHARE_TYPE_J3M;
+			case R.id.menu_share_meta_csv:
+				shareType = SharePopup.SHARE_TYPE_CSV;
 			case R.id.menu_share:
 				
 					if (batch.size() > 0)
 					{
-						new SharePopup(a,batch,false,SharePopup.SHARE_TYPE_J3M,isLocalShare);
+						new SharePopup(a,batch,false,shareType,isLocalShare);
 								
 					}
 					else
