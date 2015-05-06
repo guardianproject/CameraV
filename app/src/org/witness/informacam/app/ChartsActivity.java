@@ -47,6 +47,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Utils;
+import com.github.mikephil.charting.utils.ValueFormatter;
 
 
 public class ChartsActivity extends Activity {
@@ -189,8 +190,8 @@ public class ChartsActivity extends Activity {
 				addMap(alPoints);
 			
 			//do charts
-			final String[] sensorLabels = {getString(R.string.light),getString(R.string.air_pressure),getString(R.string.orientation),getString(R.string.motion),"Wifi Networks"};
-			final String[][] sensorTypes = {{"lightMeterValue"},{"pressureHPAOrMBAR"},{"pitch","roll","azimuth"},{"acc_x","acc_y","acc_z"},{"visibleWifiNetworks"}};
+			final String[] sensorLabels = {getString(R.string.gps_speed),getString(R.string.gps_altitude),getString(R.string.light),getString(R.string.air_pressure),getString(R.string.orientation),getString(R.string.motion),getString(R.string.wifi_networks)};
+			final String[][] sensorTypes = {{"gps_speed"},{"gps_altitude"},{"lightMeterValue"},{"pressureHPAOrMBAR"},{"pitch","roll","azimuth"},{"acc_x","acc_y","acc_z"},{"visibleWifiNetworks"}};
 			
 			int labelIdx = 0;
 			
@@ -217,6 +218,7 @@ public class ChartsActivity extends Activity {
 						{																			
 							Object val = sensor.sensorPlayback.get(sensorType);
 							xVals.add(dateFormat.format(new Date(sensor.timestamp)));						
+							//xVals.add(sensor.timestamp+"");						
 							
 							//Log.d("Chart","adding: " + sensor.timestamp + " val=" + val);
 							
@@ -228,6 +230,20 @@ public class ChartsActivity extends Activity {
 								yVals.add(new Entry(((Float)val).floatValue(), i++));
 							else if (val instanceof JSONArray)
 								yVals.add(new Entry(((JSONArray)val).length(), i++));
+							else
+							{
+								try
+								{
+									float fval = Float.parseFloat(((String)val));
+
+									yVals.add(new Entry(fval, i++));	
+								}
+								catch (Exception e)
+								{
+									//couldn't parse double
+									Log.e("Chart","couldn't parse value",e);
+								}
+							}
 						}
 					}
 
@@ -242,8 +258,10 @@ public class ChartsActivity extends Activity {
 				if (dataSets.size() > 0)
 				{
 			        // create a data object with the datasets
-			        LineData data = new LineData(xVals, dataSets);				
+			        LineData data = new LineData(xVals, dataSets);		
+			        
 			        LineChart chart = addChart(sensorLabels[labelIdx],data);
+			        
 			        
 			        /*
 			        LimitLine limitCapture = new LimitLine(media.dcimEntry.timeCaptured, "Capture");
@@ -279,8 +297,9 @@ public class ChartsActivity extends Activity {
 //	        set1.enableDashedLine(10f, 5f, 0f);
 	        
 	        set1.setLineWidth(3f);
-	        set1.setCircleSize(5f);
-	        set1.setDrawCircleHole(false);
+	        set1.setCircleSize(0f);
+	        //set1.setCircleSize(5f);
+	        //set1.setDrawCircleHole(false);
 	        //set1.setValueTextSize(9f);
 	        //set1.setFillAlpha(65);
 
