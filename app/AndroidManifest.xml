@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.witness.informacam.app"
     android:installLocation="auto"
-    android:versionCode="172"
-    android:versionName="0.1.72" >
+    android:versionCode="173"
+    android:versionName="0.1.73" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -26,6 +26,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
     <supports-screens
         android:anyDensity="true"
@@ -36,7 +37,6 @@
     <application
         android:name="org.witness.informacam.InformaCam"
         android:allowBackup="false"
-        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
         
@@ -65,23 +65,40 @@
             </intent-filter>
         </receiver>
 
+  		
         <activity
             android:name="org.witness.informacam.app.InformaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:excludeFromRecents="false"
+        	android:icon="@drawable/ic_launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            
+        </activity>
+        <activity-alias
+  		    android:enabled="false"
+            android:name="org.witness.informacam.app.InformaActivity-Alt"
+            android:targetActivity="org.witness.informacam.app.InformaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
+            android:label="@string/app_name_alt"
+            android:excludeFromRecents="true"
+        	android:icon="@drawable/ic_launcher_alt">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+        </activity-alias>
+            <!-- 
             <intent-filter>
                 <action android:name="android.media.action.IMAGE_CAPTURE" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <action android:name="info.guardianproject.action.VERIFIED_MOBILE_MEDIA" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
@@ -128,12 +145,14 @@
 			        <data android:pathPattern=".*\\.ictd" />
 			        <data android:host="*" />
 			    </intent-filter>
-            
-        </activity>
+			    </activity>
+             -->
          <activity
             android:name="org.witness.informacam.app.HashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
-            android:label="@string/app_name" >
+            android:label="@string/camerav_hash_service"
+        	android:icon="@drawable/ic_launcher"
+             >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -166,6 +185,7 @@
             android:label="@string/app_name"
             android:theme="@style/EditorTheme"
             android:exported="false"
+            android:excludeFromRecents="true"
              >
             <meta-data android:name="android.support.UI_OPTIONS"
                    android:value="splitActionBarWhenNarrow" />
@@ -183,18 +203,27 @@
              android:label="@string/app_name"   
              android:theme="@android:style/Theme.Holo.Light"
              />
+          <activity
+            android:name="org.witness.informacam.app.RemoteShareActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false"
+             android:label="@string/app_name"   
+             android:theme="@android:style/Theme.Holo.Light"
+             />
         <activity
             android:name="org.witness.informacam.app.HomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
             android:label="@string/app_name"
             android:theme="@style/HomeTheme" 
             android:exported="false"
+            android:excludeFromRecents="true"
             />
         <activity
             android:name="org.witness.informacam.app.LoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:exported="false"
+            android:excludeFromRecents="true"
              />
         <activity
             android:name="org.witness.informacam.app.WipeActivity"
@@ -247,6 +276,7 @@
             android:name="org.witness.informacam.informa.InformaService"
             android:enabled="true"
             android:exported="false" />
+        
         <service android:name="org.witness.informacam.intake.Intake"
             android:enabled="true"
             android:exported="false" />
@@ -254,6 +284,12 @@
         <service android:name="org.witness.informacam.transport.GlobaleaksTransport"
             android:enabled="true"
             android:exported="false" />
+        
+        <service
+            android:name="org.witness.informacam.share.WebShareService"
+            android:enabled="true"
+            android:exported="false" />
+        
         <activity android:name="net.hockeyapp.android.UpdateActivity" />
 
         <receiver
@@ -276,6 +312,7 @@
             android:label="@string/app_name" 
             android:uiOptions="splitActionBarWhenNarrow"
            	android:configChanges="keyboardHidden|orientation|screenSize"
+           	android:icon="@drawable/ic_launcher"
             >
             <intent-filter>                
 				<action android:name="info.guardianproject.action.SECURE_STILL_IMAGE_CAMERA" />
