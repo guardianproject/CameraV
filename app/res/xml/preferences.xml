@@ -55,5 +55,15 @@
             android:defaultValue="false"
             android:key="prefRunForeground"
         	/>
+          
+          <CheckBoxPreference
+            android:title="@string/prefs_stealth_icon"
+            android:defaultValue="false"
+            android:key="prefStealthIcon"
+        	/>
+          
+          
+          
+          
         	 
 </PreferenceScreen>

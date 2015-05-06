@@ -107,6 +107,7 @@
 	<string name="menu_creds">Share Credentials</string>
 	<string name="menu_export_keys">Backup Keys</string>
 	<string name="menu_home_gallery_select_all">Select All</string>
+	<string name="menu_remote_access">Remote Access</string>
 	
     <string name="wizard_welcome">Welcome!</string>
     <string name="wizard_choose_language">Choose a language:</string>
@@ -182,8 +183,13 @@
     
     <string name="prefs_export_local">Export Encrypted Media on Share</string>
     <string name="prefs_run_foreground">Keep app in foreground</string>
+    <string name="prefs_stealth_icon">Use Alt Icon ("CV Settings")</string>
+    
     <string name="light">Light</string>
     <string name="air_pressure">Air Pressure</string>
     <string name="orientation">Orientation</string>
     <string name="motion">Motion</string>
+    
+    <string name="camerav_hash_service">Verify Hash</string>
+    <string name="app_name_alt">CV Settings</string>
 </resources>

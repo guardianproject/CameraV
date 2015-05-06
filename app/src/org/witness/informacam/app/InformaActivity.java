@@ -1,11 +1,9 @@
 package org.witness.informacam.app;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
-import org.spongycastle.openpgp.PGPException;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.wizard.OriginalImagePreference;
 import org.witness.informacam.app.utils.Constants.App;
@@ -17,34 +15,25 @@ import org.witness.informacam.app.utils.Constants.App.Wizard;
 import org.witness.informacam.app.utils.Constants.Codes;
 import org.witness.informacam.app.utils.Constants.Preferences;
 import org.witness.informacam.crypto.KeyUtility;
-import org.witness.informacam.json.JSONException;
-import org.witness.informacam.json.JSONObject;
-import org.witness.informacam.json.JSONTokener;
-import org.witness.informacam.models.notifications.INotification;
-import org.witness.informacam.models.organizations.IOrganization;
-import org.witness.informacam.models.transport.ITransportStub;
 import org.witness.informacam.models.utils.ILanguageMap;
-import org.witness.informacam.storage.FormUtility;
-import org.witness.informacam.transport.TransportUtility;
 import org.witness.informacam.ui.CameraActivity;
-import org.witness.informacam.utils.Constants.App.Storage.Type;
 import org.witness.informacam.utils.Constants.Logger;
-import org.witness.informacam.utils.Constants.Models;
-import org.witness.informacam.utils.Constants.Models.IMedia.MimeType;
-import org.witness.informacam.utils.Constants.Models.IUser;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.os.Process;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 
 public class InformaActivity extends Activity implements InformaCamStatusListener
@@ -65,6 +54,9 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		
+		boolean prefStealthIcon = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefStealthIcon",false);
+		setIcon(prefStealthIcon);
 		
 		init = getIntent();
 
@@ -403,5 +395,41 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
         	Log.v(LOG, "Deleted dir " + dir.getAbsolutePath());
         }
     }
+    
+    private void setIcon (boolean enableAltIcon) {
+        Context ctx = this;
+        PackageManager pm = getPackageManager();
+        ActivityManager am = (ActivityManager)getSystemService(Activity.ACTIVITY_SERVICE);
+        
+        // Enable/disable activity-aliases
+        
+        
+        pm.setComponentEnabledSetting(
+                new ComponentName(ctx, "org.witness.informacam.app.InformaActivity-Alt"), 
+                enableAltIcon ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP
+        );
+     
+        pm.setComponentEnabledSetting(
+                new ComponentName(ctx, "org.witness.informacam.app.InformaActivity"), 
+                (!enableAltIcon) ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP
+        );
+          
+        // Find launcher and kill it
+        
+        Intent i = new Intent(Intent.ACTION_MAIN);
+        i.addCategory(Intent.CATEGORY_HOME);
+        i.addCategory(Intent.CATEGORY_DEFAULT);
+        List<ResolveInfo> resolves = pm.queryIntentActivities(i, 0);
+        for (ResolveInfo res : resolves) {
+            if (res.activityInfo != null) {
+                am.killBackgroundProcesses(res.activityInfo.packageName);
+            }
+        }
+        
+        // Change ActionBar icon
+        
+    }  
 
 }
