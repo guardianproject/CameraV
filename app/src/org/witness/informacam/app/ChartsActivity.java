@@ -81,17 +81,19 @@ public class ChartsActivity extends Activity {
 	
 	private void addMap (ArrayList<String> alPoints)
 	{
-		String baseMap = "https://maps.googleapis.com/maps/api/staticmap?zoom=18&size=600x400";
+		String baseMap = "https://maps.googleapis.com/maps/api/staticmap?size=600x400";
 		String basePath = "&path=color:0x0000ff|weight:5";
 		
 		StringBuffer mapUrl = new StringBuffer();
 		mapUrl.append(baseMap);
 		mapUrl.append(basePath);
 		
-		for (String point : alPoints)
+		int max = 20;
+		
+		for (int i = 0; i < alPoints.size()&& i < max; i++)
 		{
 			mapUrl.append('|');
-			mapUrl.append(point);
+			mapUrl.append(alPoints.get(i));
 		}
 		
 		ImageView iv = new ImageView(this);
@@ -115,6 +117,8 @@ public class ChartsActivity extends Activity {
 
 	    protected Bitmap doInBackground(String... urls) {
 	        String urldisplay = urls[0];
+	        
+	        Log.d("Map","getting map: " + urldisplay);
 	        
 	        try {
 	            InputStream in = new java.net.URL(urldisplay).openStream();
