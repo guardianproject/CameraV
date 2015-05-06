@@ -28,6 +28,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 public class WizardActivity extends FragmentActivity implements WizardActivityListener
@@ -46,6 +47,12 @@ public class WizardActivity extends FragmentActivity implements WizardActivityLi
 		super.onCreate(savedInstanceState);
 
 		informaCam =  InformaCam.getInstance();
+		
+		if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefBlockScreenshots", false))
+		{
+	  		getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+	  				WindowManager.LayoutParams.FLAG_SECURE);      
+		}
 		
 		setContentView(R.layout.activity_wizard);
 

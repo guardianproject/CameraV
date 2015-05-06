@@ -110,20 +110,15 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 	
 		getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);//or add in style.xml
 
-  		getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-  				WindowManager.LayoutParams.FLAG_SECURE);      
-		/*
-		if (Build.VERSION.SDK_INT >= 16) { //ye olde method
-		    View decorView = getWindow().getDecorView();
-		    // Hide the status bar.
-		    int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-		    decorView.setSystemUiVisibility(uiOptions);
-		   
-		}*/
+		if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefBlockScreenshots", false))
+		{
+	  		getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+	  				WindowManager.LayoutParams.FLAG_SECURE);      
+		}		
 		
-	  actionBar = getActionBar();
-      actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#33cccccc")));
-      actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#55cccccc")));
+		actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#33cccccc")));
+		actionBar.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#55cccccc")));
 
 		informaCam = (InformaCam) getApplication();
 		informaCam.setStatusListener(this);

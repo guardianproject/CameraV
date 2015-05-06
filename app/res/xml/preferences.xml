@@ -33,6 +33,7 @@
         
         <CheckBoxPreference
             android:title="@string/prefs_gps_highres"
+            android:summary="@string/prefs_gps_highres_summary"
             android:defaultValue="false"
             android:key="prefGpsEnableHires"
         	/>
@@ -40,30 +41,38 @@
         
          <CheckBoxPreference
             android:title="@string/prefs_external_camera"
+            android:summary="@string/prefs_external_camera_summary"
             android:defaultValue="false"
             android:key="prefExternalCamera"
         	/>
          
           <CheckBoxPreference
             android:title="@string/prefs_export_local"
+            android:summary="@string/prefs_export_local_summary"
             android:defaultValue="false"
             android:key="prefExportLocal"
         	/>
           
           <CheckBoxPreference
             android:title="@string/prefs_run_foreground"
+            android:summary="@string/prefs_run_foreground_summary"
             android:defaultValue="false"
             android:key="prefRunForeground"
         	/>
           
           <CheckBoxPreference
             android:title="@string/prefs_stealth_icon"
+            android:summary="@string/prefs_stealth_icon_summary"
             android:defaultValue="false"
             android:key="prefStealthIcon"
         	/>
           
-          
-          
+          <CheckBoxPreference
+            android:title="@string/prefs_block_screenshots"
+            android:summary="@string/prefs_block_screenshots_summary"
+            android:defaultValue="false"
+            android:key="prefBlockScreenshots"
+        	/>
           
         	 
 </PreferenceScreen>

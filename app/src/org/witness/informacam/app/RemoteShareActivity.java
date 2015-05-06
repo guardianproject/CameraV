@@ -10,7 +10,9 @@ import org.witness.informacam.share.WebShareService;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,6 +25,12 @@ public class RemoteShareActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefBlockScreenshots", false))
+		{
+	  		getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+	  				WindowManager.LayoutParams.FLAG_SECURE);      
+		}
 		
 		setContentView(R.layout.activity_remote_share);
 	
@@ -47,6 +55,17 @@ public class RemoteShareActivity extends Activity {
 			}
 			
 		});
+		
+		mEnableServer = WebShareService.isRunning();
+		
+		if (mEnableServer)
+		{
+			StringBuffer sbInfo = new StringBuffer();
+			
+			sbInfo.append("You are now sharing at http://" + WebShareService.getLocalIpAddress() + ":9999");
+			
+			mTvInfo.setText(sbInfo.toString());	
+		}
 	}
 
 	private void manageRemoteAccess (boolean enableService) throws IOException

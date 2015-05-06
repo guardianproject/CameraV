@@ -92,7 +92,6 @@
   <string name="menu_panic">Panik</string>
   <string name="menu_settings">Einstellungen</string>
   <string name="menu_lock">App sperren</string>
-  <string name="menu_view_meta">Metadaten ansehen</string>
   <string name="menu_share_hash">Beglaubigen</string>
   <string name="menu_creds">Anmeldedaten freigeben</string>
   <string name="menu_home_gallery_select_all">Alle auswählen</string>

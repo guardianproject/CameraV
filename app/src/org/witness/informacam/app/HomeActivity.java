@@ -55,6 +55,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
@@ -109,6 +110,12 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 		
 		informaCam = (InformaCam)getApplication();		
 		informaCam.setEventListener(this);
+		
+		if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefBlockScreenshots", false))
+		{
+	  		getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+	  				WindowManager.LayoutParams.FLAG_SECURE);      
+		}
 		
 		setContentView(R.layout.activity_home);
 

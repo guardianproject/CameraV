@@ -171,7 +171,11 @@
     <string name="panic_test_successful">Good job! In a real scenario, you would have successfully completed a wipe.</string>
     
     <string name="prefs_gps_highres">Force GPS High-Res</string>
+    <string name="prefs_gps_highres_summary">Ensure you only get location data from the actual GPS satellite network</string>
+    
     <string name="prefs_external_camera">Use External Camera Apps</string>
+    <string name="prefs_external_camera_summary">Use only the unencrypted system cameras apps, and not the built-in encrypted camera</string>
+    
     
     <string name="menu_alwayson">Proof Mode</string>
     
@@ -181,9 +185,18 @@
     
     <string name="_id_">" ID:"</string>
     
-    <string name="prefs_export_local">Export Encrypted Media on Share</string>
+    <string name="prefs_export_local">Export Encrypted Media</string>
+    <string name="prefs_export_local_summary">Save encrypted media first to external storage when you share them</string>
+    
     <string name="prefs_run_foreground">Keep app in foreground</string>
-    <string name="prefs_stealth_icon">Use Alt Icon ("CV Settings")</string>
+    <string name="prefs_run_foreground_summary">Ensures the app is not shutdown when you switch to another app</string>
+    
+    <string name="prefs_stealth_icon">Enable Alternative Icon</string>
+    <string name="prefs_stealth_icon_summary">Hide the CameraV icon and name in launcher, show generic "CV Settings" instead</string>
+    
+    <string name="prefs_block_screenshots">Block Screenshots</string>
+    <string name="prefs_block_screenshots_summary">Stop other apps and the Android system from taking screenshots of this app</string>
+    
     
     <string name="light">Light</string>
     <string name="air_pressure">Air Pressure</string>

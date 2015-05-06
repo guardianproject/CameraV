@@ -6,7 +6,9 @@ import org.witness.informacam.models.media.IMedia;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.method.ScrollingMovementMethod;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
@@ -22,6 +24,12 @@ public class MetadataActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefBlockScreenshots", false))
+		{
+	  		getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+	  				WindowManager.LayoutParams.FLAG_SECURE);      
+		}
 		
 		setContentView(R.layout.activity_metadata);
 		

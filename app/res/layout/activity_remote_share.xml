@@ -10,10 +10,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:layout_weight=".8"
+        android:layout_weight=".6"
         android:text="Remote Share"
-         android:layout_margin="60dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+         android:layout_margin="40dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/buttonService"
