@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -45,6 +47,13 @@ public class LoginActivity extends Activity {
 
 		setContentView(R.layout.activity_login);
 		rootView = findViewById(R.id.llRoot);
+		
+		boolean prefStealthIcon = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefStealthIcon",false);
+		if (prefStealthIcon)
+		{
+			ImageView iv = (ImageView)findViewById(R.id.loginLogo);
+			iv.setImageResource(R.drawable.ic_launcher_alt);
+		}
 
 		password = (EditText) findViewById(R.id.login_password);
 		password.setImeOptions(EditorInfo.IME_ACTION_DONE);
