@@ -4,10 +4,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.R;
+import org.witness.informacam.app.RemoteShareActivity;
 import org.witness.informacam.app.screens.popups.SharePopup;
 import org.witness.informacam.app.utils.Constants.App.Home;
 import org.witness.informacam.app.utils.Constants.HomeActivityListener;
@@ -15,11 +15,9 @@ import org.witness.informacam.app.utils.Constants.Preferences;
 import org.witness.informacam.app.utils.adapters.GalleryFilterAdapter;
 import org.witness.informacam.app.utils.adapters.GalleryGridAdapter;
 import org.witness.informacam.json.JSONException;
-import org.witness.informacam.models.media.IAsset;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
-import org.witness.informacam.utils.Constants.Logger;
 import org.witness.informacam.utils.Constants.Models;
 
 import android.app.ActionBar;
@@ -456,11 +454,13 @@ public class GalleryFragment extends Fragment implements
 		case android.R.id.home:
 			((HomeActivityListener) a).launchMain();
 			return true;
-		case R.id.menu_select: {
+		case R.id.menu_select:
 			mActionMode = getActivity().startActionMode(
 					mActionModeSelect);
 			return true;
-		}
+		case R.id.menu_remote_access:
+			enableRemoteAccess();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -702,6 +702,12 @@ public class GalleryFragment extends Fragment implements
 	public void onNothingSelected(AdapterView<?> arg0) {
 	}
 	
+	private void enableRemoteAccess ()
+	{
+		Intent intent = new Intent(a, RemoteShareActivity.class);
+		startActivity(intent);
+
+	}
 	
 	
 }
