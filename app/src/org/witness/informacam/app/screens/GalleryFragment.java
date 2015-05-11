@@ -1,5 +1,7 @@
 package org.witness.informacam.app.screens;
 
+import info.guardianproject.iocipher.File;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import org.witness.informacam.app.utils.adapters.GalleryGridAdapter;
 import org.witness.informacam.json.JSONException;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
+import org.witness.informacam.share.DropboxSyncManager;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Models;
 
@@ -172,6 +175,9 @@ public class GalleryFragment extends Fragment implements
 	{
 		super.onResume();
 		updateAdapters();
+		
+		DropboxSyncManager.getInstance().finishAuthentication();
+		
 	}
 
 	public void initData() {
@@ -458,9 +464,13 @@ public class GalleryFragment extends Fragment implements
 			mActionMode = getActivity().startActionMode(
 					mActionModeSelect);
 			return true;
-		case R.id.menu_remote_access:
-			enableRemoteAccess();
+		case R.id.menu_remote_access_tor:
+			enableOnionShare();
 			return true;
+		case R.id.menu_remote_access_dropbox:
+			enableDropboxSync();
+			return true;
+			
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -702,11 +712,32 @@ public class GalleryFragment extends Fragment implements
 	public void onNothingSelected(AdapterView<?> arg0) {
 	}
 	
-	private void enableRemoteAccess ()
+	private void enableOnionShare ()
 	{
 		Intent intent = new Intent(a, RemoteShareActivity.class);
 		startActivity(intent);
 
+	}
+
+	private void enableDropboxSync ()
+	{
+		
+		DropboxSyncManager dsm = DropboxSyncManager.getInstance();
+		
+		//do web oauth (doesn't require local app)
+		boolean isInit = dsm.init(a);
+		
+		if (isInit) //if init'd, then backup all existing files that aren't already backed up!
+		{
+			for (IMedia media : listMedia)
+			{
+				File file = new File(media.dcimEntry.fileAsset.path);
+			
+				dsm.uploadFileAsync(file);
+			}
+		}
+		
+		
 	}
 	
 	

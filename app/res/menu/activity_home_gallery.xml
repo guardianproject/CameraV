@@ -1,5 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_remote_access" android:title="@string/menu_remote_access" android:icon="@drawable/ic_action_backup" android:orderInCategory="98" android:showAsAction="always" android:enabled="true"/>
+    <item  android:title="@string/menu_remote_access" 
+        android:icon="@drawable/ic_action_backup" android:orderInCategory="98" 
+        android:showAsAction="always" android:enabled="true">
+        
+        <menu>
+             <item android:id="@+id/menu_remote_access_tor" android:title="@string/menu_remote_access_tor" 
+        android:icon="@drawable/ic_action_backup" android:orderInCategory="98" 
+        android:showAsAction="always" android:enabled="true"/>
+            <item android:id="@+id/menu_remote_access_dropbox" android:title="@string/menu_remote_access_dropbox" 
+        android:icon="@drawable/ic_action_backup" android:orderInCategory="98" 
+        android:showAsAction="always" android:enabled="true"/>
+        </menu>
+        </item>
     <item android:id="@+id/menu_filter" android:title="@string/menu_select" android:icon="@drawable/ic_gallery_select" android:orderInCategory="99" android:showAsAction="always" android:enabled="true" android:actionLayout="@layout/action_gallery_filter"/>
     <item android:id="@+id/menu_select" android:title="@string/menu_select" android:icon="@drawable/ic_gallery_select" android:orderInCategory="100" android:showAsAction="always" android:enabled="true"/>
 

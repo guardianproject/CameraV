@@ -107,7 +107,10 @@
 	<string name="menu_creds">Share Credentials</string>
 	<string name="menu_export_keys">Backup Keys</string>
 	<string name="menu_home_gallery_select_all">Select All</string>
-	<string name="menu_remote_access">Remote Access</string>
+	
+	<string name="menu_remote_access">Remote Share</string>
+	<string name="menu_remote_access_tor">Enable OnionShare</string>
+	<string name="menu_remote_access_dropbox">Sync to DropBox</string>
 	
     <string name="wizard_welcome">Welcome!</string>
     <string name="wizard_choose_language">Choose a language:</string>
@@ -208,4 +211,6 @@
     <string name="wifi_networks">Wifi Networks</string>
     <string name="gps_speed">GPS Speed</string>
     <string name="gps_altitude">GPS Altitude</string>
+    <string name="remote_web_access_enabled_at">Remote web access enabled at</string>
+    <string name="remote_web_access_disabled">Remote web access disabled</string>
 </resources>

@@ -78,6 +78,20 @@
             </intent-filter>
             
         </activity>
+        
+         <activity
+		  android:name="com.dropbox.client2.android.AuthActivity"
+		  android:launchMode="singleTask"
+		  android:configChanges="orientation|keyboard">
+		  <intent-filter>
+		    <!-- Change this to be db- followed by your app key -->
+		    <data android:scheme="db-j0ioje8k7q5o6vc" />
+		    <action android:name="android.intent.action.VIEW" />
+		    <category android:name="android.intent.category.BROWSABLE"/>
+		    <category android:name="android.intent.category.DEFAULT" />
+		  </intent-filter>
+		</activity>
+        
         <activity-alias
   		    android:enabled="false"
             android:name="org.witness.informacam.app.InformaActivity-Alt"
@@ -379,6 +393,7 @@
             android:name="info.guardianproject.cacheword.CacheWordService"
             android:enabled="true"
             android:exported="false" />
+         
     
     </application>
     
