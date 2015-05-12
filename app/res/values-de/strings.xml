@@ -41,6 +41,7 @@
   <string name="choose_an_organization">Wählen Sie eine Organisation:</string>
   <string name="send_encrypted_to_organization">Verschlüsselte an Organisation freigeben\u2026</string>
   <string name="send_encrypted_to_x">Verschlüsselte freigeben an %1$s</string>
+  <string name="sending_encrypted_to_x">Verschlüsselte freigegeben an %1$s. (Ändern?)</string>
   <string name="export_my_credentials">Meine Anmeldedaten exportieren\u2026</string>
   <string name="send_message">Nachricht senden\u2026</string>
   <string name="notes">Anmerkungen</string>
@@ -84,6 +85,8 @@
   <string name="menu_share">Freigeben</string>
   <string name="menu_share_media">Medien freigeben</string>
   <string name="menu_share_meta">Metadaten freigeben</string>
+  <string name="menu_share_meta_j3m">J3M JSON-Format freigeben</string>
+  <string name="menu_share_meta_csv">CSV-Format freigeben</string>
   <string name="menu_edit">Bearbeiten</string>
   <string name="menu_done">Fertig</string>
   <string name="menu_save">Speichern</string>
@@ -92,9 +95,11 @@
   <string name="menu_panic">Panik</string>
   <string name="menu_settings">Einstellungen</string>
   <string name="menu_lock">App sperren</string>
+  <string name="menu_view_meta">Metadaten</string>
   <string name="menu_share_hash">Beglaubigen</string>
   <string name="menu_creds">Anmeldedaten freigeben</string>
   <string name="menu_home_gallery_select_all">Alle auswählen</string>
+  <string name="menu_remote_access">Fernzugriff</string>
   <string name="wizard_welcome">Willkommen!</string>
   <string name="wizard_choose_language">Wählen Sie eine Sprache aus:</string>
   <string name="wizard_get_started">Erste Schritte</string>
@@ -152,4 +157,10 @@
   <string name="_id_"> Kennung:</string>
   <string name="prefs_export_local">Verschlüsselte Medien auf Freigabe exportieren</string>
   <string name="prefs_run_foreground">App im Vordergrund behalten</string>
+  <string name="prefs_stealth_icon">Alternatives Symbol verwenden (\"CV-Einstellungen\")</string>
+  <string name="light">Licht</string>
+  <string name="air_pressure">Luftdruck</string>
+  <string name="orientation">Ausrichtung</string>
+  <string name="motion">Bewegung</string>
+  <string name="app_name_alt">CV-Einstellungen</string>
 </resources>

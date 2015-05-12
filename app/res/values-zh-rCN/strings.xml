@@ -87,6 +87,8 @@
   <string name="menu_share">分享</string>
   <string name="menu_share_media">分享媒体</string>
   <string name="menu_share_meta">分享元数据</string>
+  <string name="menu_share_meta_j3m">分享 J3M JSON 格式</string>
+  <string name="menu_share_meta_csv">分享 CSV 格式</string>
   <string name="menu_edit">编辑</string>
   <string name="menu_done">完成</string>
   <string name="menu_save">保存</string>
@@ -95,11 +97,13 @@
   <string name="menu_panic">紧急</string>
   <string name="menu_settings">设置</string>
   <string name="menu_lock">锁定应用</string>
-  <string name="menu_view_meta">查看元数据</string>
+  <string name="menu_view_meta">元数据</string>
+  <string name="menu_view_charts">图表</string>
   <string name="menu_share_hash">公证</string>
   <string name="menu_creds">分享证书</string>
   <string name="menu_export_keys">备份密钥</string>
   <string name="menu_home_gallery_select_all">全选</string>
+  <string name="menu_remote_access">远程访问</string>
   <string name="wizard_welcome">欢迎！</string>
   <string name="wizard_choose_language">选择一个语言：</string>
   <string name="wizard_get_started">开始使用</string>
@@ -161,4 +165,11 @@
   <string name="_id_"> ID:</string>
   <string name="prefs_export_local">共享时导出加密的媒体</string>
   <string name="prefs_run_foreground">保持应用在前台</string>
+  <string name="prefs_stealth_icon">使用 Alt 图标 (\"CV 设置\")</string>
+  <string name="light">亮</string>
+  <string name="air_pressure">空气压力</string>
+  <string name="orientation">方向</string>
+  <string name="motion">运动</string>
+  <string name="camerav_hash_service">验证哈希</string>
+  <string name="app_name_alt">CV 设置</string>
 </resources>

@@ -87,6 +87,8 @@
   <string name="menu_share">Share</string>
   <string name="menu_share_media">Share Media</string>
   <string name="menu_share_meta">Share Metadata</string>
+  <string name="menu_share_meta_j3m">Share J3M JSON format</string>
+  <string name="menu_share_meta_csv">Share CSV format</string>
   <string name="menu_edit">Edit</string>
   <string name="menu_done">Done</string>
   <string name="menu_save">Save</string>
@@ -95,11 +97,13 @@
   <string name="menu_panic">Panic</string>
   <string name="menu_settings">Settings</string>
   <string name="menu_lock">Lock App</string>
-  <string name="menu_view_meta">View Metadata</string>
+  <string name="menu_view_meta">Metadata</string>
+  <string name="menu_view_charts">Charts</string>
   <string name="menu_share_hash">Notarize</string>
   <string name="menu_creds">Share Credentials</string>
   <string name="menu_export_keys">Backup Keys</string>
   <string name="menu_home_gallery_select_all">Select All</string>
+  <string name="menu_remote_access">Remote Access</string>
   <string name="wizard_welcome">Welcome!</string>
   <string name="wizard_choose_language">Choose a language:</string>
   <string name="wizard_get_started">Get started</string>
@@ -161,4 +165,11 @@
   <string name="_id_"> ID:</string>
   <string name="prefs_export_local">Export Encrypted Media on Share</string>
   <string name="prefs_run_foreground">Keep app in foreground</string>
+  <string name="prefs_stealth_icon">Use Alt Icon (\"CV Settings\")</string>
+  <string name="light">Light</string>
+  <string name="air_pressure">Air Pressure</string>
+  <string name="orientation">Orientation</string>
+  <string name="motion">Motion</string>
+  <string name="camerav_hash_service">Verify Hash</string>
+  <string name="app_name_alt">CV Settings</string>
 </resources>
