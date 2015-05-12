@@ -184,10 +184,14 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 
 	public void initData()
 	{
-
 		if (informaCam != null && informaCam.mediaManifest != null && mPhotoPager != null)
 		{
-			List<IMedia> newListMedia = informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
+			//just use what the gallery already has
+			List<IMedia> newListMedia = GalleryFragment.listMedia;
+			if (newListMedia == null)
+				listMedia = GalleryFragment.getMediaList();
+			
+			//informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
 			boolean isChanged = false;
 			
 			if (newListMedia != null)

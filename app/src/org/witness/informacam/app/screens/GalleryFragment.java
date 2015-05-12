@@ -67,12 +67,12 @@ public class GalleryFragment extends Fragment implements
 
 	boolean isInMultiSelectMode;
 	ArrayList<IMedia> batch = null;
-	List<IMedia> listMedia = null;
+	static List<IMedia> listMedia = null;
 
 	private static final String LOG = Home.LOG;
 	private final InformaCam informaCam = InformaCam.getInstance();
 	private ActionMode mActionMode;
-	private int mCurrentFiltering;
+	private static int mCurrentFiltering;
 	private MenuItem mMenuItemBatchOperations;
 	private View mEncodingMedia;
 	
@@ -187,7 +187,7 @@ public class GalleryFragment extends Fragment implements
 		updateData();
 	}
 	
-	private void getMediaList()
+	public static List<IMedia> getMediaList()
 	{
 		int sorting = Models.IMediaManifest.Sort.DATE_DESC;
 		if (mCurrentFiltering == 1) // Photos
@@ -195,7 +195,7 @@ public class GalleryFragment extends Fragment implements
 		else if (mCurrentFiltering == 2)
 			sorting = Models.IMediaManifest.Sort.TYPE_VIDEO;
 		
-		listMedia = informaCam.mediaManifest.sortBy(sorting);
+		listMedia = InformaCam.getInstance().mediaManifest.sortBy(sorting);
 		
 		if (listMedia != null)
 			listMedia = new ArrayList<IMedia>(listMedia);
@@ -257,6 +257,8 @@ public class GalleryFragment extends Fragment implements
 					listMedia.remove(i);
 			}			
 		}
+		
+		return listMedia;
 	}
 	
 	private void onMediaListAvailable()

@@ -14,6 +14,7 @@ import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.Models;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
@@ -181,74 +182,146 @@ public class GalleryGridAdapter extends BaseAdapter {
 		return position;
 	}
 
+    class ViewHolder 
+    {
+    	ImageView imageView;
+    	CheckBox checkBox;
+    	View viewOverlay;
+    	View viewSymbols;
+    	View viewAudio;
+    	View viewNote;
+    	View viewTag;
+    	View viewEncrypted;
+    }
+
+    
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		
 		View view = null;
-		
+	    ViewHolder holder;
+
 		if (position < mNumLoading)
 		{	
 			if (convertView != null && !(((ViewGroup)convertView).getChildAt(0) instanceof RoundedImageView))
 				view = convertView;
 			else
 				view = li.inflate(R.layout.adapter_gallery_grid_placeholder, parent, false);
-			ImageView encryptionView = (ImageView) view.findViewById(R.id.flPlaceholder); 
-			AnimationDrawable encryptionAnimation = (AnimationDrawable) encryptionView.getDrawable(); 
-			encryptionAnimation.start();
+			
+	        holder = (ViewHolder)view.getTag();
+	        
+	        if (holder == null)
+	        {
+				holder = new ViewHolder();
+
+	        	holder.imageView = (ImageView) view.findViewById(R.id.flPlaceholder); 
+	        	AnimationDrawable encryptionAnimation = (AnimationDrawable) holder.imageView.getDrawable(); 
+	        	encryptionAnimation.start();
+	        	
+	        	view.setTag(holder);
+	        }
+	        else
+	        {
+	        	AnimationDrawable encryptionAnimation = (AnimationDrawable) holder.imageView.getDrawable(); 
+	        	encryptionAnimation.start();
+	        }
 		}
 		else
 		{
 			IMedia m = (IMedia) media.get(position - mNumLoading);
 			MediaInfo info = mediaInfoDefault;
 			
-			// Done getting the info?
-			synchronized(this)
-			{
-				if (mediaInfo != null)
+			 if (mediaInfo != null)
 					info = mediaInfo.get(position - mNumLoading);
-			}
-			
+			 
 			if (convertView != null && (((ViewGroup)convertView).getChildAt(0) instanceof RoundedImageView))
 				view = convertView;
 			else
 				view = li.inflate(R.layout.adapter_gallery_grid, parent, false);
 
-				CheckBox chkSelected = (CheckBox) view
+			holder = (ViewHolder)view.getTag();
+			
+			if (holder == null)
+			{
+				holder = new ViewHolder();
+			
+				holder.checkBox = (CheckBox) view
 				.findViewById(R.id.chkSelect);
-			chkSelected.setVisibility(
+
+				holder.imageView = (ImageView) view.findViewById(R.id.gallery_thumb);
+				holder.viewOverlay = view.findViewById(R.id.new_media_overlay);
+				holder.viewSymbols = view.findViewById(R.id.llSymbols);
+				holder.viewAudio = view.findViewById(R.id.ivAudioNote);
+				holder.viewNote = view.findViewById(R.id.ivNote);
+				holder.viewTag = view.findViewById(R.id.ivTag);
+				holder.viewEncrypted = view.findViewById(R.id.ivEncrypted);
+				
+				view.setTag(holder);
+			}
+				
+			holder.checkBox.setVisibility(
 					mInSelectionMode ? View.VISIBLE : View.GONE);
 		
 			if (m.has(Models.IMedia.TempKeys.IS_SELECTED))
 			{
-				chkSelected.setChecked(m
+				holder.checkBox.setChecked(m
 					.getBoolean(Models.IMedia.TempKeys.IS_SELECTED));
 			}
 			else
 			{
-				chkSelected.setChecked(false);	
+				holder.checkBox.setChecked(false);	
+			}
+
+			if (!m.hasThumbnail())
+			{
+				holder.imageView.setImageResource(R.drawable.ic_home_gallery);
+				new ThumbnailTask(holder,m).execute(128);
+			}
+			else
+			{
+				holder.imageView.setImageBitmap(m.getThumbnail(128));
 			}
 			
+			holder.viewOverlay.setVisibility(m.isNew ? View.VISIBLE : View.GONE);
 
-			ImageView iv = (ImageView) view.findViewById(R.id.gallery_thumb);
-
-			view.findViewById(R.id.new_media_overlay).setVisibility(m.isNew ? View.VISIBLE : View.GONE);
-
-			try {
-				Bitmap bitmap = m.getThumbnail(128);
-				iv.setImageBitmap(bitmap);
-			} catch (NullPointerException e) {
-				iv.setImageDrawable(a.getResources().getDrawable(
-					R.drawable.ic_action_video));
-			}
 			
-			view.findViewById(R.id.llSymbols).setVisibility((info.hasAudio || info.hasNotes || info.hasTags || (m.dcimEntry.fileAsset.source == Storage.Type.IOCIPHER)) ? View.VISIBLE : View.GONE);
-			view.findViewById(R.id.ivAudioNote).setVisibility(info.hasAudio ? View.VISIBLE : View.GONE);
-			view.findViewById(R.id.ivNote).setVisibility(info.hasNotes ? View.VISIBLE : View.GONE);
-			view.findViewById(R.id.ivTag).setVisibility(info.hasTags ? View.VISIBLE : View.GONE);
-			view.findViewById(R.id.ivEncrypted).setVisibility((m.dcimEntry.fileAsset.source == Storage.Type.IOCIPHER) ? View.VISIBLE : View.GONE);
+			holder.viewSymbols.setVisibility((info.hasAudio || info.hasNotes || info.hasTags || (m.dcimEntry.fileAsset.source == Storage.Type.IOCIPHER)) ? View.VISIBLE : View.GONE);
+			holder.viewAudio.setVisibility(info.hasAudio ? View.VISIBLE : View.GONE);
+			holder.viewNote.setVisibility(info.hasNotes ? View.VISIBLE : View.GONE);
+			holder.viewTag.setVisibility(info.hasTags ? View.VISIBLE : View.GONE);
+			holder.viewEncrypted.setVisibility((m.dcimEntry.fileAsset.source == Storage.Type.IOCIPHER) ? View.VISIBLE : View.GONE);
 			
 		}
 		return view;
 	}
+	
+	private static class ThumbnailTask extends AsyncTask<Integer, Void, Bitmap> {
+	    
+	    private ViewHolder mHolder;
+	    private IMedia mMedia;
+	    public ThumbnailTask(ViewHolder holder, IMedia media) {	        
+	        mHolder = holder;
+	        mMedia = media;
+	    }
+
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			
+				Bitmap bitmap = (Bitmap)result;
+				mHolder.imageView.setImageBitmap(bitmap);
+
+		}
+
+
+
+		@Override
+		protected Bitmap doInBackground(Integer... size) {
+
+			Bitmap bitmap = mMedia.getThumbnail(size[0]);			
+			return bitmap;
+		}
+	}
+
 
 }
