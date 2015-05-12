@@ -1,6 +1,7 @@
 package org.witness.informacam.app.screens;
 
 import info.guardianproject.iocipher.File;
+import info.guardianproject.iocipher.camera.StorageManager;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,6 +21,7 @@ import org.witness.informacam.json.JSONException;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.notifications.INotification;
 import org.witness.informacam.share.DropboxSyncManager;
+import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Models;
 
@@ -230,6 +232,28 @@ public class GalleryFragment extends Fragment implements
 					}
 				}
 				if (!hasBeenShared)
+					listMedia.remove(i);
+			}			
+		}
+		else if (mCurrentFiltering == 5) // encrypted items
+		{
+
+			for (int i = listMedia.size() - 1; i >= 0; i--)
+			{
+				
+				IMedia m = listMedia.get(i);
+				if (m.dcimEntry.fileAsset.source != Storage.Type.IOCIPHER)
+					listMedia.remove(i);
+			}			
+		}
+		else if (mCurrentFiltering == 6) // unencrypted items
+		{
+
+			for (int i = listMedia.size() - 1; i >= 0; i--)
+			{
+				
+				IMedia m = listMedia.get(i);
+				if (m.dcimEntry.fileAsset.source != Storage.Type.FILE_SYSTEM)
 					listMedia.remove(i);
 			}			
 		}

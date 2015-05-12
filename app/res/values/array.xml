@@ -11,6 +11,8 @@
         <item>@string/filter_videos</item>
         <item>@string/filter_tagged</item>
         <item>@string/filter_shared</item>
+        <item>@string/filter_encrypted</item>
+        <item>@string/filter_external</item>
     </string-array>
     
     <string-array name="originalImageOptions">

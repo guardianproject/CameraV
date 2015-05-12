@@ -76,7 +76,7 @@ public class HomePhotoAdapter extends PagerAdapter {
 		
 		RoundedImageView view = (RoundedImageView) root.findViewById(R.id.ivPhoto);
 		try {
-			Bitmap bitmap = m.getThumbnail();
+			Bitmap bitmap = m.getThumbnail(400);
 			view.setImageBitmap(bitmap);
 		} catch (NullPointerException e) {
 			view.setImageDrawable(a.getResources().getDrawable(

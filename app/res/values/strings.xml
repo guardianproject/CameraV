@@ -164,8 +164,12 @@
     <string name="filter_all">All Items</string>
     <string name="filter_photos">Photos only</string>
     <string name="filter_videos">Videos only</string>
+    <string name="filter_encrypted">Encrypted only</string>
+    <string name="filter_external">External Only</string>
+    
     <string name="filter_tagged">Tagged Items</string>
     <string name="filter_shared">Shared Items</string>
+    
     
     <string name="panic_settings">Panic Settings</string>
     <string name="panic_cancel">Cancel</string>

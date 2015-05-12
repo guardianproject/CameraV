@@ -378,7 +378,7 @@ public class ChartsActivity extends Activity {
 			
 			ArrayList<Bitmap> listBitmap = new ArrayList<Bitmap>();
 			
-			listBitmap.add(media.getThumbnail());
+			listBitmap.add(media.getThumbnail(320));
 			listBitmap.add(bmMap);
 			
 			for (LineChart chart : listCharts)

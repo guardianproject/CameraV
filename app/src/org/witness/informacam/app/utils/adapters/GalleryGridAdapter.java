@@ -10,6 +10,7 @@ import org.witness.informacam.app.utils.Constants.App.Editor.Forms;
 import org.witness.informacam.app.views.RoundedImageView;
 import org.witness.informacam.models.forms.IForm;
 import org.witness.informacam.models.media.IMedia;
+import org.witness.informacam.utils.Constants.App.Storage;
 import org.witness.informacam.utils.Constants.Models;
 
 import android.app.Activity;
@@ -233,17 +234,19 @@ public class GalleryGridAdapter extends BaseAdapter {
 			view.findViewById(R.id.new_media_overlay).setVisibility(m.isNew ? View.VISIBLE : View.GONE);
 
 			try {
-				Bitmap bitmap = m.getThumbnail();
+				Bitmap bitmap = m.getThumbnail(128);
 				iv.setImageBitmap(bitmap);
 			} catch (NullPointerException e) {
 				iv.setImageDrawable(a.getResources().getDrawable(
 					R.drawable.ic_action_video));
 			}
 			
-			view.findViewById(R.id.llSymbols).setVisibility((info.hasAudio || info.hasNotes || info.hasTags) ? View.VISIBLE : View.GONE);
+			view.findViewById(R.id.llSymbols).setVisibility((info.hasAudio || info.hasNotes || info.hasTags || (m.dcimEntry.fileAsset.source == Storage.Type.IOCIPHER)) ? View.VISIBLE : View.GONE);
 			view.findViewById(R.id.ivAudioNote).setVisibility(info.hasAudio ? View.VISIBLE : View.GONE);
 			view.findViewById(R.id.ivNote).setVisibility(info.hasNotes ? View.VISIBLE : View.GONE);
 			view.findViewById(R.id.ivTag).setVisibility(info.hasTags ? View.VISIBLE : View.GONE);
+			view.findViewById(R.id.ivEncrypted).setVisibility((m.dcimEntry.fileAsset.source == Storage.Type.IOCIPHER) ? View.VISIBLE : View.GONE);
+			
 		}
 		return view;
 	}
