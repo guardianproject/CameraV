@@ -33,6 +33,8 @@ public class RemoteShareActivity extends Activity {
 	private int mLocalPort = 9999;
 	private String mOnionHost = null;
 			
+	private String[] mMediaList = null;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,7 +46,13 @@ public class RemoteShareActivity extends Activity {
 		}
 		
 		setContentView(R.layout.activity_remote_share);
+		setTitle(R.string.web_sharing);		
+		getActionBar().setIcon(R.drawable.ic_action_backup);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	
+		if (getIntent().hasExtra("medialist"))
+			mMediaList = getIntent().getStringArrayExtra("medialist");
+		
 		mTvInfo = (TextView)findViewById(R.id.tvInfo);
 
 		mCbOnionShare = (CheckBox) findViewById(R.id.cbOnionShare);
@@ -81,6 +89,16 @@ public class RemoteShareActivity extends Activity {
 		}
 	}
 
+	@Override
+	protected void onResume() {		
+		super.onResume();
+		
+
+		if (getIntent().hasExtra("medialist"))
+			mMediaList = getIntent().getStringArrayExtra("medialist");
+		
+	}
+
 	private void manageRemoteAccess (boolean enableService) throws IOException
 	{
 		
@@ -90,6 +108,10 @@ public class RemoteShareActivity extends Activity {
 			
 			Intent intent = new Intent(this, WebShareService.class);
 			intent.setAction(WebShareService.ACTION_SERVER_START);
+			
+			if (mMediaList != null)
+				intent.putExtra("medialist", mMediaList);
+			
 			startService(intent);
 			
 			StringBuffer sbInfo = new StringBuffer();

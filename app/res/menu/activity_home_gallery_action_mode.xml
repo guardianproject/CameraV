@@ -1,4 +1,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item  android:title="@string/menu_remote_access" 
+        android:icon="@drawable/ic_action_backup" android:orderInCategory="98" 
+        android:showAsAction="always" android:enabled="true">
+        
+        <menu>
+             <item android:id="@+id/menu_remote_access_tor" android:title="@string/menu_remote_access_tor" 
+        android:icon="@drawable/ic_action_backup" android:orderInCategory="98" 
+        android:showAsAction="always" android:enabled="true"/>
+            <item android:id="@+id/menu_remote_access_dropbox" android:title="@string/menu_remote_access_dropbox" 
+        android:icon="@drawable/ic_action_backup" android:orderInCategory="98" 
+        android:showAsAction="always" android:enabled="true"/>
+        </menu>
+        </item>
+    
     <item android:title="@string/menu_share" android:icon="@drawable/ic_gallery_share"
          android:orderInCategory="99" android:showAsAction="always" android:enabled="true">
         

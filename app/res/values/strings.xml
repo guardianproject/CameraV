@@ -110,7 +110,7 @@
 	
 	<string name="menu_remote_access">Remote Share</string>
 	<string name="menu_remote_access_tor">Enable Web Sharing</string>
-	<string name="menu_remote_access_dropbox">Enable DropBox</string>
+	<string name="menu_remote_access_dropbox">Enable Dropbox Sync</string>
 	
     <string name="wizard_welcome">Welcome!</string>
     <string name="wizard_choose_language">Choose a language:</string>
@@ -217,4 +217,5 @@
     <string name="gps_altitude">GPS Altitude</string>
     <string name="remote_web_access_enabled_at">Remote web access enabled at</string>
     <string name="remote_web_access_disabled">Remote web access disabled</string>
+    <string name="web_sharing">Web Sharing</string>
 </resources>

@@ -545,6 +545,12 @@ public class GalleryFragment extends Fragment implements
 			case R.id.menu_share_hash:
 				shareHashes();
 				return true;
+			case R.id.menu_remote_access_tor:
+				enableOnionShare();
+				return true;
+			case R.id.menu_remote_access_dropbox:
+				enableDropboxSync();
+				return true;
 			case R.id.menu_share_meta_j3m:
 				shareType = SharePopup.SHARE_TYPE_J3M;
 			case R.id.menu_share_meta_csv:
@@ -739,6 +745,19 @@ public class GalleryFragment extends Fragment implements
 	private void enableOnionShare ()
 	{
 		Intent intent = new Intent(a, RemoteShareActivity.class);
+		
+		if (batch != null && batch.size() > 0)
+		{
+			ArrayList<String> mediaIds = new ArrayList<String>();
+			
+			for (IMedia media : batch)
+				mediaIds.add(media._id);
+			
+			intent.putExtra("medialist", mediaIds.toArray(new String[mediaIds.size()]));
+			
+		}
+		
+		
 		startActivity(intent);
 
 	}
@@ -753,12 +772,12 @@ public class GalleryFragment extends Fragment implements
 		
 		if (isInit) //if init'd, then backup all existing files that aren't already backed up!
 		{
-			for (IMedia media : listMedia)
-			{
-				File file = new File(media.dcimEntry.fileAsset.path);
 			
-				dsm.uploadFileAsync(file);
-			}
+			if (batch != null)			
+				for (IMedia media : batch)
+				{				
+					dsm.uploadMediaAsync(media);
+				}
 		}
 		
 		
