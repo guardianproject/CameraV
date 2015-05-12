@@ -109,8 +109,8 @@
 	<string name="menu_home_gallery_select_all">Select All</string>
 	
 	<string name="menu_remote_access">Remote Share</string>
-	<string name="menu_remote_access_tor">Enable OnionShare</string>
-	<string name="menu_remote_access_dropbox">Sync to DropBox</string>
+	<string name="menu_remote_access_tor">Enable Web Sharing</string>
+	<string name="menu_remote_access_dropbox">Enable DropBox</string>
 	
     <string name="wizard_welcome">Welcome!</string>
     <string name="wizard_choose_language">Choose a language:</string>

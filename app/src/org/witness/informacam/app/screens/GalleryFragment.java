@@ -176,7 +176,7 @@ public class GalleryFragment extends Fragment implements
 		super.onResume();
 		updateAdapters();
 		
-		DropboxSyncManager.getInstance().finishAuthentication();
+		DropboxSyncManager.getInstance(a).finishAuthentication();
 		
 	}
 
@@ -722,7 +722,7 @@ public class GalleryFragment extends Fragment implements
 	private void enableDropboxSync ()
 	{
 		
-		DropboxSyncManager dsm = DropboxSyncManager.getInstance();
+		DropboxSyncManager dsm = DropboxSyncManager.getInstance(a);
 		
 		//do web oauth (doesn't require local app)
 		boolean isInit = dsm.init(a);
