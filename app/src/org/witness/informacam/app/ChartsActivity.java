@@ -416,7 +416,7 @@ public class ChartsActivity extends Activity {
 	
 	private Bitmap combineImageIntoOne(ArrayList<Bitmap> bitmap) {
         int w = 0, h = 0;
-        for (int i = 0; i < bitmap.size(); i++) {
+        for (int i = 0; i < bitmap.size()-1; i++) {
                 if (i < bitmap.size() - 1) {
                         w = bitmap.get(i).getWidth() > bitmap.get(i + 1).getWidth() ? bitmap.get(i).getWidth() : bitmap.get(i + 1).getWidth();
                 }
