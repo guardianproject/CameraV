@@ -28,8 +28,15 @@
         android:id="@+id/buttonService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Activate Server"
-        android:layout_margin="30dp"
+        android:text=""
+        android:layout_marginTop="30dp"
+         />
+    <Button
+        android:id="@+id/buttonShare"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/share_web_address"
+        android:enabled="false"
          />
 
 </LinearLayout>

@@ -109,8 +109,8 @@
 	<string name="menu_home_gallery_select_all">Select All</string>
 	
 	<string name="menu_remote_access">Remote Share</string>
-	<string name="menu_remote_access_tor">Enable Web Sharing</string>
-	<string name="menu_remote_access_dropbox">Enable Dropbox Sync</string>
+	<string name="menu_remote_access_tor">Web Sharing</string>
+	<string name="menu_remote_access_dropbox">Dropbox Sync</string>
 	
     <string name="wizard_welcome">Welcome!</string>
     <string name="wizard_choose_language">Choose a language:</string>
@@ -218,4 +218,8 @@
     <string name="remote_web_access_enabled_at">Remote web access enabled at</string>
     <string name="remote_web_access_disabled">Remote web access disabled</string>
     <string name="web_sharing">Web Sharing</string>
+    <string name="deactivate_web_share">Deactivate Web Share</string>
+    <string name="activate_web_share">Activate Web Share</string>
+    <string name="share_web_address">Share Web Address</string>
+    <string name="you_can_access_my_camerav_photos_and_videos_here_">"You can access my CameraV photos and videos here: "</string>
 </resources>
