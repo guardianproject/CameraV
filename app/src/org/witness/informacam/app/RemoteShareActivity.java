@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -83,11 +84,26 @@ public class RemoteShareActivity extends Activity {
 		{
 			StringBuffer sbInfo = new StringBuffer();
 			
-			sbInfo.append(getString(R.string.remote_web_access_enabled_at) + "\n\nhttp://" + WebShareService.getLocalIpAddress() + ":" + mLocalPort);
+			sbInfo.append(getString(R.string.remote_web_access_enabled_at) + "\n\n");
+			
+			for (String address : WebShareService.getLocalIpAddresses())
+				sbInfo.append("http://" + address + ":" + mLocalPort + "\n");
+			
 			
 			mTvInfo.setText(sbInfo.toString());	
 		}
 	}
+
+	 @Override
+	    public boolean onOptionsItemSelected(MenuItem item) {
+	        switch (item.getItemId()) {
+	        case android.R.id.home:
+	            finish();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	        }
+	    }
 
 	@Override
 	protected void onResume() {		
@@ -116,7 +132,11 @@ public class RemoteShareActivity extends Activity {
 			
 			StringBuffer sbInfo = new StringBuffer();
 			
-			sbInfo.append(getString(R.string.remote_web_access_enabled_at) + "\n\nhttp://" + WebShareService.getLocalIpAddress() + ":" + mLocalPort);
+			sbInfo.append(getString(R.string.remote_web_access_enabled_at) + "\n\n");
+			
+			for (String address : WebShareService.getLocalIpAddresses())
+				sbInfo.append("http://" + address + ":" + mLocalPort + "\n");
+			
 			
 			mTvInfo.setText(sbInfo.toString());
 			
@@ -168,11 +188,12 @@ public class RemoteShareActivity extends Activity {
 			{
 				StringBuffer sbInfo = new StringBuffer();
 				
-				sbInfo.append(getString(R.string.remote_web_access_enabled_at)
-						+ "\n\nLocal Area Network:\n\nhttp://" + WebShareService.getLocalIpAddress() + ":" + mLocalPort
-						+ "\n\nOnionShare (Tor):\n\nhttp://" + mOnionHost + ":" + mLocalPort
-					
-						);
+				sbInfo.append(getString(R.string.remote_web_access_enabled_at)).append("\n\n");
+				
+				for (String address : WebShareService.getLocalIpAddresses())
+					sbInfo.append("http://" + address + ":" + mLocalPort + "\n");
+				
+				sbInfo.append("\n\nOnionShare (Tor):\nhttp://" + mOnionHost + ":" + mLocalPort);
 				
 				mTvInfo.setText(sbInfo.toString());
 			
