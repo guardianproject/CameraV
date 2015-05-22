@@ -151,7 +151,7 @@ public class ChartsActivity extends Activity {
 		try
 		{
 
-			String j3m = ((IMedia) media).buildJ3M(this, false, null);
+			((IMedia) media).buildJ3M(this, false, null);
 			
 			ArrayList<ISensorCapture> listSensorEvents = new ArrayList<ISensorCapture>(media.data.sensorCapture);
 			
@@ -190,76 +190,95 @@ public class ChartsActivity extends Activity {
 				addMap(alPoints);
 			
 			//do charts
-			final String[] sensorLabels = {getString(R.string.gps_speed),getString(R.string.gps_altitude),getString(R.string.light),getString(R.string.air_pressure),getString(R.string.orientation),getString(R.string.motion),getString(R.string.wifi_networks)};
-			final String[][] sensorTypes = {{"gps_speed"},{"gps_altitude"},{"lightMeterValue"},{"pressureHPAOrMBAR"},{"pitch","roll","azimuth"},{"acc_x","acc_y","acc_z"},{"visibleWifiNetworks"}};
+			final String[] sensorLabels = {getString(R.string.gps_accuracy),getString(R.string.gps_speed),getString(R.string.gps_altitude),getString(R.string.light),getString(R.string.air_pressure),getString(R.string.orientation),getString(R.string.motion),getString(R.string.wifi_networks)};
+			final String[][] sensorTypes = {{"gps_accuracy"},{"gps_speed"},{"gps_altitude"},{"lightMeterValue"},{"pressureHPAOrMBAR"},{"pitch","roll","azimuth"},{"acc_x","acc_y","acc_z"},{"visibleWifiNetworks"}};
 			
 			int labelIdx = 0;
 			
 			for (String[] sensorTypeSet : sensorTypes)
 			{
-				
-				ArrayList<String> xVals = new ArrayList<String>();				
+							
 			    ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
 			    
 			    int[] colors = ColorTemplate.JOYFUL_COLORS;
 			    int colorIdx = 0;
-			    
+
+				ArrayList<String> xVals = null;
+				
 				for (String sensorType : sensorTypeSet)
 				{
-				
+					
+					xVals = new ArrayList<String>();	//only the last time through will set the values
 					
 					 int i = 0;
 					 ArrayList<Entry> yVals = new ArrayList<Entry>();
+					 long lastTimeStamp = -1;
 					 
 					for (ISensorCapture sensor : listSensorEvents)
 					{
 						
 						if (sensor.sensorPlayback.has(sensorType))
 						{																			
-							Object val = sensor.sensorPlayback.get(sensorType);
-							xVals.add(dateFormat.format(new Date(sensor.timestamp)));						
-							//xVals.add(sensor.timestamp+"");						
+							Object val = sensor.sensorPlayback.get(sensorType);			
+							lastTimeStamp = sensor.timestamp;
+
+							xVals.add(dateFormat.format(new Date(sensor.timestamp)));	
 							
-							//Log.d("Chart","adding: " + sensor.timestamp + " val=" + val);
-							
-							if (val instanceof Integer)							
-								yVals.add(new Entry(((Integer)val).intValue(), i++));								
+							if (val instanceof Integer)				
+							{		
+								yVals.add(new Entry(((Integer)val).intValue(), i++));
+							}
 							else if (val instanceof Double)							
-								yVals.add(new Entry(((Double)val).floatValue(), i++));							
-							else if (val instanceof Float)													
-								yVals.add(new Entry(((Float)val).floatValue(), i++));
+							{
+	
+								yVals.add(new Entry(((Double)val).floatValue(), i++));	
+							}
+							else if (val instanceof Float)		
+							{
+								yVals.add(new Entry(((Float)val).floatValue(), i++));			
+							}
 							else if (val instanceof JSONArray)
+							{
 								yVals.add(new Entry(((JSONArray)val).length(), i++));
+							}
 							else
 							{
 								try
 								{
-									float fval = Float.parseFloat(((String)val));
 
+									float fval = Float.parseFloat(((String)val));	
 									yVals.add(new Entry(fval, i++));	
+									
 								}
 								catch (Exception e)
 								{
 									//couldn't parse double
-									Log.e("Chart","couldn't parse value",e);
+									Log.w("Chart","couldn't parse value: " + val,e);
 								}
 							}
 						}
 					}
 
-					if (yVals.size() > 0)
+					if (!yVals.isEmpty())
 					{	
+						if (yVals.size()==1)
+						{
+							xVals.add(dateFormat.format(new Date(lastTimeStamp+1)));
+							Entry entry = yVals.get(0).copy();
+							entry.setXIndex(entry.getXIndex()+1);
+							yVals.add(entry);
+						}
+						
 						LineDataSet dataSet = addLineDataSet(sensorType, yVals);
 						dataSet.setColor(colors[colorIdx++]);
 				        dataSets.add(dataSet); // add the datasets	
 					}
 				}
 				
-				if (dataSets.size() > 0)
+				if (!dataSets.isEmpty())
 				{
 			        // create a data object with the datasets
 			        LineData data = new LineData(xVals, dataSets);		
-			        
 			        LineChart chart = addChart(sensorLabels[labelIdx],data);
 			        
 			        
