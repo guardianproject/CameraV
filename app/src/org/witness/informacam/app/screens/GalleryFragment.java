@@ -75,6 +75,8 @@ public class GalleryFragment extends Fragment implements
 	private static int mCurrentFiltering;
 	private MenuItem mMenuItemBatchOperations;
 	private View mEncodingMedia;
+
+	private MenuItem miDropbox;
 	
 	@SuppressWarnings("unused")
 	private boolean isDataInitialized;
@@ -455,6 +457,7 @@ public class GalleryFragment extends Fragment implements
 		}
 	}
 
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
@@ -467,6 +470,11 @@ public class GalleryFragment extends Fragment implements
 		spinner.setOnItemSelectedListener(this);
 		
 		mMenuItemBatchOperations = menu.findItem(R.id.menu_select);
+		
+		miDropbox = menu.findItem(R.id.menu_remote_access_dropbox);
+		DropboxSyncManager dsm = DropboxSyncManager.getInstance(a);
+		if (dsm != null && dsm.isSyncing())
+			miDropbox.setChecked(true);
 		
 		ActionBar actionBar = getActivity().getActionBar();
 		actionBar.setDisplayShowTitleEnabled(true);
@@ -494,7 +502,7 @@ public class GalleryFragment extends Fragment implements
 			enableOnionShare();
 			return true;
 		case R.id.menu_remote_access_dropbox:
-			enableDropboxSync();
+			manageDropboxSync(!item.isChecked());
 			return true;
 			
 		}
@@ -509,6 +517,8 @@ public class GalleryFragment extends Fragment implements
 			// Inflate a menu resource providing context menu items
 			 MenuInflater inflater = mode.getMenuInflater();
 			 inflater.inflate(R.menu.activity_home_gallery_action_mode, menu);
+			
+			
 		//	menu.add(Menu.NONE, R.string.menu_share, 0, R.string.menu_share)
 		//		.setIcon(R.drawable.ic_gallery_share);
 		//	menu.add(Menu.NONE, R.string.home_gallery_delete, 0,
@@ -527,6 +537,13 @@ public class GalleryFragment extends Fragment implements
 			int nSelected = (batch == null) ? 0 : batch.size();
 			mode.setTitle(GalleryFragment.this.getString(
 					R.string.home_gallery_selected, nSelected));
+			
+			 
+			 MenuItem miDropbox2 = menu.findItem(R.id.menu_remote_access_dropbox);
+				DropboxSyncManager dsm = DropboxSyncManager.getInstance(a);
+				if (dsm != null && dsm.isSyncing())
+					miDropbox2.setChecked(true);
+				
 			return false; // Return false if nothing is done
 		}
 
@@ -551,7 +568,7 @@ public class GalleryFragment extends Fragment implements
 				enableOnionShare();
 				return true;
 			case R.id.menu_remote_access_dropbox:
-				enableDropboxSync();
+				manageDropboxSync(!item.isChecked());
 				return true;
 			case R.id.menu_share_meta_j3m:
 				shareType = SharePopup.SHARE_TYPE_J3M;
@@ -616,6 +633,12 @@ public class GalleryFragment extends Fragment implements
 		public void onDestroyActionMode(ActionMode mode) {
 			mActionMode = null;
 			toggleMultiSelectMode(false);
+			
+			DropboxSyncManager dsm = DropboxSyncManager.getInstance(a);
+			if (dsm != null && dsm.isSyncing())
+				miDropbox.setChecked(true);
+			else
+				miDropbox.setChecked(false);
 		}
 	};
 	
@@ -764,22 +787,34 @@ public class GalleryFragment extends Fragment implements
 
 	}
 
-	private void enableDropboxSync ()
+	private void manageDropboxSync (boolean enable)
 	{
+		miDropbox.setChecked(enable);
 		
 		DropboxSyncManager dsm = DropboxSyncManager.getInstance(a);
 		
-		//do web oauth (doesn't require local app)
-		boolean isInit = dsm.init(a);
-		
-		if (isInit) //if init'd, then backup all existing files that aren't already backed up!
+		if (enable)
 		{
-			
-			if (batch != null)			
-				for (IMedia media : batch)
-				{				
-					dsm.uploadMediaAsync(media);
+			if (!dsm.isSyncing())
+			{
+				//do web oauth (doesn't require local app)
+				boolean isInit = dsm.start(a);
+				
+				if (isInit) //if init'd, then backup all existing files that aren't already backed up!
+				{
+					
+					if (batch != null)			
+						for (IMedia media : batch)
+						{				
+							dsm.uploadMediaAsync(media);
+						}
 				}
+			}
+			
+		}
+		else
+		{
+			dsm.stop();
 		}
 		
 		

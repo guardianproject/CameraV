@@ -222,4 +222,5 @@
     <string name="activate_web_share">Activate Web Share</string>
     <string name="share_web_address">Share Web Address</string>
     <string name="you_can_access_my_camerav_photos_and_videos_here_">"You can access my CameraV photos and videos here: "</string>
+    <string name="gps_accuracy">GPS Accuracy</string>
 </resources>

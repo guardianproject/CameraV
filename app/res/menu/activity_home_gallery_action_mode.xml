@@ -10,7 +10,7 @@
         android:showAsAction="always" android:enabled="true"/>
             <item android:id="@+id/menu_remote_access_dropbox" android:title="@string/menu_remote_access_dropbox" 
         android:icon="@drawable/ic_action_backup" android:orderInCategory="98" 
-        android:showAsAction="always" android:enabled="true"/>
+        android:showAsAction="always" android:enabled="true" android:checkable="true"/>
         </menu>
         </item>
     
