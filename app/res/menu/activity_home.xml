@@ -26,5 +26,7 @@
     <!-- 
         <item android:id="@+id/menu_export_keys" android:title="@string/menu_export_keys" android:orderInCategory="100" android:icon="@drawable/ic_home_pref" android:showAsAction="never" android:enabled="true"/>
          -->
+    <item android:id="@+id/menu_guide" android:title="@string/menu_guide" android:orderInCategory="100" android:showAsAction="never" android:enabled="true"/>
+
         <item android:id="@+id/menu_settings" android:title="@string/menu_settings" android:orderInCategory="100" android:icon="@drawable/ic_home_pref" android:showAsAction="never" android:enabled="true"/>
 </menu>

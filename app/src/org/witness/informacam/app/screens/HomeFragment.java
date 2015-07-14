@@ -10,8 +10,8 @@ import java.util.List;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.PreferencesActivity;
 import org.witness.informacam.app.R;
+import org.witness.informacam.app.WebActivity;
 import org.witness.informacam.app.WipeActivity;
-import org.witness.informacam.app.screens.HomeFragment.TapGestureListener;
 import org.witness.informacam.app.screens.popups.AudioNoteSavedPopup;
 import org.witness.informacam.app.utils.AudioNoteHelper;
 import org.witness.informacam.app.utils.Constants.App.Editor.Forms;
@@ -29,7 +29,6 @@ import org.witness.informacam.ui.AlwaysOnActivity;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Logger;
-import org.witness.informacam.utils.Constants.Models;
 import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 
 import android.app.ActionBar;
@@ -395,6 +394,12 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 				Intent intent = informaCam.exportCredentials();
 				if (intent != null)
 					getActivity().startActivity(intent);
+				
+				return true;
+				
+			case R.id.menu_guide:
+				Intent intentWeb = new Intent(getActivity(),WebActivity.class);
+				getActivity().startActivity(intentWeb);
 				
 				return true;
 				

@@ -17,7 +17,6 @@ import org.witness.informacam.app.screens.HomeFragment;
 import org.witness.informacam.app.screens.UserManagementFragment;
 import org.witness.informacam.app.screens.menus.MediaActionMenu;
 import org.witness.informacam.app.screens.popups.PopupClickListener;
-import org.witness.informacam.app.screens.popups.SharePopup;
 import org.witness.informacam.app.screens.popups.TextareaPopup;
 import org.witness.informacam.app.utils.Constants;
 import org.witness.informacam.app.utils.Constants.App.Home;
@@ -33,11 +32,12 @@ import org.witness.informacam.ui.CameraActivity;
 import org.witness.informacam.utils.Constants.InformaCamEventListener;
 import org.witness.informacam.utils.Constants.ListAdapterListener;
 import org.witness.informacam.utils.Constants.Models;
-import org.witness.informacam.utils.InformaCamBroadcaster.InformaCamStatusListener;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.BitmapDrawable;
@@ -55,9 +55,9 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
@@ -99,6 +99,8 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	
 	CacheWordHandler cacheWord;
 
+	private boolean mFirstTime = true;
+	
 	@SuppressWarnings("unused")
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -171,7 +173,6 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 			return;
 		}
 		
-		
 		informaCam.setEventListener(this);
 		informaCam.setListAdapterListener(this);
 		
@@ -217,6 +218,31 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 				}
 			});
 
+		}
+		
+		if (mFirstTime)
+		{
+			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+			    @Override
+			    public void onClick(DialogInterface dialog, int which) {
+			        switch (which){
+			        case DialogInterface.BUTTON_POSITIVE:
+			        	Intent intent = new Intent(HomeActivity.this,WebActivity.class);
+						startActivity(intent);
+						mFirstTime = false;
+			            break;
+
+			        case DialogInterface.BUTTON_NEGATIVE:
+			            //No button clicked
+			            break;
+			        }
+			    }
+			};
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(R.string.welcome_to_camerav_would_you_like_to_read_the_user_guide_).setPositiveButton(android.R.string.yes, dialogClickListener)
+			    .setNegativeButton(android.R.string.no, dialogClickListener).show();
+			
 		}
 	}
 
