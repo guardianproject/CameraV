@@ -379,14 +379,25 @@ public class ChartsActivity extends Activity {
         return chart;
 	}
 	
-	public static File saveBitmap(Bitmap b, String name) throws IOException {
+	public File saveBitmap(Bitmap b, String name) throws IOException {
 			    
 	    File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+	    
+	    if (!path.canWrite())
+	    {
+	    	path = getExternalFilesDir(null);
+	    	
+	    	if (!path.canWrite())
+	    		path = getFilesDir();
+	    }
+	    
 	    File imageFile = new File(path, name+ ".jpg");
 	    FileOutputStream fileOutPutStream = new FileOutputStream(imageFile);
 	    b.compress(Bitmap.CompressFormat.JPEG, 80, fileOutPutStream);
 	    fileOutPutStream.flush();
 	    fileOutPutStream.close();
+	    
+	    imageFile.setReadable(true, false);
 	    
 	    return imageFile;
 	}
@@ -397,13 +408,14 @@ public class ChartsActivity extends Activity {
 			
 			ArrayList<Bitmap> listBitmap = new ArrayList<Bitmap>();
 			
-			listBitmap.add(media.getThumbnail(320));
+			int chartWidth = listCharts.get(0).getWidth();
+			
+			listBitmap.add(media.getThumbnail(chartWidth));
 			listBitmap.add(bmMap);
 			
 			for (LineChart chart : listCharts)
 			{
 				Bitmap b = chart.getChartBitmap();
-				
 				listBitmap.add(b);
 			}
 			

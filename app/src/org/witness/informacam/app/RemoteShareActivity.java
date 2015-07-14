@@ -265,9 +265,13 @@ public class RemoteShareActivity extends Activity {
 			{
 				shareUrl = "http://" + mOnionHost + ":" + mLocalPort;
 			}
-			else
+			else if (mLocalHost != null)
 			{
 				shareUrl = "http://" + mLocalHost + ":" + mLocalPort;
+			}
+			else
+			{
+				shareUrl = "http://" + getLocalIpAddresses()[0]  + ":" + mLocalPort;
 			}
 			
 			Intent sendIntent = new Intent(Intent.ACTION_SEND);
