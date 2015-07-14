@@ -14,8 +14,7 @@
         android:gravity="left|center_vertical"
         android:text="@string/editor_history"
         android:textColor="#231F20"
-        android:textSize="18sp"
-        app:font="Roboto-Bold" />
+        android:textSize="18sp"/>
 
     <org.witness.informacam.app.views.CustomFontTextView
         android:id="@+id/tvSubTitle"
@@ -27,8 +26,7 @@
         android:gravity="left|center_vertical"
         android:text="@string/editor_history"
         android:textColor="#808285"
-        android:textSize="12sp"
-        app:font="Roboto-Bold" />
+        android:textSize="12sp" />
 
     <!-- 
     <ImageView

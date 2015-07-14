@@ -13,8 +13,7 @@
         android:gravity="left|center_vertical"
         android:text="@string/editor_history"
         android:textColor="#231F20"
-        android:textSize="15sp"
-        app:font="Roboto-Regular" />
+        android:textSize="15sp"/>
 
     <org.witness.informacam.app.views.CustomFontTextView
         android:id="@+id/tvTime"
@@ -26,8 +25,7 @@
         android:gravity="left|center_vertical"
         android:text="@string/editor_history"
         android:textColor="#231F20"
-        android:textSize="15sp"
-        app:font="Roboto-Regular" />
+        android:textSize="15sp" />
 
 </RelativeLayout>
 

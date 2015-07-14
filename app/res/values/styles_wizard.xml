@@ -13,17 +13,14 @@
     <item name="android:padding">4dip</item>
     <item name="android:layout_marginTop">5dip</item>
     <item name="android:layout_marginBottom">5dip</item>
-    <item name="font">Roboto-Italic</item>
     <item name="android:textSize">15sp</item>
 </style>
 
 <style name="WizardH1" parent="iwitness_h1">
-    <item name="font">Roboto-Bold</item>
     <item name="android:textSize">20sp</item>
 </style>
 
 <style name="WizardH3" parent="iwitness_h3">
-    <item name="font">Roboto-Regular</item>
     <item name="android:textSize">15sp</item>
 </style>
 
