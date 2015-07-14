@@ -124,7 +124,13 @@
 				<action android:name="android.intent.action.EDIT" />
                 <action android:name="android.intent.action.GET_CONTENT" />
 				
-                <data
+                <data  public void onCreate(Bundle savedInstanceState) {  
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.webview);  
+        WebView wv;  
+        wv = (WebView) findViewById(R.id.webview1);  
+        wv.loadUrl("file:///android_asset/guide/en/index.html");   // now it will not fail here
+    } 
                     android:mimeType="application/ictd"
                     android:scheme="content" />
             </intent-filter>
@@ -161,6 +167,10 @@
 			    </intent-filter>
 			    </activity>
              -->
+              <activity
+            android:name="org.witness.informacam.app.WebActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
+             />
          <activity
             android:name="org.witness.informacam.app.HashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
