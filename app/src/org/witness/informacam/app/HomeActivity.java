@@ -99,7 +99,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 	
 	CacheWordHandler cacheWord;
 
-	private boolean mFirstTime = true;
+	private boolean mFirstTime = false;
 	
 	@SuppressWarnings("unused")
 	@Override
@@ -180,6 +180,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 			getIntent().removeExtra(Constants.Codes.Extras.CHANGE_LOCALE);
 		}
 		if (getIntent().hasExtra(Constants.Codes.Extras.GENERATING_KEY)) {
+			mFirstTime = true;
 			mainFragment.setIsGeneratingKey(getIntent().getBooleanExtra(Constants.Codes.Extras.GENERATING_KEY, false));
 			getIntent().removeExtra(Constants.Codes.Extras.GENERATING_KEY);
 		} else {
