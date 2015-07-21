@@ -38,7 +38,8 @@
         android:name="org.witness.informacam.InformaCam"
         android:allowBackup="false"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
+        android:theme="@android:style/Theme.Holo.Light.NoActionBar" 
+        android:icon="@drawable/ic_launcher">
         
         <receiver
             android:name="org.witness.informacam.utils.InformaCamBroadcaster"
