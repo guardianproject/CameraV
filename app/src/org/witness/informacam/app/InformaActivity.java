@@ -49,13 +49,14 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 
 	public final static String HOCKEY_APP_ID = "dafbc649fcf585d7867866d5375b6495";
 
+	private boolean prefStealthIcon = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		
-		boolean prefStealthIcon = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefStealthIcon",false);
+		prefStealthIcon = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("prefStealthIcon",false);
 		setIcon(prefStealthIcon);
 		
 		init = getIntent();
@@ -78,7 +79,7 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 		informaCam = (InformaCam)getApplication();
 		informaCam.setStatusListener(this);
 		
-		Log.d(LOG, "AND HELLO onResume()!!");
+		//Log.d(LOG, "AND HELLO onResume()!!");
 		
 		try {
 			if(route != null) {
@@ -95,6 +96,10 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 					switch(informaCam.getCredentialManagerStatus()) {
 					case org.witness.informacam.utils.Constants.Codes.Status.UNLOCKED:
 						route = new Intent(this, HomeActivity.class);
+						
+						if (prefStealthIcon)
+							route.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+						
 						routeCode = Home.ROUTE_CODE;
 						break;
 					case org.witness.informacam.utils.Constants.Codes.Status.LOCKED:
@@ -194,6 +199,9 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 			*/
 			
 			route = new Intent(this, HomeActivity.class);
+			if (prefStealthIcon)
+				route.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+			
 			routeCode = Home.ROUTE_CODE;
 
 			switch (requestCode)
@@ -218,6 +226,9 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 				break;
 			case Codes.Routes.WIZARD:
 				route = new Intent(this, HomeActivity.class);
+				if (prefStealthIcon)
+					route.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+				
 				routeCode = Home.ROUTE_CODE;
 				route.putExtra(Codes.Extras.GENERATING_KEY, true);
 				
@@ -307,6 +318,9 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 			break;
 		case org.witness.informacam.utils.Constants.Codes.Messages.Home.INIT:
 			route = new Intent(this, HomeActivity.class);
+			if (prefStealthIcon)
+				route.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+			
 			routeCode = Home.ROUTE_CODE;
 			break;
 		}
