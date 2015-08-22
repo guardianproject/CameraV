@@ -132,6 +132,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 			actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_SHOW_TITLE);
 			actionBar.setTitle(R.string.app_name);			
 			actionBar.setDisplayHomeAsUpEnabled(false);
+			actionBar.setIcon(R.mipmap.ic_launcher);
 			
 		}
 	}

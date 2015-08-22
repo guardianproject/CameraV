@@ -821,8 +821,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(false);
 		actionBar.setHomeButtonEnabled(true);
-		actionBar.setLogo(this.getResources().getDrawable(R.drawable.ic_action_up));
-		actionBar.setDisplayUseLogoEnabled(false);
+		actionBar.setIcon(R.mipmap.ic_launcher);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 	}
 
