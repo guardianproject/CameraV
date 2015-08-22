@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="photo">Фотографија</string>
+  <string name="video">Видео</string>
+  <string name="menu_all_media">Сите медиуми</string>
+  <string name="menu_list">Листа</string>
+  <string name="menu_grid">Мрежа</string>
+  <string name="menu_location">Локација</string>
+  <string name="menu_date">Датум</string>
+  <string name="connected_to_tor">Поврзани сте со Tor</string>
+  <string name="not_connected_to_tor">Не сте поврзани со Tor</string>
+  <string name="you">Вие</string>
+  <string name="notifications">Известувања</string>
+  <string name="organizations">Организации</string>
+  <string name="get_in">Влези</string>
+  <string name="we_could_not_log">Вашата најава не беше успешна. Ве молиме обидете се повторно.</string>
+  <string name="change_settings"><u>Промена на нагодувањата</u></string>
+  <string name="cancel"><u>Откажи</u></string>
+  <string name="log_out">Одјави се</string>
+  <string name="no_notifications">Без известувања.</string>
+  <string name="connect_with_organizations">Поврзи се со организациите:</string>
+  <string name="delete">Избриши</string>
+  <string name="rename">Преименувај</string>
+  <string name="export">Извези</string>
+  <string name="send">Испрати\u2026</string>
+  <string name="your_gallery_is_hungry">Вашата галерија ги очекува вашите фотографии и видеоматеријали.</string>
+  <string name="swipe_left_for_cameras">Повлечете налево за опцијата камера</string>
+  <string name="all_media">Сите медиуми</string>
+  <string name="share">Сподели</string>
+  <string name="add_a_quick_note">Додај брза забелешка \u2026</string>
+  <string name="untitled">Без наслов</string>
+  <string name="x_tags">%1$d Маркер%2$s</string>
+  <string name="x_messages">%1$d Порака%2$s</string>
+  <string name="x_location">%1$f, %2$f</string>
+  <string name="location_unknown">Непозната локација</string>
+  <string name="send_to_org">Испрати до Org</string>
+  <string name="share_via">Сподели преку</string>
+  <string name="choose_an_organization">Избери организација</string>
+  <string name="send_encrypted_to_organization">Сподели шифрирано со организација\u2026</string>
+  <string name="send_encrypted_to_x">Сподели шифрирано со %1$s</string>
+  <string name="sending_encrypted_to_x">Во тек е шифрирано споделување со %1$s. (Промени?)</string>
+  <string name="there_are_no_organizations">Немате наведено организации кои би ги испратиле. Обидете се со споделување на медиуми.</string>
+  <string name="sharing_outside_of_informacam">Споделувањето надвор од %1$s значи дека изворниот ланец на вашите медиуми може да биде оспорен.  Сепак сподели?</string>
+</resources>

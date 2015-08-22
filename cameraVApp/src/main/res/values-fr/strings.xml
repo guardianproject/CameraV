@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="photo">Photo</string>
+  <string name="video">Vidéo</string>
+  <string name="menu_all_media">Tous les fichiers</string>
+  <string name="menu_list">Liste</string>
+  <string name="menu_grid">Grille</string>
+  <string name="menu_location">Lieu</string>
+  <string name="menu_date">Date</string>
+  <string name="connected_to_tor">Connecté à Tor</string>
+  <string name="not_connected_to_tor">Non connecté à Tor</string>
+  <string name="you">Vous</string>
+  <string name="notifications">Notifications</string>
+  <string name="organizations">Organisations</string>
+  <string name="get_in">Entrer</string>
+  <string name="we_could_not_log">Nous n\'avons pas réussi à vous connecter. Merci d\'essayer à nouveau.</string>
+  <string name="log_out">Déconnection</string>
+  <string name="connect_with_organizations">Connectez-vous aux organisations :</string>
+  <string name="delete">Effacer</string>
+  <string name="rename">Renommer</string>
+  <string name="export">Exporter</string>
+  <string name="send">Envoyer\u2026</string>
+  <string name="your_gallery_is_hungry">Votre galerie est avide de photos et de vidéos.</string>
+  <string name="swipe_left_for_cameras">Glisser vore doigt vers la gauche de l\'écran pour les appareils photos.</string>
+  <string name="all_media">Tous les fichiers</string>
+  <string name="share">Partager</string>
+  <string name="add_a_quick_note">Ajouter une note rapide \u2026</string>
+  <string name="untitled">Sans titre</string>
+  <string name="x_tags">%1$d Tag%2$s</string>
+  <string name="x_messages">%1$d Message%2$s</string>
+  <string name="x_location">%1$f, %2$f</string>
+  <string name="location_unknown">Lieu inconnu</string>
+  <string name="send_to_org">Envoyer à Org</string>
+  <string name="share_via">Partager via</string>
+  <string name="choose_an_organization">Choisir une organisation :</string>
+  <string name="send_encrypted_to_organization">Partager des données encodées avec l\'organisation \u2026</string>
+  <string name="sending_encrypted_to_x">Partage  de données encodées en cours avec %1$s. (Modifier?)</string>
+  <string name="there_are_no_organizations">Il n\'y a pas d\'organisation à qui l\'envoyer. Essayer plutôt de partager le fichier. </string>
+  <string name="sharing_outside_of_informacam">Le partage de données en dehors de %1$s peut compromettre la traçabilité de votre fichier. Partager quand même?</string>
+  <string name="export_my_credentials">Exporter mes certificats\u2026</string>
+</resources>

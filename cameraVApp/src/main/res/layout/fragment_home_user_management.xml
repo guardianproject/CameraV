@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/user_management_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:orientation="horizontal"
+        android:weightSum="1.0" >
+
+        <ImageButton
+            android:id="@+id/user_thumbnail"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:padding="5dip"
+            android:scaleType="fitXY"/>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.45"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/user_alias"
+                style="@style/iwitness_h2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/you" />
+
+            <TextView
+                android:id="@+id/user_connectivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/connected_to_tor" />
+        </LinearLayout>
+
+        <ImageButton style="@style/button_a"
+            android:id="@+id/emergency_wipe"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.175"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_context_panic" />
+
+        <ImageButton style="@style/button_a"
+            android:id="@+id/to_settings"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="0.175"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_context_settings" />
+    </LinearLayout>
+
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dip" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                style="@style/iwitness_sub_tab_holder"
+                android:layout_width="match_parent"
+                android:layout_height="56dip"
+                android:orientation="horizontal" />
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:background="@drawable/white"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </TabHost>
+
+</LinearLayout>

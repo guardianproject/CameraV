@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="photo">الصورة</string>
+  <string name="video">الفيديو</string>
+  <string name="menu_all_media">جميع الوسائط</string>
+  <string name="menu_list">القائمة</string>
+  <string name="menu_grid">شبكة</string>
+  <string name="menu_location">الموقع</string>
+  <string name="menu_date">التاريخ</string>
+  <string name="connected_to_tor">متصل بتور (Tor)</string>
+  <string name="not_connected_to_tor">غير متصل بتور (Tor)</string>
+  <string name="you">أنتَ/أنتِ</string>
+  <string name="notifications">الإشعارات</string>
+  <string name="organizations">المنظمات</string>
+  <string name="get_in">تسجيل الدخول</string>
+  <string name="we_could_not_log">لا يمكننا تسجيل دخولك، الرجاء أعد المحاولة </string>
+  <string name="log_out">تسجيل الخروج</string>
+  <string name="connect_with_organizations">تواصل مع المنظمات :</string>
+  <string name="delete">حذف</string>
+  <string name="rename">تغيِر التسمية</string>
+  <string name="export">التصدير</string>
+  <string name="send">إرسال\u2026</string>
+  <string name="your_gallery_is_hungry">المعرض  الخاص بك خالٍ من الصور ومقاطع الفيديو.</string>
+  <string name="swipe_left_for_cameras">إسحب لليسار للدخول إلي قسم الكاميرا</string>
+  <string name="all_media">جميع الوسائط</string>
+  <string name="share">شارك</string>
+  <string name="add_a_quick_note">أضف ملاحظة سريعة/ u2026</string>
+  <string name="untitled">غير مُعنون</string>
+  <string name="x_tags">%1$d  علامة %2$s</string>
+  <string name="x_messages">%1$d رسالة%2$s</string>
+  <string name="x_location">%1$f, %2$f</string>
+  <string name="location_unknown">الموقع غير معروف</string>
+  <string name="send_to_org">الإرسال إلي المنظمات</string>
+  <string name="share_via">شارك عبر</string>
+  <string name="choose_an_organization">إختر منظمة :</string>
+  <string name="send_encrypted_to_organization">شارك الملف المشفر مع المنظمة/u2026</string>
+  <string name="sending_encrypted_to_x">مشاركة الملف المشفر مع %1$s.</string>
+  <string name="there_are_no_organizations">لا توجد لديك منظمات لكي ترسل إليها الملفات. بدلا من ذلك، حاول أن تشاركها  .</string>
+  <string name="sharing_outside_of_informacam">المشاركة خارج ال %1$s يعني أنه بالإمكان الطعن أو التشكيك في سلسلة الحيازة للميديا الخاصة بك. هل تريد أن تشارك في كل الأحوال؟</string>
+  <string name="export_my_credentials">تصدير إعتماداتي/ u2026</string>
+</resources>

@@ -1,0 +1,410 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.witness.informacam.app"
+    android:installLocation="auto"
+    android:versionCode="201"
+    android:versionName="0.2.1">
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
+    <application
+        android:name="org.witness.informacam.InformaCam"
+        android:allowBackup="false"
+        android:excludeFromRecents="true"        
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.Light.NoActionBar" 
+
+        >
+        
+        <receiver
+            android:name="org.witness.informacam.utils.InformaCamBroadcaster"
+            android:enabled="true"
+            android:exported="true"
+            android:singleUser="false" >
+            <intent-filter>
+                <action android:name="org.witness.informacam.action.INFORMACAM_START" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.witness.informacam.action.INFORMACAM_STOP" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.witness.informacam.action.INFORMA_SERVICE_START" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.witness.informacam.action.INFORMA_SERVICE_STOP" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.FOUND" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.wifi.SCAN_RESULTS" />
+            </intent-filter>
+        </receiver>
+
+  		
+        <activity
+            android:name="org.witness.informacam.app.InformaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
+            android:label="@string/app_name"
+            android:excludeFromRecents="true"
+        	android:icon="@mipmap/ic_launcher"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+        </activity>
+        
+         <activity
+		  android:name="com.dropbox.client2.android.AuthActivity"
+		  android:launchMode="singleTask"
+		  android:configChanges="orientation|keyboard">
+		  <intent-filter>
+		    <!-- Change this to be db- followed by your app key -->
+		    <data android:scheme="db-j0ioje8k7q5o6vc" />
+		    <action android:name="android.intent.action.VIEW" />
+		    <category android:name="android.intent.category.BROWSABLE"/>
+		    <category android:name="android.intent.category.DEFAULT" />
+		  </intent-filter>
+		</activity>
+
+
+        <activity-alias
+  		    android:enabled="false"
+            android:name="org.witness.informacam.app.InformaActivity-Alt"
+            android:targetActivity="org.witness.informacam.app.InformaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
+            android:label="@string/app_name_alt"
+            android:excludeFromRecents="true"
+        	android:icon="@drawable/ic_launcher_alt">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+        </activity-alias>
+            <!-- 
+            <intent-filter>
+                <action android:name="android.media.action.IMAGE_CAPTURE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="info.guardianproject.action.VERIFIED_MOBILE_MEDIA" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.SEND" />
+				<action android:name="android.intent.action.PICK" />
+				<action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.GET_CONTENT" />
+				
+                <data  public void android:mimeType="application/ictd"
+                    android:scheme="content" />
+            </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.SEND" />
+				<action android:name="android.intent.action.PICK" />
+				<action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.GET_CONTENT" />
+				
+                <data
+                    android:mimeType="application/ictd"
+                    android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+			        <action android:name="android.intent.action.VIEW" />
+			        <category android:name="android.intent.category.DEFAULT" />
+			        <category android:name="android.intent.category.BROWSABLE" />
+			        
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.SEND" />
+				<action android:name="android.intent.action.PICK" />
+				<action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.GET_CONTENT" />
+				
+			        <data android:scheme="file" />
+			        <data android:mimeType="*/*" />
+			        <data android:pathPattern=".*\\.ictd" />
+			        <data android:host="*" />
+			    </intent-filter>
+			    </activity>
+             -->
+              <activity
+            android:name="org.witness.informacam.app.WebActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
+             />
+         <activity
+            android:name="org.witness.informacam.app.HashActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
+            android:label="@string/camerav_hash_service"
+        	android:icon="@mipmap/ic_launcher"
+             >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.SEND" />
+				<action android:name="android.intent.action.PICK" />
+				<action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.GET_CONTENT" />
+				
+                <data android:mimeType="image/*" />
+
+            </intent-filter>
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.VIEW" />
+				<action android:name="android.intent.action.SEND" />
+				<action android:name="android.intent.action.PICK" />
+				<action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.GET_CONTENT" />
+				
+                <data android:mimeType="video/*" />
+
+            </intent-filter>
+                                    
+        </activity>
+        <activity
+            android:name="org.witness.informacam.app.EditorActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/EditorTheme"
+            android:exported="false"
+            android:excludeFromRecents="true"
+             >
+            <meta-data android:name="android.support.UI_OPTIONS"
+                   android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:name="org.witness.informacam.app.MetadataActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false"
+             android:label="@string/app_name"   
+             />
+         <activity
+            android:name="org.witness.informacam.app.ChartsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false"
+             android:label="@string/app_name"   
+             android:theme="@android:style/Theme.Holo.Light"
+             />
+          <activity
+            android:name="org.witness.informacam.app.RemoteShareActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false"
+             android:label="@string/app_name"   
+             android:theme="@android:style/Theme.Holo.Light"
+             />
+        <activity
+            android:name="org.witness.informacam.app.HomeActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
+            android:label="@string/app_name"
+            android:theme="@style/HomeTheme" 
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="org.witness.informacam.app.LoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:exported="false"
+            android:excludeFromRecents="true"
+             />
+        <activity
+            android:name="org.witness.informacam.app.WipeActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Transparent"
+            android:exported="false"
+            />
+        <activity
+            android:name="org.witness.informacam.app.PreferencesActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/HomeTheme"
+            android:exported="false"
+             />
+        <activity
+            android:name="org.witness.informacam.app.WizardActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/app_name"
+            android:theme="@style/WizardTheme"
+            android:exported="false"
+             />
+        <activity
+            android:name="org.witness.informacam.ui.SurfaceGrabberActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:exported="false"
+            />
+      
+        <activity
+            android:name="org.witness.informacam.ui.CameraActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name" 
+            android:exported="false"            
+            />
+        <activity
+            android:name="org.witness.informacam.ui.AlwaysOnActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name" 
+            android:exported="false"
+            android:theme="@android:style/Theme.Dialog"
+            />
+        <activity android:name="org.witness.informacam.transport.DriveTransport" 
+            android:exported="false"
+            />
+
+        <service
+            android:name="org.witness.informacam.informa.InformaService"
+            android:enabled="true"
+            android:exported="false" />
+        
+        <service android:name="org.witness.informacam.intake.Intake"
+            android:enabled="true"
+            android:exported="false" />
+        
+        <service android:name="org.witness.informacam.transport.GlobaleaksTransport"
+            android:enabled="true"
+            android:exported="false" />
+        
+        <service
+            android:name="org.witness.informacam.share.WebShareService"
+            android:enabled="true"
+            android:exported="false" />
+        
+        <activity android:name="net.hockeyapp.android.UpdateActivity" />
+
+        <receiver
+        android:name="org.witness.informacam.intake.DCIMObserver"
+        android:enabled="true" >
+        <intent-filter>
+            <action android:name="com.android.camera.NEW_PICTURE" />
+            <action android:name="android.hardware.action.NEW_PICTURE" />
+            <data android:mimeType="image/*" />
+        </intent-filter>
+         <intent-filter>
+            <action android:name="com.android.camera.NEW_VIDEO" />
+            <action android:name="android.hardware.action.NEW_VIDEO" />
+            <data android:mimeType="video/*" />
+        </intent-filter>
+    </receiver>
+    
+          <activity
+            android:name="info.guardianproject.iocipher.camera.GalleryActivity"
+            android:label="@string/app_name" 
+            android:uiOptions="splitActionBarWhenNarrow"
+           	android:configChanges="keyboardHidden|orientation|screenSize"
+            >
+            <intent-filter>                
+				<action android:name="info.guardianproject.action.SECURE_STILL_IMAGE_CAMERA" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>                
+				<action android:name="info.guardianproject.action.SECURE_VIDEO_CAMERA" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            
+            <intent-filter>
+                <action android:name="android.provider.MediaStore.ACTION_VIDEO_CAPTURE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            
+            <intent-filter>
+                <action android:name="android.provider.MediaStore.ACTION_IMAGE_CAPTURE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            
+        </activity>
+        
+
+         <activity
+            android:name="info.guardianproject.iocipher.camera.StillCameraActivity"
+            android:label="Secure Still Camera"
+                android:theme="@android:style/Theme.NoTitleBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+                android:hardwareAccelerated="true"
+                />
+
+                 <activity
+            android:name="info.guardianproject.iocipher.camera.VideoCameraActivity"
+            android:label="Secure Video Camera"
+                android:theme="@android:style/Theme.NoTitleBar"
+                android:hardwareAccelerated="true"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+                />                        
+        
+                 <activity
+            android:name="info.guardianproject.iocipher.camera.viewer.ImageViewerActivity"
+            android:label="Secure Image Viewer"
+            
+            android:configChanges="keyboardHidden|orientation|screenSize"
+                android:theme="@android:style/Theme.NoTitleBar"/>
+        
+                  <activity
+            android:name="info.guardianproject.iocipher.camera.viewer.MjpegViewerActivity"   
+             android:label="Secure Video Viewer"
+            android:configChanges="keyboardHidden|orientation|screenSize"         
+                android:theme="@android:style/Theme.NoTitleBar"/>
+        
+        <provider
+            android:name="info.guardianproject.iocipher.camera.io.IOCipherContentProvider"
+            android:authorities="org.witness.informacam"
+            android:exported="true"
+            android:multiprocess="true"
+            android:syncable="false"            
+             />
+        
+         <service
+            android:name="info.guardianproject.cacheword.CacheWordService"
+            android:enabled="true"
+            android:exported="false" />
+         
+    
+    </application>
+    
+    
+
+</manifest>
