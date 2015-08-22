@@ -231,8 +231,8 @@ public class GalleryGridAdapter extends BaseAdapter {
 			IMedia m = (IMedia) media.get(position - mNumLoading);
 			MediaInfo info = mediaInfoDefault;
 			
-			 if (mediaInfo != null)
-					info = mediaInfo.get(position - mNumLoading);
+			 if (mediaInfo != null && mediaInfo.size() > 0)
+					info = mediaInfo.get(Math.min(mediaInfo.size()-1,position - mNumLoading));
 			 
 			if (convertView != null && (((ViewGroup)convertView).getChildAt(0) instanceof RoundedImageView))
 				view = convertView;
