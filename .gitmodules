@@ -1,6 +1,0 @@
-[submodule "external/InformaCam"]
-	path = external/InformaCam
-	url = https://github.com/guardianproject/InformaCam.git
-[submodule "external/mpandroidchart"]
-	path = external/mpandroidchart
-	url = https://github.com/PhilJay/MPAndroidChart.git

@@ -1,0 +1,2 @@
+include ':informaCam'
+include ':cameraVApp'
