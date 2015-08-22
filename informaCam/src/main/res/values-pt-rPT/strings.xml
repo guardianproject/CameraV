@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">InformaCam</string>
+  <string name="ok">CONFIRMAR</string>
+  <string name="cancel">Cancelar</string>
+  <!--<string name="gps_not_available_your">GPS is not fully available.  Your data might not be as accurate.</string>-->
+</resources>

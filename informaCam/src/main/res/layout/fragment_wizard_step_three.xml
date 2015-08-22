@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/key_gen_progress_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="30dip"
+            android:paddingRight="30dip"
+            android:text="@string/we_are_generating_your" />
+
+        <ProgressBar
+            android:id="@+id/wizard_keygen_progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dip"
+            android:max="100"
+            android:progress="0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/key_gen_success_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="30dip"
+            android:paddingRight="30dip"
+            android:text="@string/your_device_is_all" />
+
+        <Button
+            android:id="@+id/wizard_save_and_continue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/continue_" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dip"
+        android:layout_marginBottom="18dip"
+        android:layout_marginTop="18dip"
+        android:background="@drawable/black" />
+
+    <FrameLayout
+        android:id="@+id/wizard_no_sub_fragments_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/wizard_sub_fragments_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/wizard_sub_fragments_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:paddingLeft="40dip"
+            android:paddingRight="40dip"
+            android:text="@string/in_the_meantime_adjust"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:id="@+id/wizard_sub_fragments_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/wizard_sub_fragments_progress_container"
+            android:layout_below="@+id/wizard_sub_fragments_title"
+            android:layout_marginTop="30dip" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dip"
+            android:layout_alignParentBottom="true"
+             android:id="@+id/wizard_sub_fragments_progress_container"
+             >
+
+            <LinearLayout
+                android:id="@+id/wizard_sub_fragments_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:orientation="horizontal" />
+
+            <ImageButton
+                android:id="@+id/wizard_sub_fragment_next"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_context_slide_right" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,55 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 21
+        multiDexEnabled true
+
+
+    }
+
+    sourceSets {
+        main {
+            jni.srcDirs = []
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
+    }
+}
+
+dependencies {
+
+    compile 'info.guardianproject:android-ffmpeg-java:1.0.1'
+    compile 'info.guardianproject:netcipher:1.2.0'
+    compile 'info.guardianproject:camcipher:2.0.2'
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.google.code.gson:gson:2.1'
+    compile 'com.google.guava:guava:11.0.2'
+    compile 'com.google.android.gms:play-services-location:7.5.0'
+    compile 'commons-io:commons-io:2.4'
+    compile 'org.apache.commons:commons-lang3:3.0'
+    compile 'com.madgag.spongycastle:core:1.50.0.0'
+    compile 'com.madgag.spongycastle:pg:1.50.0.0'
+    compile 'com.madgag.spongycastle:prov:1.50.0.0'
+    compile 'com.android.support:multidex:1.0.1'
+    compile files('libs/dropbox-android-sdk-1.6.3.jar')
+    compile files('libs/javarosa-libraries.jar')
+    compile files('libs/json_simple-1.1.jar')
+    compile files('libs/kxml2-2.3.0.jar')
+    compile files('libs/nanohttpd-2.1.0.jar')
+    compile files('libs/protobuf-j2me-1.0-RC1.jar')
+}

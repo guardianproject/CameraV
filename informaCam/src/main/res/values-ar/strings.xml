@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">انفورماكام</string>
+  <string name="ok">حسنا</string>
+  <string name="cancel">إلغاء</string>
+  <!--<string name="gps_not_available_your">GPS is not fully available.  Your data might not be as accurate.</string>-->
+</resources>
