@@ -1,2 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources/>
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="photo">عکس </string>
+  <string name="video">ویدئو </string>
+  <string name="menu_all_media">انواع رسانه </string>
+  <string name="menu_list">لیست</string>
+  <string name="menu_grid">شبکه</string>
+  <string name="menu_location">مکان</string>
+  <string name="menu_date">تاریخ</string>
+  <string name="connected_to_tor">متصل به تور </string>
+  <string name="not_connected_to_tor">به تور وصل نیست </string>
+  <string name="you">شما </string>
+  <string name="notifications">آگاهی‌ساز</string>
+  <string name="organizations">سازمان</string>
+  <string name="we_could_not_log">نمی‌توانیم شما را وارد سیستم کنیم. لطفا دوباره سعی کنید. </string>
+  <string name="change_settings">&lt;u&gt; تغییر تنظیم &lt;u&gt;</string>
+  <string name="save">&lt;u&gt;ذخیره&lt;u&gt;</string>
+  <string name="cancel">&lt;u&gt;لغو&lt;u&gt;</string>
+  <string name="log_out">خروج</string>
+  <string name="no_notifications">هیچگونه آگاهی دهنده‌ای</string>
+  <string name="connect_with_organizations">اتصال به سازمان: </string>
+  <string name="delete">حذف</string>
+  <string name="rename">تغییر نام </string>
+  <string name="send">ارسال\u2026</string>
+  <string name="your_gallery_is_hungry">گالری شما نیاز به عکس و ویدئو دارد. </string>
+  <string name="swipe_left_for_cameras">به سمت چپ بکشید برای دوربین </string>
+  <string name="all_media">انواع رسانه‌ها</string>
+  <string name="share">اشتراک </string>
+  <string name="share_secure">اشتراک‌گذاری امن </string>
+  <string name="untitled">بدون عنوان </string>
+</resources>

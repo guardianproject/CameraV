@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <string name="app_name">CameraV</string>
   <string name="photo">Fotografia</string>
@@ -13,16 +13,19 @@
   <string name="you">Você</string>
   <string name="notifications">Notificações</string>
   <string name="organizations">Organizações</string>
+  <string name="get_in">Entrar</string>
   <string name="we_could_not_log">Não foi possível iniciar a sua sessão. Por favor, tente de novo.</string>
   <string name="change_settings"><u>Alterar Definições</u></string>
   <string name="save"><u>Guardar</u></string>
   <string name="cancel"><u>Cancelar</u></string>
   <string name="log_out">Terminar Sessão</string>
   <string name="no_notifications">Sem notificações:</string>
+  <string name="connect_with_organizations">Conte-se com organizações:</string>
   <string name="delete">Apagar</string>
   <string name="rename">Renomear</string>
   <string name="export">Exportar</string>
   <string name="send">Enviar\u2026</string>
+  <string name="your_gallery_is_hungry">A sua galeria está \"esfomeada\" por fotografias e vídeos.</string>
   <string name="swipe_left_for_cameras">Deslizar para esquerda para câmaras.</string>
   <string name="all_media">Toda a Multimédia</string>
   <string name="share">Share</string>
@@ -36,6 +39,11 @@
   <string name="send_to_org">Enviar para Org</string>
   <string name="share_via">Compartilhar Via</string>
   <string name="choose_an_organization">Escolha uma organização:</string>
+  <string name="send_encrypted_to_organization">Partilhe encriptado para organização\u2026</string>
+  <string name="send_encrypted_to_x">Partilhe encriptado para %1$s</string>
+  <string name="sending_encrypted_to_x">Partilha encriptada para %1$s. (Alterar?)</string>
+  <string name="there_are_no_organizations">Não existem organizações para você enviar. Em vez disso, tente compartilhar multimédia.</string>
+  <string name="sharing_outside_of_informacam">Partilhar fora de %1$s significa que a sua multimédia pode ser contestada.  Mesmo assim, compartilhar?</string>
   <string name="export_my_credentials">Exportar as minhas credenciais\u2026</string>
   <string name="send_message">Enviar mensagem\u2026</string>
   <string name="notes">Notas</string>
@@ -43,7 +51,7 @@
   <string name="delete_audio_note">Apagar Nota Áudio</string>
   <string name="unverified">Não Verificada</string>
   <string name="verified">Verificada</string>
-  <string name="pull_down_to_wipe">Deslize para baixo para eliminar os seus conteúdos</string>
+  <string name="pull_down_to_wipe">Deslize para baixo para limpar os seus conteúdos</string>
   <string name="or">\u2014 ou \u2014</string>
   <string name="please_wait">Aguar, por favor\u2026</string>
   <string name="record">Gravar</string>
@@ -54,7 +62,12 @@
   <string name="retry">Repetir</string>
   <string name="your_media_is_being_encoded">A sua multimédia está a ser processada...</string>
   <string name="login_open">Abrir</string>
+  <string name="login_passphrase">Código</string>
   <string name="preferences">Preferências</string>
+  <string name="original_images_should_be">As fotografias e o vídeo capturados deverão ser guardados em:</string>
+  <string name="prefs_images_deleted">Armazenamento Encriptado (Lento)</string>
+  <string name="prefs_images_saved">Armazenamento Padrão (Rápido)</string>
+  <string name="prefs_lock_screen">Bloquear ecrã</string>
   <string name="prefs_lock_screen_on">Lig.</string>
   <string name="prefs_lock_screen_off">Desl.</string>
   <string name="prefs_panic">Ação de Pânico</string>
@@ -86,8 +99,13 @@
   <string name="menu_lock">Bloquear App</string>
   <string name="menu_view_meta">Metadados</string>
   <string name="menu_view_charts">Gráficos</string>
+  <string name="menu_share_hash">Aprovar</string>
   <string name="menu_creds">Compartilhar Credenciais</string>
+  <string name="menu_export_keys">Copiar Códigos</string>
   <string name="menu_home_gallery_select_all">Selecionar Tudo</string>
+  <string name="menu_remote_access">Partilha Remota</string>
+  <string name="menu_remote_access_tor">Partilha da Web</string>
+  <string name="menu_remote_access_dropbox">Sincronizar Dropbox</string>
   <string name="wizard_welcome">Bem-vindo!</string>
   <string name="wizard_choose_language">Escolha um idioma:</string>
   <string name="wizard_get_started">Iniciar</string>
@@ -96,13 +114,13 @@
   <string name="wizard_email_optional">Correio Eletrónico (opcional)</string>
   <string name="wizard_password_dont_match">As senhas não coincidem =(</string>
   <string name="wizard_password_wrong_format">A sua senha deverá conter mais de 10 carateres.</string>
-  <string name="wizard_ok_next">Continuar</string>
+  <string name="wizard_ok_next">Continuar e Seguinte</string>
   <string name="wizard_step_2_of_2">Passo 2 de 2:</string>
-  <string name="wizard_take_photo_title">Tire 6 fotografias à sua escolha para gerar a chave do seu dispositivo.</string>
-  <string name="wizard_key_information">A sua chave irá permitir-lhe ser verificado, e assim pode compartilhar continuamente e em segurança.</string>
+  <string name="wizard_take_photo_title">Tire 6 fotografias à sua escolha para gerar o código do seu dispositivo.</string>
+  <string name="wizard_key_information">O seu código irá permitir-lhe ser verificado, e assim pode compartilhar continuamente e em segurança.</string>
   <string name="wizard_take_photo">Fotografar</string>
   <string name="wizard_take_photo_take">Fotografar</string>
-  <string name="wizard_key_is_being_made">A sua chave está a ser criada, isto poderá demorar algum tempo.</string>
+  <string name="wizard_key_is_being_made">O seu código está a ser criado, isto poderá demorar algum tempo.</string>
   <string name="wizard_key_made">A sua chave foi criada.</string>
   <string name="home_audio_note">NOTA DE ÁUDIO</string>
   <string name="home_share">COMPARTILHAR</string>
@@ -124,6 +142,13 @@
   <string name="audio_saved_info">As notas de áudio são apenas para sua referência, e não serão partilhadas.</string>
   <string name="audio_saved_ok">OBRIGADO!</string>
   <string name="shared_never">Nunca partilhada</string>
+  <string name="shared_recently">Partilhado(a) à menos de um minuto</string>
+  <string name="shared_minutes">Partilhado(a) à %1$d minutos</string>
+  <string name="shared_minute">Partilhado(a) à %1$d minuto</string>
+  <string name="shared_hours">Partilhado(a) à %1$d horas</string>
+  <string name="shared_hour">Partilhado(a) à %1$d hora</string>
+  <string name="shared_days">Partilhado(a) à %1$d dias</string>
+  <string name="shared_day">Partilhado(a) à %1$d dias</string>
   <string name="filter_all">Todos os Itens</string>
   <string name="filter_photos">Apenas fotografias</string>
   <string name="filter_videos">Apenas vídeos</string>
@@ -135,21 +160,40 @@
   <string name="panic_cancel">Cancelar</string>
   <string name="panic_hint">Deslize para baixo para apagar a app</string>
   <string name="panic_hint_wipe_content">Deslize para baixo para apagar os dados pessoais</string>
+  <string name="panic_test_successful">Bom trabalho! Num cenário real, teria efetuado a limpeza com sucesso.</string>
   <string name="prefs_gps_highres">Forçar GPS em Alta Definição</string>
   <string name="prefs_gps_highres_summary">Assegura que obtém apenas os dados de localização da rede de satélites do GPS atual</string>
   <string name="prefs_external_camera">Usar Apps de Câmara Externas</string>
+  <string name="prefs_external_camera_summary">Use apenas as apps de câmaras de sistema desencripado, e não a câmara encriptada incorporada</string>
+  <string name="menu_alwayson">Modo de Verificação</string>
+  <string name="_camerav_notarization_id_">#CameraV - Aprovação </string>
+  <string name="share_from_">Compartilhe de</string>
   <string name="_id_">Id.:</string>
   <string name="prefs_export_local">Exportar Multimédia Encriptada</string>
+  <string name="prefs_export_local_summary">Guarde primeiro a multimédia encriptada para o armazenamento externo quando a compartilhar</string>
   <string name="prefs_run_foreground">Manter app em segundo plano</string>
   <string name="prefs_run_foreground_summary">Assegura que a app não é fechada quando muda para outra app</string>
   <string name="prefs_stealth_icon">Ativar Ícone Alternativo</string>
+  <string name="prefs_stealth_icon_summary">Ocultar o ícone e o nome da CameraV no executor, em vez disso mostrar \"Definições CV\" genéricas</string>
   <string name="prefs_block_screenshots">Bloquear Capturas de Ecrã</string>
+  <string name="prefs_block_screenshots_summary">Impedir que outras apps e o sistema Android efetuem capturas de ecrã desta app</string>
+  <string name="light">Luz</string>
+  <string name="air_pressure">Pressão do Ar</string>
   <string name="orientation">Orientação</string>
   <string name="motion">Gesto</string>
+  <string name="camerav_hash_service">Verificar Hash</string>
   <string name="app_name_alt">Definições da CV</string>
   <string name="wifi_networks">Redes SEM-FIO</string>
   <string name="gps_speed">Velocidade do GPS</string>
   <string name="gps_altitude">Altitude de GPS</string>
   <string name="remote_web_access_enabled_at">Acesso da Web remoto ativado às</string>
   <string name="remote_web_access_disabled">Acesso da Web remoto desativado</string>
+  <string name="web_sharing">Comaprtilha da Web</string>
+  <string name="deactivate_web_share">Desativar Compartilha da Web</string>
+  <string name="activate_web_share">Ativar Compartilha da Web</string>
+  <string name="share_web_address">Endereço da Compartilha da Web</string>
+  <string name="you_can_access_my_camerav_photos_and_videos_here_">Pode aceder às fotografias e vídeos da CameraV aqui: </string>
+  <string name="gps_accuracy">Precisão do GPS</string>
+  <string name="welcome_to_camerav_would_you_like_to_read_the_user_guide_">Bem-vindo à CameraV. Deseja ler o guia do utilizador?</string>
+  <string name="menu_guide">Ver Guia</string>
 </resources>
