@@ -147,18 +147,7 @@ public class InformaCam extends MultiDexApplication {
 		mInstance = this;
 		processId = android.os.Process.myPid();
 
-		String localeCode = PreferenceManager.getDefaultSharedPreferences(this).getString("iw_language", "0");
-        int localeIdx = Integer.parseInt(localeCode);
-        String[] lang = getResources().getStringArray(R.array.locales);
-
-		Locale locale = new Locale(lang[localeIdx]);
-        Locale.setDefault(locale);
-		Configuration config = getResources().getConfiguration();
-		if (Build.VERSION.SDK_INT >= 17)
-			config.setLocale(locale);
-		else
-			config.locale = locale;
-		getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+		updateLocale ();
 
 		Logger.d(LOG, "InformaCam service started via intent");
 		
@@ -236,6 +225,32 @@ public class InformaCam extends MultiDexApplication {
 		
 		startup();
 		
+	}
+
+	public void updateLocale ()
+	{
+
+		String localeCode = PreferenceManager.getDefaultSharedPreferences(this).getString("iw_language", "0");
+		int localeIdx = Integer.parseInt(localeCode);
+		String[] lang = getResources().getStringArray(R.array.locales);
+
+		String[] localeString = lang[localeIdx].split("-");
+
+		Locale locale = null;
+
+		if (localeString.length == 1)
+			locale = new Locale(localeString[0]);
+		else
+			locale = new Locale(localeString[0],localeString[1]);
+
+		Locale.setDefault(locale);
+		Configuration config = getResources().getConfiguration();
+		if (Build.VERSION.SDK_INT >= 17)
+			config.setLocale(locale);
+		else
+			config.locale = locale;
+		getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
 	}
 
 	public void startup() {

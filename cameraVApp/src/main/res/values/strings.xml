@@ -84,6 +84,7 @@
     <string name="pref_languages_no">Norwegian</string>
     <string name="pref_languages_sv">Swedish</string>
     <string name="pref_languages_pt_PT">Portuguese (Portugal)</string>
+    <string name="pref_languages_pt_BR">Portuguese (Brazilian)</string>
     <string name="pref_languages_si_LK">Sinhala (Sri Lanka)</string>
     <string name="pref_languages_tr_TR">Turkish (Turkey)</string>
     

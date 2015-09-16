@@ -32,13 +32,16 @@
         <item>4</item>
         <item>5</item>
         <item>6</item>
+
         <item>7</item>
         <item>8</item>
+        <item>9</item>
     </string-array>
     <string-array name="languages_">
         <item>@string/pref_languages_en_us</item>
-        <item>@string/pref_languages_fr</item>
         <item>@string/pref_languages_es</item>
+        <item>@string/pref_languages_pt_BR</item>
+        <item>@string/pref_languages_fr</item>
         <item>@string/pref_languages_ar</item>
         <item>@string/pref_languages_no</item>
         <item>@string/pref_languages_sv</item>
@@ -48,8 +51,9 @@
     </string-array>
     <string-array name="locales">
         <item>en</item>
-        <item>fr</item>
         <item>es</item>
+        <item>pt-br</item>
+        <item>fr</item>
         <item>ar</item>
         <item>no</item>
         <item>sv</item>

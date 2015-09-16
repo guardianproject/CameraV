@@ -166,8 +166,8 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 
 		cacheWord.reattach();
 
-        setNewLocale();
-		
+		updateLocale();
+
 		if (informaCam.getCredentialManagerStatus() == org.witness.informacam.utils.Constants.Codes.Status.LOCKED)
 		{
 			informaCam.attemptLogout();
@@ -243,22 +243,39 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 		}
 	}
 
-	private void setNewLocale()
+	private void updateLocale()
 	{
 		String localeCode = PreferenceManager.getDefaultSharedPreferences(this).getString("iw_language", "0");
+
 		int localeIdx = Integer.parseInt(localeCode);
 		String[] lang = getResources().getStringArray(org.witness.informacam.R.array.locales);
 
-		Locale locale = new Locale(lang[localeIdx]);
+		String[] localeString = lang[localeIdx].split("-");
+
+		Locale locale = null;
+
+		if (localeString.length == 1)
+			locale = new Locale(localeString[0]);
+		else
+			locale = new Locale(localeString[0],localeString[1]);
+
 		Locale.setDefault(locale);
 		Configuration config = getResources().getConfiguration();
 		if (Build.VERSION.SDK_INT >= 17)
 			config.setLocale(locale);
 		else
 			config.locale = locale;
+
 		getResources().updateConfiguration(config, getResources().getDisplayMetrics());
 
+		if (lastLocale != null && (!lastLocale.equals(localeCode)))
+		{
+			startActivity(new Intent(this,HomeActivity.class));
+			finish();
+			return;
+		}
 
+		lastLocale = localeCode;
 	}
 
 	private void initLayout()
@@ -558,7 +575,7 @@ public class HomeActivity extends FragmentActivity implements HomeActivityListen
 				logoutUser();
 				break;
 			case Routes.WIZARD:
-				setNewLocale();
+				updateLocale();
 
 				break;
 			}
