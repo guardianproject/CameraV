@@ -240,12 +240,13 @@ public class GalleryFragment extends Fragment implements
 				}
 			} else if (mCurrentFiltering == 6) // unencrypted items
 			{
+				if (listMedia != null) {
+					for (int i = listMedia.size() - 1; i >= 0; i--) {
 
-				for (int i = listMedia.size() - 1; i >= 0; i--) {
-
-					IMedia m = listMedia.get(i);
-					if (m.dcimEntry.fileAsset.source != Storage.Type.FILE_SYSTEM)
-						listMedia.remove(i);
+						IMedia m = listMedia.get(i);
+						if (m.dcimEntry.fileAsset.source != Storage.Type.FILE_SYSTEM)
+							listMedia.remove(i);
+					}
 				}
 			}
 		}
