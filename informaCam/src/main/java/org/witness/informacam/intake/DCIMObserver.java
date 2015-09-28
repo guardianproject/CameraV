@@ -280,7 +280,7 @@ public class DCIMObserver extends BroadcastReceiver {
 
 		try {
 
-			if (cursor != null && cursor.isBeforeFirst()
+			if (cursor != null && cursor.isBeforeFirst())
 			{
 				cursor.moveToFirst();
 				String media_path = cursor.getString(cursor.getColumnIndex("_data"));
