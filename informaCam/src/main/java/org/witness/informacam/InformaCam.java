@@ -327,11 +327,17 @@ public class InformaCam extends MultiDexApplication {
 	}
 	
 	public void initData() throws PGPException, IllegalAccessException, InstantiationException, IOException {
-		
-		ISecretKey sKey =  (ISecretKey) getModel(new ISecretKey());
-		
-		if (sKey != null && sKey.secretKey != null)
-			signatureService.initKey(sKey);
+
+		try {
+			ISecretKey sKey = (ISecretKey) getModel(new ISecretKey());
+
+			if (sKey != null && sKey.secretKey != null)
+				signatureService.initKey(sKey);
+		}
+		catch (PGPException e)
+		{
+			Logger.e("PGP key is null",e);
+		}
 
 		mediaManifest = (IMediaManifest) getModel(mediaManifest);
 
