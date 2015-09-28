@@ -276,23 +276,30 @@ public class DCIMObserver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
-	    Cursor cursor = context.getContentResolver().query(intent.getData(),      null,null, null, null);
-	    cursor.moveToFirst();
-	    String media_path = cursor.getString(cursor.getColumnIndex("_data"));
-	    cursor.close();
-	    
-	    if (dcimDescriptor != null)
-	    {
-		    try
+	    Cursor cursor = context.getContentResolver().query(intent.getData(), null, null, null, null);
+
+		try {
+
+			if (cursor != null && cursor.isBeforeFirst()
 			{
-				dcimDescriptor.addEntry(media_path, false, Storage.Type.FILE_SYSTEM);
+				cursor.moveToFirst();
+				String media_path = cursor.getString(cursor.getColumnIndex("_data"));
+				cursor.close();
+
+				if (dcimDescriptor != null) {
+					try {
+						dcimDescriptor.addEntry(media_path, false, Storage.Type.FILE_SYSTEM);
+					} catch (Exception e) {
+						//Logger.d(LOG,"unable to add thumbnail");
+						Logger.e(LOG, e);
+					}
+				}
 			}
-			catch (Exception e)
-			{
-				//Logger.d(LOG,"unable to add thumbnail");
-				Logger.e(LOG, e);
-			}
-	    }
+		}
+		catch (Exception e)
+		{
+			Logger.e(LOG, e);
+		}
 	}
 
 }

@@ -251,7 +251,8 @@ public class InformaActivity extends Activity implements InformaCamStatusListene
 		{
 			if (data.hasExtra(Codes.Extras.CHANGE_LOCALE) && data.getBooleanExtra(Codes.Extras.CHANGE_LOCALE, false))
 			{
-				route.putExtra(Codes.Extras.CHANGE_LOCALE, true);
+				if (route != null)
+					route.putExtra(Codes.Extras.CHANGE_LOCALE, true);
 			}
 
 		}
