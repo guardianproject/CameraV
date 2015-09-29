@@ -17,7 +17,11 @@ public class ILanguageMap extends Model implements Serializable {
 	}
 	
 	public String getCode(int which) {
-		return languages.get(which).code;
+
+		if (languages != null && languages.size() > which)
+			return languages.get(which).code;
+		else
+			return "en";
 	}
 	
 	public ArrayList<String> getLabels() {
