@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TimeCam</string>
+
+    <string name="lock_screen_open">Open</string>
+    <string name="title_activity_lock_screen">Locked</string>
+    <string name="lock_screen_create_passphrase">Create passphrase</string>
+	<string name="lock_screen_passphrase_hint">Enter passphrase</string>
+	<string name="lock_screen_passphrase_not_set_enter">Enter new passphrase</string>
+	<string name="lock_screen_passphrase_not_set_confirm">Confirm new passphrase</string>
+	<string name="lock_screen_passphrases_not_matching">Passphrases did not match, please try again</string>
+	
+	<string name="pass_err_length">Your passphrase is too short</string>
+	
+	<string name="install_orbot_">Install Orbot?</string>
+	
+	<string name="market_orbot">market://search?q=pname:org.torproject.android</string>
+	
+	<string name="you_must_have_orbot">You must have Orbot installed and activated to proxy traffic through it. Would you like to install it from Google Play?</string>
+	
+	<string name="yes">Yes</string>
+	
+	<string name="no">No</string>
+	
+	<string name="always">Always</string>
+	
+	<string name="start_orbot_">Start Orbot?</string>
+	
+	<string name="orbot_doesn_t_appear_to_be_running_would_you_like_to_start_it_up_and_connect_to_tor_">Orbot doesn\'t appear to be running. Would you like to start it up and connect to Tor?</string>
+	
+</resources>

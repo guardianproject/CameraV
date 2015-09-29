@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <SurfaceView
+        android:id="@+id/surface_grabber_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <View
+        android:id="@+id/overlay_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    
+
+         <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"    
+        android:orientation="horizontal"		
+		android:padding="6dp"	
+         >
+
+        <ImageView 	
+            android:contentDescription="secure indicator"	    
+		    android:layout_width="48dp"
+            android:layout_height="48dp"	    
+		    android:background="@drawable/ic_action_secure"
+		     style="?android:attr/buttonBarButtonStyle"/>
+ 
+    <TextView
+        android:id="@+id/surface_grabber_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="36dp"
+        android:textColor="#B3ff0000"
+        />
+
+    </LinearLayout>
+    
+    
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"        
+        android:layout_alignParentRight="true"
+        android:padding="6dp"
+       >
+
+        <Button
+            android:id="@+id/surface_grabber_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+        	android:layout_alignParentTop="true"
+            android:background="@drawable/ic_action_video"
+            style="?android:attr/buttonBarButtonStyle"                       
+             />
+         
+        	<Button 
+		    android:id="@+id/selfie_button"
+		    android:layout_width="48dp"
+            android:layout_height="48dp"	    
+		    android:background="@drawable/ic_action_switch_camera"
+		    android:layout_alignParentBottom="true"
+		    style="?android:attr/buttonBarButtonStyle"
+		    
+		    />
+
+    </RelativeLayout>
+
+</RelativeLayout>

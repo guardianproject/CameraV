@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="info.guardianproject.iocipher.camera"
+    android:versionCode="201"
+    android:versionName="2.0.1-dev" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+        <uses-permission android:name="android.permission.CAMERA" />
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<!-- this is a library project; if you want to build the app, you can uncomment the code below -->
+
+</manifest>
