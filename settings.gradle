@@ -1,2 +1,3 @@
 include ':informaCam'
 include ':cameraVApp'
+include ':camCipher'
