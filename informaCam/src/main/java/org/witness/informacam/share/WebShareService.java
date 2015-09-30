@@ -25,7 +25,6 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import ch.boye.httpclientandroidlib.conn.util.InetAddressUtils;
 
 public class WebShareService extends Service {
 
