@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/app_primary"
+    android:background="@color/blue_dark"
+
     android:paddingLeft="0dip"
     android:paddingRight="0dip"
     android:paddingTop="0dip" >
