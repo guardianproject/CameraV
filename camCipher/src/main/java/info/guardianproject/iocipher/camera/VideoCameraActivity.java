@@ -211,7 +211,7 @@ public class VideoCameraActivity extends CameraBaseActivity {
 		
 		lastTime = System.currentTimeMillis();
 		
-		String fileName = "video" + new java.util.Date().getTime() + ".mp4";
+		String fileName = "camerav_video_" + new java.util.Date().getTime() + ".mp4";
 		fileOut = new info.guardianproject.iocipher.File(mFileBasePath,fileName);
 		
 		mResultList.add(fileOut.getAbsolutePath());
@@ -269,7 +269,7 @@ public class VideoCameraActivity extends CameraBaseActivity {
 			overlayView.setBackgroundResource(R.color.flash);
 			
 			long mTime = System.currentTimeMillis();
-			fileSecurePicture = new File(mFileBasePath,"secureselfie_" + mTime + ".jpg");
+			fileSecurePicture = new File(mFileBasePath,"camerav_image_" + mTime + ".jpg");
 
 			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(fileSecurePicture));
 			out.write(data);
@@ -352,22 +352,20 @@ public class VideoCameraActivity extends CameraBaseActivity {
 		}
 		
 		if (mIsRecording && mFrameQ != null)
-			synchronized (mFrameQ)
+			if (data != null)
 			{
-				if (data != null)
-				{
-					
-					VideoFrame vf = new VideoFrame();
-					vf.image = dataResult;
-					vf.duration = 1;//this is frame duration, not time //System.currentTimeMillis() - lastTime;
-					vf.fps = mFPS;
-					
-					mFrameQ.add(vf);
-					
-					mFramesTotal++;					
-					
-				}
+
+				VideoFrame vf = new VideoFrame();
+				vf.image = dataResult;
+				vf.duration = 1;//this is frame duration, not time //System.currentTimeMillis() - lastTime;
+				vf.fps = mFPS;
+
+				mFrameQ.add(vf);
+
+				mFramesTotal++;
+
 			}
+
 			
 		mFpsCounter++;
         if((System.currentTimeMillis() - start) >= 1000) {
@@ -454,7 +452,7 @@ public class VideoCameraActivity extends CameraBaseActivity {
 				//now write audio
 				
             	FileInputStream fis = new FileInputStream(fileAudio);
-            	byte[] audioBuffer = new byte[1024*64];
+            	byte[] audioBuffer = new byte[1024*32];
             	int bytesRead = -1;
             	
             	while ((bytesRead = fis.read(audioBuffer))!=-1)
@@ -465,7 +463,7 @@ public class VideoCameraActivity extends CameraBaseActivity {
 				muxer.finish();
 				
 				fis.close();
-				fos.close();
+			//	fos.close();
 				
 				
 			} catch (Exception e) {

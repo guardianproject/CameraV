@@ -56,7 +56,7 @@ public class ImageToMJPEGMOVMuxer {
         this.framesPerSecond = framesPerSecond;
         
         // Muxer that will store the encoded frames
-        muxer = new WebOptimizedMP4Muxer(ch, Brand.MOV, 16000);
+        muxer = new WebOptimizedMP4Muxer(ch, Brand.MP4, 4000);
 
         // Add video track to muxer
         videoTrack = muxer.addTrack(TrackType.VIDEO, framesPerSecond);

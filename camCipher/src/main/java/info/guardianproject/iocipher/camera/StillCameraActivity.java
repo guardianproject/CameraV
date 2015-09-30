@@ -17,14 +17,18 @@ import info.guardianproject.iocipher.File;
 import info.guardianproject.iocipher.FileOutputStream;
 
 import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Camera;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 
 public class StillCameraActivity extends CameraBaseActivity {
 	
@@ -32,7 +36,9 @@ public class StillCameraActivity extends CameraBaseActivity {
 	
 	private boolean isRequest = false;
 	private ArrayList<String> mResultList = null;
-	
+
+	private Handler mHandler = new Handler();
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,52 +52,63 @@ public class StillCameraActivity extends CameraBaseActivity {
 	}
 
 	@Override
-	public void onPictureTaken(final byte[] data, Camera camera) {		
-		File fileSecurePicture;
-		try {
-			
-			if (overlayView != null)
-				overlayView.setBackgroundResource(R.color.flash);
-			
-			long mTime = System.currentTimeMillis();
-			fileSecurePicture = new File(mFileBasePath,"secure_image_" + mTime + ".jpg");
+	public void onPictureTaken(byte[] data, Camera camera) {
 
-			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(fileSecurePicture));
-			out.write(data);
-			out.flush();
-			out.close();
+		overlayView.setBackgroundColor(Color.WHITE);
 
-			mResultList.add(fileSecurePicture.getAbsolutePath());
+		view.postDelayed(new Runnable () {
+			public void run () {
+				overlayView.setBackgroundColor(Color.TRANSPARENT);
+				resumePreview();
+			}
+		},50);
 
-			Intent intentResult = new Intent().putExtra(MediaStore.EXTRA_OUTPUT, mResultList.toArray(new String[mResultList.size()]));			
-			setResult(Activity.RESULT_OK, intentResult);
-			
-			view.postDelayed(new Runnable()
-			{
-				@Override
-				public void run() {
-					overlayView.setBackgroundColor(Color.TRANSPARENT);
-					
-					resumePreview();
-				}
-			},100);
-			
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			setResult(Activity.RESULT_CANCELED);
-
-		}
+		new SaveTask().execute(data);
 
 	}
 
 	@Override
 	public void onPause() {
-
 		super.onPause();
 
 	}
-	
-	
+
+	class SaveTask extends AsyncTask<byte[], Void, File>
+	{
+
+		@Override
+		protected void onPostExecute(File fileResult) {
+			super.onPostExecute(fileResult);
+
+			Intent intentResult = new Intent().putExtra(MediaStore.EXTRA_OUTPUT, mResultList.toArray(new String[mResultList.size()]));
+			setResult(Activity.RESULT_OK, intentResult);
+
+		}
+
+		@Override
+		protected File doInBackground(byte[]... data) {
+
+			try {
+
+				long mTime = System.currentTimeMillis();
+				File fileSecurePicture = new File(mFileBasePath, "camerav_image_" + mTime + ".jpg");
+				mResultList.add(fileSecurePicture.getAbsolutePath());
+
+				FileOutputStream out = new FileOutputStream(fileSecurePicture);
+				out.write(data[0]);
+				out.flush();
+				out.close();
+
+				return fileSecurePicture;
+
+			} catch (IOException ioe) {
+				Log.e(StillCameraActivity.class.getName(), "error saving picture", ioe);
+			}
+
+			return null;
+		}
+
+	};
+
 
 }

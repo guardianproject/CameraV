@@ -692,20 +692,17 @@ public class GalleryActivity extends Activity  implements ICacheWordSubscriber {
 	private Bitmap getPreview(File fileImage) throws FileNotFoundException {
 
 		Bitmap b = null;
-		
-		synchronized (mBitCache)
+
+		b = mBitCache.get(fileImage.getAbsolutePath());
+
+		if (b == null && mBitLoaders.get(fileImage.getAbsolutePath())==null)
 		{
-			b = mBitCache.get(fileImage.getAbsolutePath());
-			
-			if (b == null && mBitLoaders.get(fileImage.getAbsolutePath())==null)
-			{
-				BitmapWorkerThread bwt = new BitmapWorkerThread(fileImage);
-				mBitLoaders.put(fileImage.getAbsolutePath(),bwt);
-				bwt.start();
-				
-			}
+			BitmapWorkerThread bwt = new BitmapWorkerThread(fileImage);
+			mBitLoaders.put(fileImage.getAbsolutePath(),bwt);
+			bwt.start();
+
 		}
-		
+
 		return b;
 	}
 	

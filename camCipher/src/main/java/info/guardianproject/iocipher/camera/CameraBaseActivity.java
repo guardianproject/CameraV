@@ -78,7 +78,7 @@ public abstract class CameraBaseActivity extends Activity implements OnClickList
 		super.onCreate(savedInstanceState);
 
 		View decorView = getWindow().getDecorView();
-		int uiOptions = View.SYSTEM_UI_FLAG_LOW_PROFILE;
+		int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
 		decorView.setSystemUiVisibility(uiOptions);
 				
 		setContentView(getLayout());
