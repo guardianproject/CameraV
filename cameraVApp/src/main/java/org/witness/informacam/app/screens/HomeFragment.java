@@ -183,8 +183,8 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 
 	public void initData()
 	{
-		if (informaCam != null && informaCam.mediaManifest != null && mPhotoPager != null)
-		{
+		//if (informaCam != null && informaCam.mediaManifest != null && mPhotoPager != null)
+	//	{
 			//just use what the gallery already has
 			List<IMedia> newListMedia = GalleryFragment.listMedia;
 			if (newListMedia == null)
@@ -210,7 +210,7 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 					mNoMedia.setVisibility(mPhotoAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
 		
 			}
-		}		
+	//	}
 	}
 
 	private void initLayout()
