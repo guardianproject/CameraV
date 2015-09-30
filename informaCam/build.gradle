@@ -34,7 +34,9 @@ android {
 
 dependencies {
     compile 'info.guardianproject:android-ffmpeg-java:1.0.1'
-    compile 'info.guardianproject:netcipher:1.2.0'
+    compile 'info.guardianproject.netcipher:netcipher:1.2'
+    compile 'info.guardianproject.iocipher:IOCipherStandalone:0.3'
+    compile 'info.guardianproject.cacheword:cachewordlib:0.1'
     compile project(':camCipher')
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.google.code.gson:gson:2.1'

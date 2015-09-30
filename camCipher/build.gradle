@@ -21,7 +21,7 @@ dependencies {
     compile 'com.android.support:support-v4:19.1.0'
     compile 'com.github.japgolly.android:svg-android:2.0.6'
     compile 'info.guardianproject.cacheword:cachewordlib:0.1'
-    compile 'info.guardianproject.iocipher:IOCipher:0.3'
+    compile 'info.guardianproject.iocipher:IOCipherStandalone:0.3'
     compile files('libs/jcodec.jar')
     compile 'com.madgag.spongycastle:core:1.50.0.0'
     compile 'com.madgag.spongycastle:pg:1.50.0.0'
