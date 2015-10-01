@@ -67,7 +67,7 @@ public class GalleryFragment extends Fragment implements
 
 	boolean isInMultiSelectMode;
 	ArrayList<IMedia> batch = null;
-	static List<IMedia> listMedia = null;
+	List<IMedia> listMedia = null;
 
 	private static final String LOG = Home.LOG;
 	private final InformaCam informaCam = InformaCam.getInstance();
@@ -197,7 +197,7 @@ public class GalleryFragment extends Fragment implements
 		else if (mCurrentFiltering == 2)
 			sorting = Models.IMediaManifest.Sort.TYPE_VIDEO;
 		
-		listMedia = InformaCam.getInstance().mediaManifest.sortBy(sorting);
+		List<IMedia> listMedia = new ArrayList<IMedia>(InformaCam.getInstance().mediaManifest.sortBy(sorting));
 
 		if (listMedia != null) {
 
@@ -266,6 +266,8 @@ public class GalleryFragment extends Fragment implements
 			mediaDisplayGrid.setOnItemClickListener(this);
 		}
 
+		updateAdapters();
+
 		if((listMedia != null && listMedia.size() > 0) || this.mNumLoading > 0) {
 			if (noMedia != null)
 				noMedia.setVisibility(View.GONE);
@@ -274,7 +276,6 @@ public class GalleryFragment extends Fragment implements
 			if (noMedia != null)
 				noMedia.setVisibility(View.VISIBLE);
 		}
-		updateAdapters();		
 	}
 	
 	private void updateData()
@@ -283,7 +284,7 @@ public class GalleryFragment extends Fragment implements
 		{
 			@Override
 			public void run() {
-				getMediaList();
+				listMedia = getMediaList();
 				
 				if (a != null)
 					a.runOnUiThread(new Runnable()

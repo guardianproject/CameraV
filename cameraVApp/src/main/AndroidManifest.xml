@@ -36,12 +36,11 @@
 
     <application
         android:name="org.witness.informacam.InformaCam"
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:excludeFromRecents="true"        
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo.Light.NoActionBar"
         android:icon="@mipmap/ic_launcher"
-
         >
         
         <receiver
@@ -395,7 +394,7 @@
             android:authorities="org.witness.informacam"
             android:exported="true"
             android:multiprocess="true"
-            android:syncable="false"            
+            android:syncable="false"
              />
         
          <service

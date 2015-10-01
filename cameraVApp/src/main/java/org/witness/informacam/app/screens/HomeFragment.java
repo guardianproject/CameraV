@@ -170,6 +170,8 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 		}
 
 		initHomeActionBar();
+
+		initData();
 	}
 
 	@Override
@@ -183,33 +185,20 @@ public class HomeFragment extends Fragment implements ListAdapterListener, OnCli
 
 	public void initData()
 	{
+		if (a == null || mPhotoPager == null)
+			return;
+
 		//if (informaCam != null && informaCam.mediaManifest != null && mPhotoPager != null)
 	//	{
 			//just use what the gallery already has
-			List<IMedia> newListMedia = GalleryFragment.listMedia;
-			if (newListMedia == null)
-				listMedia = GalleryFragment.getMediaList();
-			
-			//informaCam.mediaManifest.sortBy(Models.IMediaManifest.Sort.DATE_DESC);
-			boolean isChanged = false;
-			
-			if (newListMedia != null)
-			{
-				if (listMedia == null || (listMedia.size() != newListMedia.size()))
-				{
-					listMedia = new ArrayList<IMedia>(newListMedia);
-					isChanged = true;
-				}
-			}
-			
-			if (isChanged)
-			{
-				mPhotoAdapter = new HomePhotoAdapter(a, listMedia);
-				mPhotoPager.setAdapter(mPhotoAdapter);
-				if (mNoMedia != null)
-					mNoMedia.setVisibility(mPhotoAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
-		
-			}
+			listMedia = GalleryFragment.getMediaList();
+
+            mPhotoAdapter = new HomePhotoAdapter(a, listMedia);
+            mPhotoPager.setAdapter(mPhotoAdapter);
+            if (mNoMedia != null)
+                mNoMedia.setVisibility(mPhotoAdapter.getCount() > 0 ? View.GONE : View.VISIBLE);
+
+
 	//	}
 	}
 
