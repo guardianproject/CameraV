@@ -476,7 +476,6 @@ public class GalleryActivity extends Activity  implements ICacheWordSubscriber {
 	{
 		
 		new AlertDialog.Builder(GalleryActivity.this)
-				.setIcon(R.drawable.ic_launcher)
 				.setTitle("[" + file.getName() + "]")
 				.setNegativeButton("Delete",
 						new DialogInterface.OnClickListener() {
