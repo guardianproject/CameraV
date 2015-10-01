@@ -192,6 +192,7 @@ public class GalleryGridAdapter extends BaseAdapter {
     	View viewNote;
     	View viewTag;
     	View viewEncrypted;
+        AsyncTask<Integer, Void, Bitmap> loadTask;
     }
 
     
@@ -272,10 +273,15 @@ public class GalleryGridAdapter extends BaseAdapter {
 				holder.checkBox.setChecked(false);	
 			}
 
+            if (holder.loadTask != null)
+                holder.loadTask.cancel(true);
+
 			if (!m.hasThumbnail())
 			{
+
 				holder.imageView.setImageResource(R.drawable.ic_home_gallery);
-				new ThumbnailTask(holder,m).execute(128);
+				holder.loadTask = new ThumbnailTask(holder,m);
+                holder.loadTask.execute(128);
 			}
 			else
 			{
