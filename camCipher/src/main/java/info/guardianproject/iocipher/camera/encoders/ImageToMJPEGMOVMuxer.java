@@ -56,16 +56,17 @@ public class ImageToMJPEGMOVMuxer {
         this.framesPerSecond = framesPerSecond;
         
         // Muxer that will store the encoded frames
-        muxer = new WebOptimizedMP4Muxer(ch, Brand.MP4, 4000);
+        muxer = new WebOptimizedMP4Muxer(ch, Brand.MP4, 4096*4);
 
         // Add video track to muxer
         videoTrack = muxer.addTrack(TrackType.VIDEO, framesPerSecond);
         muxer.addTimecodeTrack(framesPerSecond);
-        videoTrack.setTgtChunkDuration(new Rational(2, 1), Unit.SEC);
+        videoTrack.setTgtChunkDuration(new Rational(3, 1), Unit.SEC);
         
        if (af != null)
         	audioTrack = muxer.addPCMAudioTrack(af);
-       
+
+
 
     }
 
@@ -75,7 +76,8 @@ public class ImageToMJPEGMOVMuxer {
             videoTrack.addSampleEntry(MP4Muxer.videoSampleEntry(imageType, size, ENCODER_NAME));
            
             if (af != null)
-            	audioTrack.addSampleEntry(MP4Muxer.audioSampleEntry(af));	            
+            	audioTrack.addSampleEntry(MP4Muxer.audioSampleEntry(af));
+
         }
         
         // Add packet to video track

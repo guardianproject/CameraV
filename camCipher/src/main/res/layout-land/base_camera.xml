@@ -40,18 +40,18 @@
     
     
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"        
-        android:layout_alignParentRight="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:padding="6dp"
-       >
+        android:layout_alignParentBottom="true"
+
+        >
 
         <Button
             android:id="@+id/surface_grabber_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
-        	android:layout_alignParentTop="true"
+        	android:layout_alignParentRight="true"
             android:background="@drawable/ic_action_video"
             style="?android:attr/buttonBarButtonStyle"                       
              />
@@ -61,7 +61,7 @@
 		    android:layout_width="48dp"
             android:layout_height="48dp"	    
 		    android:background="@drawable/ic_action_switch_camera"
-		    android:layout_alignParentBottom="true"
+		    android:layout_alignParentLeft="true"
 		    style="?android:attr/buttonBarButtonStyle"
 		    
 		    />

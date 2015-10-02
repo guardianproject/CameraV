@@ -56,20 +56,14 @@ public class StillCameraActivity extends CameraBaseActivity {
 
 		overlayView.setBackgroundColor(Color.WHITE);
 
-		view.postDelayed(new Runnable () {
-			public void run () {
+		new SaveTask().execute(data);
+
+		view.postDelayed(new Runnable() {
+			public void run() {
 				overlayView.setBackgroundColor(Color.TRANSPARENT);
 				resumePreview();
 			}
-		},50);
-
-		new SaveTask().execute(data);
-
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
+		},10);
 
 	}
 

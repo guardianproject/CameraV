@@ -101,6 +101,14 @@ public class VideoCameraActivity extends CameraBaseActivity {
 	}
 
 	@Override
+	public void onPause() {
+		super.onPause();
+
+		if (mIsRecording)
+			stopRecording();
+	}
+
+	@Override
 	protected int getLayout()
 	{
 		return R.layout.base_camera;
@@ -125,7 +133,9 @@ public class VideoCameraActivity extends CameraBaseActivity {
             mDownX = ev.getX();
             mDownY = ev.getY();
             mIsOnClick = true;
-            handler.postDelayed(mLongPressed, 1000);
+
+			if (!mIsRecording)
+            	handler.postDelayed(mLongPressed, 1000);
             
             mInTopHalf = mDownY < (mLastHeight/2);
 
@@ -134,12 +144,19 @@ public class VideoCameraActivity extends CameraBaseActivity {
             break;
         case MotionEvent.ACTION_CANCEL:
         case MotionEvent.ACTION_UP:
-            if (!mIsRecording) {
-               
-            	//take a picture
-        		mPreviewing = false;
-        		camera.takePicture(null, null, this);
-                handler.removeCallbacks(mLongPressed);
+			handler.removeCallbacks(mLongPressed);
+
+			if (!mIsRecording) {
+
+				try {
+					//take a picture
+					mPreviewing = false;
+					camera.takePicture(null, null, this);
+				}
+				catch (RuntimeException re)
+				{
+					//hardware failure of take picture
+				}
             	
             }
             else
@@ -152,8 +169,7 @@ public class VideoCameraActivity extends CameraBaseActivity {
         	
         	mLastX = ev.getX();
         	mLastY = ev.getY();
-        	
-            
+
             mInTopHalf = mLastY < (mDownY-100);
 
             toggleCamera(mInTopHalf);

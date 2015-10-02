@@ -168,8 +168,14 @@ public abstract class CameraBaseActivity extends Activity implements OnClickList
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		initCamera();
+
+		view.postDelayed(new Runnable() {
+			public void run() {
+
+				initCamera();
+
+			}
+		},300);
 	}
 	
 	protected void initCamera()
@@ -203,7 +209,16 @@ public abstract class CameraBaseActivity extends Activity implements OnClickList
 		     Camera.getCameraInfo(nCam, info);
 		     if (info.facing == facing)
 		     {
-		    	 camera = Camera.open(nCam);
+				 try {
+
+					 camera = Camera.open(nCam);
+				 }
+				 catch (RuntimeException re)
+				 {
+					 Log.e("Camera","unable to open camera",re);
+					 return false;
+				 }
+
 		    	 cameraInfo = info;
 
 		    	 Camera.Parameters params = camera.getParameters();
@@ -270,6 +285,7 @@ public abstract class CameraBaseActivity extends Activity implements OnClickList
 						try {
 							camera.setPreviewDisplay(holder);
 							camera.startPreview();
+                            mPreviewing = true;
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
