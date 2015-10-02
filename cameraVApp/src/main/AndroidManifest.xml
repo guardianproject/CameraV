@@ -239,7 +239,6 @@
             android:theme="@style/HomeTheme" 
             android:exported="false"
             android:excludeFromRecents="true"
-            android:screenOrientation="portrait"
             />
         <activity
             android:name="org.witness.informacam.app.LoginActivity"

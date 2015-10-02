@@ -191,15 +191,19 @@ public class GalleryFragment extends Fragment implements
 	
 	public static List<IMedia> getMediaList()
 	{
+
 		int sorting = Models.IMediaManifest.Sort.DATE_DESC;
 		if (mCurrentFiltering == 1) // Photos
 			sorting = Models.IMediaManifest.Sort.TYPE_PHOTO;
 		else if (mCurrentFiltering == 2)
 			sorting = Models.IMediaManifest.Sort.TYPE_VIDEO;
-		
-		List<IMedia> listMedia = new ArrayList<IMedia>(InformaCam.getInstance().mediaManifest.sortBy(sorting));
 
-		if (listMedia != null) {
+		List<IMedia> listSource = InformaCam.getInstance().mediaManifest.sortBy(sorting);
+		List<IMedia> listMedia = null;
+
+		if (listSource != null) {
+
+			listMedia = new ArrayList<IMedia>(listSource);
 
 			if (mCurrentFiltering == 3) // Tagged items
 			{

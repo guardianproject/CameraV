@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gallery_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/white" >
+
+    <RelativeLayout
+        android:id="@+id/media_manager_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true" >
+
+        <LinearLayout
+            android:id="@+id/options_holder"
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
+            android:padding="0dip"
+            android:weightSum="1.0" >
+
+            <RelativeLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="0.69" >
+
+                <Button
+                    android:id="@+id/display_toggle_trigger"
+                    style="@style/iWitness_button_a"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/extras_button_a_selector"
+                    android:text="@string/all_media" />
+
+                <Spinner
+                    android:id="@+id/display_toggle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="6dip"
+                android:layout_marginTop="6dip"
+                android:layout_weight="0.005"
+                android:background="@drawable/grey" />
+
+            <RelativeLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15" >
+
+                <ImageButton
+                    android:id="@+id/display_sort_trigger"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/extras_button_a_selector"
+                    android:src="@drawable/ic_action_sort" />
+
+                <Spinner
+                    android:id="@+id/display_sort"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="6dip"
+                android:layout_marginTop="6dip"
+                android:layout_weight="0.005"
+                android:background="@drawable/grey" />
+
+            <ImageButton
+                android:id="@+id/multi_select"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15"
+                android:background="@drawable/white"
+                android:scaleType="centerInside" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/media_processing_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/options_holder"
+            android:visibility="gone" >
+            <include layout="@layout/media_processing" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/media_display_no_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/media_processing_holder"
+            android:layout_margin="6dip"
+            android:orientation="vertical"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip" >
+
+            <TextView
+                android:id="@+id/media_display_no_media_1"
+                style="@style/iwitness_h3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/your_gallery_is_hungry"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/media_display_no_media_1"
+                android:layout_marginTop="6dip"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/iwitness_h3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/swipe_left_for_cameras" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="6dip"
+                    android:paddingRight="6dip"
+                    android:src="@drawable/ic_context_slide_left" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="6dip"
+                    android:paddingRight="6dip"
+                    android:src="@drawable/ic_context_camera" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <GridView
+            android:id="@+id/media_display_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/media_processing_holder"
+            android:layout_margin="3dip"
+            android:gravity="center"
+            android:horizontalSpacing="3dip"
+            android:numColumns="4"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="6dip"
+            android:visibility="visible" />
+
+        <ListView
+            android:id="@+id/media_display_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/media_processing_holder"
+            android:layout_margin="6dip"
+            android:gravity="center"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/media_batch_edit_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:padding="0dip"
+        android:visibility="gone"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@+id/media_batch_share"
+            style="@style/button_b"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dip"
+            android:layout_marginRight="1dip"
+            android:layout_weight="0.5"
+            android:text="@string/send" />
+
+        <Button
+            android:id="@+id/media_batch_delete"
+            style="@style/button_b"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dip"
+            android:layout_weight="0.5"
+            android:text="@string/delete" />
+    </LinearLayout>
+
+</RelativeLayout>
