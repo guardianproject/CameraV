@@ -24,8 +24,12 @@ public class MjpegInputStream extends DataInputStream {
     private final byte[] SOI_MARKER = { (byte) 0xFF, (byte) 0xD8 };
     private final byte[] EOF_MARKER = { (byte) 0xFF, (byte) 0xD9 };
     private final String CONTENT_LENGTH = "Content-Length";
-    private final static int HEADER_MAX_LENGTH = 100;
-    private final static int FRAME_MAX_LENGTH = 40000 + HEADER_MAX_LENGTH;
+    //private final static int HEADER_MAX_LENGTH = 100;
+    //private final static int FRAME_MAX_LENGTH = 40000 + HEADER_MAX_LENGTH;
+
+    private final static int HEADER_MAX_LENGTH = 4096*4;
+    private final static int FRAME_MAX_LENGTH = 1000000 + HEADER_MAX_LENGTH;
+
     private int mContentLength = -1;
 	private SeekableStream stream;
 	private int fullLength = 0; 
@@ -91,6 +95,9 @@ public class MjpegInputStream extends DataInputStream {
         stream.mark(FRAME_MAX_LENGTH);
         int headerLen = getStartOfSequence(this, SOI_MARKER);
         stream.reset();
+        if (headerLen < 1)
+            return null;
+
         byte[] header = new byte[headerLen];
         //Log.v("MjpegInputStream", "headerLen: " + headerLen);
         stream.readFully(header);

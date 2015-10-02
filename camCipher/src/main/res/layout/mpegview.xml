@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_height="wrap_content" android:layout_width="fill_parent">
-    <LinearLayout android:id="@+id/LinearLayout1" android:layout_gravity="right" android:orientation="vertical" android:layout_height="fill_parent" android:layout_width="wrap_content">
-        <Button android:text="Video Test" android:id="@+id/button_video" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-        <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="Audio Test" android:id="@+id/button_audio" android:layout_gravity="left"></Button>
-        <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="Options" android:id="@+id/button_pref"></Button>
-        <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="Kill" android:id="@+id/button2" android:layout_gravity="left"></Button>
-    </LinearLayout>
-     
-    <org.problemloeser.cta.mjpegplayer.MjpegView android:id="@+id/videoView1" android:layout_width="wrap_content" android:layout_height="fill_parent"></org.problemloeser.cta.mjpegplayer.MjpegView>    
-    <!--
-    <VideoView android:id="@+id/videoView1" android:layout_width="wrap_content" android:layout_height="fill_parent"></VideoView>
-    -->
+    android:orientation="horizontal" android:layout_height="match_parent" android:layout_width="match_parent"
+    android:background="#000000"
+    >
+    <info.guardianproject.iocipher.player.MjpegView android:id="@+id/videoView1" android:layout_width="wrap_content" android:layout_height="match_parent"/>
 </LinearLayout>
