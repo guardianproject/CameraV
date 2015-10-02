@@ -122,12 +122,12 @@ public class Constants {
 
 	public class App {
 		public class Camera {
-			public final static String LOG = "******************** iWitness : CameraActivity ********************";
+			public final static String LOG = "CameraActivity";
 			public static final int ROUTE_CODE = Codes.Routes.CAMERA;
 		}
 
 		public class Editor {
-			public final static String LOG = "******************** iWitness : EditorActivity ********************";
+			public final static String LOG = "EditorActivity";
 			public static final int ROUTE_CODE = Codes.Routes.EDITOR;
 
 			public class Mode {

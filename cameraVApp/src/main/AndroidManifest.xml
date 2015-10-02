@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.witness.informacam.app"
     android:installLocation="auto"
-    android:versionCode="203"
-    android:versionName="0.2.3">
+    android:versionCode="204"
+    android:versionName="0.2.4">
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -387,6 +387,12 @@
              android:label="Secure Video Viewer"
             android:configChanges="keyboardHidden|orientation|screenSize"         
                 android:theme="@android:style/Theme.NoTitleBar"/>
+
+        <activity
+            android:name="info.guardianproject.iocipher.player.MjpegPlayerActivity"
+            android:label="Secure Video Viewer"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.NoTitleBar"/>
         
         <provider
             android:name="info.guardianproject.iocipher.camera.io.IOCipherContentProvider"

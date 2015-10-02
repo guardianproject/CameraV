@@ -1,19 +1,28 @@
 package org.witness.informacam.app.screens.editors;
 
-import info.guardianproject.iocipher.File;
-import info.guardianproject.iocipher.FileInputStream;
-import info.guardianproject.iocipher.camera.MediaConstants;
-import info.guardianproject.iocipher.camera.encoders.AACHelper;
-import info.guardianproject.iocipher.camera.viewer.MjpegInputStream;
-import info.guardianproject.iocipher.camera.viewer.MjpegView;
+import android.app.Activity;
+import android.content.res.Configuration;
+import android.graphics.RectF;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnVideoSizeChangedListener;
+import android.net.Uri;
+import android.os.Handler;
+import android.util.Log;
+import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 
-import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.efor18.rangeseekbar.RangeSeekBar;
+import com.efor18.rangeseekbar.RangeSeekBar.OnRangeSeekBarChangeListener;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.InformaCam;
@@ -25,69 +34,50 @@ import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.models.media.IVideo;
 import org.witness.informacam.ui.editors.IRegionDisplay;
 
-import android.app.Activity;
-import android.content.res.Configuration;
-import android.graphics.RectF;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioTrack;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnBufferingUpdateListener;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
-import android.media.MediaPlayer.OnInfoListener;
-import android.media.MediaPlayer.OnPreparedListener;
-import android.media.MediaPlayer.OnSeekCompleteListener;
-import android.media.MediaPlayer.OnVideoSizeChangedListener;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Handler;
-import android.os.storage.OnObbStateChangeListener;
-import android.util.Log;
-import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.MediaController;
-import android.widget.SeekBar;
+import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import com.efor18.rangeseekbar.RangeSeekBar;
-import com.efor18.rangeseekbar.RangeSeekBar.OnRangeSeekBarChangeListener;
+import info.guardianproject.iocipher.File;
+import info.guardianproject.iocipher.FileInputStream;
+import info.guardianproject.iocipher.camera.MediaConstants;
+import info.guardianproject.iocipher.player.MjpegInputStream;
+import info.guardianproject.iocipher.player.MjpegView;
 
-public class FullScreenMJPEGViewFragment extends FullScreenViewFragment implements OnClickListener, 
-OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener,  
+public class FullScreenMJPEGPlayerFragment extends FullScreenViewFragment implements OnClickListener,
+OnVideoSizeChangedListener, SurfaceHolder.Callback, OnTouchListener,
 OnRangeSeekBarChangeListener<Integer> {
-	
+
 	IVideo media_;
 	InformaCam informa;
-	
+
 	MjpegView videoView;
 	SurfaceHolder surfaceHolder;
 
 	AudioTrack at;
     InputStream isAudio = null;
     boolean useAAC = false;
-	
+
 	View mediaHolder_;
 	LinearLayout videoControlsHolder, endpointHolder;
 	VideoSeekBar videoSeekBar;
 	ImageButton playPauseToggle;
-	
+
 	Uri videoUri;
 
 	long duration = 0L;
 	int currentCue = 1;
 
 	private boolean isPlaying = false;
-	
+
 	private Handler handler = new Handler();
-	
+
 	private final static String LOG = Editor.LOG;
-	
+
 	@Override
 	public void onAttach(Activity a) {
 		super.onAttach(a);
@@ -100,18 +90,18 @@ OnRangeSeekBarChangeListener<Integer> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		informa = (InformaCam)a.getApplication();
 
 	}
-	
 
-	
+
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// TODO Auto-generated method stub
 		super.onConfigurationChanged(newConfig);
-		
+
 		Display display =getActivity().getWindowManager().getDefaultDisplay();
 		dims = new int[] { display.getWidth(), display.getHeight() };
 
@@ -120,7 +110,8 @@ OnRangeSeekBarChangeListener<Integer> {
 	private void initVideo() throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
 
 		try {
-			videoView.setSource(new MjpegInputStream(new info.guardianproject.iocipher.FileInputStream(media_.dcimEntry.fileAsset.path)));
+
+			videoView.setSource(new MjpegInputStream(new FileInputStream(media_.dcimEntry.fileAsset.path),getActivity().getCacheDir()));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -228,11 +219,12 @@ OnRangeSeekBarChangeListener<Integer> {
 	protected void initLayout() {
 		super.initLayout();
 	
-		mediaHolder_ = LayoutInflater.from(getActivity()).inflate(R.layout.editors_mjpeg_video, null);
+		mediaHolder_ = LayoutInflater.from(getActivity()).inflate(R.layout.editors_mjpeg_player, null);
 
 		videoView = (MjpegView) mediaHolder_.findViewById(R.id.video_view);
-		videoView.setDisplayMode(MjpegView.SIZE_BEST_FIT);
-		videoView.setFrameDelay(100); //we need to better sync each frame to the audio
+	//	videoView.setDisplayMode(MjpegView.SIZE_BEST_FIT);
+	        //mv.showFps(false);
+	//	videoView.setFrameDelay(1); //we need to better sync each frame to the audio
 
 	//	LayoutParams vv_lp = videoView.getLayoutParams();
 //		vv_lp.width = dims[0];
@@ -264,6 +256,7 @@ OnRangeSeekBarChangeListener<Integer> {
 					pause();
 					initAndStart();
 				}
+
 			}
 			
 			@Override
@@ -445,7 +438,7 @@ OnRangeSeekBarChangeListener<Integer> {
 		playPauseToggle.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_videol_pause));
 
 		playAudio ();
-		videoView.startPlayback();
+		videoView.start();
 	}
 
 	@Override

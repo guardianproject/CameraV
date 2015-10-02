@@ -10,6 +10,7 @@ import java.util.List;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.app.screens.FullScreenViewFragment;
 import org.witness.informacam.app.screens.editors.FullScreenImageViewFragment;
+import org.witness.informacam.app.screens.editors.FullScreenMJPEGPlayerFragment;
 import org.witness.informacam.app.screens.editors.FullScreenMJPEGViewFragment;
 import org.witness.informacam.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.informacam.app.screens.forms.OverviewFormFragment;
@@ -272,6 +273,7 @@ public class EditorActivity extends FragmentActivity implements EditorActivityLi
 		else if ( media.dcimEntry.fileAsset.source == Storage.Type.IOCIPHER)
 		{
 			fullscreenView = Fragment.instantiate(this, FullScreenMJPEGViewFragment.class.getName(), fullscreenViewArgs);
+			//fullscreenView = Fragment.instantiate(this, FullScreenMJPEGPlayerFragment.class.getName(), fullscreenViewArgs);
 		}
 		else if (media.dcimEntry.mediaType.startsWith(Models.IMedia.MimeType.VIDEO_BASE))
 		{

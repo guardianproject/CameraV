@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.witness.informacam.app.EditorActivity;
 import org.witness.informacam.app.R;
-import org.witness.informacam.app.screens.editors.FullScreenMJPEGViewFragment;
+import org.witness.informacam.app.screens.editors.FullScreenMJPEGPlayerFragment;
 import org.witness.informacam.app.screens.editors.FullScreenVideoViewFragment;
 import org.witness.informacam.app.screens.popups.PopupClickListener;
 import org.witness.informacam.app.utils.Constants;
@@ -315,7 +315,7 @@ public class FullScreenViewFragment extends Fragment implements OnTouchListener,
 							constrainBoundsToImage(region.bounds);
 							setCurrentRegion(region, true);
 						}
-						else if (this instanceof FullScreenMJPEGViewFragment)
+						else if (this instanceof FullScreenMJPEGPlayerFragment)
 						{
 							IRegion region = ((EditorActivityListener) a).media().addRegion(a, (int) event.getY() - (DEFAULT_REGION_HEIGHT / 2),
 									(int) event.getX() - (DEFAULT_REGION_WIDTH / 2), DEFAULT_REGION_WIDTH, DEFAULT_REGION_HEIGHT,
