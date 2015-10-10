@@ -281,6 +281,18 @@ public class Constants {
 			}
 		}
 
+		public final static class Device {
+            public final static long LOG_RATE = 10000L;
+
+            public final static class Keys {
+                public static final String FILE_EFFECTED = "fileEffected";
+                public static final String ACCESS_TYPE = "accessType";
+                public static final String ACCESS_CODE = "accessCode";
+                public static final String PLUG_EVENT_TYPE = "plugEventType";
+                public static final String PLUG_EVENT_CODE = "plugEventCode";
+            }
+        }
+
 		public final static class Phone {
 			public final static long LOG_RATE = 20000L;
 
@@ -288,7 +300,6 @@ public class Constants {
 				public static final String CELL_ID = "cellTowerId";
 				public static final String BLUETOOTH_DEVICE_ADDRESS = "bluetoothDeviceAddress";
 				public static final String BLUETOOTH_DEVICE_NAME = "bluetoothDeviceName";
-				public static final String IMEI = "IMEI";
 				public static final String VISIBLE_WIFI_NETWORKS = "visibleWifiNetworks";
 				public static final String BSSID = "bssid";
 				public static final String SSID = "ssid";
@@ -766,13 +777,17 @@ public class Constants {
 			public static final String ROOT = "informaCamIOCipher";
 			public static final String IOCIPHER = "ic_data.db";
 			public static final String DUMP = "informaCam";
-			
-			public static final String EXTERNAL_DIR = "/sdcard/InformaCam";//Environment.getExternalStorageDirectory().getAbsolutePath() + "/InformaCam";
+
+			//public static final String EXTERNAL_DIR = "/sdcard/InformaCam";//Environment.getExternalStorageDirectory().getAbsolutePath() + "/InformaCam";
 			public static final String FORM_ROOT = "forms";
 			public static final String ORGS_ROOT = "organizations";
 			public static final String LOG_DUMP = "iLogs";
 			public static final String ATTACHED_MEDIA = "attachedMedia";
-			public static final String DCIM = "/storage/extSdCard/DCIM/Camera";
+			//public static final String DCIM = "/storage/extSdCard/DCIM/Camera";
+
+            // external dirs should not be hard-coded (harlo 10/7/15)
+            public static final String EXTERNAL_DIR = String.format("%s/CameraV", Environment.getExternalStorageDirectory().getAbsolutePath());
+            public static final String DCIM = String.format("%s/Camera", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
 
 			public final static class Type {
 
@@ -805,8 +820,7 @@ public class Constants {
 
 		public final static class Crypto {
 			public final static String LOG = "InformaCrypto";
-			public final static byte[] PASSWORD_SALT = {(byte) 0xA4, (byte) 0x0B, (byte) 0xC8,
-				(byte) 0x34, (byte) 0xD6, (byte) 0x95, (byte) 0xF3, (byte) 0x13};
+
 			public final static byte[] REGION_SALT = {(byte) 0xC4, (byte) 0xE2, (byte) 0xA4, 
 				(byte) 0xF2, (byte) 0xEA, (byte) 0xA0, (byte) 0xBE, (byte) 0xF7};
 			public final static byte[] FORM_SALT = {(byte) 0x70, (byte) 0xB4, (byte) 0xEE,

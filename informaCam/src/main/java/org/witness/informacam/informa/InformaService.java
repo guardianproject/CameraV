@@ -14,19 +14,18 @@ import org.witness.informacam.Debug;
 import org.witness.informacam.InformaCam;
 import org.witness.informacam.R;
 import org.witness.informacam.informa.suckers.AccelerometerSucker;
+import org.witness.informacam.informa.suckers.DeviceSucker;
 import org.witness.informacam.informa.suckers.EnvironmentalSucker;
 import org.witness.informacam.informa.suckers.GeoFusedSucker;
 import org.witness.informacam.informa.suckers.GeoHiResSucker;
 import org.witness.informacam.informa.suckers.GeoSucker;
 import org.witness.informacam.informa.suckers.PhoneSucker;
-import org.witness.informacam.intake.Intake;
 import org.witness.informacam.json.JSONArray;
 import org.witness.informacam.json.JSONException;
 import org.witness.informacam.json.JSONObject;
 import org.witness.informacam.models.j3m.ILocation;
 import org.witness.informacam.models.j3m.ILogPack;
 import org.witness.informacam.models.j3m.ISuckerCache;
-import org.witness.informacam.models.j3m.IDCIMDescriptor.IDCIMSerializable;
 import org.witness.informacam.models.media.IMedia;
 import org.witness.informacam.models.media.IRegion;
 import org.witness.informacam.ui.AlwaysOnActivity;
@@ -58,7 +57,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -78,6 +76,7 @@ public class InformaService extends Service implements SuckerCacheListener {
 	private SensorLogger<PhoneSucker> _phone;
 	private SensorLogger<AccelerometerSucker> _acc;
 	private SensorLogger<EnvironmentalSucker> _env;
+    private SensorLogger<DeviceSucker> _dev;
 	private boolean suckersActive = false;
 
 	private info.guardianproject.iocipher.File cacheFile, cacheRoot;
@@ -229,24 +228,24 @@ public class InformaService extends Service implements SuckerCacheListener {
 		h.post(new Runnable() {
 			@Override
 			public void run() {
-				
-				
+
+
 				startTime = System.currentTimeMillis();
 				long currentTime = 0;
-				
+
 				if (_geo != null)
 				{
-					currentTime = ((GeoSucker) _geo).getTime();				
-					
+					currentTime = ((GeoSucker) _geo).getTime();
+
 					if(currentTime != 0) {
-						realStartTime = currentTime;					
+						realStartTime = currentTime;
 					}
-									
+
 					double[] currentLocation = ((GeoSucker) _geo).updateLocation();
-					
+
 					if(currentTime == 0 || currentLocation == null) {
 						GPS_WAITING++;
-	
+
 						if(GPS_WAITING < Suckers.GPS_WAIT_MAX) {
 							h.postDelayed(this, 200);
 							return;
@@ -255,19 +254,19 @@ public class InformaService extends Service implements SuckerCacheListener {
 							//Toast.makeText(InformaService.this, getString(R.string.gps_not_available_your), Toast.LENGTH_LONG).show();
 							GPS_WAITING = 0; //reset
 						}
-						
+
 					}
-					
+
 					onUpdate(((GeoSucker) _geo).forceReturn());
 				}
-				
+
 				if (_phone != null)
 				{
-					
+
 					onUpdate(((PhoneSucker) _phone).forceReturn());
-					
+
 				}
-				
+
 				if (informaCam != null)
 				{
 					sendBroadcast(new Intent()
@@ -413,7 +412,7 @@ public class InformaService extends Service implements SuckerCacheListener {
 	}
 		
 	private void startAllSuckers() {
-		
+
 		if(suckersActive) {
 			return;
 		}
@@ -443,6 +442,9 @@ public class InformaService extends Service implements SuckerCacheListener {
 		
 		_env = new EnvironmentalSucker(this);
 		_env.setSuckerCacheListener(this);
+
+        _dev = new DeviceSucker(this);
+        _dev.setSuckerCacheListener(this);
 		
 		try {
 			
@@ -498,10 +500,14 @@ public class InformaService extends Service implements SuckerCacheListener {
 		if (_env != null)
 			_env.getSucker().stopUpdates();
 
+        if (_dev != null)
+            _dev.getSucker().stopUpdates();
+
 		_geo = null;
 		_phone = null;
 		_acc = null;
 		_env = null;
+        _dev = null;
 
 		for(BroadcastReceiver b : broadcasters) {
 			
@@ -516,7 +522,7 @@ public class InformaService extends Service implements SuckerCacheListener {
 		}
 		
 		suckersActive = false;
-		
+
 		stopForeground(true);
 	}
 	

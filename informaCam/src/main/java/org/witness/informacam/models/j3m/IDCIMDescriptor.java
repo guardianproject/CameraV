@@ -38,11 +38,13 @@ public class IDCIMDescriptor extends Model {
 	private final static String LOG = Storage.LOG;
 
 	public IDCIMDescriptor(String parentId, ComponentName cameraComponent) {
-		startTime = System.currentTimeMillis()/1000;
-		this.parentId = parentId;
-		
-		if (cameraComponent != null)
-			this.cameraComponent = cameraComponent.getPackageName();
+        startTime = System.currentTimeMillis() / 1000;
+        this.parentId = parentId;
+
+        if (cameraComponent != null) {
+            this.cameraComponent = cameraComponent.getPackageName();
+            Logger.d(LOG, "CAMERA COMPONENT: " + this.cameraComponent);
+        }
 	}
 
 	public IDCIMSerializable asDescriptor() {
