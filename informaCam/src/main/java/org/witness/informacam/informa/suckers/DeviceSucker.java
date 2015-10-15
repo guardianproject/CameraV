@@ -144,46 +144,6 @@ public class DeviceSucker extends SensorLogger {
                 DeviceSucker.this.sendToBuffer(logPack);
             }
         }
-
-        private void ls(String path) {
-            runCmd(String.format("ls %s", path));
-        }
-
-        private void lsof() {
-            lsof(null);
-        }
-
-        private void pwd(String path) {
-            runCmd(String.format("cd %s && pwd", path));
-        }
-
-        private void lsof(String path) {
-            runCmd(String.format("lsof | grep %s",
-                    path == null ? Storage.DCIM : String.format("%s/%s", Storage.DCIM, path)));
-        }
-
-        private void lsof_r1(String path) {
-            runCmd(String.format("lsof -r1 %s/%s", dcim_alias, path));
-        }
-
-        private void runCmd(String cmd) {
-            Process check;
-            Logger.d(LOG, String.format("RUN CMD %s", cmd));
-
-            String[] run_cmd = {"sh", "-c", cmd};
-
-            try {
-                check = Runtime.getRuntime().exec(run_cmd);
-                BufferedReader br = new BufferedReader(new InputStreamReader(check.getInputStream()));
-
-                String line;
-                while((line = br.readLine()) != null) {
-                    Log.d(LOG, line);
-                }
-            } catch (IOException e) {
-                Logger.e(LOG, e);
-            }
-        }
     }
 
     public void stopUpdates() {
