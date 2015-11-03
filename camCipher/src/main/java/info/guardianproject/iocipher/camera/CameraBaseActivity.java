@@ -229,7 +229,7 @@ public abstract class CameraBaseActivity extends Activity implements OnClickList
 				 List<Camera.Size> supportedPreviewSizes =  camera.getParameters().getSupportedPreviewSizes();
 				 List<Camera.Size> supportedPictureSize = camera.getParameters().getSupportedPictureSizes();
 				 
-				 int previewQuality = 5;
+				 int previewQuality = Math.min(supportedPreviewSizes.size()-1,3);
 				 
 				 if (mPreviewWidth == -1)
 					 mPreviewWidth = supportedPreviewSizes.get(previewQuality).width;
