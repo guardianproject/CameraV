@@ -42,14 +42,14 @@
          <CheckBoxPreference
             android:title="@string/prefs_external_camera"
             android:summary="@string/prefs_external_camera_summary"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="prefExternalCamera"
         	/>
          
           <CheckBoxPreference
             android:title="@string/prefs_export_local"
             android:summary="@string/prefs_export_local_summary"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="prefExportLocal"
         	/>
           

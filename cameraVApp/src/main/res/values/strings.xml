@@ -212,7 +212,7 @@
     <string name="motion">Motion</string>
     
     <string name="camerav_hash_service">Verify Hash</string>
-    <string name="app_name_alt">CV Settings</string>
+    <string name="app_name_alt">Settings</string>
     <string name="wifi_networks">Wifi Networks</string>
     <string name="gps_speed">GPS Speed</string>
     <string name="gps_altitude">GPS Altitude</string>
