@@ -7,6 +7,7 @@ import org.witness.informacam.InformaCam;
 import org.witness.informacam.R;
 import org.witness.informacam.informa.InformaService;
 import org.witness.informacam.models.j3m.IDCIMDescriptor.IDCIMSerializable;
+import org.witness.informacam.utils.Constants;
 import org.witness.informacam.utils.Constants.App;
 import org.witness.informacam.utils.Constants.App.Camera;
 import org.witness.informacam.utils.Constants.App.Storage;
@@ -36,7 +37,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class CameraActivity extends Activity implements InformaCamStatusListener, InformaCamEventListener {
-	private final static String LOG = App.Camera.LOG;
+	private final static String LOG = String.format("********* CameraActivity : %s", App.Camera.LOG);
 
 	private boolean doInit = true;
 	private Intent cameraIntent = null;
@@ -237,7 +238,7 @@ public class CameraActivity extends Activity implements InformaCamStatusListener
 	public void onStop() {
 		super.onStop();
 
-
+		Constants.Logger.d(LOG, "HEY ON STOP CALLED IN CAMERA ACTIVITY!");
 	}
 
 	@Override

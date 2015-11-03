@@ -9,3 +9,7 @@ app/local.properties
 local.properties
 bin/*
 local.properties
+.gradle/
+.idea/
+*.iml
+*/build/

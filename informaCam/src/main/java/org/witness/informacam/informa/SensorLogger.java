@@ -27,7 +27,7 @@ public class SensorLogger<T> {
 	File mLog;
 	JSONArray mBuffer;
 	
-	Context mContext;
+	protected Context mContext;
 	boolean isRunning;
 	
 	//private final static String LOG = Suckers.LOG; 
