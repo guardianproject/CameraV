@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion '23.0.1'
 
     defaultConfig {
@@ -30,6 +30,9 @@ android {
         incremental true
         javaMaxHeapSize "4g"
     }
+
+    useLibrary  'org.apache.http.legacy'
+
 }
 
 dependencies {
@@ -38,7 +41,7 @@ dependencies {
     compile 'info.guardianproject.iocipher:IOCipherStandalone:0.3'
     compile 'info.guardianproject.cacheword:cachewordlib:0.1'
     compile project(':camCipher')
-    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.google.code.gson:gson:2.1'
     compile 'com.google.guava:guava:11.0.2'
     compile 'com.google.android.gms:play-services-location:7.8.0'

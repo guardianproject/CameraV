@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion '23.0.1'
 
     defaultConfig {
@@ -39,7 +39,10 @@ android {
           // but continue the build even when errors are found:
           abortOnError false
       }
-  }
+
+    useLibrary  'org.apache.http.legacy'
+
+}
 
 
 dependencies {

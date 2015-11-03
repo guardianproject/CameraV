@@ -360,9 +360,9 @@ public class PZSImageView extends ImageView {
 	/** Determine the space between the first two fingers */
 	private float spacing(MotionEvent event) {
 		// ...
-		float x = event.getX(0) - event.getX(1);
-		float y = event.getY(0) - event.getY(1);
-		return FloatMath.sqrt(x * x + y * y);
+		double x = event.getX(0) - event.getX(1);
+		double y = event.getY(0) - event.getY(1);
+		return (float)Math.sqrt(x * x + y * y);
 	}
 
 	/** Calculate the mid point of the first two fingers */
