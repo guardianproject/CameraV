@@ -148,7 +148,7 @@ public class GalleryFragment extends Fragment implements
 		noMedia.setVisibility(View.GONE);
 		
 		progressWait = (ProgressBar) rootView.findViewById(R.id.progressWait);
-		progressWait.setVisibility(View.VISIBLE);
+		progressWait.setVisibility(View.GONE);
 		
 		mEncodingMedia = rootView.findViewById(R.id.media_encoding);
 		mEncodingMedia.setVisibility(View.GONE);
@@ -260,7 +260,7 @@ public class GalleryFragment extends Fragment implements
 	
 	private void onMediaListAvailable()
 	{
-		progressWait.setVisibility(View.GONE);
+		//progressWait.setVisibility(View.GONE);
 		galleryGridAdapter = new GalleryGridAdapter(a, listMedia);
 		galleryGridAdapter.setNumLoading(mNumLoading);
 		galleryGridAdapter.setInSelectionMode(isInMultiSelectMode);

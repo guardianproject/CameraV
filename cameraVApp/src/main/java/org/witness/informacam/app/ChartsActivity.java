@@ -459,10 +459,12 @@ public class ChartsActivity extends Activity {
         Bitmap temp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(temp);
         int top = 0;
-        for (int i = 0; i < bitmap.size(); i++) {                                                
-                Rect dest = new Rect(0,top,w,top + bitmap.get(i).getHeight());
-                canvas.drawBitmap(bitmap.get(i), null, dest, null);
-                top += bitmap.get(i).getHeight();
+        for (int i = 0; i < bitmap.size(); i++) {
+			if (bitmap.get(i)!=null) {
+				Rect dest = new Rect(0, top, w, top + bitmap.get(i).getHeight());
+				canvas.drawBitmap(bitmap.get(i), null, dest, null);
+				top += bitmap.get(i).getHeight();
+			}
         }
         return temp;
 }

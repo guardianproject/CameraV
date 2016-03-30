@@ -175,7 +175,7 @@ public class SurfaceGrabberActivity extends Activity implements OnClickListener,
 			camera.setParameters(params);
 
 		} catch(IOException e) {
-			Log.e(LOG, e.toString());
+			Log.e(LOG, "error setting params",e);
 		}
 	}
 
@@ -184,9 +184,17 @@ public class SurfaceGrabberActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onClick(View view) {
-		if(mPreviewing) {
-			mPreviewing = false;
-			camera.takePicture(null, null, this);
+
+		try {
+
+			if (mPreviewing) {
+				mPreviewing = false;
+				camera.takePicture(null, null, this);
+			}
+		}
+		catch (Exception e)
+		{
+			Log.e(LOG,"unable to take a picture",e);
 		}
 	}
 
