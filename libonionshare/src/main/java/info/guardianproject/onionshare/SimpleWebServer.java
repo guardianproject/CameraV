@@ -504,34 +504,30 @@ public class SimpleWebServer extends NanoHTTPD {
              "<link rel=\"stylesheet\" type=\"text/css\" href=\"/style.css\"/>" +
              "</head><body><h2>" + heading + "</h2>");
 
+         ArrayList<File> mListMedia = new ArrayList<>();
+
          if (mListMedia != null && mListMedia.size() > 0) {
-             
-         	 
+
          	 if (mListMedia.size() > 0) {
                   msg.append("<section class=\"files\">");
                   for (int i = startIdx; i < (startIdx+length) && i < mListMedia.size(); i++)
                   {
                 	  
-                	  IMedia media = mListMedia.get(i);
+                	  File media = mListMedia.get(i);
                   	
-                	  String pathMedia = media._id;
+                	  String pathMedia = media.getAbsolutePath();
                 	  
                 	  StringBuffer desc = new StringBuffer();
-                	  desc.append("<b>").append(media.dcimEntry.fileAsset.name).append("</b><br/><br/>");
+                	  desc.append("<b>").append(media.getName()).append("</b><br/><br/>");
 					try {
-						desc.append("<pre>").append(media.buildSummary(mContext, null)).append("</pre>");
+
+                        //TODO fix this
+                        //desc.append("<pre>").append(media.buildSummary(mContext, null)).append("</pre>");
 						
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InstantiationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-                	  
   	                    msg.append("<div class=\"thumbnailBorder\">");
   	                    
   	                    msg.append("<a href=\"").append(encodeUri(pathMedia))
